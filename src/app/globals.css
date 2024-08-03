@@ -5,29 +5,18 @@
 :root {
 	--text-primary : #F6F6F8;
   --text-secondary : #77767B;
-  --text-tetiary : #B8B8C7;
+  --text-tetiary : #555458;
 
   --bg-primary : #000000;
   --bg-secondary : #111111;
   --bg-tetiary : #141414;
   --bg-quantinary : #1C1C1E;
   --bg-alt1 : #2C2C2C;
+  --bg-alt2 : #737373;
 }
 
 body {
   background-color : var(--bg-primary)
-}
-
-.dark {
-	--text-primary : #F6F6F8;
-  --text-secondary : #77767B;
-  --text-tetiary : #B8B8C7;
-
-  --bg-primary : #000000;
-  --bg-secondary : #111111;
-  --bg-tetiary : #141414;
-  --bg-quantinary : #1C1C1E;
-  --bg-alt1 : #2C2C2C;
 }
 
 @layer utilities {

@@ -40,7 +40,7 @@ const Left2 = () => {
             {
                 pages.map((item, index : number) => (
                     <div 
-                        className={`p-1 px-4 ${item.active ? 'bg-bg-quantinary' : 'bg-none'} rounded-full cursor-pointer duration-500`}
+                        className={`p-1 px-4 ${item.active ? 'bg-bg-quantinary' : 'bg-none'} rounded-full cursor-pointer duration-500 hover:duration-300 hover:opacity-[0.6] hover:scale-[0.95]`}
                         key={index}
                         onClick={()=>setActive(index)}
                     >

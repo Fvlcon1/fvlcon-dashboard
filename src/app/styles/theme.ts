@@ -4,14 +4,15 @@ export const colors = {
     text : {
         primary : '#F6F6F8',
         secondary : '#77767B',
-        tetiary : '#B8B8C7',
+        tetiary : '#555458',
     },
     bg : {
         primary : '#000000',
         secondary : '#111111',
         tetiary : '#141414',
         quantinary : '#1C1C1E',
-        alt1 : '#2C2C2C'
+        alt1 : '#2C2C2C',
+        alt2 : '#474747'
     },
 }
 

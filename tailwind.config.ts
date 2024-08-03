@@ -13,6 +13,8 @@ const config: Config = {
     extend: {
       colors : cssColors,
       backgroundImage: {
+        'gradient-container': 'linear-gradient(to bottom, rgba(17,17,17,1) 0%, rgba(17,17,17,0) 100%)',
+        'gradient-border': 'linear-gradient(to bottom, rgba(28,28,30,1) 0%, rgba(28,28,30,0) 100%)',
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
         "gradient-conic":
           "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
