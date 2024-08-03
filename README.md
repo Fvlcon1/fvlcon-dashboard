@@ -1,4 +1,4 @@
-<img src=""/>
+<img src="./src/assets/dev/fvlcon-dashboard.jpg"/>
 
 ## Live Demo
 https://fvlcon-dashboard-1.vercel.app
