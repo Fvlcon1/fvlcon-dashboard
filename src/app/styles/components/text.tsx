@@ -33,14 +33,14 @@ const Text = ({
         <span
             className={`${className} ${jetBrains_Mono.className}`}
             style={{
-                fontWeight : bold ?? TypographyBold.lg,
+                fontWeight : bold ?? TypographyBold.sm,
                 fontFamily : fontfamily,
                 fontSize : size ?? TypographySize.body,
                 color : onHover && clickableLink 
                         ? 'blue'
                         : textColor
                         ? textColor
-                        : theme.colors.almostWhite,
+                        : theme.colors.text.secondary,
                 flexWrap : wrap ? 'wrap' : 'nowrap',
                 textDecoration : underline || (onHover && clickableLink) ? 'underline' : 'none',
                 opacity : onHover && clickable ? 0.7 : 1,
@@ -65,7 +65,7 @@ export const Head1 = (props : AppTypographyProps) => {
     return (
         <Text
             size={TypographySize.HL}
-            textColor={theme.colors.almostWhite}
+            textColor={theme.colors.text.secondary}
             lineHeight={1.3}
             {...props}
         >

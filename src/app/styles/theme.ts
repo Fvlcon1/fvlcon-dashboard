@@ -1,15 +1,33 @@
 import { TypographyBold, TypographySize } from "./style.types"
 
 export const colors = {
-    darkGray : '#24232C',
-    gray : '#817D92',
-    almostWhite : '#E6E5EA',
-    veryDarkGray : '#18171F',
-    neonGreen : '#A4FFAF',
-    red : '#F64A4A',
-    orange : '#FB7C58',
-    yellow : '#F8CD65',
-    bg : "#08070B"
+    text : {
+        primary : '#F6F6F8',
+        secondary : '#77767B',
+        tetiary : '#B8B8C7',
+    },
+    bg : {
+        primary : '#000000',
+        secondary : '#111111',
+        tetiary : '#141414',
+        quantinary : '#1C1C1E',
+        alt1 : '#2C2C2C'
+    },
+}
+
+export const cssColors = {
+    text : {
+        primary : 'var(--text-primary)',
+        secondary : 'var(--text-secondary)',
+        tetiary : 'var(--text-tetiary)',
+    },
+    bg : {
+        primary : 'var(--bg-primary)',
+        secondary : 'var(--bg-secondary)',
+        tetiary : 'var(--bg-tetiary)',
+        quantinary : 'var(--bg-quantinary)',
+        alt1 : 'var(--bg-alt1)',
+    },
 }
 
 export const theme = {

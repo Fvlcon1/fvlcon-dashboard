@@ -3,47 +3,31 @@
 @tailwind utilities;
 
 :root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
-}
+	--text-primary : #F6F6F8;
+  --text-secondary : #77767B;
+  --text-tetiary : #B8B8C7;
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
-  }
+  --bg-primary : #000000;
+  --bg-secondary : #111111;
+  --bg-tetiary : #141414;
+  --bg-quantinary : #1C1C1E;
+  --bg-alt1 : #2C2C2C;
 }
 
 body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
-}
-
-.light {
-	--bg: #ffffff;
-	--text: #000000;
-	--text-light : #00000099;
-	--swapText: #ffffff;
-	--offWhite: #f0f4f8;
-	--ash: #9fb3c8;
-	--border : #b5b5b5;
+  background-color : var(--bg-primary)
 }
 
 .dark {
-	--bg: #000000;
-	--ash: #333333e1;
-	--text: #ffffff;
-	--text-light : #F6E5E5B2;
-	--swapText: #000000;
-	--offWhite: #f0f4f8;
-	--border : #333333;
+	--text-primary : #F6F6F8;
+  --text-secondary : #77767B;
+  --text-tetiary : #B8B8C7;
+
+  --bg-primary : #000000;
+  --bg-secondary : #111111;
+  --bg-tetiary : #141414;
+  --bg-quantinary : #1C1C1E;
+  --bg-alt1 : #2C2C2C;
 }
 
 @layer utilities {
