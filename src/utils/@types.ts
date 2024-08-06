@@ -34,6 +34,8 @@ export type ButtonStyleProps = {
 export interface ButtonProps extends ButtonStyleProps {
     Loader? : (props : any)=>JSX.Element
     type?: ButtonTypes
+    text? : string
+    icon? : ReactNode
     onClick?: () => void
 }
 

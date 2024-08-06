@@ -25,7 +25,7 @@ const Left = () => {
     }
     return (
         <div
-            className="flex flex-col w-[70px] h-[100vh] bg-bg-secondary py-6 gap-3 items-center justify-between"
+            className="fixed top-0 left-0 flex flex-col w-[70px] h-[100vh] bg-bg-secondary py-6 gap-3 items-center justify-between"
         >
             <Logo />
             <Flex
