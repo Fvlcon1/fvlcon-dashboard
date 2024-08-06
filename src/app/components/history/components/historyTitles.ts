@@ -1,4 +1,9 @@
-import { FaImage } from "react-icons/fa6";
+import { AiOutlineAppstoreAdd } from "react-icons/ai";
+import { BsFillCalendarDateFill } from "react-icons/bs";
+import { FaCircleUser, FaImage } from "react-icons/fa6";
+import { GrAction } from "react-icons/gr";
+import { HiOutlineStatusOnline } from "react-icons/hi";
+import { SiBaremetrics } from "react-icons/si";
 
 export const historyTitles = [
     {
@@ -7,26 +12,26 @@ export const historyTitles = [
     },
     {
         title : 'Samples',
-        icon : FaImage 
+        icon : AiOutlineAppstoreAdd 
     },
     {
-        title : 'Identified Person',
-        icon : FaImage 
+        title : 'Identity',
+        icon : FaCircleUser 
     },
     {
         title : 'Date',
-        icon : FaImage 
+        icon : BsFillCalendarDateFill 
     },
     {
         title : 'Performance',
-        icon : FaImage 
+        icon : SiBaremetrics 
     },
     {
         title : 'Status',
-        icon : FaImage 
+        icon : HiOutlineStatusOnline 
     },
     {
         title : 'Actions',
-        icon : FaImage 
+        icon : GrAction 
     },
 ]

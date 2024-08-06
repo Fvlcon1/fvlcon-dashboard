@@ -2,7 +2,7 @@
 
 import AppTypography from "@styles/components/appTypography"
 import Flex from "@styles/components/flex"
-import { TypographyBold } from "@styles/style.types"
+import { TypographyBold, TypographySize } from "@styles/style.types"
 import theme from "@styles/theme"
 import { useState } from "react"
 
@@ -52,6 +52,7 @@ const Left2 = () => {
                                 textColor={item.active ? theme.colors.text.primary : theme.colors.text.secondary}
                                 bold={item.active ? TypographyBold.sm : TypographyBold.sm}
                                 className="duration-500"
+                                size={TypographySize.body}
                             >
                                 {item.name}
                             </AppTypography>

@@ -5,10 +5,11 @@ import Flex from "@styles/components/flex"
 import Main from "./components/main"
 import Images from "./components/images"
 import Right from "@components/sidebar/right"
+import Topbar from "./components/topbar"
 
 const Home = () => {
     return (
-        <div className="flex gap-4 w-full pl-[190px] pr-[250px]">
+        <div className="flex flex-col gap-3 py-2 w-full pl-[208px] pr-[250px]">
             <Flex
                 width="fit-content"
                 gap={0}
@@ -16,6 +17,7 @@ const Home = () => {
                 <Left />
                 <Left2 />
             </Flex>
+            <Topbar />
             <Main />
             <Images />
             <Right />
