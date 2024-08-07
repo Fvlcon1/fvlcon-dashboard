@@ -92,7 +92,7 @@ const HistoryItem = () => {
                 <AppTypography
                     textColor={theme.colors.text.primary}
                 >
-                    Successfull
+                    Successful
                 </AppTypography>
             </Flex>
             <Flex
