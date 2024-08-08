@@ -3,7 +3,7 @@ import Left2 from "@components/sidebar/left2"
 import AppTypography from "@styles/components/appTypography"
 import Flex from "@styles/components/flex"
 import Main from "./components/main"
-import Images from "./components/images"
+import Controls from "./components/images/controls"
 import Right from "@components/sidebar/right"
 import Topbar from "./components/topbar"
 
@@ -19,7 +19,7 @@ const Home = () => {
             </Flex>
             <Topbar />
             <Main />
-            <Images />
+            <Controls />
             <Right />
         </div>
     )
