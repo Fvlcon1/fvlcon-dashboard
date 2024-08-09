@@ -5,21 +5,20 @@ import Flex from "@styles/components/flex"
 import { TypographyBold, TypographySize } from "@styles/style.types"
 import theme from "@styles/theme"
 import { MdCancel, MdFullscreen } from "react-icons/md"
-import ImageCard from "./imageCard"
+import MatchCard from "./MatchCard"
 import Overlay from "@components/overlay/overlay"
 import Window from "@components/window/window"
 import { useState } from "react"
 import { AnimatePresence, motion } from 'framer-motion';
-import Angels from "./angels"
 import Controls from "./controls"
-import AllFaces from "./allFaces"
+import AllMatches from "./allMatches"
 
-const DistinctFaces = () => {
+const Matches = () => {
     const [displayFaces, setDisplayFaces] = useState(false)
     const [displayAngels, setDisplayAngels] = useState(false)
     return (
         <>
-            <motion.div
+            <motion.div  
                 className="w-full relative flex flex-col flex-1 gap-1"
                 initial={{
                     y : -20,
@@ -42,12 +41,11 @@ const DistinctFaces = () => {
                         >
                             {
                                 [1,2,3,4,5,6,7,8,9].map((item, index : number) => (
-                                    <ImageCard 
+                                    <MatchCard 
                                         key={index}
-                                        title={`Face ${index + 1}`}
-                                        rightButtonTitle="View angels"
-                                        rightButtonClick={()=>setDisplayAngels(true)}
-                                        MiddleButtonTitle="Analyze ➜"
+                                        title={`Match ${index + 1}`}
+                                        rightButtonTitle="➜"
+                                        description="Lorem ipsum dolor sit amet consectetur adipisicing elit"
                                     />
                                 ))
                             }
@@ -55,15 +53,11 @@ const DistinctFaces = () => {
                     </div>
                 </div>
             </motion.div>
-            <AllFaces 
+            <AllMatches 
                 display={displayFaces}
                 setDisplay={setDisplayFaces}
-            />
-            <Angels
-                display={displayAngels}
-                setDisplay={setDisplayAngels}
             />
         </>
     )
 }
-export default DistinctFaces
+export default Matches

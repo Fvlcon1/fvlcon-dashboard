@@ -19,6 +19,22 @@ body {
   background-color : var(--bg-primary)
 }
 
+/* Chrome, Edge, and Safari */
+*::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+
+*::-webkit-scrollbar-track {
+  background: #00000000;
+  border-radius: 100px;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: var(--bg-quantinary);
+  border-radius: 100px;
+}
+
 @layer utilities {
   .text-balance {
     text-wrap: balance;

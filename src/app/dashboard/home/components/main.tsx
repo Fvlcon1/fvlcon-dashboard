@@ -5,17 +5,19 @@ import ImageContainer from "@/app/components/imageContainer/imageContainer"
 import { imageUploadContext } from "@/context/imageUpload"
 import Button from "@components/button/button"
 import Flex from "@styles/components/flex"
-import { useContext } from "react"
+import { useContext, useState } from "react"
 import { RiOrganizationChart } from "react-icons/ri"
 import DistinctFaces from "./distinct faces/distinctFaces"
 import Logs from "./logs/logs"
+import Matches from "./matches/matches"
 
 const Main = () => {
     const {
         selectedImage,
         setSelectedImage
     } = useContext(imageUploadContext)
-
+    const [displayMatches, setDisplayMatches] = useState(false)
+    const [displayFaces, setDisplayFaces] = useState(false)
     return (
         <div  className="w-full items-center flex flex-col flex-1 h-[100vh] pb-4 gap-1">
             <Flex
@@ -43,12 +45,24 @@ const Main = () => {
                         width="fit-content"
                     >
                         <Button 
-                            text="Segment"
+                            text="Analyze"
                             icon={<RiOrganizationChart className="mt-[-1px]"/>}
+                            onClick={()=>setDisplayFaces(true)}
+                        />
+                        <Button 
+                            text="Fvlconize ➜"
+                            onClick={()=>setDisplayMatches(true)}
                         />
                     </Flex>
                     {/* <Logs /> */}
-                    <DistinctFaces />
+                    {
+                        displayMatches &&
+                        <Matches />
+                    }
+                    {
+                        displayFaces &&
+                        <DistinctFaces />
+                    }
                     <History />
                 </Flex>
             </Flex>
