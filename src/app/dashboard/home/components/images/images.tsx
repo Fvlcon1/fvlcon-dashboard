@@ -1,14 +1,14 @@
 import Flex from "@styles/components/flex"
 import UploadedImage from "./uploadedImage"
-import { Dispatch, SetStateAction } from "react"
+import { Dispatch, SetStateAction, useContext } from "react"
+import { imagesType } from "./controls"
+import { imageUploadContext } from "@/context/imageUpload"
 
-const Images = ({
-    images,
-    setImages
-} : {
-    images? : string[],
-    setImages: Dispatch<SetStateAction<string[]>>
-}) => {
+const Images = () => {
+    const {
+        images, 
+        setImages,
+    } = useContext(imageUploadContext)
     return (
         <div className={`w-full ${images && images.length > 0 ? 'bg-none' : 'bg-gradient-container'} h-full rounded-lg overflow-y-auto`}>
                 <Flex

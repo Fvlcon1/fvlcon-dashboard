@@ -5,12 +5,18 @@ import AppTypography from "@styles/components/appTypography"
 import Flex from "@styles/components/flex"
 import { FaImage } from "react-icons/fa6"
 import Images from "./images"
-import { useRef, useState } from "react"
+import { useContext, useRef, useState } from "react"
 import Image from "next/image"
+import { imageUploadContext } from "@/context/imageUpload"
+
+export type imagesType = {
+    url : string,
+    name : string
+}
 
 const Controls = () => {
     const inputRef = useRef<HTMLInputElement | null>(null);
-    const [images, setImages] = useState<string[]>([])
+    const {images, setImages} = useContext(imageUploadContext)
 
     const inputClicked = () => {
         inputRef.current?.click()
@@ -19,7 +25,7 @@ const Controls = () => {
     const onFileSelected = (e : FileList | null) => {
         if(e){ 
             const imageUrl = URL.createObjectURL(e[0]);
-            setImages(prev => [...prev, imageUrl])
+            setImages(prev => [...prev, {url : imageUrl, name : e[0].name}])
             console.log(imageUrl)
         }
     }
@@ -45,10 +51,7 @@ const Controls = () => {
                     onClick={inputClicked}
                 />
             </Flex>
-            <Images 
-                images={images}
-                setImages={setImages}
-            />
+            <Images />
         </div>
     )
 }

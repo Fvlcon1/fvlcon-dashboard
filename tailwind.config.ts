@@ -14,6 +14,7 @@ const config: Config = {
       colors : cssColors,
       backgroundImage: {
         'gradient-container': 'linear-gradient(to bottom, rgba(17,17,17,1) 0%, rgba(17,17,17,0) 100%)',
+        'gradient-container-black': 'linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 100%)',
         'gradient-border': 'linear-gradient(to bottom, rgba(28,28,30,1) 0%, rgba(28,28,30,0) 100%)',
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
         "gradient-conic":

@@ -1,11 +1,21 @@
+'use client'
+
 import History from "@/app/components/history/history"
 import ImageContainer from "@/app/components/imageContainer/imageContainer"
+import { imageUploadContext } from "@/context/imageUpload"
 import Button from "@components/button/button"
 import Flex from "@styles/components/flex"
-import theme from "@styles/theme"
+import { useContext } from "react"
 import { RiOrganizationChart } from "react-icons/ri"
+import DistinctFaces from "./distinct faces/distinctFaces"
+import Logs from "./logs/logs"
 
 const Main = () => {
+    const {
+        selectedImage,
+        setSelectedImage
+    } = useContext(imageUploadContext)
+
     return (
         <div  className="w-full items-center flex flex-col flex-1 h-[100vh] pb-4 gap-1">
             <Flex
@@ -17,7 +27,9 @@ const Main = () => {
                     <Flex
                         gap={15}
                     >
-                        <ImageContainer />
+                        <ImageContainer 
+                            image={selectedImage}
+                        />
                         <ImageContainer />
                     </Flex>
                 </div>
@@ -35,6 +47,8 @@ const Main = () => {
                             icon={<RiOrganizationChart className="mt-[-1px]"/>}
                         />
                     </Flex>
+                    {/* <Logs /> */}
+                    <DistinctFaces />
                     <History />
                 </Flex>
             </Flex>

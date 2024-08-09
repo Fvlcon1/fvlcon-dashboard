@@ -26,7 +26,7 @@ const AppTypography = ({
 
     return (
         <span
-            className={className}
+            className={`w-fit ${className}`}
             style={{
                 fontWeight : bold ?? TypographyBold.sm,
                 fontFamily : fontfamily,
@@ -45,7 +45,6 @@ const AppTypography = ({
                 textOverflow : ellipsis ? 'ellipsis' : 'none',
                 maxHeight : ellipsis ? 13.33 * 1.5 * (maxLines ?? 1) : 'none',
                 overflow : 'hidden',
-                width : 'fit-content',
                 lineHeight
             }}
             onMouseOver={()=>setOnHover(true)}
