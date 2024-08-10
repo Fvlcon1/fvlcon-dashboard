@@ -4,42 +4,48 @@ import AppTypography from "@styles/components/appTypography"
 import Flex from "@styles/components/flex"
 import { TypographyBold, TypographySize } from "@styles/style.types"
 import theme from "@styles/theme"
-import { useState } from "react"
+import Link from "next/link"
+import { usePathname } from "next/navigation"
+import { useEffect, useState } from "react"
 import { RiHome6Fill } from "react-icons/ri"
 import { TbHistoryToggle } from "react-icons/tb"
 
 const Left2 = () => {
+    const pathname = usePathname()
     const [pages, setPages] = useState([
         {
             name : 'Home',
             icon : RiHome6Fill,
-            active : true
+            active : false,
+            url : '/dashboard/home'
         },
         {
             name : 'History',
             icon : TbHistoryToggle,
-            active : false
+            active : false,
+            url : '/dashboard/history'
         },
     ])
-
-    const setActive = (index : number) => {
+    
+    useEffect(()=>{
         setPages(prev =>
             prev.map((item, i) => 
-              i === index ? { ...item, active: true } : { ...item, active: false }
+              item.url === pathname ? { ...item, active: true } : { ...item, active: false }
             )
           );
-          
-    }
+        console.log(pathname)
+    },[pathname])
+
     return (
         <div
             className="fixed top-0 left-[70px] flex flex-col w-[120px] h-[100vh] bg-bg-tetiary p-2 py-6 gap-3 items-center"
         >
             {
                 pages.map((item, index : number) => (
-                    <div 
+                    <Link
+                        href={item.url} 
                         className={`p-2 px-4 ${item.active ? 'bg-bg-quantinary' : 'bg-none'} rounded-full cursor-pointer duration-500 hover:duration-300 hover:opacity-[0.6] hover:scale-[0.95]`}
                         key={index}
-                        onClick={()=>setActive(index)}
                     >
                         <Flex
                             width="fit-content"
@@ -57,7 +63,7 @@ const Left2 = () => {
                                 {item.name}
                             </AppTypography>
                         </Flex>
-                    </div>
+                    </Link>
                 ))
             }
         </div>

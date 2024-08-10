@@ -5,7 +5,7 @@ import { Tooltip } from "antd"
 
 const Right = () => {
     return (
-        <div  className="w-[50px] fixed right-[16px] flex h-[100vh] py-4">
+        <div  className="w-[50px] fixed right-[16px] top-0 flex h-[100vh] py-4">
             <div className="w-full bg-bg-secondary h-full rounded-lg flex justify-center">
                 <Flex
                     width="fit-content"

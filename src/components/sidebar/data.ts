@@ -7,12 +7,14 @@ export const bottomPagesData = [
     {
         name : 'Profile',
         icon : FaCircleUser,
-        active : true
+        active : true,
+        url : '/profile'
     },
     {
         name : 'Settings',
         icon : IoSettings,
-        active : false
+        active : false,
+        url : '/settings'
     },
 ]
 
@@ -20,12 +22,14 @@ export const rightPages = [
     {
         name : 'Profile',
         icon : FaCircleUser,
-        active : true
+        active : true,
+        url : '/profile'
     },
     {
-        name : 'Folder',
+        name : 'Directory',
         icon : FaFolderClosed,
-        active : false
+        active : false,
+        url : '/directory'
     },
 ]
 
@@ -33,21 +37,25 @@ export const pagesData =[
     {
         name : 'Dashboard',
         icon : MdDashboard,
-        active : true
+        active : false,
+        url : '/dashboard/home'
     },
     {
         name : 'Live',
         icon : RiLiveFill,
-        active : false
+        active : false,
+        url : '/live'
     },
     {
-        name : 'File',
+        name : 'Ativity Log',
         icon : FaFileContract,
-        active : false
+        active : false,
+        url : '/log'
     },
     {
         name : 'Report',
         icon : IoFileTrayFull,
-        active : false
+        active : false,
+        url : '/report'
     },
 ]

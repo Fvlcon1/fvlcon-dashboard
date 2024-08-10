@@ -5,24 +5,27 @@ import AppTypography from "@styles/components/appTypography"
 import Image from "next/image"
 import Logo from "../logo/logo"
 import Flex from "@styles/components/flex"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { MdDashboard } from "react-icons/md"
 import theme from "@styles/theme"
 import { bottomPagesData, pagesData } from "./data"
 import { Tooltip } from 'antd'
+import Link from "next/link"
+import { usePathname } from "next/navigation"
 
 const Left = () => {
     const [pages, setPages] = useState(pagesData)
     const [bottomPages, setBottomPages] = useState(bottomPagesData)
+    const pathname = usePathname()
     
-    const setActive = (index : number) => {
+    useEffect(()=>{
         setPages(prev =>
             prev.map((item, i) => 
-              i === index ? { ...item, active: true } : { ...item, active: false }
+              item.url.split('/')[1] === pathname.split('/')[1] ? { ...item, active: true } : { ...item, active: false }
             )
           );
-          
-    }
+    },[pathname])
+
     return (
         <div
             className="fixed top-0 left-0 flex flex-col w-[70px] h-[100vh] bg-bg-secondary py-6 gap-3 items-center justify-between"
@@ -39,9 +42,9 @@ const Left = () => {
                             placement="right"
                             title={item.name}
                         >
-                            <div
+                            <Link
+                                href={item.url}
                                 className={`w-full flex relative items-center justify-center cursor-pointer`}
-                                onClick={()=>setActive(index)}
                             >
                                 <div className={`absolute left-0 w-[4px] h-[25px] rounded-full ${item.active ? 'bg-text-primary' : 'bg-none'} duration-500`}></div>
                                 <div
@@ -52,7 +55,7 @@ const Left = () => {
                                         color={item.active ? theme.colors.text.primary : theme.colors.bg.alt2}
                                     />
                                 </div>
-                            </div> 
+                            </Link> 
                         </Tooltip>
                     ))
                 }

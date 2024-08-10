@@ -11,18 +11,10 @@ import { ImageUploadProvider } from '../../../context/imageUpload';
 const Home = () => {
     return (
         <ImageUploadProvider>
-            <div className="flex flex-col gap-3 py-2 w-full pl-[208px] pr-[250px]">
-                <Flex
-                    width="fit-content"
-                    gap={0}
-                >
-                    <Left />
-                    <Left2 />
-                </Flex>
+            <div className="flex flex-col gap-3 w-full pr-[165px]">
                 <Topbar />
                 <Main />
                 <Controls />
-                <Right />
             </div>
         </ImageUploadProvider>
     )
