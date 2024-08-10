@@ -7,25 +7,27 @@ const Slidein = ({
     children,
     width,
     direction,
+    className
 } : {
     children : ReactNode,
     width? : string,
-    direction? : 'top' | 'right' | 'bottom' | 'left'
+    direction? : 'top' | 'right' | 'bottom' | 'left',
+    className? : string
 }) => {
     return (
         <motion.div
-            className={`${width ?? 'w-fit'}`}
+            className={`w-fit ${className}`}
             initial={{ 
                 opacity: 0, 
                 y : direction === 'top'
-                        ? 70
+                        ? 20
                         : direction === 'bottom'
-                        ? -70
-                        : 70,
+                        ? -20
+                        : 20,
                 x : direction === 'left'
-                        ? 70
+                        ? 20
                         : direction === 'right'
-                        ? -70
+                        ? -20
                         : 0
             }}
             whileInView={{ 
@@ -36,7 +38,8 @@ const Slidein = ({
             transition={{
                 delay : 0,
                 type: "spring", 
-                stiffness: 200
+                stiffness: 50,
+                duration : 100
             }}
         >
             {children}

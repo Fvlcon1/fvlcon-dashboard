@@ -10,6 +10,7 @@ import { RiOrganizationChart } from "react-icons/ri"
 import DistinctFaces from "./distinct faces/distinctFaces"
 import Logs from "./logs/logs"
 import Matches from "./matches/matches"
+import Metadata from "./metadata"
 
 const Main = () => {
     const {
@@ -54,7 +55,16 @@ const Main = () => {
                             onClick={()=>setDisplayMatches(true)}
                         />
                     </Flex>
-                    {/* <Logs /> */}
+                    <Flex>
+                        {
+                            displayMatches &&
+                            <Logs />
+                        }
+                        {
+                            selectedImage &&
+                            <Metadata />
+                        }
+                    </Flex>
                     {
                         displayMatches &&
                         <Matches />
