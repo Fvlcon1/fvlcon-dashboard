@@ -7,7 +7,7 @@ const Template = ({
     children ? : ReactNode
 }) => {
     return (
-        <div>
+        <div className="w-full">
             <Left2 />
             <div className="w-full pl-[208px] py-4 pr-[85px]">
                 {children}
