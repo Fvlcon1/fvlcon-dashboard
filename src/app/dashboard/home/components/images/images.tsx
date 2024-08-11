@@ -1,6 +1,6 @@
 import Flex from "@styles/components/flex"
-import UploadedImage from "./uploadedImage"
-import { Dispatch, SetStateAction, useContext } from "react"
+import UploadedFile from "./uploadedFile"
+import { Dispatch, SetStateAction, useContext, useEffect } from "react"
 import { imagesType } from "./controls"
 import { imageUploadContext } from "@/context/imageUpload"
 
@@ -9,6 +9,12 @@ const Images = () => {
         images, 
         setImages,
     } = useContext(imageUploadContext)
+
+    useEffect(()=>{
+        console.log(images)
+        images.length > 0 && console.log(images[0].name.split('.')[images[0].name.split('.').length - 1])
+    },[images])
+
     return (
         <div className={`w-full ${images && images.length > 0 ? 'bg-none' : 'bg-gradient-container'} h-full rounded-lg overflow-y-auto`}>
                 <Flex
@@ -16,7 +22,7 @@ const Images = () => {
                 >
                     {
                         images?.map((item, index) => (
-                            <UploadedImage 
+                            <UploadedFile 
                                 key={index}
                                 image={item}
                                 setImages={setImages}
