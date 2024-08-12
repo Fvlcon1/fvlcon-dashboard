@@ -12,11 +12,14 @@ import { bottomPagesData, pagesData } from "./data"
 import { Tooltip } from 'antd'
 import Link from "next/link"
 import { usePathname } from "next/navigation"
+import { noTempalteRoutes } from "@/utils/constants"
 
 const Left = () => {
     const [pages, setPages] = useState(pagesData)
     const [bottomPages, setBottomPages] = useState(bottomPagesData)
     const pathname = usePathname()
+
+    const showTemplate = !noTempalteRoutes.includes(pathname)
     
     useEffect(()=>{
         setPages(prev =>
@@ -27,6 +30,7 @@ const Left = () => {
     },[pathname])
 
     return (
+        showTemplate &&
         <div
             className="fixed top-0 left-0 flex flex-col w-[70px] h-[100vh] bg-bg-secondary py-6 gap-3 items-center justify-between"
         >

@@ -9,7 +9,12 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@emotion/react": "^11.13.0",
+    "@emotion/styled": "^11.13.0",
     "@mui/base": "^5.0.0-beta.40",
+    "@mui/icons-material": "^5.16.7",
+    "@mui/material": "^5.16.7",
+    "amazon-cognito-identity-js": "^6.3.12",
     "antd": "^5.20.0",
     "framer-motion": "^11.3.24",
     "next": "14.2.5",

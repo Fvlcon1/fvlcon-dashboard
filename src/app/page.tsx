@@ -1,10 +1,10 @@
 import { redirect } from "next/navigation"
+import Logo from "./logo/Logo"
 
 const App = () => {
-  redirect('/dashboard/home')
     return (
         <div>
-
+          <Logo />
         </div>
     )
 }
