@@ -16,6 +16,7 @@
     "@mui/material": "^5.16.7",
     "amazon-cognito-identity-js": "^6.3.12",
     "antd": "^5.20.0",
+    "aws-sdk": "^2.1673.0",
     "framer-motion": "^11.3.24",
     "next": "14.2.5",
     "next-video": "^1.1.4",
