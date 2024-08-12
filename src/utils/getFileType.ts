@@ -1,6 +1,7 @@
 export const isVideoFile = (extension : string) : 'video' | 'image' | undefined => {
     if(
-        extension === 'mp4'
+        extension === 'mp4' ||
+        extension === 'mkv'
     ) return 'video'
 }
 
