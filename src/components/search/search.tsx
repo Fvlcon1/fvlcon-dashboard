@@ -21,7 +21,7 @@ const Searchbar = ({
                 placeholder="Search anything"
                 content={searchValue}
                 setContent={setSearchValue}
-                className="!w-full"
+                className="!w-full !px-3 !py-[10px]"
                 PreIcon={<LuSearch className="mt-[-2px]" color={theme.colors.text.secondary}/>}
             />
         </div>
