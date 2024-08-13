@@ -7,11 +7,11 @@ const Template = ({
     children ? : ReactNode
 }) => {
     return (
-        <div className="w-full h-full">
-            <Left />
-            <div className="w-full pl-[350px] py-4 pr-[75px]">
+        <div className="w-full relative h-full">
+            <div className="w-full pl-[80px] py-4 pr-[65px]">
                 {children}
             </div>
+            <Left />
         </div>
     )
 }
