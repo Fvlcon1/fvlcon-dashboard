@@ -42,9 +42,11 @@ const Controls = () => {
                         align="center"
                         gap={4}
                     >
-                        <AppTypography>
-                            <CgLivePhoto color={'red'}/>
-                        </AppTypography>
+                        <div className="animate-pulse">
+                            <AppTypography>
+                                <CgLivePhoto color={'red'}/>
+                            </AppTypography>
+                        </div>
                         <AppTypography>
                             Live
                         </AppTypography>
