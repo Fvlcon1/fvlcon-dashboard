@@ -13,6 +13,8 @@ import Matches from "./matches/matches"
 import Metadata from "./metadata"
 import { isImageFile, isVideoFile } from "@/utils/getFileType"
 import VideoContainer from "@components/video container/videoContainer"
+import ListFaces from "@components/listFaces";
+import VideoAnalysis from "@components/VideoAnalysis";
 
 const Main = () => {
     const {
