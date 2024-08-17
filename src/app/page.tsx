@@ -5,6 +5,7 @@ const App = () => {
     return (
         <div>
           <Logo />
+          <p>Company Code Page</p>
         </div>
     )
 }

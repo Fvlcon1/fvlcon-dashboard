@@ -63,4 +63,16 @@ export interface baseProps {
   onClick? : ()=>void
 }
 
+export type canvasTypes = {
+  dataUrl : string
+  label : string
+}
+
+export type checkedFaceType = { 
+  matchedPerson : string
+  similarity : number
+  originalImage : string
+  matchedImage? : string
+}
+
 export type overflow = "visible" | "hidden" | "clip" | "scroll" | "auto"

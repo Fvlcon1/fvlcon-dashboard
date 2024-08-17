@@ -9,8 +9,10 @@ const ImageContainer = ({
     MiddleButtonTitle,
     MiddleButtonClick,
     imageURL,
+    hostedURL
 } : {
     imageURL? : string
+    hostedURL? : string
     MiddleButtonTitle? : string,
     MiddleButtonClick? : ()=> void,
 }) => {
@@ -22,15 +24,12 @@ const ImageContainer = ({
             onMouseLeave={()=>setHover(false)}
         >
             <div className="w-[full] relative h-[150px] rounded-md bg-bg-primary flex justify-center items-center overflow-hidden">
-                <Image
-                    src={require('@/assets/dev/image1.png')}
+                <img 
+                    src={imageURL} 
                     alt="Uploaded Image"
-                    style={{
-                        width : '100%',
-                        height : 'auto'
-                    }}
-                    quality={100}
-                    className={`${hover && MiddleButtonTitle && 'scale-[1.3] !z-0'} duration-300`}
+                    width={0}
+                    height={0}
+                    className={`${hover && MiddleButtonTitle && 'scale-[1.3] !z-0'} duration-300 w-full h-auto`}
                 />
                 {
                     MiddleButtonTitle &&
