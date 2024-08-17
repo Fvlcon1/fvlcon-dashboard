@@ -32,7 +32,7 @@ const Left = () => {
     return (
         showTemplate &&
         <div
-            className="fixed top-0 left-0 flex flex-col w-[70px] h-[100vh] bg-bg-secondary py-6 gap-3 items-center justify-between"
+            className="fixed z-10 top-0 left-0 flex flex-col w-[70px] h-[100vh] bg-bg-secondary py-6 gap-3 items-center justify-between"
         >
             <Logo />
             <Flex

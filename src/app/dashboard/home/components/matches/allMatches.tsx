@@ -5,14 +5,17 @@ import Flex from "@styles/components/flex"
 import { TypographyBold } from "@styles/style.types"
 import { AnimatePresence } from "framer-motion"
 import { Dispatch, SetStateAction } from "react"
-import ImageCard from "./MatchCard"
+import MatchCard from "./MatchCard"
+import { checkedFaceType } from "@/utils/@types"
 
 const AllMatches = ({
     display, 
-    setDisplay
+    setDisplay,
+    faces
 } : {
     display : boolean,
     setDisplay : Dispatch<SetStateAction<boolean>>
+    faces : checkedFaceType[]
 }) => {
     return (
         <AnimatePresence>
@@ -45,10 +48,14 @@ const AllMatches = ({
                                     justify="space-around"
                                 >
                                     {
-                                        [1,2,3,4,5,6,7,8,9].map((item, index) => (
-                                            <ImageCard
+                                        faces.map((item, index : number) => (
+                                            <MatchCard
+                                                originalImage={item.originalImage}
+                                                matchedImage={item.matchedImage}
+                                                similarity={item.similarity}
                                                 key={index}
                                                 title={`Match ${index + 1}`}
+                                                rightButtonTitle="➜"
                                                 description="Lorem ipsum dolor sit amet consectetur adipisicing elit"
                                             />
                                         ))
