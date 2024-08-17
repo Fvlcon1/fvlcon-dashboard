@@ -16,6 +16,7 @@ import { HiVideoCamera } from "react-icons/hi"
 import { AiFillDatabase } from "react-icons/ai"
 import DBlist from "./dblist"
 import Search from "./search"
+import Head from "./head"
 
 const Databases = () => {
     const [showSearch, setShowSearch] = useState(false)
@@ -26,8 +27,7 @@ const Databases = () => {
                 direction="column"
                 gap={0}
             >
-                
-
+                <Head />
                 <Search />
                 <DBlist />
             </Flex>
