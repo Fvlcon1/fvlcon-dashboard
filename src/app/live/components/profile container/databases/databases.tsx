@@ -14,6 +14,8 @@ import Button from "@components/button/button"
 import { MdLocalPolice } from "react-icons/md"
 import { HiVideoCamera } from "react-icons/hi"
 import { AiFillDatabase } from "react-icons/ai"
+import DBlist from "./dblist"
+import Search from "./search"
 
 const Databases = () => {
     const [showSearch, setShowSearch] = useState(false)
@@ -24,85 +26,10 @@ const Databases = () => {
                 direction="column"
                 gap={0}
             >
-                <Flex
-                    padding="0 0 0 8px"
-                    align="center"
-                    justify="space-between"
-                >
-                    <Flex
-                        align="center"
-                        width='fit-content'
-                    >
-                        <AiFillDatabase
-                            color={theme.colors.text.primary}
-                        />
-                        <AppTypography
-                            textColor={theme.colors.text.primary}
-                        >
-                            Databases
-                        </AppTypography>
-                    </Flex>
-                    <Flex
-                        width="fit-content"
-                        gap={0}
-                    >
-                        <Button
-                            text='Add +'
-                        />
-                    </Flex>
-                </Flex>
+                
 
-                <AnimatePresence>
-                    {
-                        showSearch &&
-                        <motion.div 
-                            initial={{
-                                opacity : 0,
-                                y : 5
-                            }}
-                            animate={{
-                                opacity : 1,
-                                y : 0
-                            }}
-                        >
-                            <Flex>
-                                <Searchbar 
-                                    inputStyle="!bg-bg-tetiary"
-                                />
-                            </Flex>
-                        </motion.div>
-                    }
-                </AnimatePresence>
-
-                <Flex
-                    direction="column"
-                    padding="8px"
-                >
-                    {
-                        [1,2,3].map((item, index:number) => (
-                            <Fragment
-                                key={index}
-                            >
-                                <Flex
-                                    align="center"
-                                >
-                                    <MdLocalPolice 
-                                        color={theme.colors.text.secondary}
-                                    />
-                                    <AppTypography
-                                        textColor={theme.colors.text.secondary}
-                                    >
-                                        Ghana Police Service
-                                    </AppTypography>
-                                </Flex>
-                                {
-                                    index < 2 &&
-                                    <div className="w-full h-[1px] bg-bg-quantinary"></div>
-                                }
-                            </Fragment>
-                        ))
-                    }
-                </Flex>
+                <Search />
+                <DBlist />
             </Flex>
         </div>
     )
