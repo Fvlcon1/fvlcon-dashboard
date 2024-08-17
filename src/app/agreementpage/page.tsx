@@ -84,7 +84,7 @@ const Home: React.FC = () => {
             animate={{ opacity: 1 }}
             transition={{ delay: 3, duration: 1 }}
           >
-            This is a secure system for access by authorized individuals only. The right to use this system is restricted to authorized individuals only and is not transferable to any other person or entity. By clicking "Agree" you acknowledge, understand and further agree that you are the authorized and you will observe and be bound by the <a href="" className="text-[#19c2ca]">Access and Terms of Use Agreement</a>
+            This is a secure system for access by authorized individuals only. The right to use this system is restricted to authorized individuals only and is not transferable to any other person or entity. By clicking &quot;Agree&quot; you acknowledge, understand and further agree that you are the authorized and you will observe and be bound by the <a href="" className="text-[#19c2ca]">Access and Terms of Use Agreement</a>
           </motion.div>
 
           <Link href="/dashboard/home">
