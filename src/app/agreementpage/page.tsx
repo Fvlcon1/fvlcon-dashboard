@@ -87,7 +87,7 @@ const Home: React.FC = () => {
             This is a secure system for access by authorized individuals only. The right to use this system is restricted to authorized individuals only and is not transferable to any other person or entity. By clicking "Agree" you acknowledge, understand and further agree that you are the authorized and you will observe and be bound by the <a href="" className="text-[#19c2ca]">Access and Terms of Use Agreement</a>
           </motion.div>
 
-          <Link href="/">
+          <Link href="/dashboard/home">
             <motion.button
               className="bg-blue-500 text-white font-serif py-1 font-light px-2 rounded focus:outline-none focus:shadow-outline hover:bg-blue-600"
               type="button"
