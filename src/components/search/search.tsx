@@ -7,9 +7,11 @@ import { useState } from "react"
 import { LuSearch } from "react-icons/lu"
 
 const Searchbar = ({
-    className
+    className,
+    inputStyle
 } : {
     className? : string
+    inputStyle? : string
 }) => {
 
     const [searchValue, setSearchValue] = useState('')
@@ -21,7 +23,7 @@ const Searchbar = ({
                 placeholder="Search anything"
                 content={searchValue}
                 setContent={setSearchValue}
-                className="!w-full !px-3 !py-[10px]"
+                className={`!w-full !px-3 !py-[10px] ${inputStyle}`}
                 PreIcon={<LuSearch className="mt-[-2px]" color={theme.colors.text.secondary}/>}
             />
         </div>

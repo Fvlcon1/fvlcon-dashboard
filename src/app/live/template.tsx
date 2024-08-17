@@ -1,5 +1,6 @@
 import { ReactNode } from "react"
-import Left from "./components/left"
+import Right from "./components/right"
+import Profile from "./components/profile container/profile"
 
 const Template = ({
     children
@@ -8,10 +9,11 @@ const Template = ({
 }) => {
     return (
         <div className="w-full relative h-full">
-            <div className="w-full pl-[80px] py-4 pr-[65px]">
+            <Profile />
+            <div className="w-full pl-[300px] py-4 pr-[65px]">
                 {children}
             </div>
-            <Left />
+            <Right />
         </div>
     )
 }
