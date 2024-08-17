@@ -13,8 +13,14 @@ import { AnimatePresence, motion } from 'framer-motion';
 import Angels from "./angels"
 import Controls from "./controls"
 import AllFaces from "./allFaces"
+import { canvasTypes } from '../../../../../utils/@types';
+import { Spin } from "antd"
 
-const DistinctFaces = () => {
+const DistinctFaces = ({
+    faces
+} : { 
+    faces? : canvasTypes[]
+}) => {
     const [displayFaces, setDisplayFaces] = useState(false)
     const [displayAngels, setDisplayAngels] = useState(false)
     return (
@@ -41,15 +47,43 @@ const DistinctFaces = () => {
                             gap={20}
                         >
                             {
-                                [1,2,3,4,5,6,7,8,9].map((item, index : number) => (
+                                faces ?
+                                faces.map((item, index : number) => (
                                     <ImageCard 
                                         key={index}
+                                        imageURL={item.dataUrl}
                                         title={`Face ${index + 1}`}
                                         rightButtonTitle="View angels"
                                         rightButtonClick={()=>setDisplayAngels(true)}
                                         MiddleButtonTitle="Analyze ➜"
                                     />
                                 ))
+                                :
+                                <motion.div 
+                                    className='w-full min-h-[100px] animate-pulse flex justify-center items-center'
+                                    initial = {{
+                                        y : 20,
+                                        opacity : 0,
+                                    }}
+                                    animate = {{
+                                        y : 0,
+                                        opacity : 1
+                                    }}
+                                    transition={{
+                                        duration : 1
+                                    }}
+                                >
+                                    <Flex
+                                        width="fit-content"
+                                        direction="column"
+                                        align="center"
+                                    >
+                                        <Spin size="small"></Spin>
+                                        <AppTypography>
+                                            Segmenting Faces
+                                        </AppTypography>
+                                    </Flex>
+                                </motion.div>
                             }
                         </Flex>
                     </div>

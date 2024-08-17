@@ -71,8 +71,10 @@ const ImageCard = ({
             >
                 <div className="w-[full] relative h-[150px] rounded-md bg-bg-primary flex justify-center items-center overflow-hidden">
                     <Image 
-                        src={require('@/assets/dev/image1.png')}
+                        src={imageURL ?? require('@/assets/dev/image1.png')}
                         alt="Uploaded Image"
+                        width={0}
+                        height={0}
                         style={{
                             width : '100%',
                             height : 'auto'

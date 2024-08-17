@@ -11,7 +11,8 @@ import { imageUploadContext } from "@/context/imageUpload"
 
 export type imagesType = {
     url : string,
-    name : string
+    name : string,
+    fullFile : File
 }
 
 const Controls = () => {
@@ -25,7 +26,8 @@ const Controls = () => {
     const onFileSelected = (e : FileList | null) => {
         if(e){ 
             const imageUrl = URL.createObjectURL(e[0]);
-            setImages(prev => [...prev, {url : imageUrl, name : e[0].name}])
+            setImages(prev => [...prev, {url : imageUrl, name : e[0].name,  fullFile : e[0]}])
+            const x = e[0]
             console.log(imageUrl)
         }
     }

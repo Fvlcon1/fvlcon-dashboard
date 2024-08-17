@@ -12,8 +12,14 @@ import { useState } from "react"
 import { AnimatePresence, motion } from 'framer-motion';
 import Controls from "./controls"
 import AllMatches from "./allMatches"
+import { checkedFaceType } from "@/utils/@types"
+import { Spin } from "antd"
 
-const Matches = () => {
+const Matches = ({
+    faces
+} : {
+    faces? : checkedFaceType[]
+}) => {
     const [displayFaces, setDisplayFaces] = useState(false)
     const [displayAngels, setDisplayAngels] = useState(false)
     return (
@@ -40,14 +46,44 @@ const Matches = () => {
                             gap={20}
                         >
                             {
-                                [1,2,3,4,5,6,7,8,9].map((item, index : number) => (
-                                    <MatchCard 
+                                faces ?
+                                faces.map((item, index : number) => (
+                                    <MatchCard
+                                        originalImage={item.originalImage}
+                                        matchedImage={item.matchedImage}
+                                        similarity={item.similarity}
                                         key={index}
                                         title={`Match ${index + 1}`}
                                         rightButtonTitle="➜"
                                         description="Lorem ipsum dolor sit amet consectetur adipisicing elit"
                                     />
                                 ))
+                                :
+                                <motion.div 
+                                    className='w-full min-h-[100px] animate-pulse flex justify-center items-center'
+                                    initial = {{
+                                        y : 20,
+                                        opacity : 0,
+                                    }}
+                                    animate = {{
+                                        y : 0,
+                                        opacity : 1
+                                    }}
+                                    transition={{
+                                        duration : 1
+                                    }}
+                                >
+                                    <Flex
+                                        width="fit-content"
+                                        direction="column"
+                                        align="center"
+                                    >
+                                        <Spin size="small"></Spin>
+                                        <AppTypography>
+                                            Fvlconizing...
+                                        </AppTypography>
+                                    </Flex>
+                                </motion.div>
                             }
                         </Flex>
                     </div>

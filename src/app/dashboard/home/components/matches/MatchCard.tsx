@@ -14,6 +14,9 @@ import ImageContainer from "./imageContainer"
 
 const MatchCard = ({
     title,
+    originalImage,
+    matchedImage,
+    similarity,
     rightButtonTitle,
     rightButtonClick,
     MiddleButtonTitle,
@@ -22,6 +25,9 @@ const MatchCard = ({
     imageURL
 } : {
     imageURL? : string
+    originalImage : string
+    matchedImage? : string
+    similarity : number
     title? : string,
     rightButtonTitle? : string,
     rightButtonClick? : ()=> void,
@@ -72,9 +78,12 @@ const MatchCard = ({
                 <Flex
                     justify="space-between"
                 >
-                    <ImageContainer />
+                    <ImageContainer 
+                        imageURL={originalImage}
+                    />
                     <ImageContainer 
                         MiddleButtonTitle="Analyze ➜"
+                        imageURL={matchedImage}
                     />
                 </Flex>
                 <div className="w-[60px] h-[60px] bg-[#00000063] p-[6px] backdrop-filter backdrop-blur-lg rounded-full absolute top-[30%] left-[42%] ">
@@ -83,7 +92,7 @@ const MatchCard = ({
                             textColor={theme.colors.text.primary}
                             bold={TypographyBold.md}
                         >
-                            80%
+                            {parseFloat(similarity?.toFixed(1))}%
                         </AppTypography>
                     </div>
                 </div>
