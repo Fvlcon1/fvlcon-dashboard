@@ -37,20 +37,20 @@ const Controls = () => {
                     width="fit-content"
                     align="center"
                 >
-                    <Flex
-                        width="fit-content"
-                        align="center"
-                        gap={4}
-                    >
-                        <div className="animate-pulse">
+                    <div className="animate-pulse">
+                        <Flex
+                            width="fit-content"
+                            align="center"
+                            gap={4}
+                        >
+                                <AppTypography>
+                                    <CgLivePhoto color={'red'}/>
+                                </AppTypography>
                             <AppTypography>
-                                <CgLivePhoto color={'red'}/>
+                                Live
                             </AppTypography>
-                        </div>
-                        <AppTypography>
-                            Live
-                        </AppTypography>
-                    </Flex>
+                        </Flex>
+                    </div>
                     <AppTypography
                         textColor={theme.colors.text.tetiary}
                     >

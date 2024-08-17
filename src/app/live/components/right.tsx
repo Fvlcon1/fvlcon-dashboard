@@ -5,8 +5,9 @@ import theme from "@styles/theme"
 import { IoMdArrowDropdown } from "react-icons/io"
 import Profile from "./profile container/profile"
 import Button from "@components/button/button"
+import AnalysisResults from "./analysis results/analysisResults"
 
-const Left = () => {
+const Right = () => {
     return (
         <div className="fixed top-0 right-[60px] w-[210px] h-[100vh] py-4 px-6 gap-3">
             <Flex
@@ -23,8 +24,8 @@ const Left = () => {
                 <div className="flex flex-col w-full h-full rounded-lg gap-3 overflow-y-auto">
                     {
                         [1,2,3].map((item, index : number) => (
-                            <Profile 
-                            key={index}
+                            <AnalysisResults 
+                                key={index}
                             />
                         ))
                     }
@@ -33,4 +34,4 @@ const Left = () => {
         </div>
     )
 }
-export default Left
+export default Right

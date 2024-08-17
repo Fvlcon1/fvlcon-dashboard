@@ -4,7 +4,7 @@ import Flex from "@styles/components/flex"
 import User from "./components/user"
 import Controls from "./components/controls"
 import LiveView from "./components/liveView"
-import Left from "./components/left"
+import Left from "./components/right"
 
 const Live = () => {
     return (
