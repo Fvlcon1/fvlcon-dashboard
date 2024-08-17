@@ -89,10 +89,14 @@ const Matches = ({
                     </div>
                 </div>
             </motion.div>
-            <AllMatches 
-                display={displayFaces}
-                setDisplay={setDisplayFaces}
-            />
+            {
+                faces &&
+                <AllMatches 
+                    display={displayFaces}
+                    setDisplay={setDisplayFaces}
+                    faces={faces}
+                />
+            }
         </>
     )
 }
