@@ -77,7 +77,7 @@ const Button = ({
           <Flex 
               width="fit-content"
               align="center"
-              gap={4}
+              gap={8}
           >
               {icon}
               {text ?? 'Button'}
