@@ -10,7 +10,7 @@ const Template = ({
     return (
         <div className="w-full relative h-full">
             <Profile />
-            <div className="w-full pl-[300px] py-4 pr-[65px]">
+            <div className="w-full pl-[310px] py-4 pr-[75px]">
                 {children}
             </div>
             <Right />

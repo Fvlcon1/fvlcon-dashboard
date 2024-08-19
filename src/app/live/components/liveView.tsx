@@ -1,25 +1,47 @@
-import ClickableTab from "@components/clickable/clickabletab"
-import AppTypography from "@styles/components/appTypography"
-import Flex from "@styles/components/flex"
-import { TypographySize } from "@styles/style.types"
-import theme from "@styles/theme"
-import { Tooltip } from "antd"
-import { CgLivePhoto } from "react-icons/cg"
-import { MdFullscreen } from "react-icons/md"
-import { RiMenu2Fill } from "react-icons/ri"
+'use client'
+
 import LiveContainer from "./live container/liveContainer"
+import { useEffect, useState } from "react"
 
 const LiveView = () => {
+    const [activeCameras, setActiveCameras] = useState([1,2,3,4,5,6,7]);
+    const [gridClass, setGridClass] = useState<string>();
+    const [screenHeight, setScreenHeight] = useState<number>(100);
+
+    const getGridClass = () => {
+        const totalCameras = activeCameras.length;
+        if (totalCameras <= 4) return "grid-cols-2 grid-rows-2";
+        if (totalCameras <= 6) return "grid-cols-2 grid-rows-3";
+        if (totalCameras <= 9) return "grid-cols-3 grid-rows-3";
+        if (totalCameras <= 12) return "grid-cols-4 grid-rows-3";
+    };
+
+    useEffect(() => {
+        setGridClass(getGridClass());
+    }, [activeCameras]);
+
+    useEffect(() => {
+        setScreenHeight(window.innerHeight);
+        const handleResize = () => {
+            setScreenHeight(window.innerHeight);
+        };
+        window.addEventListener('resize', handleResize);
+        return ()=> window.removeEventListener('resize', handleResize)
+    }, []);
+
     return (
-        <div className="grid grid-cols-3 gap-2 w-full">
+        <div
+            className={`grid w-full gap-2 ${gridClass ?? 'grid-cols-2 gap-2'}`}
+            style={{ height: `${screenHeight - 90}px` }}
+        >
             {
-                [1,2,3,4,5,6,7,8,9].map((item, index : number) => (
+                activeCameras.map((item, index: number) => (
                     <LiveContainer 
                         key={index}
                     />
                 ))
             }
         </div>
-    )
-}
-export default LiveView
+    );
+};
+export default LiveView;

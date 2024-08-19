@@ -5,7 +5,7 @@ import AppTypography from "@styles/components/appTypography"
 import Flex from "@styles/components/flex"
 import { FaImage } from "react-icons/fa6"
 import Images from "./images"
-import { useContext, useRef, useState } from "react"
+import { useContext, useEffect, useRef, useState } from "react"
 import Image from "next/image"
 import { imageUploadContext } from "@/context/imageUpload"
 
@@ -32,11 +32,18 @@ const Controls = () => {
         }
     }
 
+    useEffect(()=>{
+        if(inputRef.current?.value?.length && inputRef.current?.value?.length > 0){
+            inputRef.current.value = ''
+        }
+    }), [images]
+
     return (
         <div  className="fixed items-end right-[82px] gap-2 w-[150px] flex flex-col h-[100vh] py-4">
             <input 
                 ref={inputRef}
                 type="file" 
+                multiple
                 onChange={e=>onFileSelected(e.target.files)}
                 className="hidden"
             />

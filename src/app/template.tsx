@@ -13,7 +13,7 @@ const Template = ({
         <Flex
             justify="center"
         >
-            <div className="max-w-[1500px] w-full">
+            <div className="w-full flex justify-center">
                 <Left />
                 {children}
                 <Right />
