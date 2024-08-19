@@ -28,18 +28,6 @@ const Controls = ({
             >
                 <ClickableTab
                     className="hover:!bg-bg-quantinary"
-                >
-                    <AppTypography
-                        textColor={theme.colors.text.primary}
-                    >
-                        Analyze all ➜
-                    </AppTypography>
-                </ClickableTab>
-                <AppTypography>
-                    |
-                </AppTypography>
-                <ClickableTab
-                    className="hover:!bg-bg-quantinary"
                     onClick={()=>setDisplayWindow(true)}
                 >
                     <AppTypography

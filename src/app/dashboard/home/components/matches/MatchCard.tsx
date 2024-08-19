@@ -11,6 +11,7 @@ import { hexOpacity } from "@/utils/hexOpacity"
 import { TypographyBold, TypographySize } from "@styles/style.types"
 import ClickableTab from "@components/clickable/clickabletab"
 import ImageContainer from "./imageContainer"
+import NoMatchFound from "./noMatchFound"
 
 const MatchCard = ({
     title,
@@ -27,7 +28,7 @@ const MatchCard = ({
     imageURL? : string
     originalImage : string
     matchedImage? : string
-    similarity : number
+    similarity? : number
     title? : string,
     rightButtonTitle? : string,
     rightButtonClick? : ()=> void,
@@ -81,19 +82,31 @@ const MatchCard = ({
                     <ImageContainer 
                         imageURL={originalImage}
                     />
-                    <ImageContainer 
-                        MiddleButtonTitle="Analyze ➜"
-                        imageURL={matchedImage}
-                    />
+                    {
+                        matchedImage ?
+                        <ImageContainer 
+                            MiddleButtonTitle="Analyze ➜"
+                            imageURL={matchedImage}
+                        />
+                        :
+                        <NoMatchFound />
+                    }
                 </Flex>
                 <div className="w-[60px] h-[60px] bg-[#00000063] p-[6px] backdrop-filter backdrop-blur-lg rounded-full absolute top-[30%] left-[42%] ">
                     <div className="w-full h-full bg-bg-primary rounded-full flex justify-center items-center ">
-                        <AppTypography
-                            textColor={theme.colors.text.primary}
-                            bold={TypographyBold.md}
-                        >
-                            {parseFloat(similarity?.toFixed(1))}%
-                        </AppTypography>
+                        {
+                            similarity ?
+                            <AppTypography
+                                textColor={theme.colors.text.primary}
+                                bold={TypographyBold.md}
+                            >
+                                {parseFloat(similarity?.toFixed(1))}%
+                            </AppTypography>
+                            :
+                            <AppTypography>
+                                N/A
+                            </AppTypography>
+                        }
                     </div>
                 </div>
             </div>

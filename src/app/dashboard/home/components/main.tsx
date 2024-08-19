@@ -16,7 +16,7 @@ import VideoContainer from "@components/video container/videoContainer"
 import ListFaces from "@components/listFaces";
 import VideoAnalysis from "@components/VideoAnalysis";
 import segmentFaces from "@/utils/segmentFaces"
-import { canvasTypes, checkedFaceType } from "@/utils/@types"
+import { canvasTypes, checkedFaceType, FetchState } from "@/utils/@types"
 import checkFace from "@/utils/model/checkface"
 import { getAllFaces } from "@/utils/model/getallFaces"
 import { getSingleFace } from "@/utils/model/getSingleFace"
@@ -30,8 +30,14 @@ const Main = () => {
     const [displayMatches, setDisplayMatches] = useState(false)
     const [displayFaces, setDisplayFaces] = useState(false)
     const [fileExtension, setFileExtension] = useState<string>()
-    const [distinctFaces, setDistinctFaces] = useState<canvasTypes[]>()
-    const [matchedFaces, setMatchedFaces] = useState<checkedFaceType[]>()
+    const [distinctFaces, setDistinctFaces] = useState<FetchState<canvasTypes[]>>({
+        isEmpty : false,
+        isLoading : false,
+    })
+    const [matchedFaces, setMatchedFaces] = useState<FetchState<checkedFaceType[]>>({
+        isEmpty : false,
+        isLoading : false
+    })
     const imageRef = useRef<HTMLImageElement>(null);
 
     let imageSplit = []
@@ -39,60 +45,74 @@ const Main = () => {
     let fileEx : any = undefined
 
     const handleAnalyze = async () => {
-        setDistinctFaces(undefined)
+        setDistinctFaces({isLoading : true})
         setDisplayFaces(true)
         if(selectedImage && imageRef.current !== null){
             const faces = await segmentFaces(selectedImage.url, imageRef)
-            if(faces) setDistinctFaces(faces)
+            if(faces){
+                setDistinctFaces({data : faces})   
+            } else {
+                setDistinctFaces({isEmpty : true})
+            }
         } else {
-            console.log("no imageRef")
+            setDistinctFaces({error : "No image selected"})
+            console.log("No Image Selected")
         }
     }
 
     const handleFalconize = async () => {
-        setMatchedFaces(undefined)
+        setMatchedFaces({isLoading : true})
         setDisplayMatches(true);
         const allFaces = await getAllFaces()
-        if (distinctFaces) {
-            const checkEachFace = async (): Promise<(checkedFaceType | null)[]> => {
+        const checkEachFace = async (): Promise<((checkedFaceType | undefined)[] | undefined)> => {
+            if(distinctFaces?.data){
                 const results = await Promise.all(
-                    distinctFaces.map(async (item) => {
-                        const checkedFace = await checkFace(item.dataUrl);
-                        if (checkedFace) {
+                    distinctFaces.data.map(async (item) => {
+                        const {result : checkedFace, error} = await checkFace(item.dataUrl);
+                        if(error) return {
+                                originalImage: item.dataUrl
+                            }
+                        if (checkedFace.matched) {
                             if(allFaces){
-                                const getFace = allFaces.filter((item : any, index : number) => item.ExternalImageId === checkedFace.result.matchedPerson)
+                                const getFace = allFaces.filter((item : any, index : number) => item.ExternalImageId === checkedFace.matchedPerson)
                                 if(getFace){
                                     const singleFace = await getSingleFace(getFace[0].FaceId)
                                     return {
                                         originalImage: item.dataUrl,
                                         matchedImage : singleFace,
-                                        matchedPerson: checkedFace.result.matchedPerson,
-                                        similarity: checkedFace.result.similarity,
+                                        matchedPerson: checkedFace.matchedPerson,
+                                        similarity: checkedFace.similarity,
                                     };
                                 }
                                 console.log({getFace})
                             }
                             return {
                                 originalImage: item.dataUrl,
-                                matchedPerson: checkedFace.result.matchedPerson,
-                                similarity: checkedFace.result.similarity,
+                                matchedPerson: checkedFace.matchedPerson,
+                                similarity: checkedFace.similarity,
                             };
                         } else {
-                            console.log("No matched faces");
-                            return null;
+                            console.log("No matches found");
+                            return {
+                                originalImage: item.dataUrl
+                            }
                         }
                     })
                 );
                 return results;
-            };
-    
+            }
+        }
+
+        if(distinctFaces.data){
             const faces = await checkEachFace();
             if (faces && faces.length > 0) {
-                const validFaces = faces.filter(face => face !== null) as checkedFaceType[];
-                setMatchedFaces(validFaces);
+                const validFaces = faces.filter(face => face !== undefined) as checkedFaceType[];
+                setMatchedFaces({data : validFaces});
+            } else {
+                setMatchedFaces({isEmpty : true})
             }
         } else {
-            console.log("No segmented faces available");
+            setMatchedFaces({error : 'No Image Selected'})
         }
     };
 
@@ -102,7 +122,6 @@ const Main = () => {
             filename = imageSplit[0]
             fileEx = imageSplit[imageSplit.length - 1] 
             setFileExtension(fileEx)
-            console.log({exten : isVideoFile(fileEx)})
         }
     },[selectedImage])
 
@@ -169,12 +188,14 @@ const Main = () => {
                         displayMatches &&
                         <Matches 
                             faces={matchedFaces}
+                            onTryAgain={handleFalconize}
                         />
                     }
                     {
                         displayFaces &&
                         <DistinctFaces 
                             faces={distinctFaces}
+                            onTryAgain={handleAnalyze}
                         />
                     }
                     <History />

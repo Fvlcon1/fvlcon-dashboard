@@ -69,10 +69,17 @@ export type canvasTypes = {
 }
 
 export type checkedFaceType = { 
-  matchedPerson : string
-  similarity : number
+  matchedPerson? : string
+  similarity? : number
   originalImage : string
   matchedImage? : string
 }
 
 export type overflow = "visible" | "hidden" | "clip" | "scroll" | "auto"
+
+export type FetchState<T> = {
+  isLoading?: boolean;
+  data?: T;
+  error?: string;
+  isEmpty?: boolean;
+};

@@ -13,13 +13,18 @@ import { AnimatePresence, motion } from 'framer-motion';
 import Angels from "./angels"
 import Controls from "./controls"
 import AllFaces from "./allFaces"
-import { canvasTypes } from '../../../../../utils/@types';
+import { canvasTypes, FetchState } from '../../../../../utils/@types';
 import { Spin } from "antd"
+import Loading from "../loading"
+import Button from "@components/button/button"
+import TryAgain from "../tryAgain"
 
 const DistinctFaces = ({
-    faces
+    faces,
+    onTryAgain
 } : { 
-    faces? : canvasTypes[]
+    faces : FetchState<canvasTypes[]>
+    onTryAgain : () => void
 }) => {
     const [displayFaces, setDisplayFaces] = useState(false)
     const [displayAngels, setDisplayAngels] = useState(false)
@@ -47,8 +52,25 @@ const DistinctFaces = ({
                             gap={20}
                         >
                             {
-                                faces ?
-                                faces.map((item, index : number) => (
+                                faces.isLoading ?
+                                <Loading 
+                                    title="Segmenting faces"
+                                />
+                                :
+                                faces.error ?
+                                <TryAgain 
+                                    title="🚫 Error"
+                                    description={faces.error}
+                                    onTryAgain={onTryAgain}
+                                />
+                                :
+                                faces.isEmpty ?
+                                <TryAgain 
+                                    title="No faces detected"
+                                    onTryAgain={onTryAgain}
+                                />
+                                :
+                                faces.data?.map((item, index : number) => (
                                     <ImageCard 
                                         key={index}
                                         imageURL={item.dataUrl}
@@ -58,32 +80,6 @@ const DistinctFaces = ({
                                         MiddleButtonTitle="Analyze ➜"
                                     />
                                 ))
-                                :
-                                <motion.div 
-                                    className='w-full min-h-[100px] animate-pulse flex justify-center items-center'
-                                    initial = {{
-                                        y : 20,
-                                        opacity : 0,
-                                    }}
-                                    animate = {{
-                                        y : 0,
-                                        opacity : 1
-                                    }}
-                                    transition={{
-                                        duration : 1
-                                    }}
-                                >
-                                    <Flex
-                                        width="fit-content"
-                                        direction="column"
-                                        align="center"
-                                    >
-                                        <Spin size="small"></Spin>
-                                        <AppTypography>
-                                            Segmenting Faces
-                                        </AppTypography>
-                                    </Flex>
-                                </motion.div>
                             }
                         </Flex>
                     </div>

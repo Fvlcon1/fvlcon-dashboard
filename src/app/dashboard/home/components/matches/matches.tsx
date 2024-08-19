@@ -12,13 +12,17 @@ import { useState } from "react"
 import { AnimatePresence, motion } from 'framer-motion';
 import Controls from "./controls"
 import AllMatches from "./allMatches"
-import { checkedFaceType } from "@/utils/@types"
+import { canvasTypes, checkedFaceType, FetchState } from "@/utils/@types"
 import { Spin } from "antd"
+import Loading from "../loading"
+import TryAgain from "../tryAgain"
 
 const Matches = ({
-    faces
-} : {
-    faces? : checkedFaceType[]
+    faces,
+    onTryAgain
+} : { 
+    faces : FetchState<checkedFaceType[]>
+    onTryAgain : () => void
 }) => {
     const [displayFaces, setDisplayFaces] = useState(false)
     const [displayAngels, setDisplayAngels] = useState(false)
@@ -46,8 +50,25 @@ const Matches = ({
                             gap={20}
                         >
                             {
-                                faces ?
-                                faces.map((item, index : number) => (
+                                faces.isLoading ?
+                                <Loading 
+                                    title="Fvlconizing..."
+                                />
+                                :
+                                faces.error ?
+                                <TryAgain
+                                    title="🚫 Error"
+                                    description={faces.error}
+                                    onTryAgain={onTryAgain}
+                                />
+                                :
+                                faces.isEmpty ?
+                                <TryAgain 
+                                    title="No Match found"
+                                    onTryAgain={onTryAgain}
+                                />
+                                :
+                                faces.data?.map((item, index : number) => (
                                     <MatchCard
                                         originalImage={item.originalImage}
                                         matchedImage={item.matchedImage}
@@ -58,43 +79,17 @@ const Matches = ({
                                         description="Lorem ipsum dolor sit amet consectetur adipisicing elit"
                                     />
                                 ))
-                                :
-                                <motion.div 
-                                    className='w-full min-h-[100px] animate-pulse flex justify-center items-center'
-                                    initial = {{
-                                        y : 20,
-                                        opacity : 0,
-                                    }}
-                                    animate = {{
-                                        y : 0,
-                                        opacity : 1
-                                    }}
-                                    transition={{
-                                        duration : 1
-                                    }}
-                                >
-                                    <Flex
-                                        width="fit-content"
-                                        direction="column"
-                                        align="center"
-                                    >
-                                        <Spin size="small"></Spin>
-                                        <AppTypography>
-                                            Fvlconizing...
-                                        </AppTypography>
-                                    </Flex>
-                                </motion.div>
                             }
                         </Flex>
                     </div>
                 </div>
             </motion.div>
             {
-                faces &&
+                faces.data &&
                 <AllMatches 
                     display={displayFaces}
                     setDisplay={setDisplayFaces}
-                    faces={faces}
+                    faces={faces.data}
                 />
             }
         </>

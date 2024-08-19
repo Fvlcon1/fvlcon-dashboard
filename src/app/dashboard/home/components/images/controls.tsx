@@ -33,26 +33,18 @@ const Controls = () => {
     }
 
     return (
-        <div  className="fixed right-[82px] gap-2 w-[150px] flex flex-col h-[100vh] py-4">
-            <Flex
-                align="center"
-                justify="space-between"
-            >
-                <AppTypography>
-                    4 items
-                </AppTypography>
-                <input 
-                    ref={inputRef}
-                    type="file" 
-                    onChange={e=>onFileSelected(e.target.files)}
-                    className="hidden"
-                />
-                <Button
-                    text="Upload +"
-                    icon={<FaImage className="mt-[-1px]"/>}
-                    onClick={inputClicked}
-                />
-            </Flex>
+        <div  className="fixed items-end right-[82px] gap-2 w-[150px] flex flex-col h-[100vh] py-4">
+            <input 
+                ref={inputRef}
+                type="file" 
+                onChange={e=>onFileSelected(e.target.files)}
+                className="hidden"
+            />
+            <Button
+                text="Upload +"
+                icon={<FaImage className="mt-[-1px]"/>}
+                onClick={inputClicked}
+            />
             <Images />
         </div>
     )
