@@ -16,7 +16,7 @@ const TryAgain = ({
     onTryAgain : ()=>void
 }) => {
     return (
-        <div className='w-full min-h-[100px] flex justify-center items-center px-2'>
+        <div className='w-full min-h-[200px] flex justify-center items-center px-2'>
             <Flex
                 width="fit-content"
                 direction="column"
