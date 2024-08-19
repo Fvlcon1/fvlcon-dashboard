@@ -6,12 +6,14 @@ import Flex from "@styles/components/flex"
 import { TypographyBold, TypographySize } from "@styles/style.types"
 import theme from "@styles/theme"
 import { AnimatePresence } from "framer-motion"
-import { Dispatch, SetStateAction, useState } from "react"
+import { Dispatch, SetStateAction, useContext, useState } from "react"
 import Required from "./required"
 import Input from "@components/input/input"
 import CamInput from "./camInput"
 import Header from "./header"
 import FormItem from "./formItem"
+import Button from "@components/button/button"
+import { liveContext } from "@/context/live"
 
 const AddCam = ({
     display, 
@@ -35,6 +37,12 @@ const AddCam = ({
     const [manufaturer, setManufacturer] = useState('')
     const [cameraModel, setCameraModel] = useState('')
     const [firmwareVersion, setFirmwareVersion] = useState('')
+    const {activeCameras, setActiveCameras} = useContext(liveContext)
+
+    const handleSubmit = () => {
+        setDisplay(false)
+        setActiveCameras(prev => [...prev, 1])
+    }
     return (
         <AnimatePresence>
             {
@@ -187,6 +195,16 @@ const AddCam = ({
                                         title="Firmware Version"
                                         value={firmwareVersion}
                                         setValue={setFirmwareVersion}
+                                    />
+                                </Flex>
+
+                                <Flex
+                                    justify="flex-end"
+                                >
+                                    <Button
+                                        text="Add Camera"
+                                        onClick={handleSubmit}
+                                        className="!bg-bg-quantinary hover:!bg-bg-alt1"
                                     />
                                 </Flex>
                             </Flex>

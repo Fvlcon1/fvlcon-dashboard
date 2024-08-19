@@ -1,17 +1,18 @@
 'use client'
 
+import { liveContext } from "@/context/live";
 import LiveContainer from "./live container/liveContainer"
-import { useEffect, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 
 const LiveView = () => {
-    const [activeCameras, setActiveCameras] = useState([1,2,3,4,5,6,7]);
+    const {activeCameras, setActiveCameras} = useContext(liveContext)
     const [gridClass, setGridClass] = useState<string>();
     const [screenHeight, setScreenHeight] = useState<number>(100);
 
     const getGridClass = () => {
         const totalCameras = activeCameras.length;
         if (totalCameras <= 4) return "grid-cols-2 grid-rows-2";
-        if (totalCameras <= 6) return "grid-cols-2 grid-rows-3";
+        if (totalCameras <= 6) return "grid-cols-3 grid-rows-2";
         if (totalCameras <= 9) return "grid-cols-3 grid-rows-3";
         if (totalCameras <= 12) return "grid-cols-4 grid-rows-3";
     };
