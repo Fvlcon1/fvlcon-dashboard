@@ -45,6 +45,8 @@ const UploadedFile = ({
         if(isVideoFile(fileEx)){
             const thumbnail = await generateVideoThumbnail(image.url)
             setThumbnail(thumbnail)
+        } else if(isImageFile(fileEx)){
+            setThumbnail(image.url)
         }
     }
 
@@ -80,37 +82,24 @@ const UploadedFile = ({
                     onClick={handleSelectedImage}
                 >
                     {
-                        isImageFile(fileEx) &&
+                        thumbnail ?
                         <Image 
-                            src={thumbnail ?? image.url}
+                            src={thumbnail}
                             alt="Uploaded Image"
-                            layout="fill"
-                            objectFit="cover"
-                            className="hover:scale-[1.3] duration-300"
+                            fill
+                            className="hover:scale-[1.3] duration-300 object-cover"
                         />
+                        :
+                        <Spin indicator={<LoadingOutlined style={{ fontSize: 48 }} spin />} />
                     }
                     {
                         isVideoFile(fileEx) &&
-                        <>
-                            {
-                                thumbnail ?
-                                <Image 
-                                    src={thumbnail}
-                                    alt="Uploaded Image"
-                                    layout="fill"
-                                    objectFit="cover"
-                                    className="hover:scale-[1.3] duration-300"
-                                />
-                                :
-                                <Spin indicator={<LoadingOutlined style={{ fontSize: 48 }} spin />} />
-                            }
-                            <div className="w-full h-full absolute bg-[#0000008b] flex justify-center items-center rounded-md hover:scale-[1.3] duration-300">
-                                <FaVideo 
-                                    color={theme.colors.text.secondary}
-                                    size={30}
-                                />
-                            </div>
-                        </>
+                        <div className="w-full h-full absolute bg-[#0000008b] flex justify-center items-center rounded-md hover:scale-[1.3] duration-300">
+                            <FaVideo 
+                                color={theme.colors.text.secondary}
+                                size={30}
+                            />
+                        </div>
                     }
                 </div>
             </div>

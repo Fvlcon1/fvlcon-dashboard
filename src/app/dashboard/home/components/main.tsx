@@ -21,6 +21,7 @@ import checkFace from "@/utils/model/checkface"
 import { getAllFaces } from "@/utils/model/getallFaces"
 import { getSingleFace } from "@/utils/model/getSingleFace"
 import checkEachFace from "@/utils/model/checkEachFace"
+import generateVideoThumbnail from "@/utils/generateVideoThumbnail"
 
 const Main = () => {
     const {
@@ -45,19 +46,34 @@ const Main = () => {
     let filename = undefined
     let fileEx : any = undefined
 
+    const setFaces = (faces : { dataUrl: string, label: string }[] | undefined) => {
+        if(faces){
+            if(faces.length === 0){
+                setDistinctFaces({isEmpty : true})
+            } else {
+                setDistinctFaces({data : faces})   
+            }   
+        } else {
+            setDistinctFaces({isEmpty : true})
+        }
+    }
+
     const handleAnalyze = async () => {
         setDistinctFaces({isLoading : true})
         setDisplayFaces(true)
-        if(selectedImage && imageRef.current !== null){
-            const faces = await segmentFaces(selectedImage.url, imageRef)
-            if(faces){
-                if(faces.length === 0){
-                    setDistinctFaces({isEmpty : true})
-                } else {
-                    setDistinctFaces({data : faces})   
-                }
+        if(selectedImage && fileExtension && imageRef.current !== null){
+            console.log(selectedImage)
+            console.log({fileExtension})
+            if(isImageFile(fileExtension)){
+                const faces = await segmentFaces(selectedImage.url, imageRef)
+                setFaces(faces)
+            } else if(isVideoFile(fileExtension)){
+                const thumbnail = await generateVideoThumbnail(selectedImage.url)
+                const faces = await segmentFaces(thumbnail, imageRef)
+                setFaces(faces)
             } else {
-                setDistinctFaces({isEmpty : true})
+                console.log("invalid file format")
+                setDistinctFaces({error : "Invalid file format"})
             }
         } else {
             setDistinctFaces({error : "No image selected"})
@@ -82,6 +98,7 @@ const Main = () => {
     };
 
     useEffect(()=> {
+        console.log(selectedImage)
         if(selectedImage){
             imageSplit = selectedImage.name.split('.')
             filename = imageSplit[0]

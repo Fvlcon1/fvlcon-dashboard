@@ -23,14 +23,16 @@ const Controls = () => {
         inputRef.current?.click()
     }
 
-    const onFileSelected = (e : FileList | null) => {
-        if(e){ 
-            const imageUrl = URL.createObjectURL(e[0]);
-            setImages(prev => [...prev, {url : imageUrl, name : e[0].name,  fullFile : e[0]}])
-            const x = e[0]
-            console.log(imageUrl)
+    const onFileSelected = (e: FileList | null) => {
+        if (e) {
+            for (let file of e) {
+                const imageUrl = URL.createObjectURL(file);
+                setImages(prev => [...prev, { url: imageUrl, name: file.name, fullFile: file }]);
+                console.log(imageUrl);
+            }
         }
     }
+    
 
     useEffect(()=>{
         if(inputRef.current?.value?.length && inputRef.current?.value?.length > 0){

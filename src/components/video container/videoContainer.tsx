@@ -7,12 +7,17 @@ import theme from "@styles/theme";
 import { imagesType } from "@/app/dashboard/home/components/images/controls";
 import Player from 'next-video/player';
 import Slidein from "@styles/components/slidein";
+import { useRef } from "react";
 
 const VideoContainer = ({
     video
 } : {
     video ? : imagesType
 }) => {
+    const playerRef = useRef<typeof Player | null>(null);
+    const getCurrentTime = (e : any) => {
+        console.log(e)
+    };
     return (
         <Slidein className="!w-full">
             <div className="w-full flex flex-1 h-[350px] rounded-xl bg-gradient-border p-[1px]">
@@ -54,11 +59,13 @@ const VideoContainer = ({
                             >
                                 <Player 
                                     src={video.url}
+                                    ref={playerRef}
                                     controls
                                     style={{
                                         height : '100%'
                                     }}
                                     accentColor={theme.colors.bg.secondary}
+                                    onTimeUpdate={getCurrentTime}
                                 />
                             </Flex>
                         }

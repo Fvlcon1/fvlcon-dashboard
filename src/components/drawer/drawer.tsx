@@ -43,8 +43,7 @@ const Drawer = ({
                             <Image
                                 src={require('@/app/favicon.ico')}
                                 alt={'default image'}
-                                layout="fill"
-                                objectFit="cover"
+                                fill
                                 quality={100}
                             />
                         </div>
