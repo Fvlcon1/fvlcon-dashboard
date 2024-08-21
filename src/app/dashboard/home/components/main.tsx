@@ -22,6 +22,7 @@ import { getAllFaces } from "@/utils/model/getallFaces"
 import { getSingleFace } from "@/utils/model/getSingleFace"
 import checkEachFace from "@/utils/model/checkEachFace"
 import generateVideoThumbnail from "@/utils/generateVideoThumbnail"
+import { Alert } from "antd"
 
 const Main = () => {
     const {
@@ -32,6 +33,8 @@ const Main = () => {
     const [displayMatches, setDisplayMatches] = useState(false)
     const [displayFaces, setDisplayFaces] = useState(false)
     const [fileExtension, setFileExtension] = useState<string>()
+    const [imageRefImage, setImageRefImage] = useState<string>()
+    const [videoTimestamp, setVideoTimestamp] = useState<number>(0)
     const [distinctFaces, setDistinctFaces] = useState<FetchState<canvasTypes[]>>({
         isEmpty : false,
         isLoading : false,
@@ -68,7 +71,7 @@ const Main = () => {
                 const faces = await segmentFaces(selectedImage.url, imageRef)
                 setFaces(faces)
             } else if(isVideoFile(fileExtension)){
-                const thumbnail = await generateVideoThumbnail(selectedImage.url)
+                const thumbnail = await generateVideoThumbnail(selectedImage.url, videoTimestamp)
                 const faces = await segmentFaces(thumbnail, imageRef)
                 setFaces(faces)
             } else {
@@ -97,6 +100,21 @@ const Main = () => {
         }
     };
 
+    const changeImageRef = async () => {
+        if(selectedImage && fileExtension){
+            if(isVideoFile(fileExtension)){
+                const thumbnail = await generateVideoThumbnail(selectedImage.url)
+                thumbnail ? setImageRefImage(thumbnail) : console.log("unable to generate thumbnail")
+            }
+            if(isImageFile(fileExtension))
+                setImageRefImage(selectedImage.url)
+        }
+    }
+
+    useEffect(()=>{
+        changeImageRef()
+    },[fileExtension])
+
     useEffect(()=> {
         console.log(selectedImage)
         if(selectedImage){
@@ -109,7 +127,7 @@ const Main = () => {
 
     return (
         <div  className="w-full items-center flex flex-col flex-1 h-[100vh] pb-4 gap-1">
-            <img ref={imageRef} className="hidden" src={selectedImage?.url}/>
+            <img ref={imageRef} className="hidden" src={imageRefImage}/>
             <Flex
                 direction="column"
                 gap={4}
@@ -120,6 +138,7 @@ const Main = () => {
                         selectedImage && fileExtension && isVideoFile(fileExtension) ?
                         <VideoContainer 
                             video={selectedImage}
+                            setVideoTimestamp={setVideoTimestamp}
                         />
                         :
                         <Flex

@@ -10,7 +10,7 @@ import Overlay from "@components/overlay/overlay"
 import Window from "@components/window/window"
 import { useState } from "react"
 import { AnimatePresence, motion } from 'framer-motion';
-import Angels from "./angels"
+import Angles from "./angles"
 import Controls from "./controls"
 import AllFaces from "./allFaces"
 import { canvasTypes, FetchState } from '../../../../../utils/@types';
@@ -27,7 +27,7 @@ const DistinctFaces = ({
     onTryAgain : () => void
 }) => {
     const [displayFaces, setDisplayFaces] = useState(false)
-    const [displayAngels, setDisplayAngels] = useState(false)
+    const [displayAngles, setDisplayAngles] = useState(false)
     return (
         <>
             <motion.div
@@ -75,8 +75,8 @@ const DistinctFaces = ({
                                         key={index}
                                         imageURL={item.dataUrl}
                                         title={`Face ${index + 1}`}
-                                        rightButtonTitle="View angels"
-                                        rightButtonClick={()=>setDisplayAngels(true)}
+                                        rightButtonTitle="View angles"
+                                        rightButtonClick={()=>setDisplayAngles(true)}
                                         MiddleButtonTitle="Analyze ➜"
                                     />
                                 ))
@@ -89,9 +89,9 @@ const DistinctFaces = ({
                 display={displayFaces}
                 setDisplay={setDisplayFaces}
             />
-            <Angels
-                display={displayAngels}
-                setDisplay={setDisplayAngels}
+            <Angles
+                display={displayAngles}
+                setDisplay={setDisplayAngles}
             />
         </>
     )

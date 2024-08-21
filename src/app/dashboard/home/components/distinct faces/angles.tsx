@@ -7,7 +7,7 @@ import { AnimatePresence } from "framer-motion"
 import { Dispatch, SetStateAction } from "react"
 import ImageCard from "./imageCard"
 
-const Angels = ({
+const Angles = ({
     display, 
     setDisplay
 } : {
@@ -36,7 +36,7 @@ const Angels = ({
                                     <AppTypography
                                         bold={TypographyBold.md}
                                     >
-                                        5 Angels
+                                        5 Angles
                                     </AppTypography>
                                 </Flex>
                                 <Flex
@@ -60,4 +60,4 @@ const Angels = ({
         </AnimatePresence>
     )
 }
-export default Angels
+export default Angles

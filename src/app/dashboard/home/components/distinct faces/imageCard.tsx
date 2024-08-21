@@ -10,7 +10,7 @@ import { imageUploadContext } from "@/context/imageUpload"
 import { hexOpacity } from "@/utils/hexOpacity"
 import { TypographyBold, TypographySize } from "@styles/style.types"
 import ClickableTab from "@components/clickable/clickabletab"
-import Angels from "./angels"
+import Angels from "./angles"
 
 const ImageCard = ({
     title,

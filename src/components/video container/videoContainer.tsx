@@ -7,12 +7,14 @@ import theme from "@styles/theme";
 import { imagesType } from "@/app/dashboard/home/components/images/controls";
 import Player from 'next-video/player';
 import Slidein from "@styles/components/slidein";
-import { useRef } from "react";
+import { Dispatch, SetStateAction, useRef } from "react";
 
 const VideoContainer = ({
-    video
+    video,
+    setVideoTimestamp
 } : {
     video ? : imagesType
+    setVideoTimestamp : Dispatch<SetStateAction<number>>
 }) => {
     const playerRef = useRef<typeof Player | null>(null);
     const getCurrentTime = (e : any) => {
@@ -65,7 +67,7 @@ const VideoContainer = ({
                                         height : '100%'
                                     }}
                                     accentColor={theme.colors.bg.secondary}
-                                    onTimeUpdate={getCurrentTime}
+                                    onTimeUpdate={(time)=>setVideoTimestamp(time.timeStamp)}
                                 />
                             </Flex>
                         }

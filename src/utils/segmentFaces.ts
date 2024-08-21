@@ -2,6 +2,7 @@ import * as faceapi from 'face-api.js';
 import { DetailedHTMLProps, ImgHTMLAttributes, MutableRefObject, RefObject, useRef } from 'react';
 
 const segmentFaces = async (url : string, imageRef : RefObject<HTMLImageElement>, image? : DetailedHTMLProps<ImgHTMLAttributes<HTMLImageElement>, HTMLImageElement>) => {
+  try {
     const img = await faceapi.fetchImage(url);
     console.log({img})
     const loadModels = async () => {
@@ -17,7 +18,7 @@ const segmentFaces = async (url : string, imageRef : RefObject<HTMLImageElement>
         }
     };
     await loadModels();
-
+  
     if (
       faceapi.nets.ssdMobilenetv1.isLoaded &&
       faceapi.nets.faceLandmark68Net.isLoaded &&
@@ -30,13 +31,13 @@ const segmentFaces = async (url : string, imageRef : RefObject<HTMLImageElement>
       .withFaceDescriptors()
       .withAgeAndGender();
       console.log({detections})
-
+  
       const faceCanvases = detections.map((detection : any, index : number) => {
         const box = detection.detection.box;
         const faceCanvas = document.createElement('canvas');
         faceCanvas.width = box.width;
         faceCanvas.height = box.height;
-
+  
         const context = faceCanvas.getContext('2d');
         if (context && imageRef.current) {
           context.drawImage(
@@ -51,7 +52,7 @@ const segmentFaces = async (url : string, imageRef : RefObject<HTMLImageElement>
             box.height
           );
         }
-
+  
         return {
           dataUrl: faceCanvas.toDataURL(),
           label: `Face ${index + 1}`
@@ -63,6 +64,9 @@ const segmentFaces = async (url : string, imageRef : RefObject<HTMLImageElement>
     } else {
         console.log('models not loaded correctly')
     }
+  } catch(error) {
+    console.log("error segmenting faces:", error)
+  }
 }
 
 export default segmentFaces
