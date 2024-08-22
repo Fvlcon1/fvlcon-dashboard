@@ -176,10 +176,10 @@ const Main = () => {
                         />
                     </Flex>
                     <Flex>
-                        {
+                        {/* {
                             displayMatches &&
-                            // <Logs />
-                        }
+                            <Logs />
+                        } */}
                         {
                             selectedImage &&
                             <Metadata />
