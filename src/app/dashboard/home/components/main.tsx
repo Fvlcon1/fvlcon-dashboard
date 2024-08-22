@@ -178,7 +178,7 @@ const Main = () => {
                     <Flex>
                         {
                             displayMatches &&
-                            <Logs />
+                            // <Logs />
                         }
                         {
                             selectedImage &&
