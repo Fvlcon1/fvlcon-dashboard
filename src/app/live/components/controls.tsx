@@ -26,7 +26,7 @@ const Controls = () => {
                 >
                     <MdViewQuilt
                         color={theme.colors.text.secondary}
-                        size={20}
+                        size={18}
                     />
                     <IoMdArrowDropdown
                         color={theme.colors.text.secondary}
@@ -40,7 +40,7 @@ const Controls = () => {
                 >
                     <FaGear
                         color={theme.colors.text.secondary}
-                        size={17}
+                        size={14}
                     />
                     <IoMdArrowDropdown
                         color={theme.colors.text.secondary}
@@ -50,6 +50,7 @@ const Controls = () => {
             <Button 
                 text="Add Cam +"
                 onClick={()=>setShowAddCam(true)}
+                className="ml-1"
             />
             <AddCam 
                 display={showAddCam}

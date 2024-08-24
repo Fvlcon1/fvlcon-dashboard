@@ -4,7 +4,7 @@ import { Dispatch, SetStateAction } from "react";
 
 interface dropdownProps extends baseProps {
     show : boolean,
-    setShow : Dispatch<SetStateAction<boolean>>
+    setShow? : Dispatch<SetStateAction<boolean>>
 }
 
 const DropdownContainer = ({
@@ -18,7 +18,7 @@ const DropdownContainer = ({
             {
                 show &&
                 <motion.div
-                    className={`flex p-[5px] flex-1 rounded-[10px] bg-white border-[1px] border-solid border-theme-colors-main-borderColorLight shadow-lg shadow-theme-colors-main-shadowLight ${className}`}
+                    className={`flex p-[5px] flex-1 rounded-[10px] bg-bg-secondary border-[1px] border-solid border-theme-colors-main-borderColorLight shadow-lg shadow-theme-colors-main-shadowLight ${className}`}
                     initial={{
                         opacity : 0,
                         y : -4,
