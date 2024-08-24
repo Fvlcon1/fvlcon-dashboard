@@ -22,7 +22,7 @@ const Cameras = () => {
             name : "Accra City Camera 01",
             description : "Accra City",
             hover : false,
-            activeMenu : true
+            activeMenu : false
         },
         {
             name : "Accra City Camera 01",
