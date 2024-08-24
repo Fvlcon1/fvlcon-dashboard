@@ -9,7 +9,7 @@ const generateVideoThumbnail = (videoUrl: string, time: number = 0): Promise<str
       const context = canvas.getContext('2d');
   
       video.onloadeddata = () => {
-        video.currentTime = 2;
+        video.currentTime = time;
       };
   
       video.onseeked = () => {

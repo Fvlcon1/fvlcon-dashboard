@@ -24,6 +24,8 @@ import checkEachFace from "@/utils/model/checkEachFace"
 import generateVideoThumbnail from "@/utils/generateVideoThumbnail"
 import { Alert } from "antd"
 
+let fileEx : any = undefined
+
 const Main = () => {
     const {
         selectedImage,
@@ -47,7 +49,6 @@ const Main = () => {
 
     let imageSplit = []
     let filename = undefined
-    let fileEx : any = undefined
 
     const setFaces = (faces : { dataUrl: string, label: string }[] | undefined) => {
         if(faces){
@@ -64,14 +65,15 @@ const Main = () => {
     const handleAnalyze = async () => {
         setDistinctFaces({isLoading : true})
         setDisplayFaces(true)
-        if(selectedImage && fileExtension && imageRef.current !== null){
+        if(selectedImage && fileEx && imageRef.current !== null){
             console.log(selectedImage)
             console.log({fileExtension})
-            if(isImageFile(fileExtension)){
+            if(isImageFile(fileEx)){
                 const faces = await segmentFaces(selectedImage.url, imageRef)
                 setFaces(faces)
-            } else if(isVideoFile(fileExtension)){
+            } else if(isVideoFile(fileEx)){
                 const thumbnail = await generateVideoThumbnail(selectedImage.url, videoTimestamp)
+                thumbnail ? setImageRefImage(thumbnail) : console.log("unable to generate thumbnail")
                 const faces = await segmentFaces(thumbnail, imageRef)
                 setFaces(faces)
             } else {
@@ -101,19 +103,15 @@ const Main = () => {
     };
 
     const changeImageRef = async () => {
-        if(selectedImage && fileExtension){
-            if(isVideoFile(fileExtension)){
-                const thumbnail = await generateVideoThumbnail(selectedImage.url)
+        if(selectedImage && fileEx){
+            if(isVideoFile(fileEx)){
+                const thumbnail = await generateVideoThumbnail(selectedImage.url, videoTimestamp)
                 thumbnail ? setImageRefImage(thumbnail) : console.log("unable to generate thumbnail")
             }
-            if(isImageFile(fileExtension))
+            if(isImageFile(fileEx))
                 setImageRefImage(selectedImage.url)
         }
     }
-
-    useEffect(()=>{
-        changeImageRef()
-    },[fileExtension])
 
     useEffect(()=> {
         console.log(selectedImage)
@@ -121,6 +119,7 @@ const Main = () => {
             imageSplit = selectedImage.name.split('.')
             filename = imageSplit[0]
             fileEx = imageSplit[imageSplit.length - 1] 
+            changeImageRef()
             setFileExtension(fileEx)
         }
     },[selectedImage])

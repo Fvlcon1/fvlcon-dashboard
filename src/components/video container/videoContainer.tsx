@@ -16,10 +16,7 @@ const VideoContainer = ({
     video ? : imagesType
     setVideoTimestamp : Dispatch<SetStateAction<number>>
 }) => {
-    const playerRef = useRef<typeof Player | null>(null);
-    const getCurrentTime = (e : any) => {
-        console.log(e)
-    };
+    const playerRef = useRef<any | null>(null);
     return (
         <Slidein className="!w-full">
             <div className="w-full flex flex-1 h-[350px] rounded-xl bg-gradient-border p-[1px]">
@@ -67,7 +64,7 @@ const VideoContainer = ({
                                         height : '100%'
                                     }}
                                     accentColor={theme.colors.bg.secondary}
-                                    onTimeUpdate={(time)=>setVideoTimestamp(time.timeStamp)}
+                                    onTimeUpdate={(time)=>setVideoTimestamp(playerRef.current.currentTime)}
                                 />
                             </Flex>
                         }
