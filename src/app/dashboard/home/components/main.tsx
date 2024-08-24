@@ -13,8 +13,6 @@ import Matches from "./matches/matches"
 import Metadata from "./metadata"
 import { isImageFile, isVideoFile } from "@/utils/getFileType"
 import VideoContainer from "@components/video container/videoContainer"
-import ListFaces from "@components/listFaces";
-import VideoAnalysis from "@components/VideoAnalysis";
 import segmentFaces from "@/utils/segmentFaces"
 import { canvasTypes, checkedFaceType, FetchState } from "@/utils/@types"
 import checkFace from "@/utils/model/checkface"
