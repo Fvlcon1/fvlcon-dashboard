@@ -13,7 +13,7 @@ import Matches from "./matches/matches"
 import Metadata from "./metadata"
 import { isImageFile, isVideoFile } from "@/utils/getFileType"
 import VideoContainer from "@components/video container/videoContainer"
-import segmentFaces from "@/utils/segmentFaces"
+import segmentFaces, { handleVideoPlay, isModelsLoaded, loadModels, videoSegmentation } from "@/utils/segmentFaces"
 import { canvasTypes, checkedFaceType, FetchState } from "@/utils/@types"
 import checkFace from "@/utils/model/checkface"
 import { getAllFaces } from "@/utils/model/getallFaces"
@@ -21,6 +21,7 @@ import { getSingleFace } from "@/utils/model/getSingleFace"
 import checkEachFace from "@/utils/model/checkEachFace"
 import generateVideoThumbnail from "@/utils/generateVideoThumbnail"
 import { Alert } from "antd"
+import * as faceapi from 'face-api.js';
 
 let fileEx : any = undefined
 
@@ -33,8 +34,10 @@ const Main = () => {
     const [displayMatches, setDisplayMatches] = useState(false)
     const [displayFaces, setDisplayFaces] = useState(false)
     const [fileExtension, setFileExtension] = useState<string>()
-    const [imageRefImage, setImageRefImage] = useState<string>()
+    const [imageSrc, setImageSrc] = useState<string>()
+    const [videoSrc, setVideoSrc] = useState<string>()
     const [videoTimestamp, setVideoTimestamp] = useState<number>(0)
+    const [isVideoPlaying, setIsVideoPlaying] = useState<boolean>(false)
     const [distinctFaces, setDistinctFaces] = useState<FetchState<canvasTypes[]>>({
         isEmpty : false,
         isLoading : false,
@@ -44,6 +47,7 @@ const Main = () => {
         isLoading : false
     })
     const imageRef = useRef<HTMLImageElement>(null);
+    const videoRef = useRef<HTMLVideoElement>(null);
 
     let imageSplit = []
     let filename = undefined
@@ -71,7 +75,7 @@ const Main = () => {
                 setFaces(faces)
             } else if(isVideoFile(fileEx)){
                 const thumbnail = await generateVideoThumbnail(selectedImage.url, videoTimestamp)
-                thumbnail ? setImageRefImage(thumbnail) : console.log("unable to generate thumbnail")
+                thumbnail ? setImageSrc(thumbnail) : console.log("unable to generate thumbnail")
                 const faces = await segmentFaces(thumbnail, imageRef)
                 setFaces(faces)
             } else {
@@ -103,11 +107,10 @@ const Main = () => {
     const changeImageRef = async () => {
         if(selectedImage && fileEx){
             if(isVideoFile(fileEx)){
-                const thumbnail = await generateVideoThumbnail(selectedImage.url, videoTimestamp)
-                thumbnail ? setImageRefImage(thumbnail) : console.log("unable to generate thumbnail")
+                setVideoSrc(selectedImage.url)
             }
             if(isImageFile(fileEx))
-                setImageRefImage(selectedImage.url)
+                setImageSrc(selectedImage.url)
         }
     }
 
@@ -122,9 +125,45 @@ const Main = () => {
         }
     },[selectedImage])
 
+    // useEffect(() => {
+    //     if (videoRef.current) {
+    //       const startSegmentation = async () => {
+    //         const cleanup = await videoSegmentation(isVideoPlaying, videoRef.current!, videoTimestamp);
+    //         return cleanup;
+    //       };
+    //       startSegmentation().then((cleanup) => {
+    //         return () => {
+    //           cleanup && cleanup();
+    //         };
+    //       });
+    //     }
+    //   }, [isVideoPlaying]);
+
+    const handleVideoState = (state : boolean) => {
+        setIsVideoPlaying(state)
+        handleVideoPlay(videoRef.current, videoTimestamp, state)
+    }
+
+    const getVideoSegments = async () => {
+        const segments = await videoSegmentation(videoRef.current, videoTimestamp)
+        const combinedFaces = (distinctFaces.data && segments)
+            ? [...distinctFaces.data, ...segments] 
+            : distinctFaces.data ? distinctFaces.data
+            : segments ?? []
+        setFaces(combinedFaces)
+    }
+
+    useEffect(()=>{
+        getVideoSegments()
+    }, [videoTimestamp])
+      
+
     return (
         <div  className="w-full items-center flex flex-col flex-1 h-[100vh] pb-4 gap-1">
-            <img ref={imageRef} className="hidden" src={imageRefImage}/>
+            <img ref={imageRef} className="hidden" src={imageSrc}/>
+            <div className="w-full flex justify-center items-center relative">
+                <video ref={videoRef} height={320} width={560} src={videoSrc} hidden muted/>
+            </div>
             <Flex
                 direction="column"
                 gap={4}
@@ -136,6 +175,8 @@ const Main = () => {
                         <VideoContainer 
                             video={selectedImage}
                             setVideoTimestamp={setVideoTimestamp}
+                            onPlay={()=>handleVideoState(true)}
+                            onPause={()=>handleVideoState(false)}
                         />
                         :
                         <Flex
@@ -183,17 +224,17 @@ const Main = () => {
                         }
                     </Flex>
                     {
-                        displayMatches &&
-                        <Matches 
-                            faces={matchedFaces}
-                            onTryAgain={handleFalconize}
-                        />
-                    }
-                    {
                         displayFaces &&
                         <DistinctFaces 
                             faces={distinctFaces}
                             onTryAgain={handleAnalyze}
+                        />
+                    }
+                    {
+                        displayMatches &&
+                        <Matches 
+                            faces={matchedFaces}
+                            onTryAgain={handleFalconize}
                         />
                     }
                     <History />

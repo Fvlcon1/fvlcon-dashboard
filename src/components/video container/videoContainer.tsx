@@ -11,17 +11,22 @@ import { Dispatch, SetStateAction, useRef } from "react";
 
 const VideoContainer = ({
     video,
-    setVideoTimestamp
+    setVideoTimestamp,
+    onPlay,
+    onPause
 } : {
     video ? : imagesType
     setVideoTimestamp : Dispatch<SetStateAction<number>>
+    onPlay? : ()=>void
+    onPause? : ()=>void
 }) => {
     const playerRef = useRef<any | null>(null);
     return (
         <Slidein className="!w-full">
             <div className="w-full flex flex-1 h-[350px] rounded-xl bg-gradient-border p-[1px]">
                 <div className="w-full flex h-full bg-bg-secondary rounded-xl p-[15px]">
-                    <div className="w-full flex h-full bg-bg-primary rounded-lg p-[1px] justify-center items-center overflow-hidden">
+                    <div className="w-full flex h-full bg-bg-primary rounded-lg p-[1px] justify-center items-center relative overflow-hidden">
+                        <div id="imageDetectionCanvas" className="absolute top-0 w-[560px] h-[320px] pointer-events-none z-10"></div>
                         {
                             !video ?
                             <Flex
@@ -65,6 +70,8 @@ const VideoContainer = ({
                                     }}
                                     accentColor={theme.colors.bg.secondary}
                                     onTimeUpdate={(time)=>setVideoTimestamp(playerRef.current.currentTime)}
+                                    onPlay={onPlay}
+                                    onPause={onPause}
                                 />
                             </Flex>
                         }

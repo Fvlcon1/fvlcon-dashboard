@@ -13,7 +13,7 @@ const Head = ({
             width="fit-content"
             align="center"
         >
-            <div className="w-[7px] h-[25px] bg-bg-alt1 rounded-full"></div>
+            {/* <div className="w-[7px] h-[25px] bg-bg-alt1 rounded-full"></div> */}
             <AppTypography
                 textColor={theme.colors.text.primary}
                 size={TypographySize.HM}
