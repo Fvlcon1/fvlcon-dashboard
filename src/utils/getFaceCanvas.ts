@@ -2,11 +2,11 @@ import * as faceapi from 'face-api.js';
 
 export const getFaceCanvas = (detections : faceapi.WithAge<faceapi.WithGender<faceapi.WithFaceDescriptor<faceapi.WithFaceLandmarks<{
     detection: faceapi.FaceDetection;}, faceapi.FaceLandmarks68>>>>[] | 
-    faceapi.WithFaceLandmarks<{
-        detection: faceapi.FaceDetection;
-    }>[], 
+    faceapi.WithFaceDescriptor<faceapi.WithFaceLandmarks<{
+      detection: faceapi.FaceDetection;
+  }, faceapi.FaceLandmarks68>>[], 
     file : HTMLImageElement | HTMLVideoElement) => {
-    const faceCanvases = detections.map((detection : any, index : number) => {
+    const faceCanvases = detections.map((detection, index : number) => {
         const box = detection.detection.box;
         const faceCanvas = document.createElement('canvas');
         faceCanvas.width = box.width;
@@ -29,7 +29,8 @@ export const getFaceCanvas = (detections : faceapi.WithAge<faceapi.WithGender<fa
   
         return {
           dataUrl: faceCanvas.toDataURL(),
-          label: `Face ${index + 1}`
+          label: `Face ${index + 1}`,
+          descriptor : detection.descriptor
         };
       });
     return faceCanvases

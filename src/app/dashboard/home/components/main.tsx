@@ -20,7 +20,7 @@ import { getAllFaces } from "@/utils/model/getallFaces"
 import { getSingleFace } from "@/utils/model/getSingleFace"
 import checkEachFace from "@/utils/model/checkEachFace"
 import generateVideoThumbnail from "@/utils/generateVideoThumbnail"
-import { Alert } from "antd"
+import { Alert, message } from "antd"
 import * as faceapi from 'face-api.js';
 
 let fileEx : any = undefined
@@ -48,6 +48,10 @@ const Main = () => {
     })
     const imageRef = useRef<HTMLImageElement>(null);
     const videoRef = useRef<HTMLVideoElement>(null);
+    let statelessDistinctFaces : FetchState<canvasTypes[]> = {
+        isEmpty : false,
+        isLoading : false,
+    }
 
     let imageSplit = []
     let filename = undefined
@@ -57,6 +61,7 @@ const Main = () => {
             if(faces.length === 0){
                 setDistinctFaces({isEmpty : true})
             } else {
+                statelessDistinctFaces = {data : faces}
                 setDistinctFaces({data : faces})   
             }   
         } else {
@@ -72,12 +77,12 @@ const Main = () => {
             console.log({fileExtension})
             if(isImageFile(fileEx)){
                 const faces = await segmentFaces(selectedImage.url, imageRef)
-                setFaces(faces)
+                faces && setFaces(faces)
             } else if(isVideoFile(fileEx)){
                 const thumbnail = await generateVideoThumbnail(selectedImage.url, videoTimestamp)
                 thumbnail ? setImageSrc(thumbnail) : console.log("unable to generate thumbnail")
                 const faces = await segmentFaces(thumbnail, imageRef)
-                setFaces(faces)
+                faces && setFaces(faces)
             } else {
                 console.log("invalid file format")
                 setDistinctFaces({error : "Invalid file format"})
@@ -90,9 +95,10 @@ const Main = () => {
 
     const handleFalconize = async () => {
         setMatchedFaces({isLoading : true})
+        await handleAnalyze()
         setDisplayMatches(true);
-        if(distinctFaces.data){
-            const faces = await checkEachFace(distinctFaces);
+        if(statelessDistinctFaces.data){
+            const faces = await checkEachFace(statelessDistinctFaces);
             if (faces && faces.length > 0) {
                 const validFaces = faces.filter(face => face !== undefined) as checkedFaceType[];
                 setMatchedFaces({data : validFaces});
@@ -114,6 +120,28 @@ const Main = () => {
         }
     }
 
+    const clearDistinctFaces = () => {
+        setDistinctFaces({
+            isEmpty : false,
+            isLoading : false,
+        })
+    }
+
+    
+    const clearMatchedFaces = () => {
+        setMatchedFaces({
+            isEmpty : false,
+            isLoading : false,
+        })
+    }
+    
+    const closeDistinctFaces = () => {
+        setDisplayFaces(false)
+    }
+
+    const closeMatchedFaces = () => {
+        setDisplayMatches(false)
+    }
     useEffect(()=> {
         console.log(selectedImage)
         if(selectedImage){
@@ -130,7 +158,7 @@ const Main = () => {
             if(!isVideoPlaying)
                 return clearInterval(startSegmentation)
             getVideoSegments()
-        }, 100);
+        }, 500);
         return () => clearInterval(startSegmentation);
       }, [isVideoPlaying]);
 
@@ -147,10 +175,6 @@ const Main = () => {
             : segments ?? []
         setFaces(combinedFaces)
     }
-
-    // useEffect(()=>{
-    //     getVideoSegments()
-    // }, [videoTimestamp])
       
 
     return (
@@ -185,7 +209,6 @@ const Main = () => {
                                 :
                                 <ImageContainer />
                             }
-                            <ImageContainer />
                         </Flex>
                     }
                 </div>
@@ -199,12 +222,12 @@ const Main = () => {
                         width="fit-content"
                     >
                         <Button 
-                            text="Analyze"
+                            text="Segment"
                             icon={<RiOrganizationChart className="mt-[-1px]"/>}
                             onClick={handleAnalyze}
                         />
                         <Button 
-                            text="Fvlconize ➜"
+                            text="Run recognition ➜"
                             onClick={handleFalconize}
                         />
                     </Flex>
@@ -223,6 +246,8 @@ const Main = () => {
                         <DistinctFaces 
                             faces={distinctFaces}
                             onTryAgain={handleAnalyze}
+                            onClear={clearDistinctFaces}
+                            onClose={closeDistinctFaces}
                         />
                     }
                     {
@@ -230,6 +255,8 @@ const Main = () => {
                         <Matches 
                             faces={matchedFaces}
                             onTryAgain={handleFalconize}
+                            onClear={clearMatchedFaces}
+                            onClose={closeMatchedFaces}
                         />
                     }
                     <History />

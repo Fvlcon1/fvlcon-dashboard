@@ -5,10 +5,12 @@ export const isVideoFile = (extension : string) : 'video' | 'image' | undefined 
     ) return 'video'
 }
 
-export const isImageFile = (extension : string) : 'video' | 'image' | undefined => {
-    if(
-        extension === 'jpg' ||
-        extension === 'jpeg' ||
-        extension === 'png'
-    ) return 'image'
-}
+export const isImageFile = (extension: string): 'video' | 'image' | undefined => {
+    const imageExtensions = [
+        'jpg', 'jpeg', 'png', 'gif', 'bmp', 'tiff', 'webp', 'svg', 'ico', 'heic', 'heif'
+    ];
+
+    if (imageExtensions.includes(extension.toLowerCase())) {
+        return 'image';
+    }
+};

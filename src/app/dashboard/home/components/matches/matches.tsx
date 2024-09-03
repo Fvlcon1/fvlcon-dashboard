@@ -19,17 +19,21 @@ import TryAgain from "../tryAgain"
 
 const Matches = ({
     faces,
-    onTryAgain
+    onTryAgain,
+    onClear,
+    onClose
 } : { 
     faces : FetchState<checkedFaceType[]>
     onTryAgain : () => void
+    onClear? : () => void
+    onClose? : ()=>void
 }) => {
     const [displayFaces, setDisplayFaces] = useState(false)
     const [displayAngels, setDisplayAngels] = useState(false)
     return (
         <>
             <motion.div  
-                className="w-full relative flex flex-col flex-1 gap-1"
+                className="w-full relative flex flex-col flex-1 gap-1 min-h-[220px]"
                 initial={{
                     y : -20,
                     opacity : 0
@@ -44,6 +48,9 @@ const Matches = ({
                 <div className="w-full rounded-lg px-3 py-2">
                     <Controls 
                         setDisplayWindow={setDisplayFaces}
+                        onClear={onClear}
+                        tryAgain={onTryAgain}
+                        onClose={onClose}
                     />
                     <div className="w-full overflow-x-auto">
                         <Flex

@@ -42,7 +42,7 @@ const Button = ({
   return (
     <button
       style={{
-        background : onHover
+        background : (onHover && !disabled)
                       ? hover?.background 
                       ? hover?.background 
                       : background ?? theme.colors.bg.alt1
@@ -53,7 +53,11 @@ const Button = ({
         maxWidth,
         width : size?.width ?? 'fit-content',
         height : size?.height,
-        opacity : onHover ? hover?.opacity ?? 0.9 : 1,
+        opacity : (onHover && !disabled)
+                  ? hover?.opacity 
+                  ?? 0.9 
+                  : disabled 
+                  ? 0.5 : 1,
         transform : `scale(${onPress ? 0.97 : 1})`,
       }}
       onClick={onClick}
@@ -61,7 +65,8 @@ const Button = ({
       onMouseLeave={()=>setOnHover(false)}
       onMouseDown={()=>setOnPress(true)}
       onMouseUp={()=>setOnPress(false)}
-      className={`${className} duration-200`}
+      className={`${className} duration-200 ${disabled && 'cursor-not-allowed'}`}
+      disabled={disabled}
     >
       <div className="w-full justify-center items-center flex gap-[8px] ">
         <AppTypography

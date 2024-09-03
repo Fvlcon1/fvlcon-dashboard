@@ -76,6 +76,16 @@ export type checkedFaceType = {
   matchedImage? : string
 }
 
+export type ImageCardType = {
+  imageURL? : string
+  title? : string,
+  rightButtonTitle? : string,
+  rightButtonClick? : ()=> void,
+  MiddleButtonTitle? : string,
+  MiddleButtonClick? : ()=> void
+  description? : string
+}
+
 export type overflow = "visible" | "hidden" | "clip" | "scroll" | "auto"
 
 export type FetchState<T> = {

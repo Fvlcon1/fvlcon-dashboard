@@ -21,17 +21,21 @@ import TryAgain from "../tryAgain"
 
 const DistinctFaces = ({
     faces,
-    onTryAgain
+    onTryAgain,
+    onClear,
+    onClose
 } : { 
     faces : FetchState<canvasTypes[]>
     onTryAgain : () => void
+    onClear? : ()=>void
+    onClose? : ()=>void
 }) => {
     const [displayFaces, setDisplayFaces] = useState(false)
     const [displayAngles, setDisplayAngles] = useState(false)
     return (
         <>
             <motion.div
-                className="w-full relative flex flex-col flex-1 gap-1"
+                className="w-full relative min-h-[200px] flex flex-col flex-1 gap-1"
                 initial={{
                     y : -20,
                     opacity : 0
@@ -41,11 +45,14 @@ const DistinctFaces = ({
                     opacity : 1
                 }}
             >
-                <div className="w-full absolute z-[-1] top-0 bg-gradient-container h-[200px] rounded-lg">
+                <div className="w-full absolute z-[-1] top-0 bg-gradient-container h-[220px] rounded-lg">
                 </div>
                 <div className="w-full rounded-lg px-3 py-2">
                     <Controls 
                         setDisplayWindow={setDisplayFaces}
+                        onClear={onClear}
+                        tryAgain={onTryAgain}
+                        onClose={onClose}
                     />
                     <div className="w-full overflow-x-auto">
                         <Flex
@@ -85,10 +92,14 @@ const DistinctFaces = ({
                     </div>
                 </div>
             </motion.div>
-            <AllFaces 
-                display={displayFaces}
-                setDisplay={setDisplayFaces}
-            />
+            {
+                faces.data &&
+                <AllFaces 
+                    display={displayFaces}
+                    setDisplay={setDisplayFaces}
+                    faces={faces.data}
+                />
+            }
             <Angles
                 display={displayAngles}
                 setDisplay={setDisplayAngles}

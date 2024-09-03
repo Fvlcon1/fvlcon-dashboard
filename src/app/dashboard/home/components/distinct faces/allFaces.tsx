@@ -6,13 +6,17 @@ import { TypographyBold } from "@styles/style.types"
 import { AnimatePresence } from "framer-motion"
 import { Dispatch, SetStateAction } from "react"
 import ImageCard from "./imageCard"
+import { canvasTypes, ImageCardType } from "@/utils/@types"
 
 const AllFaces = ({
     display, 
-    setDisplay
+    setDisplay,
+    faces
 } : {
     display : boolean,
     setDisplay : Dispatch<SetStateAction<boolean>>
+    faces : canvasTypes[]
+
 }) => {
     return (
         <AnimatePresence>
@@ -45,11 +49,12 @@ const AllFaces = ({
                                     justify="space-around"
                                 >
                                     {
-                                        [1,2,3,4,5,6,7,8,9].map((item, index) => (
+                                        faces.map((item, index) => (
                                             <ImageCard
                                                 key={index}
+                                                imageURL={item.dataUrl}
                                                 title={`Face ${index + 1}`}
-                                                MiddleButtonTitle="Analyze ➜"
+                                                MiddleButtonTitle="Fvlconize ➜"
                                             />
                                         ))
                                     }

@@ -31,10 +31,13 @@ export const loadModels = async () => {
 const segmentFaces = async (url : string, imageRef : RefObject<HTMLImageElement>, image? : DetailedHTMLProps<ImgHTMLAttributes<HTMLImageElement>, HTMLImageElement>) => {
   try {
     const img = await faceapi.fetchImage(url);
-    // console.log({img})
-    await loadModels();
+    if (!isModelsLoaded()) {
+      await loadModels();
+    }
+    if (!isModelsLoaded()) {
+      return console.log("Models not loaded properly");
+    }
   
-    if ( await isModelsLoaded()) {
     const detections = await faceapi
       .detectAllFaces(img, new faceapi.TinyFaceDetectorOptions())
       .withFaceLandmarks()
@@ -45,9 +48,6 @@ const segmentFaces = async (url : string, imageRef : RefObject<HTMLImageElement>
       const faces = getFaceCanvas(detections, img)
       console.log({faces})
       return faces
-    } else {
-        console.log('models not loaded correctly')
-    }
   } catch(error) {
     console.log("error segmenting faces:", error)
   }
@@ -57,33 +57,33 @@ const segmentFaces = async (url : string, imageRef : RefObject<HTMLImageElement>
 export const videoSegmentation = async (video: HTMLVideoElement | null, timestamp: number, distinctFaces? : canvasTypes[]) => {
   if (video) {
     try {
-      if (!await isModelsLoaded()) {
+      if (!isModelsLoaded()) {
         await loadModels();
       }
-      if (!await isModelsLoaded()) {
+      if (!isModelsLoaded()) {
         return console.log("Models not loaded properly");
       }
 
       const canvasContainer = document.getElementById("imageDetectionCanvas");
-      if (canvasContainer) {
-        canvasContainer.innerHTML = '';
-      }
-
+      
       const canvas = faceapi.createCanvasFromMedia(video);
       canvasContainer?.appendChild(canvas); 
 
       const displaySize = { width: video.width, height: video.height };
       faceapi.matchDimensions(canvas, displaySize);
-
+      
       console.log(`Timestamp: ${timestamp}`);
 
       let detections = await faceapi.detectAllFaces(video, new faceapi.TinyFaceDetectorOptions())
         .withFaceLandmarks()
         .withFaceDescriptors()
         
-      const resizedDetections = faceapi.resizeResults(detections, displaySize);
-      const context = canvas.getContext("2d");
-      context?.clearRect(0, 0, canvas.width, canvas.height);
+        const resizedDetections = faceapi.resizeResults(detections, displaySize);
+        const context = canvas.getContext("2d");
+        if (canvasContainer) {
+          canvasContainer.innerHTML = '';
+        }
+        context?.clearRect(0, 0, canvas.width, canvas.height);
       faceapi.draw.drawDetections(canvas, resizedDetections);
 
       const filteredDetections : faceapi.WithFaceDescriptor<faceapi.WithFaceLandmarks<{
