@@ -1,8 +1,9 @@
 import * as faceapi from 'face-api.js';
 import { DetailedHTMLProps, ImgHTMLAttributes, MutableRefObject, RefObject, useRef } from 'react';
 import { getFaceCanvas } from './getFaceCanvas';
+import { canvasTypes } from './@types';
 
-export const isModelsLoaded = async () => {
+export const isModelsLoaded = () => {
   if(
     faceapi.nets.tinyFaceDetector.isLoaded &&
     faceapi.nets.tinyYolov2.isLoaded &&
@@ -21,6 +22,7 @@ export const loadModels = async () => {
     await faceapi.nets.faceRecognitionNet.loadFromUri(modelPath);
     await faceapi.nets.ageGenderNet.loadFromUri(modelPath);
     console.log('Models loaded');
+    return true
   } catch (error) {
     console.error('Error loading models:', error);
   }
@@ -52,7 +54,7 @@ const segmentFaces = async (url : string, imageRef : RefObject<HTMLImageElement>
 }
 
 
-export const videoSegmentation = async (video: HTMLVideoElement | null, timestamp: number) => {
+export const videoSegmentation = async (video: HTMLVideoElement | null, timestamp: number, distinctFaces? : canvasTypes[]) => {
   if (video) {
     try {
       if (!await isModelsLoaded()) {
@@ -75,15 +77,45 @@ export const videoSegmentation = async (video: HTMLVideoElement | null, timestam
 
       console.log(`Timestamp: ${timestamp}`);
 
-      const detections = await faceapi.detectAllFaces(video, new faceapi.TinyFaceDetectorOptions())
+      let detections = await faceapi.detectAllFaces(video, new faceapi.TinyFaceDetectorOptions())
         .withFaceLandmarks()
+        .withFaceDescriptors()
         
       const resizedDetections = faceapi.resizeResults(detections, displaySize);
       const context = canvas.getContext("2d");
       context?.clearRect(0, 0, canvas.width, canvas.height);
       faceapi.draw.drawDetections(canvas, resizedDetections);
-      const faces = getFaceCanvas(detections, video)
-      console.log({faces})
+
+      const filteredDetections : faceapi.WithFaceDescriptor<faceapi.WithFaceLandmarks<{
+          detection: faceapi.FaceDetection;
+      }, faceapi.FaceLandmarks68>>[] = []
+
+      detections.map((detection) => {
+        let similarity = 10
+        if(distinctFaces){
+          console.log({distinctFaces})
+          distinctFaces.map((face) => {
+            if(face.descriptor){
+              const result = faceapi.euclideanDistance(detection.descriptor, face.descriptor)
+              console.log({result, similarity})
+              if(result < similarity){
+                similarity = result
+                console.log({similarity})
+              }
+            }
+          })
+          if (similarity > 0.6){
+            console.log('similarity > 0.6')
+            filteredDetections.push(detection)
+          }
+        } else {
+          console.log("there are no distinct faces yet?")
+          filteredDetections.push(detection)
+        }
+      })
+
+      const faces = getFaceCanvas(filteredDetections, video)
+      console.log({filteredDetections})
       return faces
     } catch (error) {
       console.log("Failed to start detection:", error);

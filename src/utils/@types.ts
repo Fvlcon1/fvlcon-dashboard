@@ -66,6 +66,7 @@ export interface baseProps {
 export type canvasTypes = {
   dataUrl : string
   label : string
+  descriptor? : Float32Array
 }
 
 export type checkedFaceType = { 

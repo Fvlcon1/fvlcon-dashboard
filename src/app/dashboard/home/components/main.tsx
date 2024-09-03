@@ -125,19 +125,14 @@ const Main = () => {
         }
     },[selectedImage])
 
-    // useEffect(() => {
-    //     if (videoRef.current) {
-    //       const startSegmentation = async () => {
-    //         const cleanup = await videoSegmentation(isVideoPlaying, videoRef.current!, videoTimestamp);
-    //         return cleanup;
-    //       };
-    //       startSegmentation().then((cleanup) => {
-    //         return () => {
-    //           cleanup && cleanup();
-    //         };
-    //       });
-    //     }
-    //   }, [isVideoPlaying]);
+    useEffect(() => {
+        const startSegmentation = setInterval(() => {
+            if(!isVideoPlaying)
+                return clearInterval(startSegmentation)
+            getVideoSegments()
+        }, 100);
+        return () => clearInterval(startSegmentation);
+      }, [isVideoPlaying]);
 
     const handleVideoState = (state : boolean) => {
         setIsVideoPlaying(state)
@@ -145,7 +140,7 @@ const Main = () => {
     }
 
     const getVideoSegments = async () => {
-        const segments = await videoSegmentation(videoRef.current, videoTimestamp)
+        const segments = await videoSegmentation(videoRef.current, videoTimestamp, distinctFaces.data)
         const combinedFaces = (distinctFaces.data && segments)
             ? [...distinctFaces.data, ...segments] 
             : distinctFaces.data ? distinctFaces.data
@@ -153,9 +148,9 @@ const Main = () => {
         setFaces(combinedFaces)
     }
 
-    useEffect(()=>{
-        getVideoSegments()
-    }, [videoTimestamp])
+    // useEffect(()=>{
+    //     getVideoSegments()
+    // }, [videoTimestamp])
       
 
     return (
