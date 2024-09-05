@@ -46,6 +46,8 @@ const ImageContainer = ({
                             :
                             <Flex
                                 width="fit-content"
+                                height="100%"
+                                background="blue"
                                 direction="column"
                                 align='center'
                                 gap={0}
@@ -56,8 +58,8 @@ const ImageContainer = ({
                                     width={0}
                                     height={0}
                                     style={{
-                                        width : '100%',
-                                        height : '100%'
+                                        width : 'fit-content',
+                                        height : '100%',
                                     }}
                                     className="hover:scale-[1.05] duration-300"
                                 />
