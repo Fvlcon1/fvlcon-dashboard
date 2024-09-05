@@ -97,7 +97,7 @@ const ImageCard = ({
                                     <AppTypography
                                         textColor={theme.colors.text.primary}
                                     >
-                                        Analyze ➜
+                                        {MiddleButtonTitle}
                                     </AppTypography>
                                 </ClickableTab>
                             }

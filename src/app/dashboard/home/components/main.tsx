@@ -5,7 +5,7 @@ import ImageContainer from "@components/imageContainer/imageContainer"
 import { imageUploadContext } from "@/context/imageUpload"
 import Button from "@components/button/button"
 import Flex from "@styles/components/flex"
-import { MutableRefObject, useContext, useEffect, useRef, useState } from "react"
+import { useContext, useEffect, useRef, useState } from "react"
 import { RiOrganizationChart } from "react-icons/ri"
 import DistinctFaces from "./distinct faces/distinctFaces"
 import Logs from "./logs/logs"
@@ -15,14 +15,8 @@ import { isImageFile, isVideoFile } from "@/utils/getFileType"
 import VideoContainer from "@components/video container/videoContainer"
 import segmentFaces, { handleVideoPlay, isModelsLoaded, loadModels, videoSegmentation } from "@/utils/segmentFaces"
 import { canvasTypes, checkedFaceType, FetchState } from "@/utils/@types"
-import checkFace from "@/utils/model/checkface"
-import { getAllFaces } from "@/utils/model/getallFaces"
-import { getSingleFace } from "@/utils/model/getSingleFace"
 import checkEachFace from "@/utils/model/checkEachFace"
 import generateVideoThumbnail from "@/utils/generateVideoThumbnail"
-import { Alert, message } from "antd"
-import * as faceapi from 'face-api.js';
-
 let fileEx : any = undefined
 
 const Main = () => {

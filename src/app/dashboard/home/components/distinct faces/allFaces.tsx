@@ -22,46 +22,46 @@ const AllFaces = ({
         <AnimatePresence>
             {
                 display &&
-                    <Overlay
-                        onClick={()=>setDisplay(false)}
+                <Overlay
+                    onClick={()=>setDisplay(false)}
+                >
+                    <Window
+                        open={display}
+                        setOpen={setDisplay}
+                        title="All Recognized Faces"
                     >
-                        <Window
-                            open={display}
-                            setOpen={setDisplay}
-                            title="All Recognized Faces"
+                        <Flex
+                            direction="column"
+                            padding="15px"
                         >
                             <Flex
-                                direction="column"
-                                padding="15px"
+                                margin="0 0 0 25px"
                             >
-                                <Flex
-                                    margin="0 0 0 25px"
+                                <AppTypography
+                                    bold={TypographyBold.md}
                                 >
-                                    <AppTypography
-                                        bold={TypographyBold.md}
-                                    >
-                                        Results: 30
-                                    </AppTypography>
-                                </Flex>
-                                <Flex
-                                    flexWrap
-                                    gap={30}
-                                    justify="space-around"
-                                >
-                                    {
-                                        faces.map((item, index) => (
-                                            <ImageCard
-                                                key={index}
-                                                imageURL={item.dataUrl}
-                                                title={`Face ${index + 1}`}
-                                                MiddleButtonTitle="Fvlconize ➜"
-                                            />
-                                        ))
-                                    }
-                                </Flex>
+                                    Results: 30
+                                </AppTypography>
                             </Flex>
-                        </Window>
-                    </Overlay>
+                            <Flex
+                                flexWrap
+                                gap={30}
+                                justify="space-around"
+                            >
+                                {
+                                    faces.map((item, index) => (
+                                        <ImageCard
+                                            key={index}
+                                            imageURL={item.dataUrl}
+                                            title={`Face ${index + 1}`}
+                                            MiddleButtonTitle="Fvlconize ➜"
+                                        />
+                                    ))
+                                }
+                            </Flex>
+                        </Flex>
+                    </Window>
+                </Overlay>
             }
         </AnimatePresence>
     )

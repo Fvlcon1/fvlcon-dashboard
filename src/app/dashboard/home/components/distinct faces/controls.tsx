@@ -22,60 +22,62 @@ const Controls = ({
     onClose? : ()=>void
 }) => {
     return (
-        <Flex
-            justify="space-between"
-            align="center"
-        >
-            <AppTypography
-                textColor={theme.colors.text.primary}
-            >
-                Disticnt Faces
-            </AppTypography>
+        <>
             <Flex
-                width="fit-content"
+                justify="space-between"
                 align="center"
-                gap={4}
             >
-                <Button
-                    text="Clear"
-                    icon={<MdDeleteSweep />}
-                    onClick={onClear}
-                />
-                <ClickableTab
-                    className="hover:!bg-bg-alt1"
-                    onClick={()=>setDisplayWindow(true)}
+                <AppTypography
+                    textColor={theme.colors.text.primary}
                 >
-                    <AppTypography
-                        textColor={theme.colors.text.primary}
-                        size={TypographySize.HL}
-                    >
-                        <MdFullscreen />
-                    </AppTypography>
-                </ClickableTab>
-                <ClickableTab
-                    className="hover:!bg-bg-alt1"
-                    onClick={tryAgain}
+                    Disticnt Faces
+                </AppTypography>
+                <Flex
+                    width="fit-content"
+                    align="center"
+                    gap={4}
                 >
-                    <AppTypography
-                        textColor={theme.colors.text.primary}
-                        size={TypographySize.HL}
+                    <Button
+                        text="Clear"
+                        icon={<MdDeleteSweep />}
+                        onClick={onClear}
+                    />
+                    <ClickableTab
+                        className="hover:!bg-bg-alt1"
+                        onClick={()=>setDisplayWindow(true)}
                     >
-                        <IoReload />
-                    </AppTypography>
-                </ClickableTab>
-                <ClickableTab
-                    className="hover:!bg-bg-alt1 !rounded-full"
-                    onClick={onClose}
-                >
-                    <AppTypography
-                        textColor={theme.colors.text.primary}
-                        size={TypographySize.HL}
+                        <AppTypography
+                            textColor={theme.colors.text.primary}
+                            size={TypographySize.HL}
+                        >
+                            <MdFullscreen />
+                        </AppTypography>
+                    </ClickableTab>
+                    <ClickableTab
+                        className="hover:!bg-bg-alt1"
+                        onClick={tryAgain}
                     >
-                        <IoIosCloseCircle />
-                    </AppTypography>
-                </ClickableTab>
+                        <AppTypography
+                            textColor={theme.colors.text.primary}
+                            size={TypographySize.HL}
+                        >
+                            <IoReload />
+                        </AppTypography>
+                    </ClickableTab>
+                    <ClickableTab
+                        className="hover:!bg-bg-alt1 !rounded-full"
+                        onClick={onClose}
+                    >
+                        <AppTypography
+                            textColor={theme.colors.text.primary}
+                            size={TypographySize.HL}
+                        >
+                            <IoIosCloseCircle />
+                        </AppTypography>
+                    </ClickableTab>
+                </Flex>
             </Flex>
-        </Flex>
+        </>
     )
 }
 export default Controls

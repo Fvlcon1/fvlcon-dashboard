@@ -13,11 +13,14 @@ import { AnimatePresence, motion } from 'framer-motion';
 import Angles from "./angles"
 import Controls from "./controls"
 import AllFaces from "./allFaces"
-import { canvasTypes, FetchState } from '../../../../../utils/@types';
+import { canvasTypes, checkedFaceType, FetchState } from '../../../../../utils/@types';
 import { Spin } from "antd"
 import Loading from "../loading"
 import Button from "@components/button/button"
 import TryAgain from "../tryAgain"
+import SingularRecognitionWindow from "../singular recognition/singularRecognitionWindow"
+import checkEachFace, { runRecognitionOnSingleFace } from "@/utils/model/checkEachFace"
+import SingleRecognition from "./singleRecognition"
 
 const DistinctFaces = ({
     faces,
@@ -32,8 +35,32 @@ const DistinctFaces = ({
 }) => {
     const [displayFaces, setDisplayFaces] = useState(false)
     const [displayAngles, setDisplayAngles] = useState(false)
+    const [displaySingularAnalysis, setDisplaySingularAnalysis] = useState(false)
+    const [selectedFace, setSelectedFace] = useState<canvasTypes>()
+    const [matchedFace, setMatchedFace] = useState<FetchState<checkedFaceType>>({
+        isEmpty : false,
+        isLoading : false
+    })
+
+    const handleFvlconize = async (face : canvasTypes) => {
+        setSelectedFace(face)
+        setDisplaySingularAnalysis(true)
+        setMatchedFace({isLoading : true})
+        const faces = await runRecognitionOnSingleFace(face);
+        if (faces) {
+            setMatchedFace({data : faces});
+        } else {
+            setMatchedFace({isEmpty : true})
+        }
+    }
     return (
         <>
+            <SingleRecognition 
+                displaySingularAnalysis={displaySingularAnalysis}
+                setDisplaySingularAnalysis={setDisplaySingularAnalysis}
+                face={matchedFace}
+                onTryAgain={selectedFace ? ()=>handleFvlconize(selectedFace) : ()=>{}}
+            />
             <motion.div
                 className="w-full relative min-h-[200px] flex flex-col flex-1 gap-1"
                 initial={{
@@ -84,7 +111,8 @@ const DistinctFaces = ({
                                         title={`Face ${index + 1}`}
                                         rightButtonTitle="View angles"
                                         rightButtonClick={()=>setDisplayAngles(true)}
-                                        MiddleButtonTitle="Analyze ➜"
+                                        MiddleButtonTitle="Fvlconize ➜"
+                                        MiddleButtonClick={()=>handleFvlconize(item)}
                                     />
                                 ))
                             }
