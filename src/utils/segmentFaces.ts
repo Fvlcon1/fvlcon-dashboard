@@ -5,7 +5,7 @@ import { canvasTypes } from './@types';
 
 export const isModelsLoaded = () => {
   if(
-    faceapi.nets.tinyFaceDetector.isLoaded &&
+    faceapi.nets.ssdMobilenetv1.isLoaded &&
     faceapi.nets.tinyYolov2.isLoaded &&
     faceapi.nets.faceLandmark68Net.isLoaded &&
     faceapi.nets.faceRecognitionNet.isLoaded &&
@@ -16,7 +16,7 @@ export const isModelsLoaded = () => {
 export const loadModels = async () => {
   const modelPath = '/model';
   try {
-    await faceapi.nets.tinyFaceDetector.loadFromUri(modelPath);
+    await faceapi.nets.ssdMobilenetv1.loadFromUri(modelPath);
     await faceapi.nets.tinyYolov2.loadFromUri(modelPath);
     await faceapi.nets.faceLandmark68Net.loadFromUri(modelPath);
     await faceapi.nets.faceRecognitionNet.loadFromUri(modelPath);
@@ -39,7 +39,7 @@ const segmentFaces = async (url : string, imageRef : RefObject<HTMLImageElement>
     }
   
     const detections = await faceapi
-      .detectAllFaces(img, new faceapi.TinyFaceDetectorOptions())
+      .detectAllFaces(img, new faceapi.SsdMobilenetv1Options())
       .withFaceLandmarks()
       .withFaceDescriptors()
       .withAgeAndGender();
@@ -74,7 +74,7 @@ export const videoSegmentation = async (video: HTMLVideoElement | null, timestam
       
       console.log(`Timestamp: ${timestamp}`);
 
-      let detections = await faceapi.detectAllFaces(video, new faceapi.TinyFaceDetectorOptions())
+      let detections = await faceapi.detectAllFaces(video, new faceapi.SsdMobilenetv1Options())
         .withFaceLandmarks()
         .withFaceDescriptors()
         
