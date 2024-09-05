@@ -221,7 +221,7 @@ const Main = () => {
                             onClick={handleAnalyze}
                         />
                         <Button 
-                            text="Run recognition ➜"
+                            text="Fvlconize ➜"
                             onClick={handleFalconize}
                         />
                     </Flex>

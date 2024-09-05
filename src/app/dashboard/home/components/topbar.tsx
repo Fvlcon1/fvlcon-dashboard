@@ -10,7 +10,7 @@ const Topbar = () => {
     return (
         <div className="flex w-full items-center justify-between px-1">
             <Head 
-                title="Image & Video Recognition"
+                title="Fvlcon Media Lab"
             />
             <Flex
                 width="fit-content"

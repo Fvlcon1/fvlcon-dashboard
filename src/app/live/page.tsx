@@ -4,7 +4,7 @@ import Flex from "@styles/components/flex"
 import User from "./components/user"
 import Controls from "./components/controls"
 import LiveView from "./components/liveView"
-import Left from "./components/right"
+import Head from "@components/title/head"
 
 const Live = () => {
     return (
@@ -13,7 +13,15 @@ const Live = () => {
                 justify="space-between"
                 align="center"
             >
-                <User />
+                <Head
+                    title="Fvlcon Live Vision"
+                />
+                <Flex
+                    width="fit-content"
+                    align='center'
+                >
+                    <User />
+                </Flex>
                 <Controls />
             </Flex>
             <div className="flex relative w-full">
