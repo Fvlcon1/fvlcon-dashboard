@@ -72,6 +72,7 @@ const VideoContainer = ({
                                     onTimeUpdate={(time)=>setVideoTimestamp(playerRef.current.currentTime)}
                                     onPlay={onPlay}
                                     onPause={onPause}
+                                    playbackRates={[0.2,0.5,0.7,1,1.2,1.5,1.7,2]}
                                 />
                             </Flex>
                         }
