@@ -53,7 +53,6 @@ const Main = () => {
     const setFaces = (faces : { dataUrl: string, label: string }[] | undefined) => {
         if(faces){
             if(faces.length === 0){
-                statelessDistinctFaces = {isEmpty : true}
                 setDistinctFaces({isEmpty : true})
             } else {
                 console.log("stateless distinct faces set")
@@ -61,7 +60,6 @@ const Main = () => {
                 setDistinctFaces({data : faces})   
             }   
         } else {
-            statelessDistinctFaces = {isEmpty : true}
             setDistinctFaces({isEmpty : true})
         }
     }
@@ -155,11 +153,13 @@ const Main = () => {
             if(!isVideoPlaying)
                 return clearInterval(startSegmentation)
             getVideoSegments()
-        }, 2000);
+        }, 200);
         return () => clearInterval(startSegmentation);
       }, [isVideoPlaying]);
 
     const handleVideoState = (state : boolean) => {
+        if(state)
+            !displayFaces && setDisplayFaces(true)
         setIsVideoPlaying(state)
         handleVideoPlay(videoRef.current, videoTimestamp, state)
     }
