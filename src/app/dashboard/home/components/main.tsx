@@ -53,14 +53,14 @@ const Main = () => {
     const setFaces = (faces : { dataUrl: string, label: string }[] | undefined) => {
         if(faces){
             if(faces.length === 0){
-                setDistinctFaces({isEmpty : true})
+                setDistinctFaces(prev => ({isEmpty : true}))
             } else {
                 console.log("stateless distinct faces set")
                 statelessDistinctFaces = {data : faces}
-                setDistinctFaces({data : faces})   
+                setDistinctFaces(prev => ({data : faces}))   
             }   
         } else {
-            setDistinctFaces({isEmpty : true})
+            setDistinctFaces(prev => ({isEmpty : true}))
         }
     }
 

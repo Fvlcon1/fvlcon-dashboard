@@ -71,8 +71,6 @@ export const videoSegmentation = async (video: HTMLVideoElement | null, timestam
 
       const displaySize = { width: video.width, height: video.height };
       faceapi.matchDimensions(canvas, displaySize);
-      
-      console.log(`Timestamp: ${timestamp}`);
 
       let detections = await faceapi.detectAllFaces(video, new faceapi.SsdMobilenetv1Options())
         .withFaceLandmarks()
@@ -93,14 +91,11 @@ export const videoSegmentation = async (video: HTMLVideoElement | null, timestam
       detections.map((detection) => {
         let similarity = 10
         if(distinctFaces){
-          console.log({distinctFaces})
           distinctFaces.map((face) => {
             if(face.descriptor){
               const result = faceapi.euclideanDistance(detection.descriptor, face.descriptor)
-              console.log({result, similarity})
               if(result < similarity){
                 similarity = result
-                console.log({similarity})
               }
             }
           })
@@ -109,7 +104,7 @@ export const videoSegmentation = async (video: HTMLVideoElement | null, timestam
             filteredDetections.push(detection)
           }
         } else {
-          console.log("there are no distinct faces yet?")
+          console.log("there are no distinct faces yet")
           filteredDetections.push(detection)
         }
       })
