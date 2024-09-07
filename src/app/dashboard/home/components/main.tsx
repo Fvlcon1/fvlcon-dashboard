@@ -53,12 +53,15 @@ const Main = () => {
     const setFaces = (faces : { dataUrl: string, label: string }[] | undefined) => {
         if(faces){
             if(faces.length === 0){
+                statelessDistinctFaces = {isEmpty : true}
                 setDistinctFaces({isEmpty : true})
             } else {
+                console.log("stateless distinct faces set")
                 statelessDistinctFaces = {data : faces}
                 setDistinctFaces({data : faces})   
             }   
         } else {
+            statelessDistinctFaces = {isEmpty : true}
             setDistinctFaces({isEmpty : true})
         }
     }
@@ -152,7 +155,7 @@ const Main = () => {
             if(!isVideoPlaying)
                 return clearInterval(startSegmentation)
             getVideoSegments()
-        }, 500);
+        }, 2000);
         return () => clearInterval(startSegmentation);
       }, [isVideoPlaying]);
 
@@ -162,11 +165,10 @@ const Main = () => {
     }
 
     const getVideoSegments = async () => {
-        const segments = await videoSegmentation(videoRef.current, videoTimestamp, distinctFaces.data)
-        const combinedFaces = (distinctFaces.data && segments)
-            ? [...distinctFaces.data, ...segments] 
-            : distinctFaces.data ? distinctFaces.data
-            : segments ?? []
+        const segments = await videoSegmentation(videoRef.current, videoTimestamp, statelessDistinctFaces.data)
+        const combinedFaces = (statelessDistinctFaces.data && segments)
+            ? [...segments,...statelessDistinctFaces.data,] 
+            : statelessDistinctFaces.data ?? segments ?? []
         setFaces(combinedFaces)
     }
       

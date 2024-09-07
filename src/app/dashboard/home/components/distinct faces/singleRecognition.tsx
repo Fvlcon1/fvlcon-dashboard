@@ -57,7 +57,7 @@ const SingleRecognition = ({
                                 similarity={face.data.similarity}
                                 title={`Match`}
                                 rightButtonTitle="➜"
-                                description="Lorem ipsum dolor sit amet consectetur adipisicing elit"
+                                description={face.data.matchedPerson}
                             />
                         </Flex>
                     }

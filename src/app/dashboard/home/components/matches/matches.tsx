@@ -83,7 +83,7 @@ const Matches = ({
                                         key={index}
                                         title={`Match ${index + 1}`}
                                         rightButtonTitle="➜"
-                                        description="Lorem ipsum dolor sit amet consectetur adipisicing elit"
+                                        description={item.matchedPerson}
                                     />
                                 ))
                             }
