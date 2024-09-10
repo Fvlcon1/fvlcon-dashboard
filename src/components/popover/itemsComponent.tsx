@@ -23,7 +23,7 @@ const ItemsComponent = ({
         onClick={() => {
           if (handleAnyItemClick) handleAnyItemClick();
           if (item.closeOnClick && closeFunction) closeFunction();
-          if (item.setActive) item.setActive(index, item.active ?? true);
+          if (item.setActive)  item.setActive(index, item.active ? item.active : true);
           if (item.onClick) item.onClick(index);
         }}
       >

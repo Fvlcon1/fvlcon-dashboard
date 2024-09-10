@@ -20,16 +20,15 @@ const LiveView = () => {
     const [currentIndex, setCurrentIndex] = useState(0)
     const [cameras, setCameras] = useState<number[][]>([])
 
-    const getGridClass = () => {
-        const totalCameras = numberOfCamerasPerPage;
+    const getGridClass = () => {;
         switch (true) {
-            case totalCameras <= 4:
+            case numberOfCamerasPerPage <= 4:
               return "grid-cols-2 grid-rows-2";
-            case totalCameras <= 6:
+            case numberOfCamerasPerPage <= 6:
               return "grid-cols-3 grid-rows-2";
-            case totalCameras <= 9:
+            case numberOfCamerasPerPage <= 9:
               return "grid-cols-3 grid-rows-3";
-            case totalCameras <= 12:
+            case numberOfCamerasPerPage <= 12:
               return "grid-cols-4 grid-rows-3";
             default:
                 return "grid-cols-2 grid-rows-2";
@@ -58,7 +57,7 @@ const LiveView = () => {
     useEffect(() => {
         setGridClass(getGridClass());
         handleSetCamerasPerPage()
-    }, [activeCameras]);
+    }, [activeCameras, numberOfCamerasPerPage]);
 
     useEffect(() => {
         setScreenHeight(window.innerHeight);

@@ -18,10 +18,10 @@ import { menuItemsTypes } from "@/utils/@types";
 const Controls = () => {
   const [showAddCam, setShowAddCam] = useState(false);
   const [showLayoutMenu, setShowLayoutMenu] = useState(false);
-  const { numberOfCamerasPerPage } = useContext(liveContext);
+  const { numberOfCamerasPerPage, setNumberOfCamerasPerPage } = useContext(liveContext);
 
   const setActive = (index: number, state?: boolean) => {
-    console.log(state)
+    console.log({setActive : state})
     setLayoutMenuItems((prev) =>
       prev.map((item, i) => ({
         ...item,
@@ -34,12 +34,26 @@ const Controls = () => {
     {
       name: `CPP: ${numberOfCamerasPerPage}`,
       onClick: () => {},
-      setActive: (index: number, active: boolean) => setActive(index, !active),
+      setActive: (index: number, active: boolean) => setActive(index, active),
       icon: <MdDashboardCustomize color={theme.colors.text.secondary}/>,
       dropdown: [
-        { name: "4", onClick: () => {}, closeOnClick: true },
-        { name: "9", onClick: () => {}, closeOnClick: true },
-        { name: "12", onClick: () => {}, closeOnClick: true },
+        { 
+            name: "4", 
+            onClick: () => {setNumberOfCamerasPerPage(4)}, 
+            closeOnClick: true 
+        },
+        { 
+            name: "9", 
+            onClick: () => {
+                console.log(9)
+                setNumberOfCamerasPerPage(9)}, 
+            closeOnClick: true 
+        },
+        { 
+            name: "12", 
+            onClick: () => {setNumberOfCamerasPerPage(12)}, 
+            closeOnClick: true 
+        },
       ],
     },
     {
