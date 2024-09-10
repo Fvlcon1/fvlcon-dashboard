@@ -5,19 +5,26 @@ import React, { createContext, useState, ReactNode } from 'react';
 import { Dispatch } from 'react';
 
 export const liveContext = createContext<{
-    activeCameras : number[],
+    activeCameras : number[]
     setActiveCameras: React.Dispatch<React.SetStateAction<number[]>>
+    numberOfCamerasPerPage : number
+    setNumberOfCamerasPerPage: React.Dispatch<React.SetStateAction<number>>
 }>({
     activeCameras : [],
-    setActiveCameras: ()=>{}
+    setActiveCameras: ()=>{},
+    numberOfCamerasPerPage : 0,
+    setNumberOfCamerasPerPage : ()=>{}
 });
 
 export const LiveProvider = ({ children }: { children: ReactNode }) => {
-    const [activeCameras, setActiveCameras] = useState<number[]>([1,2,3,4])
+    const [activeCameras, setActiveCameras] = useState<number[]>([1,2,3,4,5,6])
+    const [numberOfCamerasPerPage, setNumberOfCamerasPerPage] = useState<number>(4)
     return (
         <liveContext.Provider value={{ 
             activeCameras,
-            setActiveCameras
+            setActiveCameras,
+            numberOfCamerasPerPage,
+            setNumberOfCamerasPerPage
          }}>
             {children}
         </liveContext.Provider>
