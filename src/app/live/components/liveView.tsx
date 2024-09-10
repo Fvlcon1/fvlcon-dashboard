@@ -42,7 +42,7 @@ const LiveView = () => {
     }
 
     const handleFoward = () => {
-        if(currentIndex < 2)
+        if(currentIndex < cameras.length - 1)
             setCurrentIndex(prev => prev + 1)
     }
 

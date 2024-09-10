@@ -13,6 +13,11 @@ import Dropdown from "@components/dropdown/dropdown"
 import { ClickAwayListener } from "@mui/base"
 import Popover from "@components/popover/popover"
 import { liveContext } from "@/context/live"
+import { menuItemsTypes } from "@/utils/@types"
+import MenuItems from "@components/popover/menuItems"
+import { IoIosAddCircle } from "react-icons/io"
+import { TiDelete } from "react-icons/ti"
+import { MdDelete } from "react-icons/md"
 
 const Cameras = () => {
     const [dropdownValue, setDropdownValue] = useState('add +')
@@ -54,16 +59,18 @@ const Cameras = () => {
         })))
     }
 
-    const cameraMenuItems = [
+    const cameraMenuItems : menuItemsTypes[] = [
         {
             name : 'Add +',
             onClick : ()=>addCamera(),
-            icon : <></>
+            closeOnClick : true,
+            icon : <IoIosAddCircle color={theme.colors.text.secondary} size={14}/>
         },
         {
             name : 'Delete',
             onClick : ()=>{},
-            icon : <></>
+            closeOnClick : true,
+            icon : <MdDelete color={theme.colors.text.secondary} />
         },
     ]
 
@@ -86,73 +93,48 @@ const Cameras = () => {
                             onMouseLeave={()=>setHover(index, false)}
                             className="relative"
                         >
-                            <Flex
-                                className="duration-300 hover:scale-95 cursor-pointer"
-                            >
-                                <Flex
-                                    direction="column"
-                                    gap={0}
-                                >
-                                    <AppTypography
-                                        textColor={theme.colors.text.secondary}
-                                    >
-                                        Accra City Camera 01
-                                    </AppTypography>
-                                    <AppTypography
-                                        size={TypographySize.xs}
-                                        textColor={theme.colors.text.tetiary}
-                                    >
-                                        Accra City
-                                    </AppTypography>
-                                </Flex>
-                                {
-                                    (item.hover || item.activeMenu) &&
-                                    <AnimatePresence
-                                    >
-                                        <ClickableTab
-                                            onClick={()=>setActiveMenu(index)}
-                                        >
-                                            <VscKebabVertical 
-                                                color={theme.colors.text.primary}
-                                            />
-                                        </ClickableTab>
-                                    </AnimatePresence>
-                                }
-                            </Flex>
                             <Popover
                                 show={item.activeMenu}
-                                setShow={()=>setActiveMenu(index, false)}
+                                close={()=>setActiveMenu(index, false)}
+                                content={
+                                    <MenuItems 
+                                        items={cameraMenuItems}
+                                    />
+                                }
                             >
-                                <div className="p-1">
+                                <Flex
+                                    className="duration-300 hover:scale-95 cursor-pointer"
+                                >
+                                    <Flex
+                                        direction="column"
+                                        gap={0}
+                                    >
+                                        <AppTypography
+                                            textColor={theme.colors.text.secondary}
+                                        >
+                                            Accra City Camera 01
+                                        </AppTypography>
+                                        <AppTypography
+                                            size={TypographySize.xs}
+                                            textColor={theme.colors.text.tetiary}
+                                        >
+                                            Accra City
+                                        </AppTypography>
+                                    </Flex>
                                     {
-                                        cameraMenuItems.map((item, index : number) => (
-                                            <Fragment
-                                                key={index}
+                                        (item.hover || item.activeMenu) &&
+                                        <AnimatePresence
+                                        >
+                                            <ClickableTab
+                                                onClick={()=>setActiveMenu(index)}
                                             >
-                                                <div 
-                                                    className="px-[10px] py-[4px] duration-200 hover:bg-bg-quantinary rounded-[5px] w-full cursor-pointer "
-                                                    onClick={()=>{
-                                                        setActiveMenu(index, false)
-                                                        item.onClick()
-                                                    }}
-                                                >
-                                                    <Flex
-                                                        align="center"
-                                                    >
-                                                        {item.icon}
-                                                        <AppTypography>
-                                                            {item.name}
-                                                        </AppTypography>
-                                                    </Flex>
-                                                </div>
-                                                {
-                                                    index < (cameraMenuItems.length - 1) &&
-                                                    <div className="w-full h-[1px] bg-bg-quantinary"></div>
-                                                }
-                                            </Fragment>
-                                        ))
+                                                <VscKebabVertical 
+                                                    color={theme.colors.text.primary}
+                                                />
+                                            </ClickableTab>
+                                        </AnimatePresence>
                                     }
-                                </div>
+                                </Flex>
                             </Popover>
                         </div>
                         {

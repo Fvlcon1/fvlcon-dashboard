@@ -2,7 +2,7 @@ import ClickableTab from "@components/clickable/clickabletab"
 import AppTypography from "@styles/components/appTypography"
 import Flex from "@styles/components/flex"
 import User from "./components/user"
-import Controls from "./components/controls"
+import Controls from "./components/controls/controls"
 import LiveView from "./components/liveView"
 import Head from "@components/title/head"
 

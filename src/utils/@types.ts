@@ -94,3 +94,14 @@ export type FetchState<T> = {
   error?: string;
   isEmpty?: boolean;
 };
+
+export type menuItemsTypes = {
+  name: string;
+  onClick?: (index: number) => void;
+  setActive?: (index: number, active: boolean) => void;
+  icon?: ReactNode;
+  closeOnClick?: boolean;
+  dropdown?: menuItemsTypes[];
+  active?: boolean;
+};
+

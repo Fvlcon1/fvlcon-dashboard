@@ -1,35 +1,54 @@
-import { ClickAwayListener } from "@mui/base"
-import { AnimatePresence, motion } from 'framer-motion';
+import { ClickAwayListener } from "@mui/base";
+import { AnimatePresence, motion } from "framer-motion";
 import { ReactNode } from "react";
 
 const Popover = ({
-    show,
-    setShow,
-    children
-} : {
-    show : boolean
-    setShow : ()=>void
-    children? : ReactNode
+  show,
+  close,
+  children,
+  content,
+  position = "right", // Default position
+}: {
+  show: boolean;
+  close: () => void;
+  children?: ReactNode;
+  content?: ReactNode;
+  position?: "top" | "bottom" | "left" | "right";
 }) => {
-    return (
-        <AnimatePresence>
-            {
-                show &&
-                <ClickAwayListener onClickAway={setShow}>
-                    <motion.div 
-                        className="bg-bg-tetiary border-solid border-[1px] border-bg-quantinary absolute right-[-80px] z-10 top-0 rounded-lg"
-                        initial={{
-                            opacity : 0
-                        }}
-                        animate={{
-                            opacity : 1
-                        }}
-                    >
-                        {children}
-                    </motion.div>
-                </ClickAwayListener>
-            }
-        </AnimatePresence>
-    )
-}
-export default Popover
+  const getPositionClass = () => {
+    switch (position) {
+      case "top":
+        return "bottom-full";
+      case "bottom":
+        return "top-full";
+      case "left":
+        return "right-full top-0";
+      case "right":
+      default:
+        return "left-full top-0";
+    }
+  };
+
+  return (
+    <div className="relative">
+      {children}
+      <AnimatePresence>
+        {show && (
+          <ClickAwayListener onClickAway={close}>
+            <motion.div
+              className={`absolute z-10 bg-bg-tetiary border-[1px] border-solid border-bg-quantinary p-1 rounded-lg shadow-xl ${getPositionClass()}`}
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.2 }}
+            >
+              {content}
+            </motion.div>
+          </ClickAwayListener>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+};
+
+export default Popover;
