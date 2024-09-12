@@ -212,6 +212,7 @@ const Cameras = () => {
                                                     onMouseLeave={()=>setHover(index, false)}
                                                     className="relative"
                                                     draggable
+                                                    key={index}
                                                 >
                                                     <Popover
                                                         show={cam.activeMenu}
