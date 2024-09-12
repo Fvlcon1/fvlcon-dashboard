@@ -18,45 +18,113 @@ import MenuItems from "@components/popover/menuItems"
 import { IoIosAddCircle } from "react-icons/io"
 import { TiDelete } from "react-icons/ti"
 import { MdDelete } from "react-icons/md"
+import { FaFolderClosed } from "react-icons/fa6";
+import { FaRegFolderOpen } from "react-icons/fa6";
+import { FaCaretRight } from "react-icons/fa";
+import { GrStatusGoodSmall } from "react-icons/gr";
+import { HiVideoCamera } from "react-icons/hi";
 
 const Cameras = () => {
     const [dropdownValue, setDropdownValue] = useState('add +')
     const {activeCameras, setActiveCameras} = useContext(liveContext)
-    const [cameras, setCameras] = useState([
+    type cameraFolderType = {
+        type : 'folder'
+        folderName : string
+        cameras : cameraType[]
+        open? : boolean
+        hover : boolean,
+    }
+    type cameraType = {
+        type : 'camera'
+        name : string,
+        description? : string,
+        hover : boolean,
+        activeMenu : boolean,
+        active : boolean
+    }
+    type FolderOrCamera = cameraFolderType | cameraType;
+    const [folders, setFolders] = useState<FolderOrCamera[]>([
         {
-            name : "Accra City Camera 01",
-            description : "Accra City",
+            type : 'folder',
+            folderName : "Local",
             hover : false,
-            activeMenu : false
+            cameras : [
+                {
+                    type : 'camera',
+                    name : "Testing cam",
+                    hover : false,
+                    activeMenu : false,
+                    active : false
+                },
+                {
+                    type : 'camera',
+                    name : "Seatle",
+                    hover : false,
+                    activeMenu : false,
+                    active : true
+                },
+            ]
         },
         {
-            name : "Accra City Camera 01",
-            description : "Accra City",
+            type : 'folder',
+            folderName : "hosted",
             hover : false,
-            activeMenu : false
+            cameras : [
+                {
+                    type : 'camera',
+                    name : "London",
+                    hover : false,
+                    activeMenu : false,
+                    active : true
+                },
+                {
+                    type : 'camera',
+                    name : "Disney park cam",
+                    hover : false,
+                    activeMenu : false,
+                    active : false
+                },
+            ]
         },
         {
-            name : "Accra City Camera 01",
-            description : "Accra City",
+            type : 'camera',
+            name : "home camera",
             hover : false,
-            activeMenu : false
+            activeMenu : false,
+            active : false
         },
     ])
 
+    const setFolderVisibility = (index : number, state? : boolean) => {
+        setFolders(prev => prev.map((item, i) => (
+            item.type === 'folder' ?
+            {
+                ...item, 
+                open : i === index 
+                    ? state !== undefined 
+                    ? state 
+                    : item.open !== undefined 
+                    ? !item.open 
+                    : true : item.open
+            }
+            : item
+        )))
+    }
+
     const setHover = (index : number, state? : boolean) => {
-        setCameras(prev => prev.map((item, i) => ({
-            ...item, 
-            hover : i === index 
-            ? state ?? true : state ? !state : false
-        })))
+        // setCameras(prev => prev.map((item, i) => ({
+        //     ...item, 
+        //     hover : i === index 
+        //     ? state ?? true : state ? !state : false
+        // })))
     }
 
     const setActiveMenu = (index : number, state? : boolean) => {
-        setCameras(prev => prev.map((item, i) => ({
-            ...item, 
-            activeMenu : i === index 
-            ? state ?? true : state ? !state : false
-        })))
+        // setCameras(prev => prev.map((item, i) => ({
+        //     ...item, 
+        //     activeMenu : i === index 
+        //     ? state ?? true : state ? !state : false
+        // })))
     }
 
     const cameraMenuItems : menuItemsTypes[] = [
@@ -82,64 +150,166 @@ const Cameras = () => {
         <Flex
             direction="column"
             padding="8px"
+            gap={4}
         >
             {
-                cameras.map((item, index:number) => (
+                folders.map((item, index : number) => (
                     <Fragment
                         key={index}
                     >
-                        <div
-                            onMouseOver={()=>setHover(index)}
-                            onMouseLeave={()=>setHover(index, false)}
-                            className="relative"
-                        >
-                            <Popover
-                                show={item.activeMenu}
-                                close={()=>setActiveMenu(index, false)}
-                                content={
-                                    <MenuItems 
-                                        items={cameraMenuItems}
-                                    />
-                                }
-                            >
-                                <Flex
-                                    className="duration-300 hover:scale-95 cursor-pointer"
-                                >
-                                    <Flex
-                                        direction="column"
-                                        gap={0}
+                        {
+                            item.type === 'folder' &&
+                            <div className="flex flex-col gap-1 overflow-y-hidden">
+                                <div className="flex duration-300 w-full hover:scale-[0.97] cursor-pointer justify-between">
+                                    <div 
+                                        className="flex ml-[-3px] gap-2 justify-center items-center"
+                                        onClick={()=>setFolderVisibility(index)}
                                     >
-                                        <AppTypography
-                                            textColor={theme.colors.text.secondary}
-                                        >
-                                            Accra City Camera 01
+                                        <div className="flex gap-[4px] items-center">
+                                            <FaCaretRight 
+                                                color={theme.colors.text.secondary}
+                                                className={`${item.open ? 'rotate-90' : 'rotate-0'} duration-300`}
+                                            />
+                                            {
+                                                item.open ?
+                                                <FaRegFolderOpen 
+                                                    color={theme.colors.text.secondary}
+                                                    size={13}
+                                                />
+                                                :
+                                                <FaFolderClosed
+                                                    color={theme.colors.text.secondary}
+                                                    size={13}
+                                                />
+                                            }
+                                        </div>
+                                        <AppTypography>
+                                            {item.folderName}
                                         </AppTypography>
-                                        <AppTypography
-                                            size={TypographySize.xs}
-                                            textColor={theme.colors.text.tetiary}
-                                        >
-                                            Accra City
-                                        </AppTypography>
-                                    </Flex>
+                                    </div>
                                     {
-                                        (item.hover || item.activeMenu) &&
+                                        // (item.hover) &&
                                         <AnimatePresence
                                         >
                                             <ClickableTab
                                                 onClick={()=>setActiveMenu(index)}
+                                                className="hover:!bg-bg-quantinary"
                                             >
                                                 <VscKebabVertical 
                                                     color={theme.colors.text.primary}
+                                                    size={13}
                                                 />
                                             </ClickableTab>
                                         </AnimatePresence>
                                     }
-                                </Flex>
-                            </Popover>
-                        </div>
+                                </div>
+                                <div className={`flex ${item.open ? 'max-h-[50px]' : 'max-h-0'} duration-300 flex-col gap-1 pl-5`}>
+                                    <div className="flex duration-300 flex-col gap-1 border-l-[1px] border-solid border-l-bg-quantinary pl-2">
+                                        {
+                                            item.cameras.map((cam, index : number) => (
+                                                <div
+                                                    onMouseOver={()=>setHover(index)}
+                                                    onMouseLeave={()=>setHover(index, false)}
+                                                    className="relative"
+                                                    draggable
+                                                >
+                                                    <Popover
+                                                        show={cam.activeMenu}
+                                                        close={()=>setActiveMenu(index, false)}
+                                                        content={
+                                                            <MenuItems 
+                                                                items={cameraMenuItems}
+                                                            />
+                                                        }
+                                                    >
+                                                        <Flex
+                                                            className="duration-300 hover:scale-[0.97] cursor-pointer justify-center items-center"
+                                                        >
+                                                            <HiVideoCamera 
+                                                                color={cam.active ? '#a32a2a' :  theme.colors.text.tetiary}
+                                                                className={`${cam.active && 'animate-pulse'}`}
+                                                            />
+                                                            <Flex
+                                                                direction="column"
+                                                                gap={0}
+                                                            >
+                                                                <AppTypography
+                                                                    textColor={theme.colors.text.secondary}
+                                                                >
+                                                                    {cam.name}
+                                                                </AppTypography>
+                                                            </Flex>
+                                                            {
+                                                                (cam.hover || cam.activeMenu) &&
+                                                                <AnimatePresence
+                                                                >
+                                                                    <ClickableTab
+                                                                        onClick={()=>setActiveMenu(index)}
+                                                                    >
+                                                                        <VscKebabVertical 
+                                                                            color={theme.colors.text.primary}
+                                                                        />
+                                                                    </ClickableTab>
+                                                                </AnimatePresence>
+                                                            }
+                                                        </Flex>
+                                                    </Popover>
+                                                </div>
+                                            ))
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        }
                         {
-                            index < 2 &&
-                            <div className="w-full h-[1px] bg-bg-quantinary"></div>
+                            item.type === 'camera' &&
+                            <div
+                                onMouseOver={()=>setHover(index)}
+                                onMouseLeave={()=>setHover(index, false)}
+                                className="relative"
+                                draggable
+                            >
+                                <Popover
+                                    show={item.activeMenu}
+                                    close={()=>setActiveMenu(index, false)}
+                                    content={
+                                        <MenuItems 
+                                            items={cameraMenuItems}
+                                        />
+                                    }
+                                >
+                                    <Flex
+                                        className="duration-300 hover:scale-[0.97] cursor-pointer justify-center items-center"
+                                    >
+                                        <HiVideoCamera 
+                                            color={theme.colors.text.secondary}
+                                        />
+                                        <Flex
+                                            direction="column"
+                                            gap={0}
+                                        >
+                                            <AppTypography
+                                                textColor={theme.colors.text.secondary}
+                                            >
+                                                {item.name}
+                                            </AppTypography>
+                                        </Flex>
+                                        {
+                                            (item.hover || item.activeMenu) &&
+                                            <AnimatePresence
+                                            >
+                                                <ClickableTab
+                                                    onClick={()=>setActiveMenu(index)}
+                                                >
+                                                    <VscKebabVertical 
+                                                        color={theme.colors.text.primary}
+                                                    />
+                                                </ClickableTab>
+                                            </AnimatePresence>
+                                        }
+                                    </Flex>
+                                </Popover>
+                            </div>
                         }
                     </Fragment>
                 ))

@@ -36,7 +36,7 @@ const Popover = ({
         {show && (
           <ClickAwayListener onClickAway={close}>
             <motion.div
-              className={`absolute z-10 bg-bg-tetiary border-[1px] border-solid border-bg-quantinary p-1 rounded-lg shadow-xl ${getPositionClass()}`}
+              className={`absolute z-10 bg-bg-tetiary border-[1px] border-solid border-bg-quantinary rounded-lg shadow-xl ${getPositionClass()}`}
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}

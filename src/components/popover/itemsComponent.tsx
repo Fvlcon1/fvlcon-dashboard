@@ -19,7 +19,7 @@ const ItemsComponent = ({
   return (
     <Fragment>
       <div
-        className="px-[10px] py-[4px] duration-200 hover:bg-bg-quantinary rounded-[5px] w-full cursor-pointer"
+      className={`px-2 py-[4px] duration-200 rounded-[5px] hover:bg-bg-quantinary w-full cursor-pointer`}
         onClick={() => {
           if (handleAnyItemClick) handleAnyItemClick();
           if (item.closeOnClick && closeFunction) closeFunction();
@@ -34,9 +34,6 @@ const ItemsComponent = ({
           </AppTypography>
         </Flex>
       </div>
-      {index < items.length - 1 && (
-        <div className="w-full h-[1px] bg-bg-quantinary"></div>
-      )}
     </Fragment>
   );
 };
