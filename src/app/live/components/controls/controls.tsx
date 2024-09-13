@@ -72,6 +72,7 @@ const Controls = () => {
           <MenuItems
             items={layoutMenuItems}
             closeFunction={() => setShowLayoutMenu(false)}
+            id={"controls"}
           />
         }
       >
