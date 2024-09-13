@@ -20,6 +20,7 @@ const AppTypography = ({
     fontfamily,
     maxLines,
     lineHeight,
+    whiteSpace
 } : AppTypographyProps) => {
 
     const [onHover, setOnHover] = useState<boolean>(false)
@@ -46,7 +47,7 @@ const AppTypography = ({
                 maxHeight : ellipsis ? 13.33 * 1.5 * (maxLines ?? 1) : 'none',
                 overflow : 'hidden',
                 lineHeight,
-                whiteSpace : 'nowrap'
+                whiteSpace : whiteSpace
             }}
             onMouseOver={()=>setOnHover(true)}
             onMouseLeave={()=>setOnHover(false)}

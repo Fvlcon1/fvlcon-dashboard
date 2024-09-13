@@ -97,7 +97,7 @@ export type FetchState<T> = {
 
 export type menuItemsTypes = {
   name: string;
-  onClick?: (index: number) => void;
+  onClick?: (index: number, id : string) => void;
   setActive?: (index: number, active: boolean) => void;
   icon?: ReactNode;
   closeOnClick?: boolean;
@@ -105,3 +105,24 @@ export type menuItemsTypes = {
   active?: boolean;
 };
 
+export type cameraFolderType = {
+  id: string;
+  type: "folder";
+  folderName: string;
+  cameras: FolderOrCamera[];
+  open: boolean;
+  renaming? : boolean
+  hover: boolean;
+};
+
+export type cameraType = {
+  id: string;
+  type: "camera";
+  name: string;
+  description?: string;
+  hover: boolean;
+  activeMenu: boolean;
+  active: boolean;
+};
+
+export type FolderOrCamera = cameraFolderType | cameraType;

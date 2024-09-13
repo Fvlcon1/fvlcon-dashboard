@@ -6,10 +6,12 @@ const MenuItems = ({
   items,
   handleAnyItemClick,
   closeFunction,
+  id
 }: {
   items: menuItemsTypes[];
   handleAnyItemClick?: () => void;
   closeFunction?: (index?: number) => void;
+  id : string
 }) => {
   return (
     <div className="p-1">
@@ -24,6 +26,7 @@ const MenuItems = ({
               content={
                 <MenuItems
                   items={item.dropdown}
+                  id={id}
                   closeFunction={() => {
                     if (item.setActive) item.setActive(index, false);
                   }}
@@ -32,6 +35,7 @@ const MenuItems = ({
             >
               <ItemsComponent
                 items={items}
+                id={id}
                 closeFunction={closeFunction}
                 handleAnyItemClick={handleAnyItemClick}
                 item={item}
@@ -44,6 +48,7 @@ const MenuItems = ({
               closeFunction={closeFunction}
               handleAnyItemClick={handleAnyItemClick}
               item={item}
+              id={id}
               index={index}
             />
           )}

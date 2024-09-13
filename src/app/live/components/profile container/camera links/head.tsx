@@ -6,6 +6,8 @@ import { Dispatch, SetStateAction } from "react"
 import { FaSortAlphaDown } from "react-icons/fa"
 import { FiSearch } from "react-icons/fi"
 import { HiVideoCamera } from "react-icons/hi"
+import { RiVideoAddFill } from "react-icons/ri"
+import AddFolderOrCamera from "./addFolderOrCamera"
 
 const Head = ({
     showSearch,
@@ -35,23 +37,27 @@ const Head = ({
             </Flex>
             <Flex
                 width="fit-content"
+                align="center"
                 gap={0}
             >
                 <ClickableTab
-                    className="hover:!bg-bg-primary"
+                    className="hover:!bg-bg-alt1"
                     onClick={()=>setShowSearch(!showSearch)}
                 >
                     <FiSearch
                         color={theme.colors.text.secondary}
+                        size={13}
                     />
                 </ClickableTab>
                 <ClickableTab
-                    className="hover:!bg-bg-primary"
+                    className="hover:!bg-bg-alt1"
                 >
                     <FaSortAlphaDown
                         color={theme.colors.text.secondary}
+                        size={13}
                     />
                 </ClickableTab>
+                <AddFolderOrCamera />
             </Flex>
         </Flex>
     )

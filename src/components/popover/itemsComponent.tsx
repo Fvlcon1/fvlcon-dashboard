@@ -9,12 +9,14 @@ const ItemsComponent = ({
   index,
   closeFunction,
   handleAnyItemClick,
+  id
 }: {
   item: menuItemsTypes;
   handleAnyItemClick?: () => void;
   items: menuItemsTypes[];
   index: number;
   closeFunction?: (index?: number) => void;
+  id : string
 }) => {
   return (
     <Fragment>
@@ -24,12 +26,14 @@ const ItemsComponent = ({
           if (handleAnyItemClick) handleAnyItemClick();
           if (item.closeOnClick && closeFunction) closeFunction();
           if (item.setActive)  item.setActive(index, item.active ? item.active : true);
-          if (item.onClick) item.onClick(index);
+          if (item.onClick) item.onClick(index, id);
         }}
       >
         <Flex align="center">
           {item.icon}
-          <AppTypography>
+          <AppTypography
+            whiteSpace="nowrap"
+          >
             {item.name}
           </AppTypography>
         </Flex>
