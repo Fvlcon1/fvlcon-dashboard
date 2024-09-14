@@ -2,20 +2,26 @@ import { FolderOrCamera } from "@/utils/@types";
 import { Dispatch, SetStateAction } from "react";
 
 const filterCamDelete = (folders: FolderOrCamera[], id: string): FolderOrCamera[] => {
-    return folders.filter((item) => {
-        if (item.type === "camera") {
-            return item.id !== id;
+    return folders.map((item) => {
+        if (item.type === "camera" && item.id === id) {
+            return null;
         }
+
         if (item.type === "folder") {
-            if (item.cameras) {
-                item.cameras = filterCamDelete(item.cameras, id);
+            if (item.id === id) {
+                return null;
             }
-            return true;
+            if (item.cameras) {
+                return {
+                    ...item,
+                    cameras: filterCamDelete(item.cameras, id),
+                };
+            }
         }
-        return true;
-    });
+        return item;
+    }).filter((item) => item !== null);
 };
 
-export const deleteCam = (folders: FolderOrCamera[], id: string, setFolders : Dispatch<SetStateAction<FolderOrCamera[]>>) => {
-    setFolders(filterCamDelete(folders, id))
-}
+export const deleteCam = (folders: FolderOrCamera[], id: string, setFolders: Dispatch<SetStateAction<FolderOrCamera[]>>) => {
+    setFolders(filterCamDelete(folders, id));
+};

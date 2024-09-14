@@ -113,6 +113,7 @@ export type cameraFolderType = {
   open: boolean;
   renaming? : boolean
   hover: boolean;
+  activeMenu: boolean;
 };
 
 export type cameraType = {

@@ -6,6 +6,7 @@ export const camdata : FolderOrCamera[] = [
         type: "folder",
         folderName: "Local",
         open : false,
+        activeMenu: false,
         hover: false,
         cameras: [
             {
@@ -31,6 +32,7 @@ export const camdata : FolderOrCamera[] = [
         type: "folder",
         folderName: "Stream",
         open : false,
+        activeMenu: false,
         hover: false,
         cameras: [
             {
@@ -57,6 +59,7 @@ export const camdata : FolderOrCamera[] = [
         open : false,
         folderName: "hosted",
         hover: false,
+        activeMenu: false,
         cameras: [
             {
                 id: "folder4",
@@ -64,6 +67,7 @@ export const camdata : FolderOrCamera[] = [
                 open : false,
                 folderName: "Local",
                 hover: false,
+                activeMenu: false,
                 cameras: [
                     {
                         id: "cam5",

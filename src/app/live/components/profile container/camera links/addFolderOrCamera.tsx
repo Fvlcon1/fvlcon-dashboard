@@ -52,11 +52,12 @@ const AddFolderOrCamera = () => {
             {
                 id: `folder${getFolderLength(folders) + 1}`,
                 type: "folder",
-                folderName: `New Folder${getFolderLength(folders) + 1} ipi`,
+                folderName: `New Folder${getFolderLength(folders) + 1}`,
                 open : false,
                 hover: false,
                 cameras : [],
-                renaming : true
+                renaming : true,
+                activeMenu : false
             }
         ])
     }

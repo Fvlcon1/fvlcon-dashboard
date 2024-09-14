@@ -22,10 +22,10 @@ const Popover = ({
       case "bottom":
         return "top-full left-0";
       case "left":
-        return "right-full top-1/2 transform -translate-y-1/2";
+        return "right-full top-0 transform -translate-y-1/2";
       case "right":
       default:
-        return "left-full top-1/2 transform -translate-y-1/2";
+        return "left-full top-0 transform -translate-y-1/2";
     }
   };
 

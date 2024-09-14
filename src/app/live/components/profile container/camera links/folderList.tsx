@@ -11,13 +11,14 @@ import { liveContext } from "@/context/live";
 import { cameraFolderType, cameraType, FolderOrCamera, menuItemsTypes } from "@/utils/@types";
 import MenuItems from "@components/popover/menuItems";
 import { IoIosAddCircle } from "react-icons/io";
-import { MdDelete } from "react-icons/md";
+import { MdDelete, MdDeleteSweep } from "react-icons/md";
 import { FaFolderClosed, FaRegFolderOpen, FaCaretRight } from "react-icons/fa6";
-import { HiVideoCamera } from "react-icons/hi";
-import { RiMenuUnfoldLine } from "react-icons/ri";
+import { HiOutlineDotsVertical, HiVideoCamera } from "react-icons/hi";
+import { RiMenuUnfoldLine, RiVideoAddFill } from "react-icons/ri";
 import { ClickAwayListener } from "@mui/base";
-import { getFolderLength } from "./addFolderOrCamera";
+import { getCamLength, getFolderLength } from "./addFolderOrCamera";
 import { deleteCam } from "./helpers";
+import { AiFillFolderAdd } from "react-icons/ai";
 
 const FolderList = ({
     camOrfolder,
@@ -156,26 +157,126 @@ const FolderList = ({
             name: "Delete",
             onClick: (index, id) => {deleteCam(folders, id, setFolders)},
             closeOnClick: true,
-            icon: <MdDelete color={theme.colors.text.secondary} />,
+            icon: <MdDeleteSweep color={theme.colors.text.secondary} />,
         },
     ];
 
-    const getkNewlyCreatedFolder = (folders : FolderOrCamera[]) : cameraFolderType => {
+    const getkNewlyCreatedFolder = (folders : FolderOrCamera[], length : number) : cameraFolderType => {
         const folder = folders.map((folder, i) => {
             if(folder.type === 'folder'){
-                console.log(folder.id, `folder${getFolderLength(folders)}`)
-                if(folder.id === `folder${getFolderLength(folders)}`)
+                console.log({id : folder.id, id2 : `folder${length}`})
+                if(folder.id === `folder${length}`)
                     return folder
-                return getkNewlyCreatedFolder(folder.cameras)
+                return getkNewlyCreatedFolder(folder.cameras, length)
             }
         })
         return folder.filter((item, i) => item !== undefined)[0]
     }
 
+    const addFolderToSubFolder = (folder : cameraFolderType, folderID? : string) : cameraFolderType => {
+        if(folder.id === folderID){
+            return {
+                ...folder,
+                cameras : [
+                    ...folder.cameras,
+                    {
+                        id: `folder${getFolderLength(folders) + 1}`,
+                        type: "folder",
+                        folderName: `New Folder${getFolderLength(folders) + 1}`,
+                        open : false,
+                        hover: false,
+                        cameras : [],
+                        renaming : true,
+                        activeMenu : false
+                    }
+                ]
+            }
+        } else {
+            if(folder.cameras){
+                return {
+                    ...folder,
+                    cameras : folder.cameras.map((item, i) => {
+                        if(item.type === 'folder'){
+                            return addFolderToSubFolder(item, folderID)
+                        } else {
+                            return item
+                        }
+                    })
+                }
+            } else {
+                return folder
+            }
+        }
+    }
+
+    const addNewFolder = (folderID? : string) => {
+        if(folderID){
+            setFolders(prev => prev.map((item, i) => {
+                if(item.type === 'folder'){
+                    return addFolderToSubFolder(item, folderID)
+                } else {
+                    return item
+                }
+            }))
+        } else {
+            setFolders(prev => [
+                ...prev,
+                {
+                    id: `folder${getFolderLength(folders) + 1}`,
+                    type: "folder",
+                    folderName: `New Folder${getFolderLength(folders) + 1}`,
+                    open : false,
+                    hover: false,
+                    cameras : [],
+                    renaming : true,
+                    activeMenu : false
+                }
+            ])
+        }
+    }
+
+    const addNewCamera = (folderID? : string) => {
+        if(folderID){
+        }
+        setFolders(prev => [
+            ...prev,
+            {
+                id : `cam${getCamLength(folders) + 1}`,
+                type : 'camera',
+                name : `cam${getCamLength(folders) + 1}`,
+                hover : false,
+                activeMenu : false,
+                active : false
+            }
+        ])
+    }
+
+    const folderMenuItems: menuItemsTypes[] = [
+        {
+            name: "Add Folder",
+            onClick: (index, id)=>addNewFolder(id),
+            closeOnClick: true,
+            icon: <AiFillFolderAdd color={theme.colors.text.secondary} size={14} />,
+        },
+        {
+            name: "Add Cam",
+            onClick: (index, id)=>addNewCamera(id),
+            closeOnClick: true,
+            icon: <RiVideoAddFill color={theme.colors.text.secondary} size={14} />,
+        },
+        {
+            name: "Delete",
+            onClick: (index, id) => {deleteCam(folders, id, setFolders)},
+            closeOnClick: true,
+            icon: <MdDeleteSweep color={theme.colors.text.secondary} />,
+        },
+    ];
+
     useEffect(()=>{
         if(folders){
             setHasUpdatedFolderName(false)
-            const newFolder = getkNewlyCreatedFolder(folders)
+            const newFolder = getkNewlyCreatedFolder(folders, getFolderLength(folders))
+            console.log({newFolder})
             if(newFolder && newFolder?.renaming){
                 setFoldername(newFolder.folderName)
             }
@@ -184,8 +285,8 @@ const FolderList = ({
 
     useEffect(()=>{
         if(folders){
-            const newFolder = getkNewlyCreatedFolder(folders)
-            if(newFolder && newFolder?.renaming && hasUpdatedFolderName === false){
+            const newFolder = getkNewlyCreatedFolder(folders, getFolderLength(folders))
+            if(newFolder && newFolder?.renaming && !hasUpdatedFolderName){
                 if(renamingInputRef.current){
                     setTimeout(() => {
                         renamingInputRef.current?.select()
@@ -198,79 +299,91 @@ const FolderList = ({
 
     return (
         camOrfolder.type === 'folder' ? (
-            <div className={`flex flex-col gap-1 ${!camOrfolder.open && 'overflow-hidden'}`}>
-                <div 
-                    className="flex duration-300 h-[20px] w-full hover:bg-bg-alt1 px-2 py-2 rounded-md cursor-pointer justify-between"
-                    onClick={() => setFolderVisibility(camOrfolder.id)}    
-                >
-                    <div className="flex ml-[-3px] gap-2 justify-center items-center">
-                        <div className="flex gap-[4px] items-center">
-                            <div>
-                                <FaCaretRight
-                                    color={theme.colors.text.secondary}
-                                    className={`${camOrfolder.open ? "rotate-90" : "rotate-0"} duration-300`}
-                                />
-                            </div>
-                            {camOrfolder.open ? (
-                                <div><FaRegFolderOpen color={theme.colors.text.secondary} size={13} /></div>
-                            ) : (
-                                <div><FaFolderClosed color={theme.colors.text.secondary} size={13} /></div>
-                            )}
-                        </div>
-                        {
-                            camOrfolder.renaming ?
-                            <ClickAwayListener onClickAway={()=>handleFolderNameChange()}>
-                                <form
-                                    onSubmit={e => handleFolderNameChange(e)}
-                                    className="flex"
-                                >
-                                    <input 
-                                        type="text"
-                                        value={foldername}
-                                        className="bg-transparent text-[12px] outline-none rounded-md text-text-secondary w-full"
-                                        onChange={e => setFoldername(e.target.value)}
-                                        ref={renamingInputRef}
-                                    />
-                                </form>
-                            </ClickAwayListener>
-                            :
-                            <AppTypography textColor={theme.colors.text.secondary} ellipsis maxLines={1}>
-                                {camOrfolder.folderName}
-                            </AppTypography>
-                        }
-                    </div>
-                    <AnimatePresence>
-                        {camOrfolder.hover && (
-                            <motion.div
-                                initial={{ opacity: 0 }}
-                                animate={{ opacity: 1 }}
-                                transition={{ duration: 0.2 }}
+            <Popover
+                show={camOrfolder.activeMenu}
+                close={() => setActiveMenu(camOrfolder.id, false)}
+                content={<MenuItems items={folderMenuItems} id={camOrfolder.id} closeFunction={() => setActiveMenu(camOrfolder.id, false)} />}
+            >
+                <div className={`flex flex-col gap-1 ${!camOrfolder.open && 'overflow-hidden'}`}>
+                    <div>
+                        <div 
+                            className="flex duration-300 h-[20px] w-full hover:bg-bg-alt1 px-2 items-center rounded-md cursor-pointer justify-between"
+                            onMouseOver={() => setHover(camOrfolder.id)}
+                            onMouseLeave={() => setHover(camOrfolder.id, false)}
+                            draggable
+                        >
+                            <div className="flex ml-[-3px] gap-2 items-center flex-1"
+                                onClick={() => setFolderVisibility(camOrfolder.id)}  
                             >
-                                <ClickableTab onClick={() => setActiveMenu(camOrfolder.id)}>
-                                    <div><VscKebabVertical color={theme.colors.text.primary} size={13} /></div>
-                                </ClickableTab>
-                            </motion.div>
-                        )}
-                    </AnimatePresence>
-                </div>
-                <motion.div
-                    className={`flex transition-all duration-300 ease-in-out ${
-                        camOrfolder.open ? "max-h-[200px]" : "max-h-0"
-                    } flex-col gap-1 pl-5`}
-                >
-                    <div className="flex pl-1 border-l-[1px] border-l-bg-alt1 border-solid flex-col">
-                        {camOrfolder.cameras.map((cam, index) => (
-                            <FolderList
-                                camOrfolder={cam}
-                                index={index}
-                                folders={folders}
-                                setFolders={setFolders}
-                                key={cam.id}
-                            />
-                        ))}
+                                <div className="flex gap-[4px] items-center">
+                                    <div>
+                                        <FaCaretRight
+                                            color={theme.colors.text.secondary}
+                                            className={`${camOrfolder.open ? "rotate-90" : "rotate-0"} duration-300`}
+                                        />
+                                    </div>
+                                    {camOrfolder.open ? (
+                                        <div><FaRegFolderOpen color={theme.colors.text.secondary} size={13} /></div>
+                                    ) : (
+                                        <div><FaFolderClosed color={theme.colors.text.secondary} size={13} /></div>
+                                    )}
+                                </div>
+                                {
+                                    camOrfolder.renaming ?
+                                    <ClickAwayListener onClickAway={()=>handleFolderNameChange()}>
+                                        <form
+                                            onSubmit={e => handleFolderNameChange(e)}
+                                            className="flex"
+                                        >
+                                            <input 
+                                                type="text"
+                                                value={foldername}
+                                                className="bg-transparent text-[12px] outline-none rounded-md text-text-secondary w-full"
+                                                onChange={e => setFoldername(e.target.value)}
+                                                ref={renamingInputRef}
+                                            />
+                                        </form>
+                                    </ClickAwayListener>
+                                    :
+                                    <AppTypography textColor={theme.colors.text.secondary} ellipsis maxLines={1}>
+                                        {camOrfolder.folderName}
+                                    </AppTypography>
+                                }
+                            </div>
+                            <AnimatePresence>
+                                {camOrfolder.hover && (
+                                    <motion.div
+                                        initial={{ opacity: 0 }}
+                                        animate={{ opacity: 1 }}
+                                        transition={{ duration: 0.2 }}
+                                    >
+                                        <ClickableTab onClick={() => setActiveMenu(camOrfolder.id)}>
+                                            <div><HiOutlineDotsVertical color={theme.colors.text.primary} size={10} /></div>
+                                        </ClickableTab>
+                                    </motion.div>
+                                )}
+                            </AnimatePresence>
+                        </div>
+                        <motion.div
+                            className={`flex transition-all duration-300 ease-in-out ${
+                                camOrfolder.open ? "max-h-[200px]" : "max-h-0"
+                            } flex-col gap-1 pl-5`}
+                        >
+                            <div className="flex pl-1 border-l-[1px] border-l-bg-alt1 border-solid flex-col">
+                                {camOrfolder.cameras.map((cam, index) => (
+                                    <FolderList
+                                        camOrfolder={cam}
+                                        index={index}
+                                        folders={folders}
+                                        setFolders={setFolders}
+                                        key={cam.id}
+                                    />
+                                ))}
+                            </div>
+                        </motion.div>
                     </div>
-                </motion.div>
-            </div>
+                </div>
+            </Popover>
         ) : (
             <div
                 onMouseOver={() => setHover(camOrfolder.id)}
@@ -302,7 +415,7 @@ const FolderList = ({
                                     transition={{ duration: 0.2 }}
                                 >
                                     <ClickableTab onClick={() => setActiveMenu(camOrfolder.id)}>
-                                        <RiMenuUnfoldLine color={theme.colors.text.primary} size={10} />
+                                        <HiOutlineDotsVertical color={theme.colors.text.primary} size={10} />
                                     </ClickableTab>
                                 </motion.div>
                             )}
