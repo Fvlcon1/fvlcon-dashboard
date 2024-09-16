@@ -1,5 +1,7 @@
 'use client'
 
+import { addNewCamera } from "@/app/live/utils/addNewCamera"
+import { getFolderLength } from "@/app/live/utils/getCamOrFolderLength"
 import { liveContext } from "@/context/live"
 import { FolderOrCamera, menuItemsTypes } from "@/utils/@types"
 import Button from "@components/button/button"
@@ -11,35 +13,6 @@ import { useContext, useState } from "react"
 import { AiFillFolderAdd } from "react-icons/ai"
 import { IoIosAddCircle } from "react-icons/io"
 import { RiAddLine, RiVideoAddFill } from "react-icons/ri"
-
-export const getFolderLength = (folders : FolderOrCamera[]) : number => {
-    let len = 0
-    folders.map((folder, i) => {
-        if(folder.type === 'folder'){
-            len = len + 1
-            if(folder.cameras.length > 0){
-                const sublen = getFolderLength(folder.cameras)
-                len = sublen + len
-            }
-        }
-    })
-    return len
-}
-
-export const getCamLength = (folders : FolderOrCamera[]) : number => {
-    let len = 0
-    folders.map((folder, i) => {
-        if(folder.type === 'camera'){
-            len = len + 1
-        } else {
-            if(folder.cameras.length > 0){
-                const sublen = getFolderLength(folder.cameras)
-                len = sublen + len
-            }
-        }
-    })
-    return len
-}
 
 const AddFolderOrCamera = () => {
     const [showMenu, setShowMenu] = useState(false)
@@ -57,25 +30,10 @@ const AddFolderOrCamera = () => {
                 hover: false,
                 cameras : [],
                 renaming : true,
+                select :  true,
                 activeMenu : false
             }
         ])
-    }
-
-    const addNewCamera = (folderID? : string) => {
-        if(!folderID){
-            setFolders(prev => [
-                ...prev,
-                {
-                    id : `cam${getCamLength(folders) + 1}`,
-                    type : 'camera',
-                    name : `cam${getCamLength(folders) + 1}`,
-                    hover : false,
-                    activeMenu : false,
-                    active : false
-                }
-            ])
-        }
     }
 
     const menuitems: menuItemsTypes[] = [
@@ -87,7 +45,10 @@ const AddFolderOrCamera = () => {
         },
         {
             name: "Add Cam",
-            onClick: ()=>addNewCamera(),
+            onClick: ()=>addNewCamera({
+                folders,
+                setFolders,
+            }),
             closeOnClick: true,
             icon: <RiVideoAddFill color={theme.colors.text.secondary} size={14} />,
         },

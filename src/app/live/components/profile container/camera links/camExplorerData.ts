@@ -1,6 +1,6 @@
 import { FolderOrCamera } from "@/utils/@types";
 
-export const camdata : FolderOrCamera[] = [
+export const camExplorerData : FolderOrCamera[] = [
     {
         id: "folder1",
         type: "folder",

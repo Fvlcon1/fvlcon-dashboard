@@ -114,16 +114,19 @@ export type cameraFolderType = {
   renaming? : boolean
   hover: boolean;
   activeMenu: boolean;
+  select? : boolean
 };
 
 export type cameraType = {
   id: string;
   type: "camera";
   name: string;
+  renaming? : boolean
   description?: string;
   hover: boolean;
   activeMenu: boolean;
   active: boolean;
+  select? : boolean
 };
 
 export type FolderOrCamera = cameraFolderType | cameraType;

@@ -15,10 +15,12 @@ import { MdDelete, MdDeleteSweep } from "react-icons/md";
 import { FaFolderClosed, FaRegFolderOpen, FaCaretRight } from "react-icons/fa6";
 import { HiOutlineDotsVertical, HiVideoCamera } from "react-icons/hi";
 import { RiMenuUnfoldLine, RiVideoAddFill } from "react-icons/ri";
-import { ClickAwayListener } from "@mui/base";
-import { getCamLength, getFolderLength } from "./addFolderOrCamera";
+import { ClickAwayListener } from "@mui/base"
 import { deleteCam } from "./helpers";
 import { AiFillFolderAdd } from "react-icons/ai";
+import { FaEdit } from "react-icons/fa";
+import { addNewCamera } from "@/app/live/utils/addNewCamera";
+import { getFolderLength, getCamLength } from '../../../utils/getCamOrFolderLength';
 
 const FolderList = ({
     camOrfolder,
@@ -32,12 +34,12 @@ const FolderList = ({
     folders: FolderOrCamera[];
 }) => {
     const [foldername, setFoldername] = useState("New Folder")
-    const [hasUpdatedFolderName, setHasUpdatedFolderName] = useState(false)
     const renamingInputRef = useRef<HTMLInputElement>(null)
     const { 
         activeCameras, 
         setActiveCameras,
-     } = useContext(liveContext);
+    } = useContext(liveContext);
+
     const updateFolderOpenProperty = (
         items: FolderOrCamera[],
         folderId: string,
@@ -53,30 +55,55 @@ const FolderList = ({
                 return { ...item, cameras: updateFolderOpenProperty(item.cameras, folderId, state) };
             }
             return item;
-        })};
+    })};
 
-    const getChangedFolderName = (folder: cameraFolderType): cameraFolderType | undefined => {
-        if (folder.id === `folder${getFolderLength(folders)}`) {
+    const changeCamName = (cam: cameraType): cameraType => {
+        if (cam.renaming) {
             return {
-                ...folder,
-                folderName: `${foldername}`,
+                ...cam,
+                name: `${foldername}`,
                 renaming: false
             };
+        }
+        return cam;
+    }
+
+    const getChangedFolderName = (folder: FolderOrCamera): FolderOrCamera | undefined => {
+        if(folder.type === 'folder'){
+            if (folder.renaming) {
+                return {
+                    ...folder,
+                    folderName: `${foldername}`,
+                    renaming: false
+                };
+            }
+        } else {
+            if(folder.type === 'camera'){
+                if (folder.renaming) {
+                    return {
+                        ...folder,
+                        name: `${foldername}`,
+                        renaming: false
+                    };
+                }
+            }
         }
         return undefined;
     }
 
-    const handleFolderNameChangeRecursive = (folder: cameraFolderType): cameraFolderType => {
+    const handleFolderNameChangeRecursive = (folder: FolderOrCamera): FolderOrCamera => {
         const updatedFolder = getChangedFolderName(folder);
         if (updatedFolder) return updatedFolder;
 
-        if (folder.cameras) {
-            return {
-                ...folder,
-                cameras: folder.cameras.map((cam) =>
-                    cam.type === "folder" ? handleFolderNameChangeRecursive(cam) : cam
-                ),
-            };
+        if(folder.type === 'folder'){
+            if (folder.cameras) {
+                return {
+                    ...folder,
+                    cameras: folder.cameras.map((cam) =>
+                        handleFolderNameChangeRecursive(cam)
+                    ),
+                };
+            }
         }
         return folder;
     };
@@ -86,25 +113,53 @@ const FolderList = ({
         setFolders((prev) =>
             prev.map((item) => {
                 if (item.type === "folder") {
-                    console.log("is folder")
                     const folder = getChangedFolderName(item);
                     if (folder) {
-                        console.log({folder})
                         return folder;
-                    } else {console.log("no updated folder")}
+                    }
                     if (item.cameras) {
                         return {
                             ...item,
                             cameras: item.cameras.map((cam) =>
-                                cam.type === "folder" ? handleFolderNameChangeRecursive(cam) : cam
+                                handleFolderNameChangeRecursive(cam)
                             ),
                         };
+                    } else {
+                        return item
+                    }
+                } else {
+                    if(item.type === 'camera'){
+                        return changeCamName(item)
+                    } else {
+                        return item
                     }
                 }
-                return item;
             })
         );
     };
+
+    const unsetSelectRecursion = (folder: FolderOrCamera) : FolderOrCamera => {
+        if(folder.select){
+            return {
+                ...folder,
+                select : false
+            }
+        } 
+        if(folder.type === 'folder' && folder.cameras){
+            return {
+                ...folder,
+                cameras : folder.cameras.map((item, index) => unsetSelectRecursion(item))
+            }
+        } else {
+            return folder
+        }
+    }
+
+    const unsetSelect = () => {
+        setFolders(prev => 
+            prev.map((item, index) => unsetSelectRecursion(item))
+        )
+    }
 
     const setFolderVisibility = (id: string, state?: boolean) => {
         setFolders((prev) => updateFolderOpenProperty(prev, id, state));
@@ -148,6 +203,12 @@ const FolderList = ({
 
     const cameraMenuItems: menuItemsTypes[] = [
         {
+            name: "Rename",
+            onClick: (index, id)=>rename(id),
+            closeOnClick: true,
+            icon: <FaEdit color={theme.colors.text.secondary} size={14} />,
+        },
+        {
             name: "Add +",
             onClick: () => addCamera(),
             closeOnClick: true,
@@ -161,16 +222,55 @@ const FolderList = ({
         },
     ];
 
-    const getkNewlyCreatedFolder = (folders : FolderOrCamera[], length : number) : cameraFolderType => {
+    const getkNewlyCreatedFolder = (folders : FolderOrCamera[], length : number) : FolderOrCamera => {
         const folder = folders.map((folder, i) => {
             if(folder.type === 'folder'){
-                console.log({id : folder.id, id2 : `folder${length}`})
                 if(folder.id === `folder${length}`)
                     return folder
                 return getkNewlyCreatedFolder(folder.cameras, length)
             }
         })
         return folder.filter((item, i) => item !== undefined)[0]
+    }
+
+    const getRenamingElement = (folders : FolderOrCamera[]) : FolderOrCamera => {
+        const folder = folders.map((folder, i) => {
+            if(folder.type === 'folder'){
+                if(folder.renaming)
+                    return folder
+                return getRenamingElement(folder.cameras)
+            } else {
+                if(folder.renaming)
+                    return folder
+            }
+        })
+        return folder.filter((item, i) => item !== undefined)[0]
+    }
+
+    const renameFolder = (folder : FolderOrCamera, folderID : string) : FolderOrCamera => {
+        if(folder.id === folderID){
+            return {
+                ...folder,
+                renaming : true,
+                select : true
+            }
+        } else {
+            if(folder.type === 'folder' && folder.cameras){
+                return {
+                    ...folder,
+                    cameras : folder.cameras.map((item, index) => renameFolder(item, folderID))
+                }
+            } else {
+                return folder
+            }
+        }
+    }
+
+    const rename = (folderID : string) => {
+        setFolders(prev => 
+            prev.map((folder, index) => renameFolder(folder, folderID))
+        )
+        setFoldername('')
     }
 
     const addFolderToSubFolder = (folder : cameraFolderType, folderID? : string) : cameraFolderType => {
@@ -187,6 +287,7 @@ const FolderList = ({
                         hover: false,
                         cameras : [],
                         renaming : true,
+                        select : true,
                         activeMenu : false
                     }
                 ]
@@ -235,23 +336,13 @@ const FolderList = ({
         }
     }
 
-    const addNewCamera = (folderID? : string) => {
-        if(folderID){
-        }
-        setFolders(prev => [
-            ...prev,
-            {
-                id : `cam${getCamLength(folders) + 1}`,
-                type : 'camera',
-                name : `cam${getCamLength(folders) + 1}`,
-                hover : false,
-                activeMenu : false,
-                active : false
-            }
-        ])
-    }
-
     const folderMenuItems: menuItemsTypes[] = [
+        {
+            name: "Rename",
+            onClick: (index, id)=>rename(id),
+            closeOnClick: true,
+            icon: <FaEdit color={theme.colors.text.secondary} size={14} />,
+        },
         {
             name: "Add Folder",
             onClick: (index, id)=>addNewFolder(id),
@@ -260,7 +351,11 @@ const FolderList = ({
         },
         {
             name: "Add Cam",
-            onClick: (index, id)=>addNewCamera(id),
+            onClick: (index, id)=>addNewCamera({
+                folders,
+                setFolders,
+                folderID : id
+            }),
             closeOnClick: true,
             icon: <RiVideoAddFill color={theme.colors.text.secondary} size={14} />,
         },
@@ -274,25 +369,27 @@ const FolderList = ({
 
     useEffect(()=>{
         if(folders){
-            setHasUpdatedFolderName(false)
-            const newFolder = getkNewlyCreatedFolder(folders, getFolderLength(folders))
-            console.log({newFolder})
-            if(newFolder && newFolder?.renaming){
-                setFoldername(newFolder.folderName)
+            const RenamingElement = getRenamingElement(folders)
+            if(RenamingElement && RenamingElement.renaming){
+                if(RenamingElement.type === 'folder'){
+                    setFoldername(RenamingElement.folderName)
+                } else if(RenamingElement.type === 'camera'){
+                    setFoldername(RenamingElement.name)
+                }
             }
         }
     },[folders])
 
     useEffect(()=>{
         if(folders){
-            const newFolder = getkNewlyCreatedFolder(folders, getFolderLength(folders))
-            if(newFolder && newFolder?.renaming && !hasUpdatedFolderName){
+            const RenamingElement = getRenamingElement(folders)
+            if(RenamingElement && RenamingElement.select){
                 if(renamingInputRef.current){
                     setTimeout(() => {
                         renamingInputRef.current?.select()
+                        unsetSelect()
                     }, 200);
                 }
-                setHasUpdatedFolderName(true)
             }
         }
     },[foldername])
@@ -385,15 +482,15 @@ const FolderList = ({
                 </div>
             </Popover>
         ) : (
-            <div
-                onMouseOver={() => setHover(camOrfolder.id)}
-                onMouseLeave={() => setHover(camOrfolder.id, false)}
-                draggable
+            <Popover
+                show={camOrfolder.activeMenu}
+                close={() => setActiveMenu(camOrfolder.id, false)}
+                content={<MenuItems items={cameraMenuItems} id={camOrfolder.id} closeFunction={() => setActiveMenu(camOrfolder.id, false)}/>}
             >
-                <Popover
-                    show={camOrfolder.activeMenu}
-                    close={() => setActiveMenu(camOrfolder.id, false)}
-                    content={<MenuItems items={cameraMenuItems} id={camOrfolder.id} />}
+                <div
+                    onMouseOver={() => setHover(camOrfolder.id)}
+                    onMouseLeave={() => setHover(camOrfolder.id, false)}
+                    draggable
                 >
                     <Flex className="duration-300 hover:bg-bg-alt1 rounded-md px-2 py-[2px] cursor-pointer justify-center items-center">
                         <div>
@@ -402,13 +499,31 @@ const FolderList = ({
                                 className={`${camOrfolder.active && 'animate-pulse'}`}
                             />
                         </div>
-                        <Flex direction="column" gap={0}>
-                            <AppTypography textColor={theme.colors.text.secondary} ellipsis maxLines={1}>
-                                {camOrfolder.name}
-                            </AppTypography>
-                        </Flex>
+                        {
+                            camOrfolder.renaming ?
+                            <ClickAwayListener onClickAway={()=>handleFolderNameChange()}>
+                                <form
+                                    onSubmit={e => handleFolderNameChange(e)}
+                                    className="flex"
+                                >
+                                    <input 
+                                        type="text"
+                                        value={foldername}
+                                        className="bg-transparent text-[12px] outline-none rounded-md text-text-secondary w-full"
+                                        onChange={e => setFoldername(e.target.value)}
+                                        ref={renamingInputRef}
+                                    />
+                                </form>
+                            </ClickAwayListener>
+                            :
+                            <Flex direction="column" gap={0}>
+                                <AppTypography textColor={theme.colors.text.secondary} ellipsis maxLines={1}>
+                                    {camOrfolder.name}
+                                </AppTypography>
+                            </Flex>
+                        }
                         <AnimatePresence>
-                            {(camOrfolder.hover || camOrfolder.activeMenu) && (
+                            {(camOrfolder.hover) && (
                                 <motion.div
                                     initial={{ opacity: 0 }}
                                     animate={{ opacity: 1 }}
@@ -421,8 +536,8 @@ const FolderList = ({
                             )}
                         </AnimatePresence>
                     </Flex>
-                </Popover>
-            </div>
+                </div>
+            </Popover>
         )
     );
 };

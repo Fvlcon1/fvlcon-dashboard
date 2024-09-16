@@ -1,16 +1,7 @@
 'use client'
 
-import ClickableTab from "@components/clickable/clickabletab"
-import Searchbar from "@components/search/search"
-import AppTypography from "@styles/components/appTypography"
 import Flex from "@styles/components/flex"
-import { TypographySize } from "@styles/style.types"
-import theme from "@styles/theme"
-import { Fragment, useState } from "react"
-import { FaSortAlphaDown } from "react-icons/fa"
-import { FiSearch } from "react-icons/fi"
-import { AnimatePresence, motion } from 'framer-motion';
-import { HiVideoCamera } from "react-icons/hi"
+import { useState } from "react"
 import Cameras from "./cameras"
 import Head from "./head"
 import Search from "./search"

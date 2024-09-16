@@ -1,7 +1,7 @@
 'use client'
 
 import { imagesType } from '@/app/dashboard/home/components/images/controls';
-import { camdata } from '@/app/live/components/profile container/camera links/camdata';
+import { camExplorerData } from '@/app/live/components/profile container/camera links/camExplorerData';
 import { FolderOrCamera } from '@/utils/@types';
 import React, { createContext, useState, ReactNode } from 'react';
 import { Dispatch } from 'react';
@@ -25,7 +25,7 @@ export const liveContext = createContext<{
 export const LiveProvider = ({ children }: { children: ReactNode }) => {
     const [activeCameras, setActiveCameras] = useState<number[]>([1,2,3,4,5,6])
     const [numberOfCamerasPerPage, setNumberOfCamerasPerPage] = useState<number>(4)
-    const [folders, setFolders] = useState<FolderOrCamera[]>(camdata);
+    const [folders, setFolders] = useState<FolderOrCamera[]>(camExplorerData);
     return (
         <liveContext.Provider value={{ 
             activeCameras,
