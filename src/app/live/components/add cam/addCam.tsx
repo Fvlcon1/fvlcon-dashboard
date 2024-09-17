@@ -37,7 +37,12 @@ const AddCam = ({
     const [manufaturer, setManufacturer] = useState('')
     const [cameraModel, setCameraModel] = useState('')
     const [firmwareVersion, setFirmwareVersion] = useState('')
-    const {activeCameras, setActiveCameras} = useContext(liveContext)
+    const {
+        activeCameras, 
+        setActiveCameras,
+        folders,
+        setFolders
+    } = useContext(liveContext)
 
     const handleSubmit = () => {
         setDisplay(false)

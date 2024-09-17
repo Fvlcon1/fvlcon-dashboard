@@ -55,7 +55,6 @@ const AllMatches = ({
                                                 similarity={item.similarity}
                                                 key={index}
                                                 title={`Match ${index + 1}`}
-                                                rightButtonTitle="➜"
                                                 description={item.matchedPerson}
                                             />
                                         ))
