@@ -8,7 +8,7 @@ import { MdCancel, MdFullscreen } from "react-icons/md"
 import ImageCard from "./imageCard"
 import Overlay from "@components/overlay/overlay"
 import Window from "@components/window/window"
-import { useState } from "react"
+import { Fragment, useState } from "react"
 import { AnimatePresence, motion } from 'framer-motion';
 import Angles from "./angles"
 import Controls from "./controls"
@@ -16,9 +16,7 @@ import AllFaces from "./allFaces"
 import { canvasTypes, checkedFaceType, FetchState } from '../../../../../utils/@types';
 import { Spin } from "antd"
 import Loading from "../loading"
-import Button from "@components/button/button"
 import TryAgain from "../tryAgain"
-import SingularRecognitionWindow from "../singular recognition/singularRecognitionWindow"
 import checkEachFace, { runRecognitionOnSingleFace } from "@/utils/model/checkEachFace"
 import SingleRecognition from "./singleRecognition"
 
@@ -45,7 +43,10 @@ const DistinctFaces = ({
     const handleFvlconize = async (face : canvasTypes) => {
         setSelectedFace(face)
         setDisplaySingularAnalysis(true)
-        setMatchedFace({isLoading : true})
+        setMatchedFace(prev => ({
+            ...prev,
+            isLoading : true,
+        }))
         const faces = await runRecognitionOnSingleFace(face);
         if (faces) {
             setMatchedFace({data : faces});
@@ -74,7 +75,7 @@ const DistinctFaces = ({
             >
                 <div className="w-full absolute z-[-1] top-0 bg-gradient-container h-[220px] rounded-lg">
                 </div>
-                <div className="w-full rounded-lg px-3 py-2">
+                <div className="w-full rounded-lg px-3 py-2 flex flex-col gap-2">
                     <Controls 
                         setDisplayWindow={setDisplayFaces}
                         onClear={onClear}
@@ -86,7 +87,7 @@ const DistinctFaces = ({
                             gap={20}
                         >
                             {
-                                faces.isLoading ?
+                                faces.isLoading && !faces.data ?
                                 <Loading 
                                     title="Segmenting faces"
                                 />
@@ -104,17 +105,28 @@ const DistinctFaces = ({
                                     onTryAgain={onTryAgain}
                                 />
                                 :
-                                faces.data?.map((item, index : number) => (
-                                    <ImageCard 
-                                        key={index}
-                                        imageURL={item.dataUrl}
-                                        title={`Face ${index + 1}`}
-                                        rightButtonTitle="View angles"
-                                        rightButtonClick={()=>setDisplayAngles(true)}
-                                        MiddleButtonTitle="Fvlconize ➜"
-                                        MiddleButtonClick={()=>handleFvlconize(item)}
-                                    />
-                                ))
+                                faces.data && 
+                                <>
+                                    {
+                                        faces.isLoading &&
+                                        <div className="flex bg-bg-primary rounded-md min-w-[200px] h-[150px] justify-center items-center">
+                                            <Spin size="small"/>
+                                        </div>
+                                    }
+                                    {
+                                        [...faces.data].reverse().map((item, index : number) => (
+                                            <ImageCard 
+                                                key={index}
+                                                imageURL={item.dataUrl}
+                                                title={`Face ${index + 1}`}
+                                                rightButtonTitle="View angles"
+                                                rightButtonClick={()=>setDisplayAngles(true)}
+                                                MiddleButtonTitle="Fvlconize ➜"
+                                                MiddleButtonClick={()=>handleFvlconize(item)}
+                                            />
+                                        ))
+                                    }
+                                </>
                             }
                         </Flex>
                     </div>

@@ -57,7 +57,7 @@ const Matches = ({
                             gap={20}
                         >
                             {
-                                faces.isLoading ?
+                                faces.isLoading && !faces.data ?
                                 <Loading 
                                     title="Fvlconizing..."
                                 />
@@ -75,16 +75,28 @@ const Matches = ({
                                     onTryAgain={onTryAgain}
                                 />
                                 :
-                                faces.data?.map((item, index : number) => (
-                                    <MatchCard
-                                        originalImage={item.originalImage}
-                                        matchedImage={item.matchedImage}
-                                        similarity={item.similarity}
-                                        key={index}
-                                        title={`Match ${index + 1}`}
-                                        description={item.matchedPerson}
-                                    />
-                                ))
+                                faces.data && 
+                                <>
+                                    {
+                                        faces.isLoading &&
+                                        <div className="flex bg-bg-primary rounded-md min-w-[200px] h-[150px] justify-center items-center">
+                                            <Spin size="small"/>
+                                        </div>
+                                    }
+                                    {
+                                        [...faces.data].reverse().map((item, index : number) => (
+                                            <MatchCard
+                                                originalImage={item.originalImage}
+                                                matchedImage={item.matchedImage}
+                                                similarity={item.similarity}
+                                                key={index}
+                                                title={`Match ${index + 1}`}
+                                                description={item.matchedPerson}
+                                                showExpand
+                                            />
+                                        ))
+                                    }
+                                </>
                             }
                         </Flex>
                     </div>

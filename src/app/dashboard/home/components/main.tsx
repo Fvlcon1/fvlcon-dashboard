@@ -17,6 +17,7 @@ import segmentFaces, { handleVideoPlay, isModelsLoaded, loadModels, videoSegment
 import { canvasTypes, checkedFaceType, FetchState } from "@/utils/@types"
 import checkEachFace from "@/utils/model/checkEachFace"
 import generateVideoThumbnail from "@/utils/generateVideoThumbnail"
+import { toast } from "react-toastify"
 let fileEx : any = undefined
 
 const Main = () => {
@@ -53,11 +54,23 @@ const Main = () => {
     const setFaces = (faces : { dataUrl: string, label: string }[] | undefined) => {
         if(faces){
             if(faces.length === 0){
-                setDistinctFaces(prev => ({isEmpty : true}))
+                if(!distinctFaces.data){
+                    setDistinctFaces(prev => ({isEmpty : true}))
+                } else {
+                    setDistinctFaces(prev => ({
+                        ...prev,
+                        isLoading : false
+                    }))
+                }
+                toast.error("No face detected!")
             } else {
-                console.log("stateless distinct faces set")
-                statelessDistinctFaces = {data : faces}
-                setDistinctFaces(prev => ({data : faces}))   
+                statelessDistinctFaces = {
+                    data : statelessDistinctFaces.data ? 
+                    [...statelessDistinctFaces.data, ...faces] : faces
+                }
+                setDistinctFaces(prev => ({
+                    data : prev.data ? [...prev.data, ...faces] : faces
+                }))   
             }   
         } else {
             setDistinctFaces(prev => ({isEmpty : true}))
@@ -65,11 +78,12 @@ const Main = () => {
     }
 
     const handleAnalyze = async () => {
-        setDistinctFaces({isLoading : true})
         setDisplayFaces(true)
+        setDistinctFaces(prev => ({
+            ...prev,
+            isLoading : true,
+        }))
         if(selectedImage && fileEx && imageRef.current !== null){
-            console.log(selectedImage)
-            console.log({fileExtension})
             if(isImageFile(fileEx)){
                 const faces = await segmentFaces(selectedImage.url, imageRef)
                 faces && setFaces(faces)
@@ -89,16 +103,22 @@ const Main = () => {
     }
 
     const handleFalconize = async () => {
-        setMatchedFaces({isLoading : true})
+        setMatchedFaces(prev => ({
+            ...prev,
+            isLoading : true
+        }));
         await handleAnalyze()
         setDisplayMatches(true);
         if(statelessDistinctFaces.data){
             const faces = await checkEachFace(statelessDistinctFaces);
             if (faces && faces.length > 0) {
                 const validFaces = faces.filter(face => face !== undefined) as checkedFaceType[];
-                setMatchedFaces({data : validFaces});
+                setMatchedFaces(prev => ({
+                    data : prev.data ? [...prev.data, ...validFaces] : validFaces,
+                }));
             } else {
-                setMatchedFaces({isEmpty : true})
+                toast.error("No match found!")
+                !matchedFaces.data && setMatchedFaces({isEmpty : true})
             }
         } else {
             setMatchedFaces({error : 'No Image Selected'})

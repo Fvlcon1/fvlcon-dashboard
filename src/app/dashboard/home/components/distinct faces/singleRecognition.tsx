@@ -1,10 +1,11 @@
 import { Dispatch, SetStateAction } from "react"
-import SingularRecognitionWindow from "../singular recognition/singularRecognitionWindow"
 import Flex from "@styles/components/flex"
 import { checkedFaceType, FetchState } from "@/utils/@types"
 import Loading from "../loading"
 import TryAgain from "../tryAgain"
 import MatchCard from "../matches/MatchCard"
+import OverlayWindow from "@components/window/overlayWindow"
+import ExpandMatchComponent from "../matches/expandMatchComponent"
 
 const SingleRecognition = ({
     displaySingularAnalysis,
@@ -19,7 +20,7 @@ const SingleRecognition = ({
 }) => {
     return (
         <>
-            <SingularRecognitionWindow
+            <OverlayWindow
                 display={displaySingularAnalysis}
                 setDisplay={setDisplaySingularAnalysis}
                 title="Fvlconize"
@@ -47,22 +48,12 @@ const SingleRecognition = ({
                         />
                         :
                         face.data &&
-                        <Flex
-                            justify="center"
-                            padding="20px"
-                        >
-                            <MatchCard
-                                originalImage={face.data.originalImage}
-                                matchedImage={face.data.matchedImage}
-                                similarity={face.data.similarity}
-                                title={`Match`}
-                                rightButtonTitle="➜"
-                                description={face.data.matchedPerson}
-                            />
-                        </Flex>
+                        <ExpandMatchComponent 
+                            match={face.data}
+                        />
                     }
                 </Flex>
-            </SingularRecognitionWindow>
+            </OverlayWindow>
         </>
     )
 }

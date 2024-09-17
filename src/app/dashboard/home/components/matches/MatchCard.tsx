@@ -14,6 +14,7 @@ import ImageContainer from "./imageContainer"
 import NoMatchFound from "./noMatchFound"
 import { FaExpand } from "react-icons/fa6"
 import ExpandMatch from './expandMatch';
+import { TbListDetails } from "react-icons/tb"
 
 const MatchCard = ({
     title,
@@ -54,7 +55,7 @@ const MatchCard = ({
             />
             <div 
                 className="p-3 py-3 min-w-[400px] w-[400px] h-fit flex flex-col gap-1 rounded-2xl bg-gradient-container-black"
-                onClick={()=>setExpand(true)}
+                onClick={showExpand ? ()=>setExpand(true) : ()=>{}}
             >
                 <Flex
                     justify="space-between"
@@ -77,9 +78,17 @@ const MatchCard = ({
                         <ClickableTab
                             onClick={()=>setExpand(true)}
                         >
-                            <MdFullscreen
-                                color={theme.colors.text.primary}
-                            />
+                            <div className="hover:opacity-100 opacity-70 gap-1 flex items-center hover:scale-[0.98] duration-200 cursor-pointer">
+                                <TbListDetails 
+                                    color={theme.colors.text.primary}
+                                    size={14}
+                                />
+                                <AppTypography
+                                    textColor={theme.colors.text.primary}
+                                >
+                                    More Details...
+                                </AppTypography>
+                            </div>
                         </ClickableTab>
                     }
                 </Flex>
