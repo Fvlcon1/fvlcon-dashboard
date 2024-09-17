@@ -45,7 +45,7 @@ const Matches = ({
             >
                 <div className="w-full absolute z-[-1] top-0 bg-gradient-container h-[200px] rounded-lg">
                 </div>
-                <div className="w-full rounded-lg px-3 py-2">
+                <div className="w-full rounded-lg px-3 py-2 flex flex-col gap-2">
                     <Controls 
                         setDisplayWindow={setDisplayFaces}
                         onClear={onClear}

@@ -28,7 +28,7 @@ export const loadModels = async () => {
   }
 };
 
-const segmentFaces = async (url : string, imageRef : RefObject<HTMLImageElement>, image? : DetailedHTMLProps<ImgHTMLAttributes<HTMLImageElement>, HTMLImageElement>) => {
+const segmentFaces = async (url : string) => {
   try {
     const img = await faceapi.fetchImage(url);
     if (!isModelsLoaded()) {
@@ -76,19 +76,19 @@ export const videoSegmentation = async (video: HTMLVideoElement | null, timestam
         .withFaceLandmarks()
         .withFaceDescriptors()
         
-        const resizedDetections = faceapi.resizeResults(detections, displaySize);
-        const context = canvas.getContext("2d");
-        if (canvasContainer) {
-          canvasContainer.innerHTML = '';
-        }
-        context?.clearRect(0, 0, canvas.width, canvas.height);
+      const resizedDetections = faceapi.resizeResults(detections, displaySize);
+      const context = canvas.getContext("2d");
+      if (canvasContainer) {
+        canvasContainer.innerHTML = '';
+      }
+      context?.clearRect(0, 0, canvas.width, canvas.height);
       faceapi.draw.drawDetections(canvas, resizedDetections);
 
       const filteredDetections : faceapi.WithFaceDescriptor<faceapi.WithFaceLandmarks<{
           detection: faceapi.FaceDetection;
       }, faceapi.FaceLandmarks68>>[] = []
 
-      detections.map((detection) => {
+      resizedDetections.map((detection) => {
         let similarity = 10
         if(distinctFaces){
           distinctFaces.map((face) => {
@@ -99,8 +99,7 @@ export const videoSegmentation = async (video: HTMLVideoElement | null, timestam
               }
             }
           })
-          if (similarity > 0.6){
-            console.log('similarity > 0.6')
+          if (similarity > 0.8){
             filteredDetections.push(detection)
           }
         } else {

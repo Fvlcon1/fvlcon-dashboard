@@ -51,18 +51,25 @@ const Main = () => {
     let imageSplit = []
     let filename = undefined
 
-    const setFaces = (faces : { dataUrl: string, label: string }[] | undefined) => {
+    const setFaces = (faces : { dataUrl: string, label: string }[] | undefined, type? : 'video' | 'image') => {
         if(faces){
             if(faces.length === 0){
                 if(!distinctFaces.data){
-                    setDistinctFaces(prev => ({isEmpty : true}))
+                    if(type !== 'video'){
+                        statelessDistinctFaces = {isEmpty : true}
+                        setDistinctFaces(prev => ({isEmpty : true}))
+                    }
                 } else {
+                    statelessDistinctFaces = {
+                        ...statelessDistinctFaces.data,
+                        isLoading : false
+                    }
                     setDistinctFaces(prev => ({
                         ...prev,
                         isLoading : false
                     }))
                 }
-                toast.error("No face detected!")
+                type !== 'video' && toast.error("No face detected!")
             } else {
                 statelessDistinctFaces = {
                     data : statelessDistinctFaces.data ? 
@@ -85,12 +92,12 @@ const Main = () => {
         }))
         if(selectedImage && fileEx && imageRef.current !== null){
             if(isImageFile(fileEx)){
-                const faces = await segmentFaces(selectedImage.url, imageRef)
+                const faces = await segmentFaces(selectedImage.url)
                 faces && setFaces(faces)
             } else if(isVideoFile(fileEx)){
                 const thumbnail = await generateVideoThumbnail(selectedImage.url, videoTimestamp)
                 thumbnail ? setImageSrc(thumbnail) : console.log("unable to generate thumbnail")
-                const faces = await segmentFaces(thumbnail, imageRef)
+                const faces = await segmentFaces(thumbnail)
                 faces && setFaces(faces)
             } else {
                 console.log("invalid file format")
@@ -136,12 +143,15 @@ const Main = () => {
     }
 
     const clearDistinctFaces = () => {
+        statelessDistinctFaces = {
+            isEmpty : false,
+            isLoading : false,
+        }
         setDistinctFaces({
             isEmpty : false,
             isLoading : false,
         })
     }
-
     
     const clearMatchedFaces = () => {
         setMatchedFaces({
@@ -173,7 +183,7 @@ const Main = () => {
             if(!isVideoPlaying)
                 return clearInterval(startSegmentation)
             getVideoSegments()
-        }, 200);
+        }, 1000);
         return () => clearInterval(startSegmentation);
       }, [isVideoPlaying]);
 
@@ -186,10 +196,7 @@ const Main = () => {
 
     const getVideoSegments = async () => {
         const segments = await videoSegmentation(videoRef.current, videoTimestamp, statelessDistinctFaces.data)
-        const combinedFaces = (statelessDistinctFaces.data && segments)
-            ? [...segments,...statelessDistinctFaces.data,] 
-            : statelessDistinctFaces.data ?? segments ?? []
-        setFaces(combinedFaces)
+        setFaces(segments ?? [], 'video')
     }
       
 
