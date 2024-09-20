@@ -1,0 +1,42 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+	--text-primary : #F6F6F8;
+  --text-secondary : #77767B;
+  --text-tetiary : #555458;
+
+  --bg-primary : #000000;
+  --bg-secondary : #111111;
+  --bg-tetiary : #141414;
+  --bg-quantinary : #1C1C1E;
+  --bg-alt1 : #2C2C2C;
+  --bg-alt2 : #737373;
+}
+
+body {
+  background-color : var(--bg-primary)
+}
+
+/* Chrome, Edge, and Safari */
+*::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+
+*::-webkit-scrollbar-track {
+  background: #00000000;
+  border-radius: 100px;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: var(--bg-quantinary);
+  border-radius: 100px;
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
