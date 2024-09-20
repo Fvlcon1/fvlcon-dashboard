@@ -2,6 +2,7 @@ import * as faceapi from 'face-api.js';
 import { DetailedHTMLProps, ImgHTMLAttributes, MutableRefObject, RefObject, useRef } from 'react';
 import { getFaceCanvas } from './getFaceCanvas';
 import { canvasTypes } from './@types';
+import axios from 'axios';
 
 export const isModelsLoaded = () => {
   if(
@@ -127,6 +128,20 @@ export const handleVideoPlay = async (video: HTMLVideoElement | null, timestamp:
     }
   }
 };
+
+export const awsSegmentation = async (file : File) => {
+  const getPresignedUrl = await axios.get("https://lne96wspb2.execute-api.us-east-1.amazonaws.com/Prod/upload-video")
+  if(getPresignedUrl.data){
+    const presignedUrl = getPresignedUrl.data.data
+    console.log(getPresignedUrl.data)
+    const uploadVideo = await axios.put(presignedUrl, file, {
+      headers: {
+        'Content-Type': file.type,
+      }
+    });
+    console.log(uploadVideo)
+  }
+}
 
 
 

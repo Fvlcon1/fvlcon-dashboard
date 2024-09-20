@@ -13,7 +13,7 @@ import Matches from "./matches/matches"
 import Metadata from "./metadata"
 import { isImageFile, isVideoFile } from "@/utils/getFileType"
 import VideoContainer from "@components/video container/videoContainer"
-import segmentFaces, { handleVideoPlay, isModelsLoaded, loadModels, videoSegmentation } from "@/utils/segmentFaces"
+import segmentFaces, { awsSegmentation, handleVideoPlay, isModelsLoaded, loadModels, videoSegmentation } from "@/utils/segmentFaces"
 import { canvasTypes, checkedFaceType, FetchState } from "@/utils/@types"
 import checkEachFace from "@/utils/model/checkEachFace"
 import generateVideoThumbnail from "@/utils/generateVideoThumbnail"
@@ -110,6 +110,10 @@ const Main = () => {
     }
 
     const handleFalconize = async () => {
+        if(isVideoFile(fileEx) && selectedImage && selectedImage.fullFile){
+            console.log(selectedImage)
+            return awsSegmentation(selectedImage!.fullFile)
+        }
         setMatchedFaces(prev => ({
             ...prev,
             isLoading : true
