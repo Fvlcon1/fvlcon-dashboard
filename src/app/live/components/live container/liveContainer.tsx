@@ -14,7 +14,7 @@ const LiveContainer = () => {
                 frameBorder={0}
                 allowFullScreen
                 allow="accelerometer; autoplay; clipboard-writehttp://18.212.105.195:8888/haatso/channel_1/"
-            />
+            />
         </div>
     )
 }

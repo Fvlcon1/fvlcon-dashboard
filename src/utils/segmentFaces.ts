@@ -131,8 +131,9 @@ export const handleVideoPlay = async (video: HTMLVideoElement | null, timestamp:
 
 export const awsSegmentation = async (file : File) => {
   const getPresignedUrl = await axios.get("https://lne96wspb2.execute-api.us-east-1.amazonaws.com/Prod/upload-video")
+  const {presignedUrl, videoKey} = getPresignedUrl.data
+
   if(getPresignedUrl.data){
-    const presignedUrl = getPresignedUrl.data.data
     console.log(getPresignedUrl.data)
     const uploadVideo = await axios.put(presignedUrl, file, {
       headers: {
@@ -140,6 +141,38 @@ export const awsSegmentation = async (file : File) => {
       }
     });
     console.log(uploadVideo)
+
+    if(uploadVideo.status === 200){
+      const startAnalysis = await axios.post("https://lne96wspb2.execute-api.us-east-1.amazonaws.com/Prod/upload-video", {videoKey})
+      console.log({startAnalysis})
+      if(startAnalysis.status === 200){
+        const {
+          faceJobId,
+          textJobId,
+          message,
+          videoKey
+        } = startAnalysis.data
+        const pollInterval = setInterval( async () => {
+          try {
+            const getFaceStatus = await axios.get("https://lne96wspb2.execute-api.us-east-1.amazonaws.com/Prod/check-job-status", {
+              params : {
+                jobId : faceJobId,
+                jobType : 'face'
+              }
+            })
+            if(
+              getFaceStatus.data.status === 'SUCCEED' || 'FAILED'
+            ) {
+              console.log(getFaceStatus.data)
+              clearInterval(pollInterval)
+            }
+          } catch (error) {
+            clearInterval(pollInterval)
+            console.log({error})
+          }
+        }, 5000);
+      }
+    }
   }
 }
 
