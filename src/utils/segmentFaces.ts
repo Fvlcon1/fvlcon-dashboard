@@ -3,6 +3,7 @@ import { DetailedHTMLProps, ImgHTMLAttributes, MutableRefObject, RefObject, useR
 import { getFaceCanvas } from './getFaceCanvas';
 import { canvasTypes } from './@types';
 import axios from 'axios';
+import { toast } from 'react-toastify';
 
 export const isModelsLoaded = () => {
   if(
@@ -129,52 +130,95 @@ export const handleVideoPlay = async (video: HTMLVideoElement | null, timestamp:
   }
 };
 
-export const awsSegmentation = async (file : File) => {
-  const getPresignedUrl = await axios.get("https://lne96wspb2.execute-api.us-east-1.amazonaws.com/Prod/upload-video")
-  const {presignedUrl, videoKey} = getPresignedUrl.data
+export const awsSegmentation = async (file: File) => {
+  try {
+    const { data: { presignedUrl, videoKey } } = await axios.get("https://lne96wspb2.execute-api.us-east-1.amazonaws.com/Prod/upload-video");
+    console.log({ presignedUrl, videoKey });
 
-  if(getPresignedUrl.data){
-    console.log(getPresignedUrl.data)
-    const uploadVideo = await axios.put(presignedUrl, file, {
-      headers: {
-        'Content-Type': file.type,
-      }
-    });
-    console.log(uploadVideo)
+    // Upload the video to S3
+    await uploadToS3(presignedUrl, file);
 
-    if(uploadVideo.status === 200){
-      const startAnalysis = await axios.post("https://lne96wspb2.execute-api.us-east-1.amazonaws.com/Prod/upload-video", {videoKey})
-      console.log({startAnalysis})
-      if(startAnalysis.status === 200){
-        const {
-          faceJobId,
-          textJobId,
-          message,
-          videoKey
-        } = startAnalysis.data
-        const pollInterval = setInterval( async () => {
-          try {
-            const getFaceStatus = await axios.get("https://lne96wspb2.execute-api.us-east-1.amazonaws.com/Prod/check-job-status", {
-              params : {
-                jobId : faceJobId,
-                jobType : 'face'
-              }
-            })
-            if(
-              getFaceStatus.data.status === 'SUCCEED' || 'FAILED'
-            ) {
-              console.log(getFaceStatus.data)
-              clearInterval(pollInterval)
-            }
-          } catch (error) {
-            clearInterval(pollInterval)
-            console.log({error})
-          }
-        }, 5000);
-      }
-    }
+    // Start analysis
+    const { data: analysisData } = await startVideoAnalysis(videoKey);
+    const { faceJobId } = analysisData;
+
+    // Poll for analysis results
+    return await pollJobStatus(faceJobId, videoKey, 'face');
+
+  } catch (error: any) {
+    handleError(error);
   }
-}
+};
+
+const uploadToS3 = async (presignedUrl: string, file: File) => {
+  try {
+    const response = await axios.put(presignedUrl, file, {
+      headers: { 'Content-Type': file.type },
+    });
+    console.log("Upload response:", response);
+
+    if (response.status !== 200) {
+      throw new Error("Unable to upload video to S3");
+    }
+  } catch (error: any) {
+    throw new Error(`S3 upload failed: ${error.message}`);
+  }
+};
+
+const startVideoAnalysis = async (videoKey: string) => {
+  try {
+    const response = await axios.post("https://lne96wspb2.execute-api.us-east-1.amazonaws.com/Prod/upload-video", { videoKey });
+    console.log("Analysis started:", response);
+
+    if (response.status !== 200) {
+      throw new Error("Unable to start video analysis");
+    }
+
+    return response;
+  } catch (error: any) {
+    throw new Error(`Failed to start video analysis: ${error.message}`);
+  }
+};
+
+const pollJobStatus = async (jobId: string, videoKey: string, jobType: string): Promise<any> => {
+  const pollInterval = 5000;
+
+  return new Promise((resolve, reject) => {
+    const intervalId = setInterval(async () => {
+      try {
+        const { data: jobStatusData } = await axios.get("https://lne96wspb2.execute-api.us-east-1.amazonaws.com/Prod/check-job-status", {
+          params: { jobId, jobType, videoKey }
+        });
+
+        console.log("Job status:", jobStatusData);
+
+        if (jobStatusData.status === 'SUCCEEDED') {
+          toast.success("Recognition Successful");
+          clearInterval(intervalId);  // Stop the polling
+          resolve(jobStatusData);     // Resolve the promise with the result
+        } else if (jobStatusData.status === 'FAILED') {
+          toast.error("Recognition Failed");
+          clearInterval(intervalId);  // Stop the polling
+          reject(new Error("Recognition failed")); // Reject the promise with an error
+        }
+      } catch (error: any) {
+        toast.error(`Failed to get job status: ${error.message}`);
+        clearInterval(intervalId);    // Stop the polling on error
+        reject(new Error(`Polling failed: ${error.message}`)); // Reject the promise with an error
+      }
+    }, pollInterval);
+  });
+};
+
+
+
+const handleError = (error: any) => {
+  toast.error(`Error: ${error.message}`);
+  console.error("An error occurred:", {
+    message: error.message,
+    details: error.response?.data || null
+  });
+};
 
 
 

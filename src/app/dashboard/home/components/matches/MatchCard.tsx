@@ -26,7 +26,8 @@ const MatchCard = ({
     MiddleButtonClick,
     showExpand,
     description,
-    imageURL
+    imageURL,
+    details
 } : {
     imageURL? : string
     originalImage : string
@@ -37,7 +38,8 @@ const MatchCard = ({
     MiddleButtonTitle? : string,
     MiddleButtonClick? : ()=> void
     description? : string,
-    showExpand? : boolean
+    showExpand? : boolean,
+    details? : any
 }) => {
     const [hover, setHover] = useState(false)
     const [expand, setExpand] = useState(false)
@@ -48,7 +50,8 @@ const MatchCard = ({
                     matchedImage,
                     originalImage,
                     similarity,
-                    matchedPerson : description
+                    matchedPerson : description,
+                    details
                 }}
                 display={expand}
                 setDisplay={setExpand}

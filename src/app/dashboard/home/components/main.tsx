@@ -18,6 +18,8 @@ import { canvasTypes, checkedFaceType, FetchState } from "@/utils/@types"
 import checkEachFace from "@/utils/model/checkEachFace"
 import generateVideoThumbnail from "@/utils/generateVideoThumbnail"
 import { toast } from "react-toastify"
+import { getSingleFace } from "@/utils/model/getSingleFace"
+import { getImageURLFromBoundingBox } from "@/utils/getImageURLFromBoundingBox"
 let fileEx : any = undefined
 
 const Main = () => {
@@ -84,7 +86,7 @@ const Main = () => {
         }
     }
 
-    const handleAnalyze = async () => {
+    const handleAnalyze = async (timestamp? : number) => {
         setDisplayFaces(true)
         setDistinctFaces(prev => ({
             ...prev,
@@ -95,7 +97,7 @@ const Main = () => {
                 const faces = await segmentFaces(selectedImage.url)
                 faces && setFaces(faces)
             } else if(isVideoFile(fileEx)){
-                const thumbnail = await generateVideoThumbnail(selectedImage.url, videoTimestamp)
+                const thumbnail = await generateVideoThumbnail(selectedImage.url, timestamp ?? videoTimestamp)
                 thumbnail ? setImageSrc(thumbnail) : console.log("unable to generate thumbnail")
                 const faces = await segmentFaces(thumbnail)
                 faces && setFaces(faces)
@@ -110,14 +112,57 @@ const Main = () => {
     }
 
     const handleFalconize = async () => {
-        if(isVideoFile(fileEx) && selectedImage && selectedImage.fullFile){
-            console.log(selectedImage)
-            return awsSegmentation(selectedImage!.fullFile)
-        }
         setMatchedFaces(prev => ({
             ...prev,
             isLoading : true
         }));
+        setDisplayMatches(true);
+        if(isVideoFile(fileEx) && selectedImage && selectedImage.fullFile){
+            const matchedFaces =  await awsSegmentation(selectedImage!.fullFile)
+            const faces = getMatchedFaces(matchedFaces.results)
+            if (faces.length > 0) {
+                const checkedFaces = await Promise.all(faces.map(async (face: any) => {
+                    const faceMatches = await Promise.all(face.FaceMatches.map(async (faceMatch: any) => {
+                        const details = await getSingleFace(faceMatch.Face.FaceId);
+                        const match = {
+                            matchedPerson: faceMatch.Face.ExternalImageId,
+                            similarity: faceMatch.Similarity,
+                            originalImage: await getImageURLFromBoundingBox(faceMatch.Face.BoundingBox, await generateVideoThumbnail(selectedImage.url, face.Timestamp)),
+                            matchedImage: details.imageUrl,
+                            faceid: faceMatch.Face.FaceId
+                        }
+                        return match
+                    }));
+                    return faceMatches;  // Return the face matches to flatten them into the larger array
+                }));
+                const flatternedCheckedFaces = checkedFaces.flat()
+                setMatchedFaces({
+                    data : flatternedCheckedFaces
+                })
+            }
+        } else {
+            manualFalconize()
+        }
+    };
+
+    const getMatchedFaces = (matchedFaces : any) => {
+        const matchedIndices : number[] = []
+        const faces = matchedFaces.map((item : any, index : number) => {
+            if(item.FaceMatches.length > 0){
+                return item
+            }
+        })
+        const filteredUndefined =  faces.filter((item : any) => item !== undefined)
+        const filterAlreadyExistingIndex = filteredUndefined.filter((item : any) => {
+            if(matchedIndices.includes(item.Person.index) === false){
+                matchedIndices.push(item.Person.index)
+                return true
+            }
+        })
+        return filterAlreadyExistingIndex
+    }
+
+    const manualFalconize = async () => {
         await handleAnalyze()
         setDisplayMatches(true);
         if(statelessDistinctFaces.data){
@@ -134,7 +179,7 @@ const Main = () => {
         } else {
             setMatchedFaces({error : 'No Image Selected'})
         }
-    };
+    }
 
     const changeImageRef = async () => {
         if(selectedImage && fileEx){
@@ -172,7 +217,6 @@ const Main = () => {
         setDisplayMatches(false)
     }
     useEffect(()=> {
-        console.log(selectedImage)
         if(selectedImage){
             imageSplit = selectedImage.name.split('.')
             filename = imageSplit[0]

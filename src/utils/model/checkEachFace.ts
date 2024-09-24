@@ -20,23 +20,30 @@ export const runRecognitionOnSingleFace = async (face : canvasTypes, allFaces? :
                 originalImage: face.dataUrl
             }
         if (checkedFace.matched) {
-            if(allFaces){
-                const getFace = allFaces.filter((item : any, index : number) => item.ExternalImageId === checkedFace.matchedPerson)
-                if(getFace){
-                    const singleFace = await getSingleFace(getFace[0].FaceId)
-                    return {
-                        originalImage: face.dataUrl,
-                        matchedImage : singleFace,
-                        matchedPerson: checkedFace.matchedPerson,
-                        similarity: checkedFace.similarity,
-                    };
-                }
-                console.log({getFace})
-            }
+            const matchedImage = await getSingleFace(checkedFace.matchedFaceId)
             return {
                 originalImage: face.dataUrl,
-                matchedPerson: checkedFace.matchedPerson,
+                matchedImage : matchedImage.imageUrl,
+                matchedPerson: checkedFace.details.PersonName,
                 similarity: checkedFace.similarity,
+                details : {
+                    Address : matchedImage.Address,
+                    Citizenship : matchedImage.Citizenship,
+                    CriminalRecord : matchedImage.CriminalRecord,
+                    DateOfBirth : matchedImage.DateOfBirth,
+                    DigitalAddress : matchedImage.DigitalAddress,
+                    ExternalImageId : matchedImage.ExternalImageId,
+                    FaceId : matchedImage.FaceId,
+                    FirstName : matchedImage.FirstName,
+                    HasCriminalRecord : matchedImage.HasCriminalRecord,
+                    LastName : matchedImage.LastName,
+                    MiddleName : matchedImage.MiddleName,
+                    PersonId : matchedImage.PersonId,
+                    PersonName : matchedImage.PersonName,
+                    PlaceOfBirth : matchedImage.PlaceOfBirth,
+                    S3Key : matchedImage.S3Key,
+                    imageUrl : matchedImage.imageUrl
+                }
             };
         } else {
             console.log("No matches found");

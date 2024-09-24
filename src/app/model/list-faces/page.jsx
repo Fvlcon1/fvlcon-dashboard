@@ -6,9 +6,9 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const API_URL =
-  "https://gxdr14b8gf.execute-api.us-east-1.amazonaws.com/Prod/faces";
+  "https://lne96wspb2.execute-api.us-east-1.amazonaws.com/Prod/faces";
 const CHECK_FACE_URL =
-  "https://gxdr14b8gf.execute-api.us-east-1.amazonaws.com/Prod/faces/check";
+  "https://lne96wspb2.execute-api.us-east-1.amazonaws.com/Prod/faces/check";
 
 const ListFaces = () => {
   const [faces, setFaces] = useState([]);

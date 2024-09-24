@@ -5,8 +5,8 @@ export const getSingleFace = async (faceId : string) => {
     try {
       const response = await axios.get(`${API_URL}/${faceId}`);
       if (response.data && response.data.imageUrl) {
-        console.log(response.data.imageUrl)
-        return (response.data.imageUrl);
+        console.log(response.data)
+        return (response.data);
       } else {
         console.log("No image URL received");
       }

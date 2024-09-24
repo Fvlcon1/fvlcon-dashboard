@@ -92,6 +92,7 @@ const Matches = ({
                                                 key={index}
                                                 title={`Match ${index + 1}`}
                                                 description={item.matchedPerson}
+                                                details={item.details}
                                                 showExpand
                                             />
                                         ))

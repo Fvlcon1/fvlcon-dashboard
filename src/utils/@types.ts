@@ -74,6 +74,25 @@ export type checkedFaceType = {
   similarity? : number
   originalImage : string
   matchedImage? : string
+  faceid? : string,
+  details ?: {
+    Address : string,
+    Citizenship : string,
+    CriminalRecord : string,
+    DateOfBirth : string,
+    DigitalAddress : string,
+    ExternalImageId : string,
+    FaceId : string,
+    FirstName : string,
+    HasCriminalRecord : string,
+    LastName : string,
+    MiddleName : string,
+    PersonId : string,
+    PersonName : string,
+    PlaceOfBirth : string,
+    S3Key : string,
+    imageUrl : string
+  }
 }
 
 export type ImageCardType = {
