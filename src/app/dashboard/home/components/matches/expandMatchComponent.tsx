@@ -35,146 +35,35 @@ const ExpandMatchComponent = ({
                         </AppTypography>
                     </div>
                     <div className="flex flex-col gap-1">
-                        <div className="flex gap-1">
-                            <AppTypography>
-                                Firstname :
-                            </AppTypography>
-                            <AppTypography
-                                textColor={match.details?.FirstName && theme.colors.text.primary}
-                            >
-                                {match.details?.FirstName || 'N/A'}
-                            </AppTypography>
-                        </div>
-                        <div className="flex gap-1">
-                            <AppTypography>
-                                Lastname :
-                            </AppTypography>
-                            <AppTypography
-                                textColor={match.details?.LastName && theme.colors.text.primary}
-                            >
-                                {match.details?.LastName || 'N/A'}
-                            </AppTypography>
-                        </div>
-                        <div className="flex gap-1">
-                            <AppTypography>
-                                Address :
-                            </AppTypography>
-                            <AppTypography
-                                textColor={match.details?.Address && theme.colors.text.primary}
-                            >
-                                {match.details?.Address || 'N/A'}
-                            </AppTypography>
-                        </div>
-                        <div className="flex gap-1">
-                            <AppTypography>
-                                Citizenship :
-                            </AppTypography>
-                            <AppTypography
-                                textColor={match.details?.Citizenship && theme.colors.text.primary}
-                            >
-                                {match.details?.Citizenship || 'N/A'}
-                            </AppTypography>
-                        </div>
-                        <div className="flex gap-1">
-                            <AppTypography>
-                                CriminalRecord :
-                            </AppTypography>
-                            <AppTypography
-                                textColor={match.details?.CriminalRecord && theme.colors.text.primary}
-                            >
-                                {match.details?.CriminalRecord || 'N/A'}
-                            </AppTypography>
-                        </div>
-                        <div className="flex gap-1">
-                            <AppTypography>
-                                DateOfBirth :
-                            </AppTypography>
-                            <AppTypography
-                                textColor={match.details?.DateOfBirth && theme.colors.text.primary}
-                            >
-                                {match.details?.DateOfBirth || 'N/A'}
-                            </AppTypography>
-                        </div>
-                        <div className="flex gap-1">
-                            <AppTypography>
-                                DigitalAddress :
-                            </AppTypography>
-                            <AppTypography
-                                textColor={match.details?.DigitalAddress && theme.colors.text.primary}
-                            >
-                                {match.details?.DigitalAddress || 'N/A'}
-                            </AppTypography>
-                        </div>
-                        <div className="flex gap-1">
-                            <AppTypography>
-                                ExternalImageId :
-                            </AppTypography>
-                            <AppTypography
-                                textColor={match.details?.ExternalImageId && theme.colors.text.primary}
-                            >
-                                {match.details?.ExternalImageId || 'N/A'}
-                            </AppTypography>
-                        </div>
-                        <div className="flex gap-1">
-                            <AppTypography>
-                                FaceId :
-                            </AppTypography>
-                            <AppTypography
-                                textColor={match.details?.FaceId && theme.colors.text.primary}
-                            >
-                                {match.details?.FaceId || 'N/A'}
-                            </AppTypography>
-                        </div>
-                        <div className="flex gap-1">
-                            <AppTypography>
-                                HasCriminalRecord :
-                            </AppTypography>
-                            <AppTypography
-                                textColor={match.details?.HasCriminalRecord && theme.colors.text.primary}
-                            >
-                                {match.details?.HasCriminalRecord || 'N/A'}
-                            </AppTypography>
-                        </div>
-                        <div className="flex gap-1">
-                            <AppTypography>
-                                MiddleName :
-                            </AppTypography>
-                            <AppTypography
-                                textColor={match.details?.MiddleName && theme.colors.text.primary}
-                            >
-                                {match.details?.MiddleName || 'N/A'}
-                            </AppTypography>
-                        </div>
-                        <div className="flex gap-1">
-                            <AppTypography>
-                                PersonId :
-                            </AppTypography>
-                            <AppTypography
-                                textColor={match.details?.PersonId && theme.colors.text.primary}
-                            >
-                                {match.details?.PersonId || 'N/A'}
-                            </AppTypography>
-                        </div>
-                        <div className="flex gap-1">
-                            <AppTypography>
-                                PlaceOfBirth :
-                            </AppTypography>
-                            <AppTypography
-                                textColor={match.details?.PlaceOfBirth && theme.colors.text.primary}
-                            >
-                                {match.details?.PlaceOfBirth || 'N/A'}
-                            </AppTypography>
-                        </div>
-                        <div className="flex gap-1">
-                            <AppTypography>
-                                S3Key :
-                            </AppTypography>
-                            <AppTypography
-                                textColor={match.details?.S3Key && theme.colors.text.primary}
-                            >
-                                {match.details?.S3Key || 'N/A'}
-                            </AppTypography>
-                        </div>
+                        {
+                            match.details &&
+                            Object.entries(match.details).map(([key, value]) => (
+                                key !== 'imageUrl' &&
+                                <div 
+                                    key={key}
+                                    className="flex gap-1"
+                                >
+                                    <AppTypography>
+                                        {key} :
+                                    </AppTypography>
+                                    {
+                                        key === 'CriminalRecord' && value ?
+                                        <AppTypography
+                                            textColor='royalblue'
+                                            className="cursor-pointer hover:!underline hover:!opacity-70"
+                                        >
+                                            View
+                                        </AppTypography>
+                                        :
+                                        <AppTypography
+                                            textColor={value && value !== 'N/A' ? theme.colors.text.primary : theme.colors.text.secondary}
+                                        >
+                                            {value || 'N/A'}
+                                        </AppTypography>
+                                    }
+                                </div>
+                            ))
+                        }
                     </div>
                 </div>
             </div>

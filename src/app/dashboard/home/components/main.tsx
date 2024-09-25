@@ -177,7 +177,7 @@ const Main = () => {
                 !matchedFaces.data && setMatchedFaces({isEmpty : true})
             }
         } else {
-            setMatchedFaces({error : 'No Image Selected'})
+            setMatchedFaces({error : 'No Image Segmented'})
         }
     }
 

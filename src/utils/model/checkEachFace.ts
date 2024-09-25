@@ -4,45 +4,43 @@ import { getAllFaces } from "./getallFaces";
 import { getSingleFace } from "./getSingleFace";
 
 const checkEachFace = async (distinctFaces : FetchState<canvasTypes[]>): Promise<((checkedFaceType | undefined)[] | undefined)> => {
-    const allFaces = await getAllFaces()
     if(distinctFaces?.data){
         const results = await Promise.all(
-            distinctFaces.data.map(async (item) => await runRecognitionOnSingleFace(item, allFaces))
+            distinctFaces.data.map(async (item) => await runRecognitionOnSingleFace(item))
         );
         return results;
     }
 }
 
-export const runRecognitionOnSingleFace = async (face : canvasTypes, allFaces? : any) : Promise<(checkedFaceType | undefined)> => {
-    allFaces = allFaces || await getAllFaces()
+export const runRecognitionOnSingleFace = async (face : canvasTypes) : Promise<(checkedFaceType | undefined)> => {
     const {result : checkedFace, error} = await checkFace(face.dataUrl);
         if(error) return {
                 originalImage: face.dataUrl
             }
         if (checkedFace.matched) {
-            const matchedImage = await getSingleFace(checkedFace.matchedFaceId)
+            const details = await getSingleFace(checkedFace.matchedFaceId)
             return {
                 originalImage: face.dataUrl,
-                matchedImage : matchedImage.imageUrl,
+                matchedImage : details.imageUrl,
                 matchedPerson: checkedFace.details.PersonName,
                 similarity: checkedFace.similarity,
                 details : {
-                    Address : matchedImage.Address,
-                    Citizenship : matchedImage.Citizenship,
-                    CriminalRecord : matchedImage.CriminalRecord,
-                    DateOfBirth : matchedImage.DateOfBirth,
-                    DigitalAddress : matchedImage.DigitalAddress,
-                    ExternalImageId : matchedImage.ExternalImageId,
-                    FaceId : matchedImage.FaceId,
-                    FirstName : matchedImage.FirstName,
-                    HasCriminalRecord : matchedImage.HasCriminalRecord,
-                    LastName : matchedImage.LastName,
-                    MiddleName : matchedImage.MiddleName,
-                    PersonId : matchedImage.PersonId,
-                    PersonName : matchedImage.PersonName,
-                    PlaceOfBirth : matchedImage.PlaceOfBirth,
-                    S3Key : matchedImage.S3Key,
-                    imageUrl : matchedImage.imageUrl
+                    Address : details.Address,
+                    Citizenship : details.Citizenship,
+                    CriminalRecord : details.CriminalRecord,
+                    DateOfBirth : details.DateOfBirth,
+                    DigitalAddress : details.DigitalAddress,
+                    ExternalImageId : details.ExternalImageId,
+                    FaceId : details.FaceId,
+                    FirstName : details.FirstName,
+                    HasCriminalRecord : details.HasCriminalRecord,
+                    LastName : details.LastName,
+                    MiddleName : details.MiddleName,
+                    PersonId : details.PersonId,
+                    PersonName : details.PersonName,
+                    PlaceOfBirth : details.PlaceOfBirth,
+                    S3Key : details.S3Key,
+                    imageUrl : details.imageUrl
                 }
             };
         } else {
