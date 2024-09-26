@@ -86,7 +86,7 @@ const Main = () => {
         }
     }
 
-    const handleAnalyze = async (timestamp? : number) => {
+    const handleAnalyze = async () => {
         setDisplayFaces(true)
         setDistinctFaces(prev => ({
             ...prev,
@@ -97,7 +97,7 @@ const Main = () => {
                 const faces = await segmentFaces(selectedImage.url)
                 faces && setFaces(faces)
             } else if(isVideoFile(fileEx)){
-                const thumbnail = await generateVideoThumbnail(selectedImage.url, timestamp ?? videoTimestamp)
+                const thumbnail = await generateVideoThumbnail(selectedImage.url, videoTimestamp)
                 thumbnail ? setImageSrc(thumbnail) : console.log("unable to generate thumbnail")
                 const faces = await segmentFaces(thumbnail)
                 faces && setFaces(faces)
@@ -227,14 +227,14 @@ const Main = () => {
         }
     },[selectedImage])
 
-    useEffect(() => {
-        const startSegmentation = setInterval(() => {
-            if(!isVideoPlaying)
-                return clearInterval(startSegmentation)
-            getVideoSegments()
-        }, 1000);
-        return () => clearInterval(startSegmentation);
-      }, [isVideoPlaying]);
+    // useEffect(() => {
+    //     const startSegmentation = setInterval(() => {
+    //         if(!isVideoPlaying)
+    //             return clearInterval(startSegmentation)
+    //         getVideoSegments()
+    //     }, 1000);
+    //     return () => clearInterval(startSegmentation);
+    //   }, [isVideoPlaying]);
 
     const handleVideoState = (state : boolean) => {
         if(state)
