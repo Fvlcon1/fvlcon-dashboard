@@ -129,7 +129,8 @@ const Main = () => {
                             similarity: faceMatch.Similarity,
                             originalImage: await getImageURLFromBoundingBox(faceMatch.Face.BoundingBox, await generateVideoThumbnail(selectedImage.url, face.Timestamp)),
                             matchedImage: details.imageUrl,
-                            faceid: faceMatch.Face.FaceId
+                            faceid: faceMatch.Face.FaceId,
+                            details
                         }
                         return match
                     }));
