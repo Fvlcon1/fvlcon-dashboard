@@ -132,7 +132,7 @@ export const handleVideoPlay = async (video: HTMLVideoElement | null, timestamp:
 
 export const awsSegmentation = async (file: File) => {
   try {
-    const { data: { presignedUrl, videoKey } } = await axios.get("https://lne96wspb2.execute-api.us-east-1.amazonaws.com/Prod/upload-video");
+    const { data: { presignedUrl, videoKey } } = await axios.get("https://pr77ql49be.execute-api.us-east-1.amazonaws.com/Prod/upload-video");
     console.log({ presignedUrl, videoKey });
 
     // Upload the video to S3
@@ -167,7 +167,7 @@ const uploadToS3 = async (presignedUrl: string, file: File) => {
 
 const startVideoAnalysis = async (videoKey: string) => {
   try {
-    const response = await axios.post("https://lne96wspb2.execute-api.us-east-1.amazonaws.com/Prod/upload-video", { videoKey });
+    const response = await axios.post("https://pr77ql49be.execute-api.us-east-1.amazonaws.com/Prod/upload-video", { videoKey });
     console.log("Analysis started:", response);
 
     if (response.status !== 200) {
@@ -186,7 +186,7 @@ const pollJobStatus = async (jobId: string, videoKey: string, jobType: string): 
   return new Promise((resolve, reject) => {
     const intervalId = setInterval(async () => {
       try {
-        const { data: jobStatusData } = await axios.get("https://lne96wspb2.execute-api.us-east-1.amazonaws.com/Prod/check-job-status", {
+        const { data: jobStatusData } = await axios.get("https://pr77ql49be.execute-api.us-east-1.amazonaws.com/Prod/check-job-status", {
           params: { jobId, jobType, videoKey }
         });
 
