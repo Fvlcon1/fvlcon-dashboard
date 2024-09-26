@@ -57,8 +57,7 @@ const MatchCard = ({
                 setDisplay={setExpand}
             />
             <div 
-                className="p-3 py-3 min-w-[400px] w-[400px] h-fit flex flex-col gap-1 rounded-2xl bg-gradient-container-black"
-                onClick={showExpand ? ()=>setExpand(true) : ()=>{}}
+                className="p-3 py-2 min-w-[400px] w-[400px] h-fit flex flex-col gap-1 rounded-lg bg-gradient-container-black"
             >
                 <Flex
                     justify="space-between"
@@ -66,33 +65,24 @@ const MatchCard = ({
                 >
                     {
                         title &&
-                        <div className="py-[2px] px-3 bg-bg-secondary rounded-lg">
-                            <div className="mt-[-1px]">
-                                <AppTypography
-                                    textColor={theme.colors.text.primary}
-                                >
-                                    {title && `• ${title}`}
-                                </AppTypography>
-                            </div>
-                        </div>
+                        <AppTypography
+                            textColor={theme.colors.text.primary}
+                        >
+                            {title && `• ${title}`}
+                        </AppTypography>
                     }
                     {
                         showExpand !== false &&
-                        <ClickableTab
+                        <div
                             onClick={()=>setExpand(true)}
                         >
-                            <div className="hover:opacity-100 opacity-70 gap-1 flex items-center hover:scale-[0.98] duration-200 cursor-pointer">
-                                <TbListDetails 
-                                    color={theme.colors.text.primary}
-                                    size={14}
-                                />
-                                <AppTypography
-                                    textColor={theme.colors.text.primary}
-                                >
-                                    More Details...
-                                </AppTypography>
-                            </div>
-                        </ClickableTab>
+                            <AppTypography
+                                textColor='royalblue'
+                                className="hover:!underline hover:!scale-80 cursor-pointer hover:!opacity-60 !opacity-80"
+                            >
+                                More details..
+                            </AppTypography>
+                        </div>
                     }
                 </Flex>
                 <div

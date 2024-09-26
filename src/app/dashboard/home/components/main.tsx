@@ -122,19 +122,19 @@ const Main = () => {
             const faces = getMatchedFaces(matchedFaces.results)
             if (faces.length > 0) {
                 const checkedFaces = await Promise.all(faces.map(async (face: any) => {
-                    const faceMatches = await Promise.all(face.FaceMatches.map(async (faceMatch: any) => {
-                        const details = await getSingleFace(faceMatch.Face.FaceId);
-                        const match = {
-                            matchedPerson: faceMatch.Face.ExternalImageId,
-                            similarity: faceMatch.Similarity,
-                            originalImage: await getImageURLFromBoundingBox(faceMatch.Face.BoundingBox, await generateVideoThumbnail(selectedImage.url, face.Timestamp)),
-                            matchedImage: details.imageUrl,
-                            faceid: faceMatch.Face.FaceId,
-                            details
-                        }
-                        return match
-                    }));
-                    return faceMatches;  // Return the face matches to flatten them into the larger array
+                    const faceMatch = face.FaceMatches[0]
+                    const details = await getSingleFace(faceMatch.Face.FaceId);
+                    const boundingBox = face.Person.Face.BoundingBox
+                    console.log({boundingBox})
+                    const match = {
+                        matchedPerson: faceMatch.Face.ExternalImageId,
+                        similarity: faceMatch.Similarity,
+                        originalImage: await getImageURLFromBoundingBox(boundingBox, await generateVideoThumbnail(selectedImage.url, face.Timestamp / 1000)),
+                        matchedImage: details.imageUrl,
+                        faceid: faceMatch.Face.FaceId,
+                        details
+                    }
+                    return match
                 }));
                 const flatternedCheckedFaces = checkedFaces.flat()
                 setMatchedFaces({
