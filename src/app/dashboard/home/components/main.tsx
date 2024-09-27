@@ -14,12 +14,16 @@ import Metadata from "./metadata"
 import { isImageFile, isVideoFile } from "@/utils/getFileType"
 import VideoContainer from "@components/video container/videoContainer"
 import segmentFaces, { awsSegmentation, handleVideoPlay, isModelsLoaded, loadModels, videoSegmentation } from "@/utils/segmentFaces"
-import { canvasTypes, checkedFaceType, FetchState } from "@/utils/@types"
+import { canvasTypes, checkedFaceType, FetchState, logsType } from "@/utils/@types"
 import checkEachFace from "@/utils/model/checkEachFace"
 import generateVideoThumbnail from "@/utils/generateVideoThumbnail"
 import { toast } from "react-toastify"
 import { getSingleFace } from "@/utils/model/getSingleFace"
 import { getImageURLFromBoundingBox } from "@/utils/getImageURLFromBoundingBox"
+import { AnimatePresence, motion } from 'framer-motion';
+import { Spin } from "antd"
+import AppTypography from "@styles/components/appTypography"
+import theme from "@styles/theme"
 let fileEx : any = undefined
 
 const Main = () => {
@@ -30,6 +34,7 @@ const Main = () => {
 
     const [displayMatches, setDisplayMatches] = useState(false)
     const [displayFaces, setDisplayFaces] = useState(false)
+    const [fvlconizing, setFvlconizing] = useState(false)
     const [fileExtension, setFileExtension] = useState<string>()
     const [imageSrc, setImageSrc] = useState<string>()
     const [videoSrc, setVideoSrc] = useState<string>()
@@ -49,6 +54,7 @@ const Main = () => {
         isEmpty : false,
         isLoading : false,
     }
+    const [logs, setLogs] = useState<logsType[]>([])
 
     let imageSplit = []
     let filename = undefined
@@ -74,11 +80,10 @@ const Main = () => {
                 type !== 'video' && toast.error("No face detected!")
             } else {
                 statelessDistinctFaces = {
-                    data : statelessDistinctFaces.data ? 
-                    [...statelessDistinctFaces.data, ...faces] : faces
+                    data : faces
                 }
                 setDistinctFaces(prev => ({
-                    data : prev.data ? [...prev.data, ...faces] : faces
+                    data : faces
                 }))   
             }   
         } else {
@@ -117,32 +122,40 @@ const Main = () => {
             isLoading : true
         }));
         setDisplayMatches(true);
-        if(isVideoFile(fileEx) && selectedImage && selectedImage.fullFile){
-            const matchedFaces =  await awsSegmentation(selectedImage!.fullFile)
-            const faces = getMatchedFaces(matchedFaces.results)
-            if (faces.length > 0) {
-                const checkedFaces = await Promise.all(faces.map(async (face: any) => {
-                    const faceMatch = face.FaceMatches[0]
-                    const details = await getSingleFace(faceMatch.Face.FaceId);
-                    const boundingBox = face.Person.Face.BoundingBox
-                    console.log({boundingBox})
-                    const match = {
-                        matchedPerson: faceMatch.Face.ExternalImageId,
-                        similarity: faceMatch.Similarity,
-                        originalImage: await getImageURLFromBoundingBox(boundingBox, await generateVideoThumbnail(selectedImage.url, face.Timestamp / 1000)),
-                        matchedImage: details.imageUrl,
-                        faceid: faceMatch.Face.FaceId,
-                        details
-                    }
-                    return match
-                }));
-                const flatternedCheckedFaces = checkedFaces.flat()
-                setMatchedFaces({
-                    data : flatternedCheckedFaces
-                })
+        try {
+            if(isVideoFile(fileEx) && selectedImage && selectedImage.fullFile){
+                setFvlconizing(true)
+                const matchedFaces =  await awsSegmentation(selectedImage!.fullFile, setLogs)
+                const faces = getMatchedFaces(matchedFaces.results)
+                if (faces.length > 0) {
+                    const checkedFaces = await Promise.all(faces.map(async (face: any) => {
+                        const faceMatch = face.FaceMatches[0]
+                        const details = await getSingleFace(faceMatch.Face.FaceId);
+                        const boundingBox = face.Person.Face.BoundingBox
+                        console.log({boundingBox})
+                        const match = {
+                            matchedPerson: faceMatch.Face.ExternalImageId,
+                            similarity: faceMatch.Similarity,
+                            originalImage: await getImageURLFromBoundingBox(boundingBox, await generateVideoThumbnail(selectedImage.url, face.Timestamp / 1000)),
+                            matchedImage: details.imageUrl,
+                            faceid: faceMatch.Face.FaceId,
+                            details
+                        }
+                        return match
+                    }));
+                    const flatternedCheckedFaces = checkedFaces.flat()
+                    setMatchedFaces({
+                        data : flatternedCheckedFaces
+                    })
+                }
+                setFvlconizing(false)
+            } else {
+                manualFalconize()
             }
-        } else {
-            manualFalconize()
+        } catch (error : any) {
+            console.log({error})
+            toast.error(error.message)
+            setFvlconizing(false)
         }
     };
 
@@ -237,10 +250,10 @@ const Main = () => {
     //   }, [isVideoPlaying]);
 
     const handleVideoState = (state : boolean) => {
-        if(state)
-            !displayFaces && setDisplayFaces(true)
-        setIsVideoPlaying(state)
-        handleVideoPlay(videoRef.current, videoTimestamp, state)
+        // if(state)
+        //     !displayFaces && setDisplayFaces(true)
+        // setIsVideoPlaying(state)
+        // handleVideoPlay(videoRef.current, videoTimestamp, state)
     }
 
     const getVideoSegments = async () => {
@@ -260,7 +273,36 @@ const Main = () => {
                 gap={4}
                 maxWidth="1080px"
             >
-                <div className="w-full bg-gradient-container h-[500px] rounded-2xl p-4">
+                <div className="w-full relative bg-gradient-container h-[500px] rounded-2xl p-4">
+                    <AnimatePresence>
+                        {
+                            fvlconizing &&
+                            <motion.div className="h-[350px] absolute top-0 z-50 w-full left-0 bg-[#000000b6] flex justify-center items-center flex-col gap-1 backdrop-filter backdrop-blur-sm">
+                                <Spin />
+                                <motion.div
+                                    initial={{
+                                        opacity : 0,
+                                        y : 20
+                                    }}
+                                    animate={{
+                                        opacity : 1,
+                                        y : 0
+                                    }}
+                                    exit={{
+                                        opacity : 0,
+                                        y : 20
+                                    }}
+                                >
+                                    <AppTypography
+                                        textColor={theme.colors.text.primary}
+                                        className="animate-pulse"
+                                    >
+                                        {logs[logs.length - 1].log.content}
+                                    </AppTypography>
+                                </motion.div>
+                            </motion.div>
+                        }
+                    </AnimatePresence>
                     {
                         selectedImage && fileExtension && isVideoFile(fileExtension) ?
                         <VideoContainer 
@@ -301,13 +343,17 @@ const Main = () => {
                         <Button 
                             text="Fvlconize ➜"
                             onClick={handleFalconize}
+                            disabled={fvlconizing}
                         />
                     </Flex>
                     <Flex>
-                        {/* {
+                        {
                             displayMatches &&
-                            <Logs />
-                        } */}
+                            <Logs 
+                                logs={logs}
+                                setLogs={setLogs}
+                            />
+                        }
                         {
                             selectedImage &&
                             <Metadata />

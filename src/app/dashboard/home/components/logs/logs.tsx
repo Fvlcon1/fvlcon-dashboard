@@ -1,16 +1,30 @@
-import getDate from "@/utils/getDate"
+import getDate, { getTime } from "@/utils/getDate"
 import ClickableTab from "@components/clickable/clickabletab"
 import AppTypography from "@styles/components/appTypography"
 import Flex from "@styles/components/flex"
 import { TypographySize } from "@styles/style.types"
 import theme from "@styles/theme"
-import { useState } from "react"
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react"
 import { MdFullscreen } from "react-icons/md"
 import AllLogs from "./allLogs"
 import Slidein from "@styles/components/slidein"
+import { AnimatePresence, motion } from 'framer-motion';
+import { logsType } from "@/utils/@types"
 
-const Logs = () => {
+const Logs = ({
+    logs,
+    setLogs
+} : {
+    logs : logsType[],
+    setLogs: Dispatch<SetStateAction<logsType[]>>
+}) => {
     const [showFullLogs, setShowFullLogs] = useState(false)
+    const logContainerRef = useRef<HTMLDivElement>(null);
+    useEffect(() => {
+        if (logContainerRef.current) {
+          logContainerRef.current.scrollTop = logContainerRef.current.scrollHeight;
+        }
+      }, [logs]);
     return (
         <Flex
             flex={1}
@@ -52,21 +66,45 @@ const Logs = () => {
                                 </ClickableTab>
                             </Flex>
                         </Flex>
-                        <Flex
-                            padding="5px 5px"
+                        <div 
+                            ref={logContainerRef}
+                            className="flex flex-col p-1 overflow-auto h-[100px]"
                         >
-                            <AppTypography
-                                ellipsis
-                                maxLines={5}
-                            >
-                                Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime mollitia,
-                                molestiae quas vel sint commodi repudiandae consequuntur voluptatum laborum
-                            </AppTypography>
-                        </Flex>
+                            <AnimatePresence>
+                                {
+                                    logs.map((log, index) => (
+                                        <motion.div
+                                            className="flex gap-2"
+                                            key={index} // Make sure each element has a unique key
+                                            initial={{ opacity: 0, y: 20 }}
+                                            animate={{ opacity: 1, y: 0 }}
+                                            exit={{ opacity: 0, y: 20 }}
+                                            transition={{ duration: 0.3 }}
+                                        >
+                                            <div className="flex">
+                                                <AppTypography className="whitespace-nowrap">
+                                                    {`[${getDate(log.date, { shortmonth: true })} ${getTime(log.date)}]`}
+                                                </AppTypography>
+                                            </div>
+                                            <AppTypography
+                                                textColor={theme.colors.text.primary}
+                                                ellipsis={log.log.maxLines ? true : false}
+                                                maxLines={log.log.maxLines}
+                                                className={`${log.log.content === 'Analyzing...' && index === logs.length - 1 ? 'animate-pulse' : ''}`}
+                                            >
+                                                {log.log.content}
+                                            </AppTypography>
+                                        </motion.div>
+                                    ))
+                                }
+                            </AnimatePresence>
+                        </div>
                     </div>
                     <AllLogs 
                         display={showFullLogs}
                         setDisplay={setShowFullLogs}
+                        logs={logs}
+                        setLogs={setLogs}
                     />
                 </div>
             </Slidein>

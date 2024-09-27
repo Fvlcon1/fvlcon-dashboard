@@ -149,3 +149,11 @@ export type cameraType = {
 };
 
 export type FolderOrCamera = cameraFolderType | cameraType;
+
+export type logsType = {
+  date : Date,
+  log : {
+    maxLines? : number,
+    content : string
+  }
+}

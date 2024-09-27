@@ -1,7 +1,7 @@
 import * as faceapi from 'face-api.js';
-import { DetailedHTMLProps, ImgHTMLAttributes, MutableRefObject, RefObject, useRef } from 'react';
+import { DetailedHTMLProps, Dispatch, ImgHTMLAttributes, MutableRefObject, RefObject, SetStateAction, useRef } from 'react';
 import { getFaceCanvas } from './getFaceCanvas';
-import { canvasTypes } from './@types';
+import { canvasTypes, logsType } from './@types';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 
@@ -130,20 +130,42 @@ export const handleVideoPlay = async (video: HTMLVideoElement | null, timestamp:
   }
 };
 
-export const awsSegmentation = async (file: File) => {
+export const awsSegmentation = async (file: File, setLogs: Dispatch<SetStateAction<logsType[]>>) => {
   try {
+    setLogs([{log : {content : "Initializing..."}, date : new Date()}])
+    setLogs(prev => ([
+      ...prev, { date : new Date(), log : { content : "Generating presigned URL" } }
+    ]))
     const { data: { presignedUrl, videoKey } } = await axios.get("https://pr77ql49be.execute-api.us-east-1.amazonaws.com/Prod/upload-video");
     console.log({ presignedUrl, videoKey });
+    setLogs(prev => ([
+      ...prev, { date : new Date(), log : { content : `Successfully generated presigned url: ${presignedUrl}`, maxLines : 2 } }
+    ]))
 
     // Upload the video to S3
+    setLogs(prev => ([
+      ...prev, { date : new Date(), log : { content : "Uploading video" } }
+    ]))
     await uploadToS3(presignedUrl, file);
+    setLogs(prev => ([
+      ...prev, { date : new Date(), log : { content : "Video uploaded successfully" } }
+    ]))
 
     // Start analysis
+    setLogs(prev => ([
+      ...prev, { date : new Date(), log : { content : "Starting analysis" } }
+    ]))
     const { data: analysisData } = await startVideoAnalysis(videoKey);
+    setLogs(prev => ([
+      ...prev, { date : new Date(), log : { content : "Video analysis started" } }
+    ]))
+    setLogs(prev => ([
+      ...prev, { date : new Date(), log : { content : "Fvlconizing..." } }
+    ]))
     const { faceJobId } = analysisData;
 
     // Poll for analysis results
-    return await pollJobStatus(faceJobId, videoKey, 'face');
+    return await pollJobStatus(faceJobId, videoKey, 'face', setLogs);
 
   } catch (error: any) {
     handleError(error);
@@ -180,7 +202,7 @@ const startVideoAnalysis = async (videoKey: string) => {
   }
 };
 
-const pollJobStatus = async (jobId: string, videoKey: string, jobType: string): Promise<any> => {
+const pollJobStatus = async (jobId: string, videoKey: string, jobType: string, setLogs: Dispatch<SetStateAction<logsType[]>>): Promise<any> => {
   const pollInterval = 5000;
 
   return new Promise((resolve, reject) => {
@@ -193,7 +215,10 @@ const pollJobStatus = async (jobId: string, videoKey: string, jobType: string): 
         console.log("Job status:", jobStatusData);
 
         if (jobStatusData.status === 'SUCCEEDED') {
-          toast.success("Recognition Successful");
+          setLogs(prev => ([
+            ...prev, { date : new Date(), log : { content : "Video analysis Successful" } }
+          ]))
+          toast.success("Fvlconizing Successful");
           clearInterval(intervalId);  // Stop the polling
           resolve(jobStatusData);     // Resolve the promise with the result
         } else if (jobStatusData.status === 'FAILED') {

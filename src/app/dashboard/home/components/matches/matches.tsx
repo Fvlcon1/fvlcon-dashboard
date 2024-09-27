@@ -57,7 +57,7 @@ const Matches = ({
                             gap={20}
                         >
                             {
-                                faces.isLoading && !faces.data ?
+                                faces.isLoading ?
                                 <Loading 
                                     title="Fvlconizing..."
                                 />
@@ -78,10 +78,10 @@ const Matches = ({
                                 faces.data && 
                                 <>
                                     {
-                                        faces.isLoading &&
-                                        <div className="flex bg-bg-primary rounded-md min-w-[200px] h-[150px] justify-center items-center">
-                                            <Spin size="small"/>
-                                        </div>
+                                        // faces.isLoading &&
+                                        // <div className="flex bg-bg-primary rounded-md min-w-[200px] h-[150px] justify-center items-center">
+                                        //     <Spin size="small"/>
+                                        // </div>
                                     }
                                     {
                                         [...faces.data].reverse().map((item, index : number) => (
