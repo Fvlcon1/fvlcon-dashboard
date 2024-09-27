@@ -24,6 +24,8 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { Spin } from "antd"
 import AppTypography from "@styles/components/appTypography"
 import theme from "@styles/theme"
+import useTimer from "@/utils/useTimer"
+
 let fileEx : any = undefined
 
 const Main = () => {
@@ -55,6 +57,7 @@ const Main = () => {
         isLoading : false,
     }
     const [logs, setLogs] = useState<logsType[]>([])
+    const { seconds, start : startTimer, stop : stopTimer, reset } = useTimer();
 
     let imageSplit = []
     let filename = undefined
@@ -261,6 +264,13 @@ const Main = () => {
         setFaces(segments ?? [], 'video')
     }
       
+    useEffect(()=>{
+        if(fvlconizing){
+            startTimer()
+        } else {
+            stopTimer()
+        }
+    },[fvlconizing])
 
     return (
         <div  className="w-full items-center flex flex-col flex-1 h-[100vh] pb-4 gap-1">
@@ -352,6 +362,9 @@ const Main = () => {
                             <Logs 
                                 logs={logs}
                                 setLogs={setLogs}
+                                time={{
+                                    seconds
+                                }}
                             />
                         }
                         {

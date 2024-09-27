@@ -13,10 +13,14 @@ import { logsType } from "@/utils/@types"
 
 const Logs = ({
     logs,
-    setLogs
+    setLogs,
+    time
 } : {
     logs : logsType[],
-    setLogs: Dispatch<SetStateAction<logsType[]>>
+    setLogs: Dispatch<SetStateAction<logsType[]>>,
+    time : {
+        seconds : number
+    }
 }) => {
     const [showFullLogs, setShowFullLogs] = useState(false)
     const logContainerRef = useRef<HTMLDivElement>(null);
@@ -36,11 +40,16 @@ const Logs = ({
                         <Flex
                             justify="space-between"
                         >
-                            <div className="py-1 px-3 bg-bg-primary rounded-lg">
-                                <AppTypography
-                                    textColor={theme.colors.text.primary}
-                                >
-                                    Logs
+                            <div className="flex gap-2 items-center">
+                                <div className="py-1 px-3 bg-bg-primary rounded-lg">
+                                    <AppTypography
+                                        textColor={theme.colors.text.primary}
+                                    >
+                                        Logs
+                                    </AppTypography>
+                                </div>
+                                <AppTypography textColor={theme.colors.text.primary}>
+                                    {`${time.seconds}s`}
                                 </AppTypography>
                             </div>
                             <Flex
