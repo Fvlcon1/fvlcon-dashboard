@@ -99,7 +99,7 @@ const Logs = ({
                                                 textColor={theme.colors.text.primary}
                                                 ellipsis={log.log.maxLines ? true : false}
                                                 maxLines={log.log.maxLines}
-                                                className={`${log.log.content === 'Analyzing...' && index === logs.length - 1 ? 'animate-pulse' : ''}`}
+                                                className={`${log.log.content === 'Fvlconizing...' && index === logs.length - 1 ? 'animate-pulse' : ''}`}
                                             >
                                                 {log.log.content}
                                             </AppTypography>
