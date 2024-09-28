@@ -5,7 +5,7 @@ import { TypographySize } from "@styles/style.types"
 import theme from "@styles/theme"
 import { Tooltip } from "antd"
 import { CgLivePhoto } from "react-icons/cg"
-import { MdFullscreen } from "react-icons/md"
+import { MdDelete, MdFullscreen } from "react-icons/md"
 import { RiMenu2Fill } from "react-icons/ri"
 
 const Controls = () => {
@@ -63,10 +63,10 @@ const Controls = () => {
                             size={TypographySize.HM}
                         >
                             <Tooltip
-                                title='Fullscreen'
+                                title='Remove Camera'
                                 placement="right"
                             >
-                                <MdFullscreen />
+                                <MdDelete />
                             </Tooltip>
                         </AppTypography>
                     </ClickableTab>

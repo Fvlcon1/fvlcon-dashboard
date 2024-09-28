@@ -2,13 +2,13 @@
 
 import { imagesType } from '@/app/dashboard/home/components/images/controls';
 import { camExplorerData } from '@/app/live/components/profile container/camera links/camExplorerData';
-import { FolderOrCamera } from '@/utils/@types';
+import { activeCameraType, FolderOrCamera } from '@/utils/@types';
 import React, { createContext, useState, ReactNode } from 'react';
 import { Dispatch } from 'react';
 
 export const liveContext = createContext<{
-    activeCameras : number[]
-    setActiveCameras: React.Dispatch<React.SetStateAction<number[]>>
+    activeCameras : activeCameraType[]
+    setActiveCameras: React.Dispatch<React.SetStateAction<activeCameraType[]>>
     numberOfCamerasPerPage : number
     setNumberOfCamerasPerPage: React.Dispatch<React.SetStateAction<number>>
     folders: FolderOrCamera[]
@@ -23,7 +23,20 @@ export const liveContext = createContext<{
 });
 
 export const LiveProvider = ({ children }: { children: ReactNode }) => {
-    const [activeCameras, setActiveCameras] = useState<number[]>([1,2,3,4,5,6])
+    const [activeCameras, setActiveCameras] = useState<activeCameraType[]>([
+        {
+            id : '1',
+            url : "http://52.20.249.108:8888/towncouncil/channel_1/"
+        },
+        {
+            id : '2',
+            url : "http://52.20.249.108:8888/towncouncil/channel_3/"
+        },
+        {
+            id : '3',
+            url : "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
+        }
+    ])
     const [numberOfCamerasPerPage, setNumberOfCamerasPerPage] = useState<number>(4)
     const [folders, setFolders] = useState<FolderOrCamera[]>(camExplorerData);
     return (

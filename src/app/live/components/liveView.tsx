@@ -7,6 +7,7 @@ import AppTypography from "@styles/components/appTypography";
 import theme from "@styles/theme";
 import ClickableTab from "@components/clickable/clickabletab";
 import { FaCaretLeft, FaCaretRight } from "react-icons/fa6";
+import { activeCameraType } from "@/utils/@types";
 
 const LiveView = () => {
     const {
@@ -18,7 +19,7 @@ const LiveView = () => {
     const [gridClass, setGridClass] = useState<string>();
     const [screenHeight, setScreenHeight] = useState<number>(100);
     const [currentIndex, setCurrentIndex] = useState(0)
-    const [cameras, setCameras] = useState<number[][]>([])
+    const [cameras, setCameras] = useState<activeCameraType[][]>([])
 
     const getGridClass = () => {;
         switch (true) {
@@ -71,8 +72,8 @@ const LiveView = () => {
     return (
         <div className="flex flex-col gap-2 w-full">
             <div 
-                className="w-full relative overflow-hidden h-full"
-                style={{ height: `${screenHeight - 125}px` }}
+                className="w-full relative overflow-hidden h-fit"
+                // style={{ height: `${screenHeight - 125}px` }}
             >
                 <div
                     className="flex transition-transform duration-500 h-full"
@@ -82,13 +83,15 @@ const LiveView = () => {
                         cameras.map((item, index) => (
                             <div
                                 className={`grid min-w-full gap-2 ${gridClass ?? 'grid-cols-2 gap-2'}`}
-                                style={{ height: `${screenHeight - 125}px` }}
+                                // style={{ height: `${screenHeight - 125}px` }}
                                 key={index}
                             >
                                 {
-                                    item.map((item, index: number) => (
+                                    item.map((cam, index: number) => (
                                         <LiveContainer 
                                             key={index}
+                                            url={cam.url}
+                                            gridClass={gridClass}
                                         />
                                     ))
                                 }

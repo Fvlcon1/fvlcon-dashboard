@@ -1,20 +1,51 @@
+import { useContext, useEffect, useRef, useState } from "react"
 import Controls from "./controls"
+import { liveContext } from "@/context/live"
 
-const LiveContainer = () => {
+const LiveContainer = ({
+    url,
+    gridClass
+} : {
+    url : string,
+    gridClass? : string
+}) => {
+    const liveRef = useRef<HTMLDivElement>(null)
+    const [liveHeight, setLiveHeight] = useState(0)
+    const { activeCameras, numberOfCamerasPerPage } = useContext(liveContext)
+    const resizeLiveHeight = () => {
+        const cameraWidth = liveRef.current?.offsetWidth
+        console.log({cameraWidth})
+        if(cameraWidth)
+            setLiveHeight(cameraWidth / (16/9))
+    }
+    useEffect(()=>{
+        resizeLiveHeight()
+    },[gridClass])
+    useEffect(() => {
+        window.addEventListener('resize', resizeLiveHeight);
+        return ()=> window.removeEventListener('resize', resizeLiveHeight)
+    }, []);
     return (
         <div
-            className="bg-bg-secondary relative rounded-lg h-full overflow-hidden"
+            ref={liveRef}
+            className={`bg-bg-secondary flex flex-col relative rounded-lg max-h-full overflow-hidden h-fit`}
         >
             <Controls />
-            <iframe 
-                src="http://18.212.105.195:8888/haatso/channel_1/"
-                title="stream"
-                width={'100%'}
-                height={'100%'}
-                frameBorder={0}
-                allowFullScreen
-                allow="accelerometer; autoplay; clipboard-writehttp://18.212.105.195:8888/haatso/channel_1/"
-            />
+            <div 
+                className="w-full flex flex-grow justify-center items-center"
+                style={{
+                    height : `${liveHeight}px`
+                }}
+            >
+                <iframe 
+                    src={url}
+                    title="stream"
+                    width={'100%'}
+                    height={'100%'}
+                    allowFullScreen
+                    allow="accelerometer; autoplay; clipboard-write"
+                />
+            </div>
         </div>
     )
 }

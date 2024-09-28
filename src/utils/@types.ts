@@ -157,3 +157,8 @@ export type logsType = {
     content : string
   }
 }
+
+export type activeCameraType = {
+  id : string,
+  url : string
+}
