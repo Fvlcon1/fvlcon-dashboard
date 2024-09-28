@@ -198,7 +198,10 @@ const FolderList = ({
     };
 
     const addCamera = () => {
-        setActiveCameras((prev) => [...prev, 1]);
+        setActiveCameras((prev) => [...prev, {
+            id : '1',
+            url : "http://52.20.249.108:8888/towncouncil/channel_1/"
+        }]);
     };
 
     const cameraMenuItems: menuItemsTypes[] = [

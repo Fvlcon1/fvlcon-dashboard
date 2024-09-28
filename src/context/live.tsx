@@ -35,7 +35,7 @@ export const LiveProvider = ({ children }: { children: ReactNode }) => {
         {
             id : '3',
             url : "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
-        }
+        },
     ])
     const [numberOfCamerasPerPage, setNumberOfCamerasPerPage] = useState<number>(4)
     const [folders, setFolders] = useState<FolderOrCamera[]>(camExplorerData);

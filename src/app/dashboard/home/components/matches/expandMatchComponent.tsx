@@ -24,10 +24,7 @@ const ExpandMatchComponent = ({
                     />
                 </div>
                 <div className="flex flex-col flex-1 gap-2 p-4 rounded-md bg-gradient-container-black-50 w-full">
-                    <div className="flex items-center gap-2 w-full bg-bg-tetiary px-3 py-2 rounded-md">
-                        <TbListDetails
-                            color={theme.colors.text.primary}
-                        />
+                    <div className="flex items-center gap-2 w-full rounded-md">
                         <AppTypography
                             textColor={theme.colors.text.primary}
                         >
