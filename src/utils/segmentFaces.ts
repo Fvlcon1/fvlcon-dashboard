@@ -134,7 +134,7 @@ export const awsSegmentation = async (file: File, setLogs: Dispatch<SetStateActi
   try {
     setLogs([{log : {content : "Initializing..."}, date : new Date()}])
     setLogs(prev => ([
-      ...prev, { date : new Date(), log : { content : "Generating presigned URL" } }
+      ...prev, { date : new Date(), log : { content : "Generating presigned URL..." } }
     ]))
     const { data: { presignedUrl, videoKey } } = await axios.get("https://pr77ql49be.execute-api.us-east-1.amazonaws.com/Prod/upload-video");
     console.log({ presignedUrl, videoKey });
@@ -144,7 +144,7 @@ export const awsSegmentation = async (file: File, setLogs: Dispatch<SetStateActi
 
     // Upload the video to S3
     setLogs(prev => ([
-      ...prev, { date : new Date(), log : { content : "Uploading video" } }
+      ...prev, { date : new Date(), log : { content : "Uploading video..." } }
     ]))
     await uploadToS3(presignedUrl, file);
     setLogs(prev => ([
@@ -153,7 +153,7 @@ export const awsSegmentation = async (file: File, setLogs: Dispatch<SetStateActi
 
     // Start analysis
     setLogs(prev => ([
-      ...prev, { date : new Date(), log : { content : "Starting analysis" } }
+      ...prev, { date : new Date(), log : { content : "Starting analysis..." } }
     ]))
     const { data: analysisData } = await startVideoAnalysis(videoKey);
     setLogs(prev => ([
@@ -216,20 +216,20 @@ const pollJobStatus = async (jobId: string, videoKey: string, jobType: string, s
 
         if (jobStatusData.status === 'SUCCEEDED') {
           setLogs(prev => ([
-            ...prev, { date : new Date(), log : { content : "Video analysis Successful" } }
+            ...prev, { date : new Date(), log : { content : "Video analysis successful" } }
           ]))
           toast.success("Fvlconizing Successful");
-          clearInterval(intervalId);  // Stop the polling
-          resolve(jobStatusData);     // Resolve the promise with the result
+          clearInterval(intervalId);
+          resolve(jobStatusData);
         } else if (jobStatusData.status === 'FAILED') {
           toast.error("Recognition Failed");
-          clearInterval(intervalId);  // Stop the polling
-          reject(new Error("Recognition failed")); // Reject the promise with an error
+          clearInterval(intervalId);
+          reject(new Error("Recognition failed"));
         }
       } catch (error: any) {
         toast.error(`Failed to get job status: ${error.message}`);
-        clearInterval(intervalId);    // Stop the polling on error
-        reject(new Error(`Polling failed: ${error.message}`)); // Reject the promise with an error
+        clearInterval(intervalId);
+        reject(new Error(`Polling failed: ${error.message}`));
       }
     }, pollInterval);
   });

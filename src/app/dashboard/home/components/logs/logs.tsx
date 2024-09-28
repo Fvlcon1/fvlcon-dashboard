@@ -14,10 +14,12 @@ import { logsType } from "@/utils/@types"
 const Logs = ({
     logs,
     setLogs,
-    time
+    time,
+    fvlconizing
 } : {
     logs : logsType[],
     setLogs: Dispatch<SetStateAction<logsType[]>>,
+    fvlconizing? : boolean
     time : {
         seconds : number
     }
@@ -29,6 +31,12 @@ const Logs = ({
           logContainerRef.current.scrollTop = logContainerRef.current.scrollHeight;
         }
       }, [logs]);
+    useEffect(()=>{
+    if(!fvlconizing)
+        setLogs(prev => ([
+            ...prev, { date : new Date(), log : { content : `Completed in ${time.seconds} seconds` } }
+        ]))
+    },[fvlconizing])
     return (
         <Flex
             flex={1}
@@ -99,7 +107,7 @@ const Logs = ({
                                                 textColor={theme.colors.text.primary}
                                                 ellipsis={log.log.maxLines ? true : false}
                                                 maxLines={log.log.maxLines}
-                                                className={`${log.log.content === 'Fvlconizing...' && index === logs.length - 1 ? 'animate-pulse' : ''}`}
+                                                className={`${index === logs.length - 1 && fvlconizing ? 'animate-pulse' : ''}`}
                                             >
                                                 {log.log.content}
                                             </AppTypography>

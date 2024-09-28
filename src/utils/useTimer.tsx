@@ -31,7 +31,7 @@ const useTimer = () => {
     setSeconds(0);
   };
 
-  return { seconds, start, stop, reset };
+  return { seconds, start, stop, reset, setSeconds };
 };
 
 export default useTimer;

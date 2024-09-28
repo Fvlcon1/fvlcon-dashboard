@@ -57,7 +57,7 @@ const Main = () => {
         isLoading : false,
     }
     const [logs, setLogs] = useState<logsType[]>([])
-    const { seconds, start : startTimer, stop : stopTimer, reset } = useTimer();
+    const { seconds, start : startTimer, stop : stopTimer, reset : resetTimer, setSeconds} = useTimer();
 
     let imageSplit = []
     let filename = undefined
@@ -365,6 +365,7 @@ const Main = () => {
                                 time={{
                                     seconds
                                 }}
+                                fvlconizing={fvlconizing}
                             />
                         }
                         {
