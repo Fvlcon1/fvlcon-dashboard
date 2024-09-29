@@ -17,19 +17,6 @@ const Topbar = () => {
                 align="center"
                 gap={20}
             >
-                <Flex
-                    width="fit-content"
-                    align="center"
-                >
-                    <FaCircleUser 
-                        color={theme.colors.text.secondary}
-                        className="mt-[-1px]"
-                        size={20}
-                    />
-                    <AppTypography>
-                        Amin Hafez Michael
-                    </AppTypography>
-                </Flex>
                 <Searchbar className="!w-[400px]" />
             </Flex>
         </div>

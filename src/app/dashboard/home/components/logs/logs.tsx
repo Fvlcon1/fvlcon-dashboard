@@ -32,7 +32,7 @@ const Logs = ({
         }
       }, [logs]);
     useEffect(()=>{
-    if(!fvlconizing)
+    if(fvlconizing === false)
         setLogs(prev => ([
             ...prev, { date : new Date(), log : { content : `Completed in ${time.seconds} seconds` } }
         ]))

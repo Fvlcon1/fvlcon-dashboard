@@ -69,30 +69,32 @@ export type canvasTypes = {
   descriptor? : Float32Array
 }
 
+export type checkFaceDetails = {
+  Address : string,
+  Citizenship : string,
+  CriminalRecord : string,
+  DateOfBirth : string,
+  DigitalAddress : string,
+  ExternalImageId : string,
+  FaceId : string,
+  FirstName : string,
+  HasCriminalRecord : string,
+  LastName : string,
+  MiddleName : string,
+  PersonId : string,
+  PersonName : string,
+  PlaceOfBirth : string,
+  S3Key : string,
+  imageUrl : string
+}
+
 export type checkedFaceType = { 
   matchedPerson? : string
   similarity? : number
   originalImage : string
   matchedImage? : string
   faceid? : string,
-  details ?: {
-    Address : string,
-    Citizenship : string,
-    CriminalRecord : string,
-    DateOfBirth : string,
-    DigitalAddress : string,
-    ExternalImageId : string,
-    FaceId : string,
-    FirstName : string,
-    HasCriminalRecord : string,
-    LastName : string,
-    MiddleName : string,
-    PersonId : string,
-    PersonName : string,
-    PlaceOfBirth : string,
-    S3Key : string,
-    imageUrl : string
-  }
+  details ?: checkFaceDetails
 }
 
 export type ImageCardType = {

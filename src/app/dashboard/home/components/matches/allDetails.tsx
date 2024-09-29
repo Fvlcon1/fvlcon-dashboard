@@ -1,0 +1,150 @@
+import { checkFaceDetails } from "@/utils/@types"
+import AppTypography from "@styles/components/appTypography"
+import theme from "@styles/theme"
+import { FaLocationArrow, FaRegFileLines } from "react-icons/fa6"
+import { HiUserCircle } from "react-icons/hi"
+
+const AllDetails = ({
+    details
+} : {
+    details? : checkFaceDetails
+}) => {
+    return (
+        <div className="flex flex-col gap-5">
+            <div className="flex flex-col gap-1">
+                <div className="flex items-center gap-1">
+                    <HiUserCircle size={12} color={theme.colors.text.primary}/>
+                    <AppTypography textColor={theme.colors.text.primary}>
+                        Persoanl information
+                    </AppTypography>
+                </div>
+                <div className="flex flex-col p-2 px-3 bg-bg-secondary rounded-md gap-1">
+                    <div className="flex gap-1">
+                        <AppTypography>
+                            Firstname :
+                        </AppTypography>
+                        <AppTypography
+                            textColor={details?.FirstName && theme.colors.text.primary}
+                        >
+                            {details?.FirstName || 'N/A'}
+                        </AppTypography>
+                    </div>
+                    <div className="flex gap-1">
+                        <AppTypography>
+                            MiddleName :
+                        </AppTypography>
+                        <AppTypography
+                            textColor={details?.MiddleName && theme.colors.text.primary}
+                        >
+                            {details?.MiddleName || 'N/A'}
+                        </AppTypography>
+                    </div>
+                    <div className="flex gap-1">
+                        <AppTypography>
+                            Lastname :
+                        </AppTypography>
+                        <AppTypography
+                            textColor={details?.LastName && theme.colors.text.primary}
+                        >
+                            {details?.LastName || 'N/A'}
+                        </AppTypography>
+                    </div>
+                    <div className="flex gap-1">
+                        <AppTypography>
+                            DateOfBirth :
+                        </AppTypography>
+                        <AppTypography
+                            textColor={details?.DateOfBirth && theme.colors.text.primary}
+                        >
+                            {details?.DateOfBirth || 'N/A'}
+                        </AppTypography>
+                    </div>
+                </div>
+            </div>
+
+            <div className="flex flex-col gap-1">
+                <div className="flex items-center gap-1">
+                    <FaLocationArrow size={10} color={theme.colors.text.primary}/>
+                    <AppTypography textColor={theme.colors.text.primary}>
+                        Location information
+                    </AppTypography>
+                </div>
+                <div className="flex flex-col p-2 px-3 bg-bg-secondary rounded-md gap-1">
+                    <div className="flex gap-1">
+                        <AppTypography>
+                            Address :
+                        </AppTypography>
+                        <AppTypography
+                            textColor={details?.Address && theme.colors.text.primary}
+                        >
+                            {details?.Address || 'N/A'}
+                        </AppTypography>
+                    </div>
+                    <div className="flex gap-1">
+                        <AppTypography>
+                            DigitalAddress :
+                        </AppTypography>
+                        <AppTypography
+                            textColor={details?.DigitalAddress && theme.colors.text.primary}
+                        >
+                            {details?.DigitalAddress || 'N/A'}
+                        </AppTypography>
+                    </div>
+                    <div className="flex gap-1">
+                        <AppTypography>
+                            PlaceOfBirth :
+                        </AppTypography>
+                        <AppTypography
+                            textColor={details?.PlaceOfBirth && theme.colors.text.primary}
+                        >
+                            {details?.PlaceOfBirth || 'N/A'}
+                        </AppTypography>
+                    </div>
+                </div>
+            </div>
+
+            <div className="flex flex-col gap-1">
+                <div className="flex items-center gap-1">
+                    <FaRegFileLines size={10} color={theme.colors.text.primary}/>
+                    <AppTypography textColor={theme.colors.text.primary}>
+                        Legal information
+                    </AppTypography>
+                </div>
+                <div className="flex flex-col p-2 px-3 bg-bg-secondary rounded-md gap-1">
+                    <div className="flex gap-1">
+                        <AppTypography>
+                            Citizenship :
+                        </AppTypography>
+                        <AppTypography
+                            textColor={details?.Citizenship && theme.colors.text.primary}
+                        >
+                            {details?.Citizenship || 'N/A'}
+                        </AppTypography>
+                    </div>
+                    <div className="flex gap-1">
+                        <AppTypography>
+                            CriminalRecord :
+                        </AppTypography>
+                        <AppTypography
+                            textColor={details?.CriminalRecord && theme.colors.text.primary}
+                        >
+                            {details?.CriminalRecord || 'N/A'}
+                        </AppTypography>
+                    </div>
+                    <div className="flex gap-1">
+                        <AppTypography>
+                            HasCriminalRecord :
+                        </AppTypography>
+                        <AppTypography
+                            textColor={details?.HasCriminalRecord && theme.colors.text.primary}
+                        >
+                            {details?.HasCriminalRecord || 'N/A'}
+                        </AppTypography>
+                    </div>
+                </div>
+            </div>
+        </div>
+    )
+}
+
+export default AllDetails

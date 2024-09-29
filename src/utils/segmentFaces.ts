@@ -30,26 +30,31 @@ export const loadModels = async () => {
   }
 };
 
-const segmentFaces = async (url : string) => {
+const segmentFaces = async (url : string, setLogs: Dispatch<SetStateAction<logsType[]>>) => {
   try {
     const img = await faceapi.fetchImage(url);
     if (!isModelsLoaded()) {
       await loadModels();
     }
     if (!isModelsLoaded()) {
+      setLogs([{log : {content : "Models not loaded properly"}, date : new Date()}])
       return console.log("Models not loaded properly");
     }
   
+    setLogs([{log : {content : "Segmenting started..."}, date : new Date()}])
     const detections = await faceapi
       .detectAllFaces(img, new faceapi.SsdMobilenetv1Options())
       .withFaceLandmarks()
       .withFaceDescriptors()
       .withAgeAndGender();
-      console.log({detections})
+    console.log({detections})
+    setLogs(prev => [...prev, {log : {content : "Segmentation successful"}, date : new Date()}])
+    setLogs(prev => [...prev, {log : {content : "Croping segments..."}, date : new Date()}])
   
-      const faces = getFaceCanvas(detections, img)
-      console.log({faces})
-      return faces
+    const faces = getFaceCanvas(detections, img)
+    setLogs(prev => [...prev, {log : {content : "Segments successlly cropped"}, date : new Date()}])
+    console.log({faces})
+    return faces
   } catch(error) {
     console.log("error segmenting faces:", error)
   }

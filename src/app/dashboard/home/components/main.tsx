@@ -94,7 +94,9 @@ const Main = () => {
         }
     }
 
-    const handleAnalyze = async () => {
+    const handleAnalyze = async (onlyAnalyze? : boolean) => {
+        if(onlyAnalyze)
+            setFvlconizing(true)
         setDisplayFaces(true)
         setDistinctFaces(prev => ({
             ...prev,
@@ -102,18 +104,21 @@ const Main = () => {
         }))
         if(selectedImage && fileEx && imageRef.current !== null){
             if(isImageFile(fileEx)){
-                const faces = await segmentFaces(selectedImage.url)
+                const faces = await segmentFaces(selectedImage.url, setLogs)
                 faces && setFaces(faces)
             } else if(isVideoFile(fileEx)){
                 const thumbnail = await generateVideoThumbnail(selectedImage.url, videoTimestamp)
                 thumbnail ? setImageSrc(thumbnail) : console.log("unable to generate thumbnail")
-                const faces = await segmentFaces(thumbnail)
+                const faces = await segmentFaces(thumbnail, setLogs)
                 faces && setFaces(faces)
             } else {
                 console.log("invalid file format")
                 setDistinctFaces({error : "Invalid file format"})
             }
+            if(onlyAnalyze)
+                setFvlconizing(false)
         } else {
+            setFvlconizing(false)
             setDistinctFaces({error : "No image selected"})
             console.log("No Image Selected")
         }
@@ -180,10 +185,13 @@ const Main = () => {
     }
 
     const manualFalconize = async () => {
+        setFvlconizing(true)
         await handleAnalyze()
         setDisplayMatches(true);
         if(statelessDistinctFaces.data){
+            setLogs(prev => [...prev, {log : {content : "Fvlconizing..."}, date : new Date()}])
             const faces = await checkEachFace(statelessDistinctFaces);
+            setLogs(prev => [...prev, {log : {content : "Fvlconized successfully"}, date : new Date()}])
             if (faces && faces.length > 0) {
                 const validFaces = faces.filter(face => face !== undefined) as checkedFaceType[];
                 setMatchedFaces(prev => ({
@@ -193,8 +201,10 @@ const Main = () => {
                 toast.error("No match found!")
                 !matchedFaces.data && setMatchedFaces({isEmpty : true})
             }
+            setFvlconizing(false)
         } else {
             setMatchedFaces({error : 'No Image Segmented'})
+            setFvlconizing(false)
         }
     }
 
@@ -284,35 +294,6 @@ const Main = () => {
                 maxWidth="1080px"
             >
                 <div className="w-full relative bg-gradient-container h-[500px] rounded-2xl p-4">
-                    <AnimatePresence>
-                        {
-                            fvlconizing &&
-                            <motion.div className="h-[350px] absolute top-0 z-50 w-full left-0 bg-[#000000b6] flex justify-center items-center flex-col gap-1 backdrop-filter backdrop-blur-sm">
-                                <Spin />
-                                <motion.div
-                                    initial={{
-                                        opacity : 0,
-                                        y : 20
-                                    }}
-                                    animate={{
-                                        opacity : 1,
-                                        y : 0
-                                    }}
-                                    exit={{
-                                        opacity : 0,
-                                        y : 20
-                                    }}
-                                >
-                                    <AppTypography
-                                        textColor={theme.colors.text.primary}
-                                        className="animate-pulse"
-                                    >
-                                        {logs[logs.length - 1].log.content}
-                                    </AppTypography>
-                                </motion.div>
-                            </motion.div>
-                        }
-                    </AnimatePresence>
                     {
                         selectedImage && fileExtension && isVideoFile(fileExtension) ?
                         <VideoContainer 
@@ -358,7 +339,7 @@ const Main = () => {
                     </Flex>
                     <Flex>
                         {
-                            displayMatches &&
+                            displayMatches && displayFaces &&
                             <Logs 
                                 logs={logs}
                                 setLogs={setLogs}

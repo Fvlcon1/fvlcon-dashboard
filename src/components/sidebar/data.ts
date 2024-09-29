@@ -35,19 +35,19 @@ export const rightPages = [
 
 export const pagesData =[
     {
-        name : 'Dashboard',
+        name : 'Media Lab',
         icon : MdDashboard,
         active : false,
         url : '/dashboard/home'
     },
     {
-        name : 'Live',
+        name : 'Live Vision',
         icon : RiLiveFill,
         active : false,
         url : '/live'
     },
     {
-        name : 'Ativity Log',
+        name : 'Activity Log',
         icon : FaFileContract,
         active : false,
         url : '/log'
