@@ -21,7 +21,7 @@ const AllDetails = ({
                 <div className="flex flex-col p-2 px-3 bg-bg-secondary rounded-md gap-1">
                     <div className="flex gap-1">
                         <AppTypography>
-                            Firstname :
+                            First name :
                         </AppTypography>
                         <AppTypography
                             textColor={details?.FirstName && theme.colors.text.primary}
@@ -31,7 +31,7 @@ const AllDetails = ({
                     </div>
                     <div className="flex gap-1">
                         <AppTypography>
-                            MiddleName :
+                            Middle name :
                         </AppTypography>
                         <AppTypography
                             textColor={details?.MiddleName && theme.colors.text.primary}
@@ -41,7 +41,7 @@ const AllDetails = ({
                     </div>
                     <div className="flex gap-1">
                         <AppTypography>
-                            Lastname :
+                            Last name :
                         </AppTypography>
                         <AppTypography
                             textColor={details?.LastName && theme.colors.text.primary}
@@ -51,7 +51,7 @@ const AllDetails = ({
                     </div>
                     <div className="flex gap-1">
                         <AppTypography>
-                            DateOfBirth :
+                            Date of birth :
                         </AppTypography>
                         <AppTypography
                             textColor={details?.DateOfBirth && theme.colors.text.primary}
@@ -82,7 +82,7 @@ const AllDetails = ({
                     </div>
                     <div className="flex gap-1">
                         <AppTypography>
-                            DigitalAddress :
+                            Digital address :
                         </AppTypography>
                         <AppTypography
                             textColor={details?.DigitalAddress && theme.colors.text.primary}
@@ -92,7 +92,7 @@ const AllDetails = ({
                     </div>
                     <div className="flex gap-1">
                         <AppTypography>
-                            PlaceOfBirth :
+                            Place of birth :
                         </AppTypography>
                         <AppTypography
                             textColor={details?.PlaceOfBirth && theme.colors.text.primary}
@@ -123,22 +123,30 @@ const AllDetails = ({
                     </div>
                     <div className="flex gap-1">
                         <AppTypography>
-                            CriminalRecord :
+                            Criminal record :
                         </AppTypography>
-                        <AppTypography
-                            textColor={details?.CriminalRecord && theme.colors.text.primary}
-                        >
-                            {details?.CriminalRecord || 'N/A'}
-                        </AppTypography>
+                        {
+                            details?.CriminalRecord ?
+                            <AppTypography
+                                textColor="royalblue"
+                                className="hover:!underline !cursor-pointer hover:!opacity-70"
+                            >
+                                View
+                            </AppTypography>
+                            :
+                            <AppTypography>
+                                N/A
+                            </AppTypography>
+                        }
                     </div>
                     <div className="flex gap-1">
                         <AppTypography>
-                            HasCriminalRecord :
+                            Has criminal record :
                         </AppTypography>
                         <AppTypography
-                            textColor={details?.HasCriminalRecord && theme.colors.text.primary}
+                            textColor={theme.colors.text.primary}
                         >
-                            {details?.HasCriminalRecord || 'N/A'}
+                            {details?.HasCriminalRecord ? 'Yes' : 'No'}
                         </AppTypography>
                     </div>
                 </div>

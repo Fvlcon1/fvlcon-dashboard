@@ -208,8 +208,7 @@ const startVideoAnalysis = async (videoKey: string) => {
 };
 
 const pollJobStatus = async (jobId: string, videoKey: string, jobType: string, setLogs: Dispatch<SetStateAction<logsType[]>>): Promise<any> => {
-  const pollInterval = 5000;
-
+  const pollInterval = 5000
   return new Promise((resolve, reject) => {
     const intervalId = setInterval(async () => {
       try {

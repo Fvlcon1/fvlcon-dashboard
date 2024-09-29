@@ -14,7 +14,7 @@ import Metadata from "./metadata"
 import { isImageFile, isVideoFile } from "@/utils/getFileType"
 import VideoContainer from "@components/video container/videoContainer"
 import segmentFaces, { awsSegmentation, handleVideoPlay, isModelsLoaded, loadModels, videoSegmentation } from "@/utils/segmentFaces"
-import { canvasTypes, checkedFaceType, FetchState, logsType } from "@/utils/@types"
+import { canvasTypes, checkedFaceType, FetchState, fvlconizedFaceType, logsType } from "@/utils/@types"
 import checkEachFace from "@/utils/model/checkEachFace"
 import generateVideoThumbnail from "@/utils/generateVideoThumbnail"
 import { toast } from "react-toastify"
@@ -42,6 +42,10 @@ const Main = () => {
     const [videoSrc, setVideoSrc] = useState<string>()
     const [videoTimestamp, setVideoTimestamp] = useState<number>(0)
     const [isVideoPlaying, setIsVideoPlaying] = useState<boolean>(false)
+    const [occurance, setOccurance] = useState<{
+        index: number;
+        content: fvlconizedFaceType[];
+    }>()
     const [distinctFaces, setDistinctFaces] = useState<FetchState<canvasTypes[]>>({
         isEmpty : false,
         isLoading : false,
@@ -124,6 +128,37 @@ const Main = () => {
         }
     }
 
+    let facesGroupedByIndex : {
+        index : number,
+        content : fvlconizedFaceType[],
+    }[] = []
+    
+    const groupFacesByIndex = (faces : fvlconizedFaceType[]) => {
+        faces.map((item) => groupSingleFaceByIndex(item))
+        console.log({facesGroupedByIndex})
+    }
+
+    const groupSingleFaceByIndex = (face : fvlconizedFaceType) => {
+        let isIndexed = false
+        facesGroupedByIndex = facesGroupedByIndex.map((item) => {
+            if(item.index === face.Person.Index){
+                isIndexed = true
+                return {
+                    index : item.index,
+                    content : [...item.content, face]
+                }
+            } else {
+                return item
+            }
+        })
+        if(!isIndexed){
+            facesGroupedByIndex.push({
+                index : face.Person.Index,
+                content : [face]
+            })
+        }
+    }
+
     const handleFalconize = async () => {
         setMatchedFaces(prev => ({
             ...prev,
@@ -134,27 +169,31 @@ const Main = () => {
             if(isVideoFile(fileEx) && selectedImage && selectedImage.fullFile){
                 setFvlconizing(true)
                 const matchedFaces =  await awsSegmentation(selectedImage!.fullFile, setLogs)
-                const faces = getMatchedFaces(matchedFaces.results)
-                if (faces.length > 0) {
-                    const checkedFaces = await Promise.all(faces.map(async (face: any) => {
-                        const faceMatch = face.FaceMatches[0]
-                        const details = await getSingleFace(faceMatch.Face.FaceId);
-                        const boundingBox = face.Person.Face.BoundingBox
+                groupFacesByIndex(matchedFaces.results)
+                if(facesGroupedByIndex){
+                    const checkedFaces = await Promise.all(facesGroupedByIndex.map(async (face) => {
+                        const faceMatch = face.content[0].FaceMatches[0]
+                        let details : any = undefined
+                        if(faceMatch)
+                            details = await getSingleFace(faceMatch.Face.FaceId);
+                        const boundingBox = face.content[0].Person.Face.BoundingBox
                         console.log({boundingBox})
-                        const match = {
-                            matchedPerson: faceMatch.Face.ExternalImageId,
-                            similarity: faceMatch.Similarity,
-                            originalImage: await getImageURLFromBoundingBox(boundingBox, await generateVideoThumbnail(selectedImage.url, face.Timestamp / 1000)),
-                            matchedImage: details.imageUrl,
-                            faceid: faceMatch.Face.FaceId,
+                        const match : checkedFaceType = {
+                            matchedPerson: faceMatch?.Face.ExternalImageId,
+                            similarity: faceMatch?.Similarity,
+                            originalImage: await getImageURLFromBoundingBox(boundingBox, await generateVideoThumbnail(selectedImage.url, face.content[0].Timestamp / 1000)),
+                            matchedImage: details?.imageUrl,
+                            faceid: faceMatch?.Face.FaceId,
+                            occurances : face,
                             details
                         }
                         return match
-                    }));
+                    }))
                     const flatternedCheckedFaces = checkedFaces.flat()
                     setMatchedFaces({
                         data : flatternedCheckedFaces
                     })
+                    setOccurance(flatternedCheckedFaces[0].occurances)
                 }
                 setFvlconizing(false)
             } else {
@@ -252,27 +291,6 @@ const Main = () => {
             setFileExtension(fileEx)
         }
     },[selectedImage])
-
-    // useEffect(() => {
-    //     const startSegmentation = setInterval(() => {
-    //         if(!isVideoPlaying)
-    //             return clearInterval(startSegmentation)
-    //         getVideoSegments()
-    //     }, 1000);
-    //     return () => clearInterval(startSegmentation);
-    //   }, [isVideoPlaying]);
-
-    const handleVideoState = (state : boolean) => {
-        // if(state)
-        //     !displayFaces && setDisplayFaces(true)
-        // setIsVideoPlaying(state)
-        // handleVideoPlay(videoRef.current, videoTimestamp, state)
-    }
-
-    const getVideoSegments = async () => {
-        const segments = await videoSegmentation(videoRef.current, videoTimestamp, statelessDistinctFaces.data)
-        setFaces(segments ?? [], 'video')
-    }
       
     useEffect(()=>{
         if(fvlconizing){
@@ -290,17 +308,16 @@ const Main = () => {
             </div>
             <Flex
                 direction="column"
-                gap={4}
+                gap={3}
                 maxWidth="1080px"
             >
-                <div className="w-full relative bg-gradient-container h-[500px] rounded-2xl p-4">
+                <div className="w-full relative bg-gradient-container h-fit rounded-2xl p-4">
                     {
                         selectedImage && fileExtension && isVideoFile(fileExtension) ?
                         <VideoContainer 
                             video={selectedImage}
                             setVideoTimestamp={setVideoTimestamp}
-                            onPlay={()=>handleVideoState(true)}
-                            onPause={()=>handleVideoState(false)}
+                            occurances={occurance}
                         />
                         :
                         <Flex
@@ -321,7 +338,6 @@ const Main = () => {
                     padding="0 18px"
                     direction="column"
                     gap={12}
-                    margin="-120px 0 0 0"
                 >
                     <Flex 
                         width="fit-content"
@@ -339,7 +355,7 @@ const Main = () => {
                     </Flex>
                     <Flex>
                         {
-                            displayMatches && displayFaces &&
+                            (displayMatches || displayFaces) &&
                             <Logs 
                                 logs={logs}
                                 setLogs={setLogs}

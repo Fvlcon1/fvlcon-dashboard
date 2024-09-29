@@ -94,6 +94,10 @@ export type checkedFaceType = {
   originalImage : string
   matchedImage? : string
   faceid? : string,
+  occurances? : {
+    index: number;
+    content: fvlconizedFaceType[];
+  }
   details ?: checkFaceDetails
 }
 
@@ -163,4 +167,13 @@ export type logsType = {
 export type activeCameraType = {
   id : string,
   url : string
+}
+
+export type fvlconizedFaceType = {
+  Person : {
+      Face : any,
+      Index : number
+  },
+  Timestamp : number
+  FaceMatches : any[]
 }

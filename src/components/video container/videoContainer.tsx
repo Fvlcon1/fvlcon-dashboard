@@ -7,79 +7,178 @@ import theme from "@styles/theme";
 import { imagesType } from "@/app/dashboard/home/components/images/controls";
 import Player from 'next-video/player';
 import Slidein from "@styles/components/slidein";
-import { Dispatch, SetStateAction, useRef } from "react";
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
+import { fvlconizedFaceType } from "@/utils/@types";
 
 const VideoContainer = ({
     video,
     setVideoTimestamp,
     onPlay,
-    onPause
+    onPause,
+    occurances
 } : {
-    video ? : imagesType
-    setVideoTimestamp : Dispatch<SetStateAction<number>>
-    onPlay? : ()=>void
-    onPause? : ()=>void
+    video?: imagesType
+    setVideoTimestamp: Dispatch<SetStateAction<number>>
+    onPlay?: () => void
+    onPause?: () => void
+    occurances?: {
+        index: number;
+        content: fvlconizedFaceType[];
+    }
 }) => {
-    const playerRef = useRef<any | null>(null);
+    const playerRef = useRef<HTMLVideoElement | null>(null);
+    const [duration, setDuration] = useState(0);
+    const [seekBlocks, setSeekBlocks] = useState<(fvlconizedFaceType | undefined)[]>([]);
+    const [seekBlockWidth, setSeekBlockWidth] = useState(0);
+    const [videoContainerWidth, setVideoContainerWidth] = useState(0);
+    const videoContainerWidthRef = useRef<HTMLDivElement>(null);
+    const [currentTime, setCurrentTime] = useState(0);
+
+    const updateDivWidth = () => {
+        if (videoContainerWidthRef.current) {
+            const containerWidth = videoContainerWidthRef.current.offsetWidth;
+            setSeekBlockWidth(containerWidth / seekBlocks.length);
+            setVideoContainerWidth(containerWidth);
+        }
+    };
+
+    useEffect(() => {
+        updateDivWidth();
+        window.addEventListener('resize', updateDivWidth);
+        return () => {
+            window.removeEventListener('resize', updateDivWidth);
+        };
+    }, [seekBlocks]);
+
+    const setStamps = () => {
+        let stamps = occurances?.content;
+        let localSeekBlock: (fvlconizedFaceType | undefined)[] = [];
+        for (let i = 0; i < duration * 2; i++) {
+            if (stamps) {
+                let face: fvlconizedFaceType | undefined = undefined;
+                if (stamps[0]?.Timestamp <= 0.5 * i * 1000) {
+                    face = stamps[0];
+                    stamps = stamps.filter((_, index) => index !== 0);
+                }
+                localSeekBlock.push(face);
+            }
+        }
+        setSeekBlocks(localSeekBlock);
+    };
+
+    useEffect(() => {
+        setStamps();
+        updateDivWidth();
+    }, [occurances]);
+
+    useEffect(() => {
+        if (video) {
+            const videoElement = document.createElement('video');
+            videoElement.src = video.url;
+            videoElement.addEventListener('loadedmetadata', () => {
+                setDuration(videoElement.duration);
+            });
+        }
+    }, [video]);
+
+    // Handle time update with debouncing
+    let timeUpdateTimeout: NodeJS.Timeout;
+    const handleTimeUpdate = () => {
+        if (timeUpdateTimeout) clearTimeout(timeUpdateTimeout);
+        timeUpdateTimeout = setTimeout(() => {
+            if (playerRef.current) {
+                const updatedTime = playerRef.current.currentTime;
+                setVideoTimestamp(updatedTime);
+            }
+        }, 100); // Adjust debounce time as needed
+    };
+
     return (
         <Slidein className="!w-full">
-            <div className="w-full flex flex-1 h-[350px] rounded-xl bg-gradient-border p-[1px]">
-                <div className="w-full flex h-full bg-bg-secondary rounded-xl p-[15px]">
-                    <div className="w-full flex h-full bg-bg-primary rounded-lg p-[1px] justify-center items-center relative overflow-hidden">
+            <div className="w-full flex flex-1 h-fit rounded-xl bg-gradient-border p-[1px]">
+                <div className="w-full flex flex-col gap-2 h-full bg-bg-secondary rounded-xl p-[15px]">
+                    <div 
+                        className="w-full flex h-[350px] bg-bg-primary rounded-lg p-[1px] justify-center items-center relative overflow-hidden"
+                        ref={videoContainerWidthRef}
+                    >
                         <div id="imageDetectionCanvas" className="absolute top-0 w-[560px] h-[320px] pointer-events-none z-10"></div>
                         {
                             !video ?
-                            <Flex
-                                width="fit-content"
-                                direction="column"
-                                align='center'
-                                gap={0}
-                            >
-                                <Image 
-                                    alt="logo"
-                                    width={100}
-                                    height={100}
-                                    src={require('@/assets/logo.png')}
-                                />
                                 <Flex
-                                    width="200px"
-                                    margin="-20px 0 0 0"
+                                    width="fit-content"
+                                    direction="column"
+                                    align='center'
+                                    gap={0}
                                 >
-                                    <AppTypography
-                                        textAlign="center"
-                                        textColor={theme.colors.text.tetiary}
+                                    <Image 
+                                        alt="logo"
+                                        width={100}
+                                        height={100}
+                                        src={require('@/assets/logo.png')}
+                                    />
+                                    <Flex
+                                        width="200px"
+                                        margin="-20px 0 0 0"
                                     >
-                                        Drag and drop and Video / click an Video to start
-                                    </AppTypography>
+                                        <AppTypography
+                                            textAlign="center"
+                                            textColor={theme.colors.text.tetiary}
+                                        >
+                                            Drag and drop a Video / click a Video to start
+                                        </AppTypography>
+                                    </Flex>
                                 </Flex>
-                            </Flex>
-                            :
-                            <Flex
-                                width="fit-content"
-                                direction="column"
-                                align='center'
-                                height="100%"
-                                gap={0}
-                            >
-                                <Player 
-                                    src={video.url}
-                                    ref={playerRef}
-                                    controls
-                                    style={{
-                                        height : '100%'
-                                    }}
-                                    accentColor={theme.colors.bg.secondary}
-                                    onTimeUpdate={(time)=>setVideoTimestamp(playerRef.current.currentTime)}
-                                    onPlay={onPlay}
-                                    onPause={onPause}
-                                    playbackRates={[0.2,0.5,0.7,1,1.2,1.5,1.7,2]}
-                                />
-                            </Flex>
+                                :
+                                <Flex
+                                    width="fit-content"
+                                    direction="column"
+                                    align='center'
+                                    height="100%"
+                                    gap={0}
+                                >
+                                    <Player 
+                                        src={video.url}
+                                        ref={playerRef}
+                                        controls
+                                        style={{ height: '100%' }}
+                                        accentColor={theme.colors.bg.secondary}
+                                        onTimeUpdate={handleTimeUpdate}
+                                        onPlay={onPlay}
+                                        onPause={onPause}
+                                        playbackRates={[0.2, 0.5, 0.7, 1, 1.2, 1.5, 1.7, 2]}
+                                        currentTime={currentTime}
+                                    />
+                                </Flex>
+                        }
+                    </div>
+                    <div className="flex w-full rounded-md">
+                        {
+                            seekBlocks.map((item, index) => (
+                                item ?
+                                    <div 
+                                        className={`flex h-[30px] bg-bg-alt1 hover:opacity-50 cursor-pointer ${index === 0 && 'rounded-l-md'} ${!seekBlocks[index - 1] && 'rounded-l-md'} ${!seekBlocks[index + 1] && 'rounded-r-md'} ${index === seekBlocks.length - 1 && 'rounded-r-md'}`}
+                                        style={{ width: `${seekBlockWidth}px` }}
+                                        key={index}
+                                        onClick={() => {
+                                            if (item) {
+                                                const update = item.Timestamp / 1000
+                                                setCurrentTime(prev => prev === update ? update + 0.001 : update);
+                                            }
+                                        }}
+                                    />
+                                    :
+                                    <div 
+                                        className={`flex h-[30px]`}
+                                        style={{ width: `${seekBlockWidth}px` }}
+                                        key={index}
+                                    />
+                            ))
                         }
                     </div>
                 </div>
             </div>
         </Slidein>
-    )
-}
-export default VideoContainer
+    );
+};
+
+export default VideoContainer;
