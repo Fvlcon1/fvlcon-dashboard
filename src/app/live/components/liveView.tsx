@@ -70,7 +70,7 @@ const LiveView = () => {
     }, []);
 
     return (
-        <div className="flex flex-col gap-2 w-full">
+        <div className="flex flex-col justify-between h-[90vh] gap-2 w-full">
             <div 
                 className="w-full relative overflow-hidden h-fit"
                 // style={{ height: `${screenHeight - 125}px` }}
