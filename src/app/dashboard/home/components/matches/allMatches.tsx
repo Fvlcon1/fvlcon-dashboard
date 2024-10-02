@@ -6,16 +6,20 @@ import { TypographyBold } from "@styles/style.types"
 import { AnimatePresence } from "framer-motion"
 import { Dispatch, SetStateAction } from "react"
 import MatchCard from "./MatchCard"
-import { checkedFaceType } from "@/utils/@types"
+import { checkedFaceType, occurance } from "@/utils/@types"
 
 const AllMatches = ({
     display, 
     setDisplay,
-    faces
+    faces,
+    setOccurance,
+    currentOccurance
 } : {
     display : boolean,
     setDisplay : Dispatch<SetStateAction<boolean>>
     faces : checkedFaceType[]
+    setOccurance: Dispatch<SetStateAction<occurance | undefined>>
+    currentOccurance?: occurance
 }) => {
     return (
         <AnimatePresence>
@@ -56,6 +60,8 @@ const AllMatches = ({
                                                 key={index}
                                                 title={`Match ${index + 1}`}
                                                 description={item.matchedPerson}
+                                                currentOccurance={currentOccurance}
+                                                setOccurance={setOccurance}
                                             />
                                         ))
                                     }

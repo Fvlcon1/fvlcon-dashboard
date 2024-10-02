@@ -108,6 +108,8 @@ const Matches = ({
                     display={displayFaces}
                     setDisplay={setDisplayFaces}
                     faces={faces.data}
+                    currentOccurance={currentOccurance}
+                    setOccurance={setOccurance}
                 />
             }
         </>
