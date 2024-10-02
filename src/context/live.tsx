@@ -38,11 +38,13 @@ export const LiveProvider = ({ children }: { children: ReactNode }) => {
         },
         {
             id : '1',
-            url : "http://52.20.249.108:8888/towncouncil/channel_1/"
+            // url : "http://52.20.249.108:8888/towncouncil/channel_1/"
+            url : "https://stream.fvlcon.app:8888/towncouncil/channel_1"
         },
         {
             id : '2',
-            url : "http://52.20.249.108:8888/towncouncil/channel_3/"
+            // url : "http://52.20.249.108:8888/towncouncil/channel_3/"
+             url : "https://stream.fvlcon.app:8888/towncouncil/channel_3"
         },
     ])
     const [numberOfCamerasPerPage, setNumberOfCamerasPerPage] = useState<number>(4)
