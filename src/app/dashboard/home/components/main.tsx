@@ -14,7 +14,7 @@ import Metadata from "./metadata"
 import { isImageFile, isVideoFile } from "@/utils/getFileType"
 import VideoContainer from "@components/video container/videoContainer"
 import segmentFaces, { awsSegmentation, handleVideoPlay, isModelsLoaded, loadModels, videoSegmentation } from "@/utils/segmentFaces"
-import { canvasTypes, checkedFaceType, FetchState, fvlconizedFaceType, logsType } from "@/utils/@types"
+import { canvasTypes, checkedFaceType, FetchState, fvlconizedFaceType, logsType, occurance } from "@/utils/@types"
 import checkEachFace from "@/utils/model/checkEachFace"
 import generateVideoThumbnail from "@/utils/generateVideoThumbnail"
 import { toast } from "react-toastify"
@@ -42,10 +42,7 @@ const Main = () => {
     const [videoSrc, setVideoSrc] = useState<string>()
     const [videoTimestamp, setVideoTimestamp] = useState<number>(0)
     const [isVideoPlaying, setIsVideoPlaying] = useState<boolean>(false)
-    const [occurance, setOccurance] = useState<{
-        index: number;
-        content: fvlconizedFaceType[];
-    }>()
+    const [occurance, setOccurance] = useState<occurance>()
     const [distinctFaces, setDistinctFaces] = useState<FetchState<canvasTypes[]>>({
         isEmpty : false,
         isLoading : false,
@@ -66,6 +63,7 @@ const Main = () => {
     let imageSplit = []
     let filename = undefined
 
+    // Sets the segmented faces to be displayed
     const setFaces = (faces : { dataUrl: string, label: string }[] | undefined, type? : 'video' | 'image') => {
         if(faces){
             if(faces.length === 0){
@@ -98,6 +96,7 @@ const Main = () => {
         }
     }
 
+    // Handles the segmentation of images and specific video timestamps
     const handleAnalyze = async (onlyAnalyze? : boolean) => {
         if(onlyAnalyze)
             setFvlconizing(true)
@@ -168,7 +167,7 @@ const Main = () => {
         try {
             if(isVideoFile(fileEx) && selectedImage && selectedImage.fullFile){
                 setFvlconizing(true)
-                const matchedFaces =  await awsSegmentation(selectedImage!.fullFile, setLogs)
+                const matchedFaces =  await awsSegmentation(selectedImage!.fullFile, setLogs) //Both segmentation and fvlconizing using aws
                 groupFacesByIndex(matchedFaces.results)
                 if(facesGroupedByIndex){
                     const checkedFaces = await Promise.all(facesGroupedByIndex.map(async (face) => {
@@ -197,7 +196,7 @@ const Main = () => {
                 }
                 setFvlconizing(false)
             } else {
-                manualFalconize()
+                ImageFvlconization()
             }
         } catch (error : any) {
             console.log({error})
@@ -206,24 +205,7 @@ const Main = () => {
         }
     };
 
-    const getMatchedFaces = (matchedFaces : any) => {
-        const matchedIndices : number[] = []
-        const faces = matchedFaces.map((item : any, index : number) => {
-            if(item.FaceMatches.length > 0){
-                return item
-            }
-        })
-        const filteredUndefined =  faces.filter((item : any) => item !== undefined)
-        const filterAlreadyExistingIndex = filteredUndefined.filter((item : any) => {
-            if(matchedIndices.includes(item.Person.index) === false){
-                matchedIndices.push(item.Person.index)
-                return true
-            }
-        })
-        return filterAlreadyExistingIndex
-    }
-
-    const manualFalconize = async () => {
+    const ImageFvlconization = async () => {
         setFvlconizing(true)
         await handleAnalyze()
         setDisplayMatches(true);
@@ -300,6 +282,11 @@ const Main = () => {
         }
     },[fvlconizing])
 
+    useEffect(()=>{
+        occurance?.content[0] && setVideoTimestamp(occurance?.content[0].Timestamp / 1000)
+        console.log(occurance?.content[0].Timestamp)
+    },[occurance])
+
     return (
         <div  className="w-full items-center flex flex-col flex-1 h-[100vh] pb-4 gap-1">
             <img ref={imageRef} className="hidden" src={imageSrc}/>
@@ -316,8 +303,11 @@ const Main = () => {
                         selectedImage && fileExtension && isVideoFile(fileExtension) ?
                         <VideoContainer 
                             video={selectedImage}
+                            logs={logs}
                             setVideoTimestamp={setVideoTimestamp}
+                            videoTimestamp={videoTimestamp}
                             occurances={occurance}
+                            fvlconizing={fvlconizing}
                         />
                         :
                         <Flex
@@ -386,6 +376,8 @@ const Main = () => {
                             onTryAgain={handleFalconize}
                             onClear={clearMatchedFaces}
                             onClose={closeMatchedFaces}
+                            currentOccurance={occurance}
+                            setOccurance={setOccurance}
                         />
                     }
                     <History />

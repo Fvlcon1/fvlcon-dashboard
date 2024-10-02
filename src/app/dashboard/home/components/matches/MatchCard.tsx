@@ -1,13 +1,11 @@
 'use client'
 
+import React, { Dispatch, SetStateAction, useEffect } from "react"
 import AppTypography from "@styles/components/appTypography"
 import Flex from "@styles/components/flex"
 import theme from "@styles/theme"
 import Image from "next/image"
-import { Dispatch, SetStateAction, useContext, useState } from "react"
-import { MdDelete, MdFullscreen } from "react-icons/md"
-import { imageUploadContext } from "@/context/imageUpload"
-import { hexOpacity } from "@/utils/hexOpacity"
+import { useState } from "react"
 import { TypographyBold, TypographySize } from "@styles/style.types"
 import ClickableTab from "@components/clickable/clickabletab"
 import ImageContainer from "./imageContainer"
@@ -15,6 +13,7 @@ import NoMatchFound from "./noMatchFound"
 import { FaExpand } from "react-icons/fa6"
 import ExpandMatch from './expandMatch';
 import { TbListDetails } from "react-icons/tb"
+import { fvlconizedFaceType, occurance } from '../../../../../utils/@types';
 
 const MatchCard = ({
     title,
@@ -27,7 +26,10 @@ const MatchCard = ({
     showExpand,
     description,
     imageURL,
-    details
+    details,
+    occurances,
+    currentOccurance,
+    setOccurance
 } : {
     imageURL? : string
     originalImage : string
@@ -40,9 +42,20 @@ const MatchCard = ({
     description? : string,
     showExpand? : boolean,
     details? : any
+    occurances?: occurance
+    currentOccurance?: occurance
+    setOccurance: Dispatch<SetStateAction<occurance | undefined>>
 }) => {
     const [hover, setHover] = useState(false)
     const [expand, setExpand] = useState(false)
+    const getSelectedOccurenceClass = () => {
+        if(occurances && currentOccurance)
+            if(occurances.index === currentOccurance.index)
+                return 'border-[#3780ff60] shadow-lg border-dotted border-[3px]  duration-200'
+    }
+    useEffect(()=>{
+        console.log({occ1 : currentOccurance, occ2 : occurances})
+    },[currentOccurance])
     return (
         <>
             <ExpandMatch 
@@ -57,7 +70,8 @@ const MatchCard = ({
                 setDisplay={setExpand}
             />
             <div 
-                className="p-3 py-2 min-w-[400px] w-[400px] h-fit flex flex-col gap-1 rounded-lg bg-gradient-container-black"
+                className={`p-3 py-2 min-w-[400px] cursor-pointer w-[400px] h-fit flex flex-col gap-1 rounded-lg bg-gradient-container-black ${getSelectedOccurenceClass() ?? ''}`}
+                onClick={()=>setOccurance(occurances)}
             >
                 <Flex
                     justify="space-between"
@@ -74,7 +88,10 @@ const MatchCard = ({
                     {
                         showExpand !== false &&
                         <div
-                            onClick={()=>setExpand(true)}
+                            onClick={(e)=>{
+                                e.stopPropagation()
+                                setExpand(true)
+                            }}
                         >
                             <AppTypography
                                 textColor='royalblue'
@@ -88,7 +105,7 @@ const MatchCard = ({
                 <div
                     onMouseOver={()=>setHover(true)}
                     onMouseLeave={()=>setHover(false)}
-                    className="relative"
+                    className={`relative`}
                 >
                     <Flex
                         justify="space-between"

@@ -1,3 +1,4 @@
+import React from "react"
 import getDate from "@/utils/getDate"
 import ClickableTab from "@components/clickable/clickabletab"
 import AppTypography from "@styles/components/appTypography"
@@ -108,13 +109,7 @@ const DistinctFaces = ({
                                 faces.data && 
                                 <>
                                     {
-                                        // faces.isLoading &&
-                                        // <div className="flex bg-bg-primary rounded-md min-w-[200px] h-[150px] justify-center items-center">
-                                        //     <Spin size="small"/>
-                                        // </div>
-                                    }
-                                    {
-                                        [...faces.data].reverse().map((item, index : number) => (
+                                        [...faces.data].map((item, index : number) => (
                                             <ImageCard 
                                                 key={index}
                                                 imageURL={item.dataUrl}

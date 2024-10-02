@@ -8,19 +8,25 @@ import { imagesType } from "@/app/dashboard/home/components/images/controls";
 import Player from 'next-video/player';
 import Slidein from "@styles/components/slidein";
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
-import { fvlconizedFaceType } from "@/utils/@types";
+import { fvlconizedFaceType, logsType } from "@/utils/@types";
 
 const VideoContainer = ({
     video,
+    logs,
     setVideoTimestamp,
     onPlay,
     onPause,
-    occurances
+    occurances,
+    fvlconizing,
+    videoTimestamp
 } : {
     video?: imagesType
+    logs : logsType[],
     setVideoTimestamp: Dispatch<SetStateAction<number>>
     onPlay?: () => void
     onPause?: () => void
+    fvlconizing : boolean
+    videoTimestamp : number
     occurances?: {
         index: number;
         content: fvlconizedFaceType[];
@@ -32,7 +38,6 @@ const VideoContainer = ({
     const [seekBlockWidth, setSeekBlockWidth] = useState(0);
     const [videoContainerWidth, setVideoContainerWidth] = useState(0);
     const videoContainerWidthRef = useRef<HTMLDivElement>(null);
-    const [currentTime, setCurrentTime] = useState(0);
 
     const updateDivWidth = () => {
         if (videoContainerWidthRef.current) {
@@ -80,18 +85,6 @@ const VideoContainer = ({
             });
         }
     }, [video]);
-
-    // Handle time update with debouncing
-    let timeUpdateTimeout: NodeJS.Timeout;
-    const handleTimeUpdate = () => {
-        if (timeUpdateTimeout) clearTimeout(timeUpdateTimeout);
-        timeUpdateTimeout = setTimeout(() => {
-            if (playerRef.current) {
-                const updatedTime = playerRef.current.currentTime;
-                setVideoTimestamp(updatedTime);
-            }
-        }, 100); // Adjust debounce time as needed
-    };
 
     return (
         <Slidein className="!w-full">
@@ -142,17 +135,23 @@ const VideoContainer = ({
                                         controls
                                         style={{ height: '100%' }}
                                         accentColor={theme.colors.bg.secondary}
-                                        onTimeUpdate={handleTimeUpdate}
                                         onPlay={onPlay}
                                         onPause={onPause}
                                         playbackRates={[0.2, 0.5, 0.7, 1, 1.2, 1.5, 1.7, 2]}
-                                        currentTime={currentTime}
+                                        currentTime={videoTimestamp}
                                     />
                                 </Flex>
                         }
                     </div>
                     <div className="flex w-full rounded-md">
                         {
+                            fvlconizing ?
+                            <div className="bg-bg-quantinary w-full h-8 animate-pulse rounded-md flex justify-center items-center">
+                                <AppTypography>
+                                    {logs[logs.length - 1].log.content}
+                                </AppTypography>
+                            </div>
+                            :
                             seekBlocks.map((item, index) => (
                                 item ?
                                     <div 
@@ -162,7 +161,7 @@ const VideoContainer = ({
                                         onClick={() => {
                                             if (item) {
                                                 const update = item.Timestamp / 1000
-                                                setCurrentTime(prev => prev === update ? update + 0.001 : update);
+                                                setVideoTimestamp(prev => prev === update ? update + 0.001 : update);
                                             }
                                         }}
                                     />

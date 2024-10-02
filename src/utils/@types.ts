@@ -177,3 +177,8 @@ export type fvlconizedFaceType = {
   Timestamp : number
   FaceMatches : any[]
 }
+
+export type occurance = {
+  index: number;
+  content: fvlconizedFaceType[];
+}

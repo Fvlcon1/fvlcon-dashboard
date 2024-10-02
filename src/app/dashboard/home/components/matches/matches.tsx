@@ -1,35 +1,31 @@
-import getDate from "@/utils/getDate"
-import ClickableTab from "@components/clickable/clickabletab"
-import AppTypography from "@styles/components/appTypography"
+import React, { Dispatch, SetStateAction } from "react"
 import Flex from "@styles/components/flex"
-import { TypographyBold, TypographySize } from "@styles/style.types"
-import theme from "@styles/theme"
-import { MdCancel, MdFullscreen } from "react-icons/md"
 import MatchCard from "./MatchCard"
-import Overlay from "@components/overlay/overlay"
-import Window from "@components/window/window"
 import { useState } from "react"
-import { AnimatePresence, motion } from 'framer-motion';
+import { motion } from 'framer-motion';
 import Controls from "./controls"
 import AllMatches from "./allMatches"
-import { canvasTypes, checkedFaceType, FetchState } from "@/utils/@types"
-import { Spin } from "antd"
+import { checkedFaceType, FetchState, fvlconizedFaceType } from "@/utils/@types"
 import Loading from "../loading"
 import TryAgain from "../tryAgain"
+import { occurance } from '../../../../../utils/@types';
 
 const Matches = ({
     faces,
     onTryAgain,
     onClear,
-    onClose
+    onClose,
+    currentOccurance,
+    setOccurance
 } : { 
     faces : FetchState<checkedFaceType[]>
     onTryAgain : () => void
     onClear? : () => void
     onClose? : ()=>void
+    currentOccurance?: occurance
+    setOccurance: Dispatch<SetStateAction<occurance | undefined>>
 }) => {
     const [displayFaces, setDisplayFaces] = useState(false)
-    const [displayAngels, setDisplayAngels] = useState(false)
     return (
         <>
             <motion.div  
@@ -84,7 +80,7 @@ const Matches = ({
                                         // </div>
                                     }
                                     {
-                                        [...faces.data].reverse().map((item, index : number) => (
+                                        [...faces.data].map((item, index : number) => (
                                             <MatchCard
                                                 originalImage={item.originalImage}
                                                 matchedImage={item.matchedImage}
@@ -93,6 +89,9 @@ const Matches = ({
                                                 title={`Match ${index + 1}`}
                                                 description={item.matchedPerson}
                                                 details={item.details}
+                                                occurances={item.occurances}
+                                                currentOccurance={currentOccurance}
+                                                setOccurance={setOccurance}
                                                 showExpand
                                             />
                                         ))
