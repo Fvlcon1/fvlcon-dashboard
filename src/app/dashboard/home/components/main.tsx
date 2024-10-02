@@ -367,6 +367,8 @@ const Main = () => {
                             onTryAgain={handleAnalyze}
                             onClear={clearDistinctFaces}
                             onClose={closeDistinctFaces}
+                            currentOccurance={occurance}
+                            setOccurance={setOccurance}
                         />
                     }
                     {

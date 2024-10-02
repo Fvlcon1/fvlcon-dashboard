@@ -1,6 +1,7 @@
+import React from "react"
 import { Dispatch, SetStateAction } from "react"
 import Flex from "@styles/components/flex"
-import { checkedFaceType, FetchState } from "@/utils/@types"
+import { checkedFaceType, FetchState, occurance } from "@/utils/@types"
 import Loading from "../loading"
 import TryAgain from "../tryAgain"
 import MatchCard from "../matches/MatchCard"
@@ -11,12 +12,16 @@ const SingleRecognition = ({
     displaySingularAnalysis,
     setDisplaySingularAnalysis,
     face,
-    onTryAgain
+    onTryAgain,
+    setOccurance,
+    currentOccurance
 } : {
     setDisplaySingularAnalysis: Dispatch<SetStateAction<boolean>>
     displaySingularAnalysis : boolean
     face : FetchState<checkedFaceType>
     onTryAgain : ()=> void
+    setOccurance: Dispatch<SetStateAction<occurance | undefined>>
+    currentOccurance?: occurance
 }) => {
     return (
         <>
@@ -50,6 +55,8 @@ const SingleRecognition = ({
                         face.data &&
                         <ExpandMatchComponent 
                             match={face.data}
+                            currentOccurance={currentOccurance}
+                            setOccurance={setOccurance}
                         />
                     }
                 </Flex>

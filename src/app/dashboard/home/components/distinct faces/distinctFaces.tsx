@@ -1,4 +1,4 @@
-import React from "react"
+import React, { Dispatch, SetStateAction } from "react"
 import getDate from "@/utils/getDate"
 import ClickableTab from "@components/clickable/clickabletab"
 import AppTypography from "@styles/components/appTypography"
@@ -14,7 +14,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import Angles from "./angles"
 import Controls from "./controls"
 import AllFaces from "./allFaces"
-import { canvasTypes, checkedFaceType, FetchState } from '../../../../../utils/@types';
+import { canvasTypes, checkedFaceType, FetchState, occurance } from '../../../../../utils/@types';
 import { Spin } from "antd"
 import Loading from "../loading"
 import TryAgain from "../tryAgain"
@@ -25,12 +25,16 @@ const DistinctFaces = ({
     faces,
     onTryAgain,
     onClear,
-    onClose
+    onClose,
+    setOccurance,
+    currentOccurance
 } : { 
     faces : FetchState<canvasTypes[]>
     onTryAgain : () => void
     onClear? : ()=>void
     onClose? : ()=>void
+    setOccurance: Dispatch<SetStateAction<occurance | undefined>>
+    currentOccurance?: occurance
 }) => {
     const [displayFaces, setDisplayFaces] = useState(false)
     const [displayAngles, setDisplayAngles] = useState(false)
@@ -62,6 +66,8 @@ const DistinctFaces = ({
                 setDisplaySingularAnalysis={setDisplaySingularAnalysis}
                 face={matchedFace}
                 onTryAgain={selectedFace ? ()=>handleFvlconize(selectedFace) : ()=>{}}
+                currentOccurance={currentOccurance}
+                setOccurance={setOccurance}
             />
             <motion.div
                 className="w-full relative min-h-[200px] flex flex-col flex-1 gap-1"
