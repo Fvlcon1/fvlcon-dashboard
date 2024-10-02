@@ -1,16 +1,21 @@
-import { checkedFaceType } from "@/utils/@types"
+import { checkedFaceType, occurance } from "@/utils/@types"
 import MatchCard from "./MatchCard"
 import { TbListDetails } from "react-icons/tb"
 import theme from "@styles/theme"
 import AppTypography from "@styles/components/appTypography"
 import AllDetails from "./allDetails"
+import { Dispatch, SetStateAction } from "react"
 
 const ExpandMatchComponent = ({
     match,
-    showExpand
+    showExpand,
+    setOccurance,
+    currentOccurance
 } : {
     match : checkedFaceType
     showExpand? : boolean
+    setOccurance: Dispatch<SetStateAction<occurance | undefined>>
+    currentOccurance?: occurance
 }) => {
     return (
         <div className="flex justify-center items-center w-full">
@@ -22,6 +27,8 @@ const ExpandMatchComponent = ({
                         similarity={match.similarity}
                         description={match.matchedPerson}
                         showExpand={showExpand ?? false}
+                        currentOccurance={currentOccurance}
+                        setOccurance={setOccurance}
                     />
                 </div>
                 <div className="flex flex-col flex-1 gap-1 p-4 rounded-md bg-gradient-container-black-50 w-full">

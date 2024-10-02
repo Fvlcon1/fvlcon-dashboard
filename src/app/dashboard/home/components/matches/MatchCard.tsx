@@ -68,6 +68,8 @@ const MatchCard = ({
                 }}
                 display={expand}
                 setDisplay={setExpand}
+                currentOccurance={currentOccurance}
+                setOccurance={setOccurance}
             />
             <div 
                 className={`p-3 py-2 min-w-[400px] cursor-pointer w-[400px] h-fit flex flex-col gap-1 rounded-lg bg-gradient-container-black ${getSelectedOccurenceClass() ?? ''}`}

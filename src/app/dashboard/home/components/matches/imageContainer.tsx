@@ -1,5 +1,6 @@
 'use client'
 
+import React from "react"
 import { hexOpacity } from "@/utils/hexOpacity"
 import ClickableTab from "@components/clickable/clickabletab"
 import Overlay from "@components/overlay/overlay"
