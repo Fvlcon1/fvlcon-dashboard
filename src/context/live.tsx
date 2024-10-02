@@ -26,15 +26,15 @@ export const LiveProvider = ({ children }: { children: ReactNode }) => {
     const [activeCameras, setActiveCameras] = useState<activeCameraType[]>([
         {
             id : '3',
-            url : "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
+            url : "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
         },
         {
             id : '4',
-            url : "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4"
+            url : "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4"
         },
         {
             id : '5',
-            url : "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4"
+            url : "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4"
         },
         {
             id : '1',

@@ -20,10 +20,6 @@ import generateVideoThumbnail from "@/utils/generateVideoThumbnail"
 import { toast } from "react-toastify"
 import { getSingleFace } from "@/utils/model/getSingleFace"
 import { getImageURLFromBoundingBox } from "@/utils/getImageURLFromBoundingBox"
-import { AnimatePresence, motion } from 'framer-motion';
-import { Spin } from "antd"
-import AppTypography from "@styles/components/appTypography"
-import theme from "@styles/theme"
 import useTimer from "@/utils/useTimer"
 
 let fileEx : any = undefined
