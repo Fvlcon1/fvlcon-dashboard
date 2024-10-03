@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import { FaGear } from "react-icons/fa6";
 import { IoMdArrowDropdown } from "react-icons/io";
 import { MdDashboardCustomize, MdViewQuilt } from "react-icons/md";
@@ -21,7 +21,6 @@ const Controls = () => {
   const { numberOfCamerasPerPage, setNumberOfCamerasPerPage } = useContext(liveContext);
 
   const setActive = (index: number, state?: boolean) => {
-    console.log({setActive : state})
     setLayoutMenuItems((prev) =>
       prev.map((item, i) => ({
         ...item,
@@ -29,6 +28,25 @@ const Controls = () => {
       }))
     );
   };
+
+  const updateNumberOfPagesInMenuItems = () => {
+    setLayoutMenuItems(prev => {
+      return prev.map((item) => {
+        if(item.name.startsWith("CPP")){
+          return {
+            ...item,
+            name : `CPP: ${numberOfCamerasPerPage}`
+          }
+        } else {
+          return item
+        }
+      })
+    })
+  }
+
+  useEffect(()=>{
+    updateNumberOfPagesInMenuItems()
+  },[numberOfCamerasPerPage])
 
   const [layoutMenuItems, setLayoutMenuItems] = useState<menuItemsTypes[]>([
     {
@@ -39,14 +57,16 @@ const Controls = () => {
       dropdown: [
         { 
             name: "4", 
-            onClick: () => {setNumberOfCamerasPerPage(4)}, 
+            onClick: () => {
+              setNumberOfCamerasPerPage(4)
+            }, 
             closeOnClick: true 
         },
         { 
             name: "9", 
             onClick: () => {
-                console.log(9)
-                setNumberOfCamerasPerPage(9)}, 
+                setNumberOfCamerasPerPage(9)
+              }, 
             closeOnClick: true 
         },
         { 

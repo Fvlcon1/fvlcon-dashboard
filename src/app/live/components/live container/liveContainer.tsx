@@ -14,7 +14,6 @@ const LiveContainer = ({
     const { activeCameras, numberOfCamerasPerPage } = useContext(liveContext)
     const resizeLiveHeight = () => {
         const cameraWidth = liveRef.current?.offsetWidth
-        console.log({cameraWidth})
         if(cameraWidth)
             setLiveHeight(cameraWidth / (16/9))
     }

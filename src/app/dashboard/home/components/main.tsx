@@ -171,6 +171,10 @@ const Main = () => {
             if(isVideoFile(fileEx) && selectedImage && selectedImage.fullFile){
                 setFvlconizing(true)
                 const matchedFaces =  await awsSegmentation(selectedImage!.fullFile, setLogs) //Both segmentation and fvlconizing using aws
+                if(!matchedFaces){
+                    setFvlconizing(false)
+                    return setMatchedFaces({error : "Error fvlconizing video"})
+                }
                 groupFacesByIndex(matchedFaces.results)  //Categorized faces by index
                 if(facesGroupedByIndex){
                     const checkedFaces = await Promise.all(facesGroupedByIndex.map(async (face) => {

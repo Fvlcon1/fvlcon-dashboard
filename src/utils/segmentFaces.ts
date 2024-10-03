@@ -226,7 +226,7 @@ const pollJobStatus = async (jobId: string, videoKey: string, jobType: string, s
           clearInterval(intervalId);
           resolve(jobStatusData);
         } else if (jobStatusData.status === 'FAILED') {
-          toast.error("Recognition Failed");
+          toast.error(jobStatusData.statusMessage);
           clearInterval(intervalId);
           reject(new Error("Recognition failed"));
         }
@@ -242,7 +242,7 @@ const pollJobStatus = async (jobId: string, videoKey: string, jobType: string, s
 
 
 const handleError = (error: any) => {
-  toast.error(`Error: ${error.message}`);
+  toast.error(`${error.message}`);
   console.error("An error occurred:", {
     message: error.message,
     details: error.response?.data || null
