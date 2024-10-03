@@ -171,19 +171,19 @@ const Main = () => {
             if(isVideoFile(fileEx) && selectedImage && selectedImage.fullFile){
                 setFvlconizing(true)
                 const matchedFaces =  await awsSegmentation(selectedImage!.fullFile, setLogs) //Both segmentation and fvlconizing using aws
-                groupFacesByIndex(matchedFaces.results)
+                groupFacesByIndex(matchedFaces.results)  //Categorized faces by index
                 if(facesGroupedByIndex){
                     const checkedFaces = await Promise.all(facesGroupedByIndex.map(async (face) => {
-                        const resultsContainingFacesMatches = getResultsContainingFaceMatches(face.content)
+                        const resultsContainingFacesMatches = getResultsContainingFaceMatches(face.content) // gets a single item in the category which has a face match
                         const faceMatch = resultsContainingFacesMatches?.FaceMatches[0]
                         let details : any = undefined
                         if(faceMatch)
                             details = await getSingleFace(faceMatch.Face.FaceId);
-                        const boundingBox = resultsContainingFacesMatches?.Person.Face.BoundingBox
+                        const boundingBox = (resultsContainingFacesMatches ?? face.content[0]).Person.Face.BoundingBox
                         const match : checkedFaceType = {
                             matchedPerson: faceMatch?.Face.ExternalImageId,
                             similarity: faceMatch?.Similarity,
-                            originalImage: await getImageURLFromBoundingBox(boundingBox, await generateVideoThumbnail(selectedImage.url, face.content[0].Timestamp / 1000)),
+                            originalImage: await getImageURLFromBoundingBox(boundingBox, await generateVideoThumbnail(selectedImage.url, (resultsContainingFacesMatches ?? face.content[0]).Timestamp / 1000)),
                             matchedImage: details?.imageUrl,
                             faceid: faceMatch?.Face.FaceId,
                             occurances : face,
@@ -191,11 +191,8 @@ const Main = () => {
                         }
                         return match
                     }))
-                    const flatternedCheckedFaces = checkedFaces.flat()
-                    setMatchedFaces({
-                        data : flatternedCheckedFaces
-                    })
-                    setOccurance(flatternedCheckedFaces[0].occurances)
+                    setMatchedFaces({ data : checkedFaces })
+                    setOccurance(checkedFaces[0].occurances)
                 }
                 setFvlconizing(false)
             } else {

@@ -2,6 +2,7 @@ export const getImageURLFromBoundingBox = (
     boundingBox: { Height: number; Left: number; Top: number; Width: number },
     url: string
   ): Promise<string> => {
+    console.log({boundingBox})
     return new Promise((resolve, reject) => {
       const faceCanvas = document.createElement('canvas');
       const img = document.createElement('img');
