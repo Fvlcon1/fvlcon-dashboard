@@ -25,6 +25,14 @@ export const liveContext = createContext<{
 export const LiveProvider = ({ children }: { children: ReactNode }) => {
     const [activeCameras, setActiveCameras] = useState<activeCameraType[]>([
         {
+            id : '1',
+            url : "https://stream.fvlcon.app:8888/towncouncil/channel_1"
+        },
+        {
+            id : '2',
+            url : "https://stream.fvlcon.app:8888/towncouncil/channel_3"
+        },
+        {
             id : '3',
             url : "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
         },
@@ -35,14 +43,6 @@ export const LiveProvider = ({ children }: { children: ReactNode }) => {
         {
             id : '5',
             url : "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4"
-        },
-        {
-            id : '1',
-            url : "http://52.20.249.108:8888/towncouncil/channel_1/"
-        },
-        {
-            id : '2',
-            url : "http://52.20.249.108:8888/towncouncil/channel_3/"
         },
     ])
     const [numberOfCamerasPerPage, setNumberOfCamerasPerPage] = useState<number>(4)

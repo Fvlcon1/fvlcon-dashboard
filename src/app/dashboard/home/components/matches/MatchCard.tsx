@@ -114,11 +114,13 @@ const MatchCard = ({
                     >
                         <ImageContainer 
                             imageURL={originalImage}
+                            onClick={e=>e.stopPropagation()}
                         />
                         {
                             matchedImage ?
                             <ImageContainer
                                 imageURL={matchedImage}
+                                onClick={e=>e.stopPropagation()}
                             />
                             :
                             <NoMatchFound />

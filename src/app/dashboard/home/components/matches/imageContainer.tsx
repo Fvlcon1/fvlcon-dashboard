@@ -15,13 +15,15 @@ const ImageContainer = ({
     MiddleButtonClick,
     imageURL,
     hostedURL,
-    isZoomable = true
+    isZoomable = true,
+    onClick
 } : {
     imageURL? : string
     hostedURL? : string
     MiddleButtonTitle? : string,
     MiddleButtonClick? : ()=> void,
     isZoomable? : boolean
+    onClick ? : (e : any)=>void
 }) => {
     const [hover, setHover] = useState(false)
     const [zoom, setZoom] = useState(false)
@@ -52,6 +54,7 @@ const ImageContainer = ({
                 className="w-full rounded-lg bg-bg-tetiary p-2 cursor-pointer"
                 onMouseOver={()=>setHover(true)}
                 onMouseLeave={()=>setHover(false)}
+                onClick={onClick}
             >
                 <div 
                     className="w-[full] relative h-[150px] rounded-md bg-bg-primary flex justify-center items-center overflow-hidden"

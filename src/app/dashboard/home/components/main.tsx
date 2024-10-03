@@ -154,6 +154,13 @@ const Main = () => {
         }
     }
 
+    const getResultsContainingFaceMatches = (results : fvlconizedFaceType[]) => {
+        for(let item of results){
+            if(item.FaceMatches.length > 0)
+                return item
+        }
+    }
+
     const handleFalconize = async () => {
         setMatchedFaces(prev => ({
             ...prev,
@@ -167,12 +174,12 @@ const Main = () => {
                 groupFacesByIndex(matchedFaces.results)
                 if(facesGroupedByIndex){
                     const checkedFaces = await Promise.all(facesGroupedByIndex.map(async (face) => {
-                        const faceMatch = face.content[0].FaceMatches[0]
+                        const resultsContainingFacesMatches = getResultsContainingFaceMatches(face.content)
+                        const faceMatch = resultsContainingFacesMatches?.FaceMatches[0]
                         let details : any = undefined
                         if(faceMatch)
                             details = await getSingleFace(faceMatch.Face.FaceId);
-                        const boundingBox = face.content[0].Person.Face.BoundingBox
-                        console.log({boundingBox})
+                        const boundingBox = resultsContainingFacesMatches?.Person.Face.BoundingBox
                         const match : checkedFaceType = {
                             matchedPerson: faceMatch?.Face.ExternalImageId,
                             similarity: faceMatch?.Similarity,
