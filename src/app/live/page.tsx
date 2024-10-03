@@ -1,10 +1,10 @@
 import ClickableTab from "@components/clickable/clickabletab"
 import AppTypography from "@styles/components/appTypography"
 import Flex from "@styles/components/flex"
-import User from "./components/user"
 import Controls from "./components/controls/controls"
 import LiveView from "./components/liveView"
 import Head from "@components/title/head"
+import Searchbar from "@components/search/search"
 
 const Live = () => {
     return (
@@ -13,15 +13,17 @@ const Live = () => {
                 justify="space-between"
                 align="center"
             >
-                <Head
-                    title="Fvlcon Live Vision"
-                />
-                <Flex
-                    width="fit-content"
-                    align='center'
-                >
-                    <User />
-                </Flex>
+                <div className="flex items-center gap-4">
+                    <Head
+                        typographyProps={{
+                            ellipsis : true,
+                            maxLines : 1,
+                            whiteSpace : 'nowrap'
+                        }}
+                        title="Fvlcon Live Vision"
+                    />
+                    <Searchbar className="!w-[350px]"/>
+                </div>
                 <Controls />
             </Flex>
             <div className="flex relative w-full">

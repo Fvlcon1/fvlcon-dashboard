@@ -1,12 +1,14 @@
 import AppTypography from "@styles/components/appTypography"
 import Flex from "@styles/components/flex"
-import { TypographySize } from "@styles/style.types"
+import { AppTypographyProps, TypographySize } from "@styles/style.types"
 import theme from "@styles/theme"
 
 const Head = ({
-    title
+    title,
+    typographyProps
 } : {
     title : string
+    typographyProps? : AppTypographyProps
 }) => {
     return (
         <Flex
@@ -17,6 +19,7 @@ const Head = ({
             <AppTypography
                 textColor={theme.colors.text.primary}
                 size={TypographySize.HM}
+                {...typographyProps}
             >
                 {title}
             </AppTypography>
