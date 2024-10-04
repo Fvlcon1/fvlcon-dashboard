@@ -5,6 +5,7 @@ import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import "leaflet/dist/leaflet.css";
 import camIcon from '@/assets/prod/cctv.png'
 import L from 'leaflet';
+import { useIsClient } from '@/context/isClientCtx';
 
 // Dynamically import MapContainer and other leaflet components with SSR disabled
 const MapContainer = dynamic(() => import('react-leaflet').then(mod => mod.MapContainer), {
@@ -22,21 +23,20 @@ const Map = ({
     setShow: Dispatch<SetStateAction<boolean>>;
 }) => {
     const [camMarkerIcon, setCamMarkerIcon] = useState<L.Icon | null>(null);
-    const [isBrowser, setIsBrowser] = useState(false);
+    const isClient = useIsClient()
 
     // Check if we're running in the browser (client-side)
     useEffect(() => {
-        if (typeof window !== 'undefined') {
-            setIsBrowser(true);
+        if (typeof window !== undefined) {
             const icon = new L.Icon({
-                iconUrl: camIcon.src,
-                iconSize: [35, 35]
+                iconUrl: require('@/assets/prod/cam.png'),
+                iconSize: [35, 45]
             });
             setCamMarkerIcon(icon);
         }
     }, []);
 
-    if (!isBrowser) {
+    if (!isClient) {
         return null; // Return nothing during server-side rendering
     }
 
