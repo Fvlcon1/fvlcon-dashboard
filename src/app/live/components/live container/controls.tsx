@@ -5,23 +5,24 @@ import { TypographySize } from "@styles/style.types"
 import theme from "@styles/theme"
 import { Tooltip } from "antd"
 import { CgLivePhoto } from "react-icons/cg"
+import { FaMap } from "react-icons/fa6"
 import { MdDelete, MdFullscreen } from "react-icons/md"
 import { RiMenu2Fill } from "react-icons/ri"
+import Map from "./map"
+import { useState } from "react"
 
 const Controls = () => {
+    const [showMap, setShowMap] = useState(false)
     return (
         <div className="w-full abosolute top-0 bg-bg-quantinary h-[30px] flex gap-1 items-center px-2">
-            <Flex
-                justify="space-between"
-                align="center"
-            >
+            <div className="flex w-full justify-between items-center">
                 <Flex
                     width="fit-content"
                     align="center"
                     gap={2}
                 >
                     <ClickableTab
-                        className="!p-2"
+                        className="!p-[6px]"
                     >
                         <AppTypography
                             size={TypographySize.HM}
@@ -56,22 +57,33 @@ const Controls = () => {
                     >
                         |
                     </AppTypography>
-                    <ClickableTab
-                        className="!p-2"
-                    >
-                        <AppTypography
-                            size={TypographySize.HM}
-                        >
-                            <Tooltip
-                                title='Remove Camera'
-                                placement="right"
+                    <div className="flex items-center">
+                        <div className="relative">
+                            <Map 
+                                show={showMap}
+                                setShow={setShowMap}
+                            />
+                            <ClickableTab
+                                className="!p-[6px]"
+                                onClick={()=>setShowMap(prev => !prev)}
                             >
-                                <MdDelete />
-                            </Tooltip>
-                        </AppTypography>
-                    </ClickableTab>
+                                <FaMap 
+                                    color={theme.colors.text.secondary}
+                                    size={13}
+                                />
+                            </ClickableTab>
+                        </div>
+                        <ClickableTab
+                            className="!p-[6px]"
+                        >
+                            <MdDelete 
+                                color={theme.colors.text.secondary}
+                                size={13}
+                            />
+                        </ClickableTab>
+                    </div>
                 </Flex>
-            </Flex>
+            </div>
         </div> 
     )
 }
