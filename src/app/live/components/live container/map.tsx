@@ -26,7 +26,7 @@ const Map = ({
     const [locationName, setLocationName] = useState<any>()
 
     const getLocationNameFromCordinates = async () => {
-        const response = await axios.get(`http://api.openweathermap.org/geo/1.0/reverse`, {
+        const response = await axios.get(`https://api.openweathermap.org/geo/1.0/reverse`, {
             params : {
                 lat : coordinates[0],
                 lon : coordinates[1],
