@@ -91,6 +91,7 @@ const LiveView = () => {
                                         <LiveContainer 
                                             key={index}
                                             url={cam.url}
+                                            id={`liveContainer${index}`}
                                             gridClass={gridClass}
                                         />
                                     ))

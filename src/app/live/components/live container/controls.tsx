@@ -5,13 +5,18 @@ import { TypographySize } from "@styles/style.types"
 import theme from "@styles/theme"
 import { Tooltip } from "antd"
 import { CgLivePhoto } from "react-icons/cg"
-import { FaMap } from "react-icons/fa6"
+import { FaCamera, FaMap } from "react-icons/fa6"
 import { MdDelete, MdFullscreen } from "react-icons/md"
 import { RiMenu2Fill } from "react-icons/ri"
 import Map from "./map"
-import { useState } from "react"
+import { RefObject, useState } from "react"
+import snapshotComponent from "@components/snapshotComponent/snapshotComponent"
 
-const Controls = () => {
+const Controls = ({
+    id
+} : {
+    id : string
+}) => {
     const [showMap, setShowMap] = useState(false)
     return (
         <div className="w-full abosolute top-0 bg-bg-quantinary h-[30px] flex gap-1 items-center px-2">
@@ -73,6 +78,15 @@ const Controls = () => {
                                 />
                             </ClickableTab>
                         </div>
+                        <ClickableTab
+                            className="!p-[6px]"
+                            onClick={()=>snapshotComponent(id)}
+                        >
+                            <FaCamera 
+                                color={theme.colors.text.secondary}
+                                size={13}
+                            />
+                        </ClickableTab>
                         <ClickableTab
                             className="!p-[6px]"
                         >

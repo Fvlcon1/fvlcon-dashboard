@@ -71,6 +71,28 @@ const VideoContainer = ({
         setSeekBlocks(localSeekBlock);
     };
 
+    const handleSetPlayerTimestamp = (time : number) => {
+        if(playerRef.current){
+            const playerTime = playerRef.current.currentTime
+            if(playerTime === time){
+                playerRef.current.currentTime = time + 0.001
+            } else {
+                playerRef.current.currentTime = time
+            }
+        }
+    }
+
+    let timeUpdateTimeout: NodeJS.Timeout;
+    const handleTimeUpdate = () => {
+        if (timeUpdateTimeout) clearTimeout(timeUpdateTimeout);
+        timeUpdateTimeout = setTimeout(() => {
+            if (playerRef.current) {
+                const updatedTime = playerRef.current.currentTime;
+                setVideoTimestamp(updatedTime);
+            }
+        }, 100); // Adjust debounce time as needed
+    };
+
     useEffect(() => {
         setStamps();
         updateDivWidth();
@@ -138,7 +160,7 @@ const VideoContainer = ({
                                         onPlay={onPlay}
                                         onPause={onPause}
                                         playbackRates={[0.2, 0.5, 0.7, 1, 1.2, 1.5, 1.7, 2]}
-                                        currentTime={videoTimestamp}
+                                        onTimeUpdate={handleTimeUpdate}
                                     />
                                 </Flex>
                         }
@@ -148,7 +170,7 @@ const VideoContainer = ({
                             fvlconizing ?
                             <div className="bg-bg-quantinary w-full h-8 animate-pulse rounded-md flex justify-center items-center">
                                 <AppTypography>
-                                    {logs[logs.length - 1].log.content}
+                                    {logs[logs.length - 1]?.log.content}
                                 </AppTypography>
                             </div>
                             :
@@ -159,10 +181,8 @@ const VideoContainer = ({
                                         style={{ width: `${seekBlockWidth}px` }}
                                         key={index}
                                         onClick={() => {
-                                            if (item) {
-                                                const update = item.Timestamp / 1000
-                                                setVideoTimestamp(prev => prev === update ? update + 0.001 : update);
-                                            }
+                                            const update = item.Timestamp / 1000
+                                            handleSetPlayerTimestamp(update)
                                         }}
                                     />
                                     :

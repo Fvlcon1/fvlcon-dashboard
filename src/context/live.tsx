@@ -33,10 +33,6 @@ export const LiveProvider = ({ children }: { children: ReactNode }) => {
             url : "https://stream.fvlcon.app:8888/towncouncil/channel_3"
         },
         {
-            id : '3',
-            url : "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
-        },
-        {
             id : '4',
             url : "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4"
         },

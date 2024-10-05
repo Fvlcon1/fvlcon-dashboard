@@ -6,6 +6,7 @@ const Popover = ({
   show,
   close,
   children,
+  style,
   content,
   position = "right", // Default position
 }: {
@@ -13,6 +14,7 @@ const Popover = ({
   close: () => void;
   children?: ReactNode;
   content?: ReactNode;
+  style? : string
   position?: "top" | "bottom" | "left" | "right";
 }) => {
   const getPositionClass = () => {
@@ -36,7 +38,7 @@ const Popover = ({
         {show && (
           <ClickAwayListener onClickAway={close}>
             <motion.div
-              className={`absolute z-50 bg-bg-tetiary border-[1px] border-solid border-bg-quantinary rounded-lg shadow-xl ${getPositionClass()}`}
+              className={`absolute z-50 bg-bg-tetiary border-[1px] border-solid border-bg-quantinary rounded-lg shadow-xl ${getPositionClass()} ${style}`}
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}

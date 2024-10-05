@@ -4,10 +4,12 @@ import { liveContext } from "@/context/live"
 
 const LiveContainer = ({
     url,
+    id,
     gridClass
 } : {
     url : string,
-    gridClass? : string
+    gridClass? : string,
+    id : string
 }) => {
     const liveRef = useRef<HTMLDivElement>(null)
     const [liveHeight, setLiveHeight] = useState(0)
@@ -29,7 +31,7 @@ const LiveContainer = ({
             ref={liveRef}
             className={`bg-bg-secondary flex flex-col relative rounded-lg max-h-full overflow-hidden h-fit`}
         >
-            <Controls />
+            <Controls id={id} />
             <div 
                 className="w-full flex flex-grow justify-center items-center"
                 style={{
@@ -41,6 +43,7 @@ const LiveContainer = ({
                     title="stream"
                     width={'100%'}
                     height={'100%'}
+                    id={id}
                     allowFullScreen
                     allow="accelerometer; autoplay; clipboard-write"
                 />
