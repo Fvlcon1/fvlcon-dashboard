@@ -26,19 +26,27 @@ export const LiveProvider = ({ children }: { children: ReactNode }) => {
     const [activeCameras, setActiveCameras] = useState<activeCameraType[]>([
         {
             id : '1',
-            url : "https://stream.fvlcon.app:8888/towncouncil/channel_1"
+            url : "https://stream.fvlcon.app:8888/towncouncil/channel_1",
+            location : 'Osu Accra',
+            coordinates : [5.558, -0.187]
         },
         {
             id : '2',
-            url : "https://stream.fvlcon.app:8888/towncouncil/channel_3"
+            url : "https://stream.fvlcon.app:8888/towncouncil/channel_3",
+            location : 'East legon, Accra',
+            coordinates : [5.65, -0.163]
         },
         {
             id : '4',
-            url : "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4"
+            url : "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
+            location : 'Spintex, Accra',
+            coordinates : [5.6316, -0.1229]
         },
         {
             id : '5',
-            url : "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4"
+            url : "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4",
+            location : 'Kokomlemle, new town',
+            coordinates : [5.5655, -0.2077]
         },
     ])
     const [numberOfCamerasPerPage, setNumberOfCamerasPerPage] = useState<number>(4)

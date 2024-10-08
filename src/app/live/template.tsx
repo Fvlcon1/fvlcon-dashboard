@@ -9,15 +9,13 @@ const Template = ({
     children ? : ReactNode
 }) => {
     return (
-        <LiveProvider>
-            <div className="w-full relative h-full">
-                <Profile />
-                <div className="w-full pl-[310px] py-4 pr-[75px]">
-                    {children}
-                </div>
-                <Right />
+        <div className="w-full relative h-full">
+            <Profile />
+            <div className="w-full pl-[310px] py-4 pr-[75px]">
+                {children}
             </div>
-        </LiveProvider>
+            <Right />
+        </div>
     )
 }
 export default Template

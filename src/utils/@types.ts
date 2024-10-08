@@ -166,7 +166,9 @@ export type logsType = {
 
 export type activeCameraType = {
   id : string,
-  url : string
+  url : string,
+  location? : string
+  coordinates? : number[]
 }
 
 export type fvlconizedFaceType = {

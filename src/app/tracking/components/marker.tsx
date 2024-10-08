@@ -1,15 +1,17 @@
 'use client'
 
 import dynamic from 'next/dynamic';
-import { useEffect, useState } from 'react';
+import { ReactNode, useEffect, useState } from 'react';
 import { Popup } from 'react-leaflet';
 import L from 'leaflet'
 import { LatLngExpression } from 'leaflet';
 
 const CustomMarker = ({
-    position
+    position,
+    popup
 } : {
     position : LatLngExpression & number[]
+    popup? : ReactNode
 }) => {
     const [camMarkerIcon, setCamMarkerIcon] = useState<L.Icon>();
 
@@ -17,8 +19,8 @@ const CustomMarker = ({
     useEffect(() => {
         if (typeof window !== 'undefined') {
             const icon = new L.Icon({
-                iconUrl: '/assets/prod/cctv.png', // Ensure cam.png is in the /public/assets/prod/ folder
-                iconSize: [35, 30],
+                iconUrl: '/assets/prod/pin.png', // Ensure cam.png is in the /public/assets/prod/ folder
+                iconSize: [55, 50],
             });
             setCamMarkerIcon(icon);
         }
@@ -26,7 +28,9 @@ const CustomMarker = ({
     const Marker = dynamic(() => import('react-leaflet').then(mod => mod.Marker), { ssr: false });
     return (
         <Marker position={position} icon={camMarkerIcon}>
-            <Popup>Cam</Popup>
+            <Popup>
+                {popup ?? `${position[0]}, ${position[1]}`}
+            </Popup>
         </Marker>
     )
 }

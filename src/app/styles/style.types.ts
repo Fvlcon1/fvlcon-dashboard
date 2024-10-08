@@ -1,6 +1,7 @@
 import { ReactNode } from "react";
 
 export enum TypographySize {
+  xs2 = "8px",
   xs = "10px",
   body = "12px",
   HM = "14px",

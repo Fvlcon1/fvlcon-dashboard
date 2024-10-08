@@ -1,18 +1,34 @@
+'use client'
+
 import Button from "@components/button/button"
 import Searchbar from "@components/search/search"
 import Text from "@styles/components/text"
 import theme from "@styles/theme"
+import { useContext } from "react"
 import { FaCaretDown } from "react-icons/fa6"
-import { IoIosEye } from "react-icons/io"
+import { IoIosEye, IoIosEyeOff } from "react-icons/io"
+import { trackingContext } from "../context/trackingContext"
 
 const Controls = () => {
+    const {showCameras, setShowCameras} = useContext(trackingContext)
+
     return (
         <div className="w-full flex justify-between">
             <div className="flex gap-2">
-                <div className="flex gap-1 p-2 px-3 rounded-lg hover:bg-bg-quantinary cursor-pointer bg-bg-tetiary items-center">
-                    <IoIosEye
-                        color={theme.colors.text.secondary}
-                    />
+                <div 
+                    className="flex gap-1 p-2 px-3 rounded-lg hover:bg-bg-quantinary cursor-pointer bg-bg-tetiary items-center"
+                    onClick={()=>setShowCameras(prev => !prev)}
+                >
+                    {
+                        showCameras ?
+                        <IoIosEye
+                            color={theme.colors.text.secondary}
+                        />
+                        :
+                        <IoIosEyeOff
+                            color={theme.colors.text.secondary}
+                        />
+                    }
                     <Text>
                         Show Cameras
                     </Text>
