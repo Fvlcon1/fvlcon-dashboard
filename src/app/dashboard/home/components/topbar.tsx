@@ -14,20 +14,34 @@ import { useState } from "react"
 import { AiFillDatabase } from "react-icons/ai"
 import { FaCircleUser } from "react-icons/fa6"
 import { IoMdArrowDropdown } from "react-icons/io"
+import { MdPermMedia } from "react-icons/md"
 
 const Topbar = () => {
     const [showDatabase, setShowDatabase] = useState(false)
     return (
         <div className="flex w-full items-center justify-between px-1">
-            <Head 
-                title="Fvlcon Media Lab"
-            />
+            <div className="flex items-center gap-4">
+                <div className="flex items-center gap-2">
+                    <MdPermMedia 
+                        color={theme.colors.text.primary}
+                        className="mt-[2px]"
+                    />
+                    <Head
+                        typographyProps={{
+                            ellipsis : true,
+                            maxLines : 1,
+                            whiteSpace : 'nowrap'
+                        }}
+                        title="Fvlcon Media Lab"
+                    />
+                </div>
+                <Searchbar className="!w-[350px]"/>
+            </div>
             <Flex
                 width="fit-content"
                 align="center"
                 gap={20}
             >
-                <Searchbar className="!w-[400px]" />
                 <Popover
                     show={showDatabase}
                     close={() => setShowDatabase(false)}

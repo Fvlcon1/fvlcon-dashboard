@@ -1,0 +1,64 @@
+'use client'
+
+import Text from "@styles/components/text"
+import theme from "@styles/theme"
+import Image from "next/image"
+import { FaCamera, FaCaretDown, FaLocationArrow, FaMapLocationDot } from "react-icons/fa6"
+import { IoIosVideocam } from "react-icons/io"
+import { IoPin } from "react-icons/io5"
+import { MdOutlineShareLocation } from "react-icons/md"
+import CamDetails from "./camDetails"
+import { LuHistory } from "react-icons/lu"
+import { PiDetectiveFill } from "react-icons/pi";
+import TableHead from "./tableHead"
+import TableBody from "./tableBody"
+
+const Bottom = () => {
+    return (
+        <div className="flex flex-1 gap-4">
+            <CamDetails />
+            <div className="bg-gradient-container px-3 py-2 gap-2 flex flex-col flex-1 rounded-lg">
+                <div className="w-full justify-between flex items-center">
+                    <div className="flex gap-1 items-center pl-2">
+                        <LuHistory 
+                            color={theme.colors.text.primary}
+                            size={13}
+                        />
+                        <Text
+                            textColor={theme.colors.text.primary}
+                        >
+                            Recents • <Text>
+                                Accra City Camera
+                            </Text>
+                        </Text>
+                    </div>
+                    <div className="flex">
+                        <div className="rounded-l-lg bg-bg-tetiary hover:bg-bg-quantinary cursor-pointer gap-1 p-2 flex items-center px-4 border-r-[1px] border-r-solid border-bg-alt1">
+                            <Text>
+                                Last 7 days
+                            </Text>
+                            <FaCaretDown
+                                color={theme.colors.text.secondary}
+                            />
+                        </div>
+                        <div className="rounded-r-lg gap-1 cursor-pointer hover:bg-bg-quantinary bg-bg-tetiary p-2 flex items-center px-4">
+                            <Text>
+                                March 20 - March 30
+                            </Text>
+                            <FaCaretDown 
+                                color={theme.colors.text.secondary}
+                            />
+                        </div>
+                    </div>
+                </div>
+                <div className="w-full overflow-y-auto">
+                    <table className="w-full">
+                        <TableHead />
+                        <TableBody />
+                    </table>
+                </div>
+            </div>
+        </div>
+    )
+}
+export default Bottom

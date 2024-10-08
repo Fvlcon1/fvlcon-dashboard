@@ -1,12 +1,7 @@
 'use client'
-// This component is the same as "AppTypography" component
-// I use this because the component name is shorter and "AppTypography is too long"
-
 import { AppTypographyProps, TypographyBold, TypographySize } from "@styles/style.types"
 import theme from "@styles/theme"
 import { useState } from "react"
-import { JetBrains_Mono } from "next/font/google";
-import { jetBrains_Mono } from "@/utils/fonts";
 
 const Text = ({
     children,
@@ -25,13 +20,14 @@ const Text = ({
     fontfamily,
     maxLines,
     lineHeight,
+    whiteSpace
 } : AppTypographyProps) => {
 
     const [onHover, setOnHover] = useState<boolean>(false)
 
     return (
         <span
-            className={`${className} ${jetBrains_Mono.className}`}
+            className={`w-fit ${className}`}
             style={{
                 fontWeight : bold ?? TypographyBold.sm,
                 fontFamily : fontfamily,
@@ -50,8 +46,8 @@ const Text = ({
                 textOverflow : ellipsis ? 'ellipsis' : 'none',
                 maxHeight : ellipsis ? 13.33 * 1.5 * (maxLines ?? 1) : 'none',
                 overflow : 'hidden',
-                width : 'fit-content',
-                lineHeight
+                lineHeight,
+                whiteSpace : whiteSpace
             }}
             onMouseOver={()=>setOnHover(true)}
             onMouseLeave={()=>setOnHover(false)}

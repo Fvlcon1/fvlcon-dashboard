@@ -16,7 +16,8 @@ const config: Config = {
         'custom-shadow': '0px 6px 38px -15px rgba(0,0,0,1);',
       },
       backgroundImage: {
-        'gradient-container': 'linear-gradient(to bottom, rgba(17,17,17,1) 0%, rgba(17,17,17,0) 100%)',
+        'gradient-container': 'linear-gradient(to bottom, rgba(12,12,12,1) 0%, rgba(5,5,5,0) 80%)',
+        'gradient-container-md': 'linear-gradient(to bottom, rgba(17,17,17,1) 0%, rgba(5,5,5,0) 100%)',
         'gradient-container-black': 'linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 100%)',
         'gradient-container-black-50': 'linear-gradient(to bottom, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0) 100%)',
         'gradient-border': 'linear-gradient(to bottom, rgba(28,28,30,1) 0%, rgba(28,28,30,0) 100%)',

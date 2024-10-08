@@ -32,6 +32,9 @@ const Input = ({
         <div 
             className={`flex w-full flex-1 gap-2 px-[15px] py-[10px] items-center rounded-full bg-bg-secondary border-bg-tetiary border-[1px] border-solid ${inputFocus || hover ? 'border-bg-alt1' : 'border-bg-quantinary'} duration-200 ${className}`}
             onClick={onClick} 
+            style={{
+                borderColor : inputFocus || hover ? theme.colors.bg.alt1 : ''
+            }}
         >
             {
                 PreIcon && PreIcon

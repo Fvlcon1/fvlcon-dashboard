@@ -12,8 +12,9 @@ const Template = ({
     return (
         <Flex
             justify="center"
+            height="100%"
         >
-            <div className="w-full flex justify-center">
+            <div className="w-full h-full flex justify-center">
                 <Left />
                 {children}
                 <Right />

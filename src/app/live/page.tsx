@@ -5,6 +5,8 @@ import Controls from "./components/controls/controls"
 import LiveView from "./components/liveView"
 import Head from "@components/title/head"
 import Searchbar from "@components/search/search"
+import theme from "@styles/theme"
+import { RiLiveFill } from "react-icons/ri"
 
 const Live = () => {
     return (
@@ -14,14 +16,20 @@ const Live = () => {
                 align="center"
             >
                 <div className="flex items-center gap-4">
-                    <Head
-                        typographyProps={{
-                            ellipsis : true,
-                            maxLines : 1,
-                            whiteSpace : 'nowrap'
-                        }}
-                        title="Fvlcon Live Vision"
-                    />
+                    <div className="flex items-center gap-2">
+                        <RiLiveFill 
+                            color={theme.colors.text.primary}
+                            className="mt-[2px]"
+                        />
+                        <Head
+                            typographyProps={{
+                                ellipsis : true,
+                                maxLines : 1,
+                                whiteSpace : 'nowrap'
+                            }}
+                            title="Fvlcon Live Vision"
+                        />
+                    </div>
                     <Searchbar className="!w-[350px]"/>
                 </div>
                 <Controls />
