@@ -1,9 +1,14 @@
+'use client'
+
 import Text from "@styles/components/text"
 import theme from "@styles/theme"
 import Image from "next/image"
 import MatchContainer from "./matchContainer"
+import { useState } from "react"
 
 const TableBody = () => {
+    const [onHover, setOnHover] = useState<boolean>(false)
+    const [onPress, setOnPress] = useState<boolean>(false)
     return (
         <tbody>
             {
@@ -11,6 +16,10 @@ const TableBody = () => {
                     <tr
                         key={index}
                         className={`${index % 2 === 1 ? 'bg-gradient-container-md' : ''} hover:scale-[0.98] cursor-pointer duration-200`}
+                        onMouseOver={()=>setOnHover(true)}
+                        onMouseLeave={()=>setOnHover(false)}
+                        onMouseDown={()=>setOnPress(true)}
+                        onMouseUp={()=>setOnPress(false)}
                     >
                         <td className="py-4 pl-4">
                             <MatchContainer />

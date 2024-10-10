@@ -1,4 +1,4 @@
-import { IPersonTrackingType, ITrackingDataTypes } from "./types";
+import { IPersonTrackingType, ITrackingDataTypes, ITrackingWaypointsType } from "./types";
 
 export const personTrackingData: IPersonTrackingType[] = [
     {
@@ -80,5 +80,63 @@ export const personTrackingData: IPersonTrackingType[] = [
         lastSeen: 'Tema, Community 1',
         coordinates: [5.6786, -0.0177],  // Tema, Community 1
         timeSeen: new Date('2024-10-05T15:00:00')  
+    }
+];
+
+
+export const trackingDataWaypoints : ITrackingWaypointsType[] = [
+    {
+        name: 'Start Point',
+        lastSeen: 'Korle Bu, Accra',
+        coordinates: [5.5560, -0.2227],
+        radius: 100,
+        timeSeen: new Date('2024-10-05T15:00:00'),
+        color: 'green',
+        fillColor: '#28a745'
+    },
+    {
+        name: 'Waypoint 1',
+        lastSeen: 'High Street, Accra',
+        coordinates: [5.5475, -0.2057],
+        radius: 100,
+        color: 'orange',
+        fillColor: '#fd7e14',
+        timeSeen: new Date('2024-10-05T15:00:00'),
+    },
+    {
+        name: 'Waypoint 2',
+        lastSeen: 'Osu Castle, Accra',
+        coordinates: [5.5465, -0.1846],
+        radius: 100,
+        color: 'orange',
+        fillColor: '#fd7e14',
+        timeSeen: new Date('2024-10-05T15:00:00'),
+    },
+    {
+        name: 'Waypoint 3',
+        lastSeen: 'Osu Oxford Street, Accra',
+        coordinates: [5.5519, -0.1741],
+        radius: 100,
+        color: 'orange',
+        fillColor: '#fd7e14',
+        timeSeen: new Date('2024-10-05T15:00:00'),
+    },
+    {
+        name: 'Waypoint 4',
+        lastSeen: 'East Legon, Accra',
+        coordinates: [5.6145, -0.1751],
+        radius: 100,
+        color: 'orange',
+        fillColor: '#fd7e14',
+        timeSeen: new Date('2024-10-05T15:00:00'),
+    },
+    {
+        name: 'Final Destination',
+        lastSeen: 'Madina, Accra',
+        coordinates: [5.6753, -0.1619],
+        radius: 100,
+        color: 'red',
+        fillColor: '#dc3545',
+        timeSeen: new Date('2024-10-05T15:00:00'),
     }
 ];

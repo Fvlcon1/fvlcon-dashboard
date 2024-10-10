@@ -14,7 +14,7 @@ const MatchContainer = () => {
                     98%
                 </Text>
             </div>
-            <div className="w-[50px] h-[50px] overflow-hidden bg-bg-secondary relative rounded-sm">
+            <div className="w-[50px] h-[50px] overflow-hidden bg-bg-secondary relative rounded-md">
                 <Image
                     src={require('@/assets/dev/image1.png')} 
                     alt="test-bg"
@@ -23,7 +23,7 @@ const MatchContainer = () => {
                     className="lg:hover:scale-[1.2] duration-200 cursor-pointer hover:lg:opacity-70"
                 /> 
             </div>
-            <div className="w-[50px] h-[50px] overflow-hidden bg-bg-secondary relative rounded-sm">
+            <div className="w-[50px] h-[50px] overflow-hidden bg-bg-secondary relative rounded-md">
                 <Image
                     src={require('@/assets/dev/image1.png')} 
                     alt="test-bg"
