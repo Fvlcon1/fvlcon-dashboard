@@ -8,16 +8,16 @@ import { liveContext } from '@/context/live';
 import { trackingContext } from '../context/trackingContext';
 import getLocationNameFromCordinates from '@/utils/getLocationNameFromCoordinates';
 import { trackingDataWaypoints } from './data';
-import { LocationMarker } from './marker';
-import RoutingMachine from './routingMachine';
 import './styles.css'
 
 // Dynamically import leaflet components without SSR
 const MapContainer = dynamic(() => import('react-leaflet').then(mod => mod.MapContainer), { ssr: false });
 const Polyline = dynamic(() => import('react-leaflet').then(mod => mod.Polyline), { ssr: false });
 const CustomMarker = dynamic(() => import('./marker'), { ssr: false });
+const RoutingMachine = dynamic(() => import('./routingMachine'), { ssr: false });
 const BlueDotMarker = dynamic(() => import('./marker').then(mod => mod.BlueDotMarker), { ssr: false });
 const TrackingMarker = dynamic(() => import('./marker').then(mod => mod.TrackingMarker), { ssr: false });
+const LocationMarker = dynamic(() => import('./marker').then(mod => mod.LocationMarker), { ssr: false });
 const Popup = dynamic(() => import('react-leaflet').then(mod => mod.Popup), { ssr: false });
 const TileLayer = dynamic(() => import('react-leaflet').then(mod => mod.TileLayer), { ssr: false });
 
@@ -53,15 +53,15 @@ const MapComponent = () => {
                     attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 />
-                {/* {
+                {
                     showCameras &&
                     activeCameras?.map((cam, index) => (
-                        <LocationMarker 
+                        <LocationMarker
                             key={index}
                             position={cam.coordinates as LatLngExpression & number[]} 
                         />
                     ))
-                } */}
+                }
                 {
                     trackingDataWaypoints.map((item, index) => (
                         <TrackingMarker
@@ -70,10 +70,9 @@ const MapComponent = () => {
                         />
                     ))
                 }
-                <Polyline positions={wayPointsCoordinates} color="#0453b3c6" />
-                {/* <RoutingMachine 
+                <RoutingMachine 
                     wayPointsCoordinates={wayPointsCoordinates}
-                /> */}
+                />
             </MapContainer>
         </div>
     );
