@@ -102,7 +102,7 @@ export const LocationMarker = ({
     useEffect(() => {
         const icon = new L.Icon({
             iconUrl: '/assets/prod/location shadow.png', // Ensure cam.png is in the /public/assets/prod/ folder
-            iconSize: [55, 50],
+            iconSize: [40, 40],
         });
         setCamMarkerIcon(icon);
     }, []);
@@ -116,5 +116,4 @@ export const LocationMarker = ({
         </Marker>
     )
 }
-
 export default CustomMarker
