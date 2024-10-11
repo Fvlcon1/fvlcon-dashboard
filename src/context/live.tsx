@@ -44,7 +44,7 @@ export const LiveProvider = ({ children }: { children: ReactNode }) => {
         },
         {
             id : '5',
-            url : "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4",
+            url : "https://b-61687957.kinesisvideo.us-east-1.amazonaws.com/hls/v1/getHLSMasterPlaylist.m3u8?SessionToken=CiDaAZxsxDzJixJqPG5wxjDvbuYS_Lx7c9eS8VA_t3xnoBIQVCUinGjNaKOLbJ_VfDc8mxoZO56oeSqqduq6ASq-hmWKNeaFQ4dpJDJ-SSIgcFKVoxPosnl6ho7eZwEICOUVaWZOsboVBNsOsS7re6U~",
             location : 'Kokomlemle, new town',
             coordinates : [5.5655, -0.2077]
         },

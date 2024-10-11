@@ -2,7 +2,6 @@
 
 import dynamic from 'next/dynamic';
 import { ReactNode, useEffect, useState } from 'react';
-import { Popup } from 'react-leaflet';
 import L from 'leaflet'
 import { LatLngExpression } from 'leaflet';
 
@@ -17,15 +16,14 @@ const CustomMarker = ({
 
     // Leaflet icon setup, wrapped inside useEffect to avoid SSR issues
     useEffect(() => {
-        if (typeof window !== 'undefined') {
-            const icon = new L.Icon({
-                iconUrl: '/assets/prod/pin.png', // Ensure cam.png is in the /public/assets/prod/ folder
-                iconSize: [55, 50],
-            });
-            setCamMarkerIcon(icon);
-        }
+        const icon = new L.Icon({
+            iconUrl: '/assets/prod/pin.png', // Ensure cam.png is in the /public/assets/prod/ folder
+            iconSize: [55, 50],
+        });
+        setCamMarkerIcon(icon);
     }, []);
     const Marker = dynamic(() => import('react-leaflet').then(mod => mod.Marker), { ssr: false });
+    const Popup = dynamic(() => import('react-leaflet').then(mod => mod.Popup), { ssr: false });
     return (
         <Marker position={position} icon={camMarkerIcon}>
             <Popup>
@@ -46,15 +44,14 @@ export const BlueDotMarker = ({
 
     // Leaflet icon setup, wrapped inside useEffect to avoid SSR issues
     useEffect(() => {
-        if (typeof window !== 'undefined') {
-            const icon = new L.Icon({
-                iconUrl: '/assets/prod/blueDot.png', // Ensure cam.png is in the /public/assets/prod/ folder
-                iconSize: [18, 15],
-            });
-            setCamMarkerIcon(icon);
-        }
+        const icon = new L.Icon({
+            iconUrl: '/assets/prod/blueDot.png', // Ensure cam.png is in the /public/assets/prod/ folder
+            iconSize: [18, 15],
+        });
+        setCamMarkerIcon(icon);
     }, []);
     const Marker = dynamic(() => import('react-leaflet').then(mod => mod.Marker), { ssr: false });
+    const Popup = dynamic(() => import('react-leaflet').then(mod => mod.Popup), { ssr: false });
     return (
         <Marker position={position} icon={camMarkerIcon}>
             <Popup>
@@ -75,15 +72,14 @@ export const TrackingMarker = ({
 
     // Leaflet icon setup, wrapped inside useEffect to avoid SSR issues
     useEffect(() => {
-        if (typeof window !== 'undefined') {
-            const icon = new L.Icon({
-                iconUrl: '/assets/prod/pin.png', // Ensure cam.png is in the /public/assets/prod/ folder
-                iconSize: [55, 50],
-            });
-            setCamMarkerIcon(icon);
-        }
+        const icon = new L.Icon({
+            iconUrl: '/assets/prod/pin.png', // Ensure cam.png is in the /public/assets/prod/ folder
+            iconSize: [55, 50],
+        });
+        setCamMarkerIcon(icon);
     }, []);
     const Marker = dynamic(() => import('react-leaflet').then(mod => mod.Marker), { ssr: false });
+    const Popup = dynamic(() => import('react-leaflet').then(mod => mod.Popup), { ssr: false });
     return (
         <Marker position={position} icon={camMarkerIcon}>
             <Popup>
@@ -104,15 +100,14 @@ export const LocationMarker = ({
 
     // Leaflet icon setup, wrapped inside useEffect to avoid SSR issues
     useEffect(() => {
-        if (typeof window !== 'undefined') {
-            const icon = new L.Icon({
-                iconUrl: '/assets/prod/location shadow.png', // Ensure cam.png is in the /public/assets/prod/ folder
-                iconSize: [40, 40],
-            });
-            setCamMarkerIcon(icon);
-        }
+        const icon = new L.Icon({
+            iconUrl: '/assets/prod/location shadow.png', // Ensure cam.png is in the /public/assets/prod/ folder
+            iconSize: [40, 40],
+        });
+        setCamMarkerIcon(icon);
     }, []);
     const Marker = dynamic(() => import('react-leaflet').then(mod => mod.Marker), { ssr: false });
+    const Popup = dynamic(() => import('react-leaflet').then(mod => mod.Popup), { ssr: false });
     return (
         <Marker position={position} icon={camMarkerIcon}>
             <Popup>

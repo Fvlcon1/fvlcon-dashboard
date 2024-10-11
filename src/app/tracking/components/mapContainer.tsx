@@ -47,13 +47,13 @@ const MapComponent = () => {
         }, 3000);
     },[])
     return (
-        <div className="w-full relative overflow-hidden flex justify-center items-center rounded-md bg-bg-secondary h-full">
+        <div className="w-full relative overflow-hidden flex justify-center items-center rounded-lg bg-bg-secondary h-full">
             <MapContainer className="w-full h-full" center={activeCameras[0].coordinates ? activeCameras[0].coordinates as LatLngExpression & number[] : coordinates} zoom={zoom} scrollWheelZoom={true}>
                 <TileLayer
                     attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 />
-                {
+                {/* {
                     showCameras &&
                     activeCameras?.map((cam, index) => (
                         <LocationMarker 
@@ -61,7 +61,7 @@ const MapComponent = () => {
                             position={cam.coordinates as LatLngExpression & number[]} 
                         />
                     ))
-                }
+                } */}
                 {
                     trackingDataWaypoints.map((item, index) => (
                         <TrackingMarker
@@ -70,10 +70,10 @@ const MapComponent = () => {
                         />
                     ))
                 }
-                {/* <Polyline positions={wayPointsCoordinates} color="#0453b3c6" /> */}
-                <RoutingMachine 
+                <Polyline positions={wayPointsCoordinates} color="#0453b3c6" />
+                {/* <RoutingMachine 
                     wayPointsCoordinates={wayPointsCoordinates}
-                />
+                /> */}
             </MapContainer>
         </div>
     );
