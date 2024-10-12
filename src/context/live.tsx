@@ -44,7 +44,7 @@ export const LiveProvider = ({ children }: { children: ReactNode }) => {
         },
         {
             id : '5',
-            url : "https://b-61687957.kinesisvideo.us-east-1.amazonaws.com/hls/v1/getHLSMasterPlaylist.m3u8?SessionToken=CiDaAZxsxDzJixJqPG5wxjDvbuYS_Lx7c9eS8VA_t3xnoBIQVCUinGjNaKOLbJ_VfDc8mxoZO56oeSqqduq6ASq-hmWKNeaFQ4dpJDJ-SSIgcFKVoxPosnl6ho7eZwEICOUVaWZOsboVBNsOsS7re6U~",
+            url : "https://b-61687957.kinesisvideo.us-east-1.amazonaws.com/hls/v1/getHLSMasterPlaylist.m3u8?SessionToken=CiBvnJwsJ3RF4OqXt1l1mfRt1CFrQtcZZ0tbS4YDHWHKZxIQ-1eHThDwhJkmxnuCbigpVhoZAYljNZaUescsE4aPFKDxg6bMwCB0d7ZhwSIgf5NZ0Nfo7dV0E0b2IIXZjpZiMXOoMz69k6tdK9_QOz4~",
             location : 'Kokomlemle, new town',
             coordinates : [5.5655, -0.2077]
         },

@@ -1,6 +1,8 @@
 import { useContext, useEffect, useRef, useState } from "react"
 import Controls from "./controls"
 import { liveContext } from "@/context/live"
+import Player from 'next-video/player';
+import theme from "@styles/theme";
 
 const LiveContainer = ({
     url,
@@ -38,7 +40,7 @@ const LiveContainer = ({
                     height : `${liveHeight}px`
                 }}
             >
-                <iframe 
+                {/* <iframe 
                     src={url}
                     title="stream"
                     width={'100%'}
@@ -46,6 +48,15 @@ const LiveContainer = ({
                     id={id}
                     allowFullScreen
                     allow="accelerometer; autoplay; clipboard-write"
+                /> */}
+                <Player
+                    src={url}
+                    controls
+                    style={{ height: '100%' }}
+                    accentColor={theme.colors.bg.secondary}
+                    playbackRates={[0.2, 0.5, 0.7, 1, 1.2, 1.5, 1.7, 2]}
+                    placeholder="Stream"
+                    autoPlay={true}
                 />
             </div>
         </div>
