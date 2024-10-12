@@ -6,8 +6,8 @@ import { CognitoUser, AuthenticationDetails } from 'amazon-cognito-identity-js';
 import userPool from '../components/UserPool';
 import { Avatar, Button, CssBaseline, TextField, Typography, Container, Box, Grid, CircularProgress } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import SecretAgentIcon from '../../../assets/FVLCON3.png'; // Import logo
-import '../../styles/index.css'; 
+import SecretAgentIcon from '../../../assets/FVLCON3.png';
+import '../../styles/index.css';
 
 const theme = createTheme({
   palette: {
@@ -69,7 +69,12 @@ const Login: React.FC = () => {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <Container component="main" maxWidth="xs" sx={{ position: 'relative', minHeight: '100vh' }}>
+      <Container component="main" maxWidth="xs" sx={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        minHeight: '100vh'
+      }}>
         <Box
           sx={{
             display: 'flex',
@@ -77,15 +82,15 @@ const Login: React.FC = () => {
             alignItems: 'center',
           }}
         >
-          <Avatar 
-            sx={{ m: 1, bgcolor: 'transparent', width: 72, height: 72 }} 
+          <Avatar
+            sx={{ mt: -3, bgcolor: 'transparent', width: 72, height: 72 }}
           >
-            <img src={SecretAgentIcon.src} alt="Secret Agent Icon" style={{ width: '100%', height: '100%' }} />
+            <img src={SecretAgentIcon.src} alt="Secret Agent Icon" style={{ width: '100%', height: '90%' }} />
           </Avatar>
           <Typography component="h2" variant="h5" sx={{ mt: 2, letterSpacing: 2, color: theme.palette.primary.main }}>
             LOGIN
           </Typography>
-          <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3, width: '100%' }}>
+          <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1, width: '100%' }}>
             <Grid container spacing={2}>
               <Grid item xs={12}>
                 <TextField
