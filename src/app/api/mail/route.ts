@@ -5,7 +5,7 @@ import dotenv from 'dotenv'
 
 dotenv.config()
 
-const resend = new Resend(process.env.RESEND_API_KEY as string); // Type assertion for the API key
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 interface SendEmailProps {
   email: string;
