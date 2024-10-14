@@ -3,8 +3,9 @@ import { PrismaClient } from '@prisma/client';
 import bcrypt from 'bcryptjs';
 import { Resend } from 'resend';
 import { render } from '@react-email/render';
-// import EmailTemplate from '@/emails'; // Adjust the path to your email template
+import dotenv from 'dotenv'
 
+dotenv.config()
 const prisma = new PrismaClient();
 const resend = new Resend(process.env.RESEND_API_KEY);
 

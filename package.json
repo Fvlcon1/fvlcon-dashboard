@@ -24,6 +24,7 @@
     "aws-sdk": "^2.1673.0",
     "axios": "^1.7.4",
     "bcryptjs": "^2.4.3",
+    "dotenv": "^16.4.5",
     "face-api.js": "^0.22.2",
     "framer-motion": "^11.3.24",
     "fs": "^0.0.1-security",

@@ -2,10 +2,12 @@ import { NextResponse } from 'next/server';
 import { PrismaClient } from '@prisma/client';
 import { Resend } from 'resend';
 import { render } from '@react-email/render';
-// import EmailTemplate from '@/emails'; // Adjust the path to your email template
+import dotenv from 'dotenv'
+
+dotenv.config()
 
 const prisma = new PrismaClient();
-const resend = new Resend(process.env.RESEND_API_KEY);
+// const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function POST(request : any) {
   // const { email } = await request.json();
