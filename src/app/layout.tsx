@@ -21,12 +21,12 @@ export default function RootLayout({
   return (
     <html lang="en" className="h-full">
       <body className={`${inter.className} h-full`}>
-        <IsClientCtxProvider>
-          <LiveProvider>
-            <ToastContainer />
-            {children}
-          </LiveProvider>
-        </IsClientCtxProvider>
+          <IsClientCtxProvider>
+            <LiveProvider>
+              <ToastContainer />
+              {children}
+            </LiveProvider>
+          </IsClientCtxProvider>
       </body>
     </html>
   );

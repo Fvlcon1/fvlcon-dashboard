@@ -1,14 +1,15 @@
 'use client';
 
-import React, { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import React, { useEffect, useState } from 'react';
+import { redirect, useParams, useRouter, useSearchParams } from 'next/navigation';
 import { CognitoUser, AuthenticationDetails } from 'amazon-cognito-identity-js';
 import userPool from '../components/UserPool';
 import { Avatar, Button, CssBaseline, TextField, Typography, Container, Box, Grid, CircularProgress } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import SecretAgentIcon from '../../../assets/FVLCON3.png';
 import '../../styles/index.css';
-import { signIn } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
+import { message } from 'antd';
 
 const theme = createTheme({
   palette: {
@@ -32,6 +33,14 @@ const Login: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>('');
   const router = useRouter();
+  const { data: session } = useSession();
+  const params = useSearchParams()
+
+  if(session)
+    redirect("/dashboard/home")
+
+  const redirectError = params.get("error")
+  let hasDisplayedRedirectError = false
 
   const handleSubmit = async (e:any) => {
     e.preventDefault(); // Prevent default form submission behavior
@@ -52,7 +61,14 @@ const Login: React.FC = () => {
       setLoading(false);
       router.push('/agreementpage');
     }
-  };
+  }
+
+  useEffect(()=>{
+    if(redirectError && !hasDisplayedRedirectError){
+      hasDisplayedRedirectError = true
+      message.error(redirectError)
+    }
+  },[])
 
   return (
     <ThemeProvider theme={theme}>

@@ -35,6 +35,11 @@ body {
   border-radius: 100px;
 }
 
+.ant-message-notice-content{
+  background-color: var(--bg-secondary) !important;
+  color : var(--text-primary);
+}
+
 @layer utilities {
   .text-balance {
     text-wrap: balance;
