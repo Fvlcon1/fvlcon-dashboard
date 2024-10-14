@@ -8,6 +8,7 @@ import { Avatar, Button, CssBaseline, TextField, Typography, Container, Box, Gri
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import SecretAgentIcon from '../../../assets/FVLCON3.png';
 import '../../styles/index.css';
+import { signIn } from "next-auth/react";
 
 const theme = createTheme({
   palette: {
@@ -32,37 +33,24 @@ const Login: React.FC = () => {
   const [error, setError] = useState<string>('');
   const router = useRouter();
 
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+  const handleSubmit = async (e:any) => {
+    e.preventDefault(); // Prevent default form submission behavior
     setLoading(true);
 
-    try {
-      const user = new CognitoUser({
-        Username: email.toLowerCase(),
-        Pool: userPool,
-      });
+    const res = await signIn("credentials", {
+      redirect: false,
+      email,
+      password,
+    });
 
-      const authDetails = new AuthenticationDetails({
-        Username: email.toLowerCase(),
-        Password: password,
-      });
-
-      user.authenticateUser(authDetails, {
-        onSuccess: (data) => {
-          console.log('Login success', data);
-          setLoading(false);
-          router.push('/agreementpage');
-        },
-        onFailure: (err) => {
-          console.error('Login error', err);
-          setLoading(false);
-          setError(err.message || 'An error occurred while logging in');
-        },
-      });
-    } catch (error) {
-      console.error('Login error', error);
+    if (res?.error) {
+      console.error('Login error', res.error);
       setLoading(false);
-      setError('An unexpected error occurred. Please try again later.');
+      setError(res.error || 'An error occurred while logging in');
+    } else {
+      console.log('Login success', res);
+      setLoading(false);
+      router.push('/agreementpage');
     }
   };
 
