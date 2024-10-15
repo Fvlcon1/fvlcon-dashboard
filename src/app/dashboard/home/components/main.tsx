@@ -22,7 +22,6 @@ import { getSingleFace } from "@/utils/model/getSingleFace"
 import { getImageURLFromBoundingBox } from "@/utils/getImageURLFromBoundingBox"
 import useTimer from "@/utils/useTimer"
 import Text from "@styles/components/text"
-import PageLoader from "@components/page loader/pageLoader"
 
 let fileEx : any = undefined
 
@@ -41,7 +40,6 @@ const Main = () => {
     const [videoTimestamp, setVideoTimestamp] = useState<number>(0)
     const [isVideoPlaying, setIsVideoPlaying] = useState<boolean>(false)
     const [occurance, setOccurance] = useState<occurance>()
-    const [isPageLoaded, setIsPageLoaded] = useState(false)
     const [distinctFaces, setDistinctFaces] = useState<FetchState<canvasTypes[]>>({
         isEmpty : false,
         isLoading : false,
@@ -293,13 +291,6 @@ const Main = () => {
         occurance?.content[0] && setVideoTimestamp(occurance?.content[0].Timestamp / 1000)
         console.log(occurance?.content[0].Timestamp)
     },[occurance])
-
-    useEffect(()=>{
-        setIsPageLoaded(true)
-    },[])
-
-    if(!isPageLoaded)
-        return <PageLoader />
 
     return (
         <div  className="w-full items-center flex flex-col flex-1 h-[100vh] pb-4 gap-1">

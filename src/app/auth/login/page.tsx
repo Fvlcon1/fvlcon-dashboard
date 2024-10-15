@@ -10,7 +10,7 @@ import SecretAgentIcon from '../../../assets/FVLCON3.png';
 import '../../styles/index.css';
 import { signIn, useSession } from "next-auth/react";
 import { message, Spin } from 'antd';
-import PageLoader from '@components/page loader/pageLoader';
+import PageLoader from '@components/loaders/pageLoader';
 
 const theme = createTheme({
   palette: {
