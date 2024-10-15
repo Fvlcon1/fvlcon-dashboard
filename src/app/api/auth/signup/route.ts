@@ -11,7 +11,6 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function POST(request: Request) {
   const { firstName, lastName, email, companyCode, password }: { firstName: string; lastName: string; email: string; companyCode: string; password: string } = await request.json();
-
   // Validate input
   if (!firstName || !lastName || !companyCode || !email || !password) {
     return NextResponse.json({ error: 'All fields are required.' }, { status: 400 });
@@ -69,7 +68,7 @@ export async function POST(request: Request) {
     const redirectUrl = `${request.headers.get('origin')}/verify-email?email=${encodeURIComponent(email)}`;
 
     // Redirect the user to the email verification page
-    return NextResponse.redirect(redirectUrl);
+    return NextResponse.json({ message: 'Account created successfully', data : user }, { status: 201 });
 
   } catch (error) {
     console.error("Error creating user: ", error);

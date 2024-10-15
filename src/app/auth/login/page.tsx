@@ -37,38 +37,45 @@ const Login: React.FC = () => {
   const { data: session, status : sessionStatus } = useSession();
   const params = useSearchParams()
 
-  if (session)
-    redirect("/dashboard/home")
-
   const redirectError = params.get("error")
   let hasDisplayedRedirectError = false
 
-  const handleSubmit = async (e: any) => {
-    e.preventDefault(); // Prevent default form submission behavior
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
     setLoading(true);
-
-    const res = await signIn("credentials", {
-      redirect: false,
-      email,
-      password,
-    });
-
-    if (res?.error) {
-      console.error('Login error', res.error);
+  
+    try {
+      const res = await signIn("credentials", {
+        redirect: false,
+        email,
+        password,
+      });
+  
+      if (res?.error) {
+        console.error('Login error:', res.error);
+        setError(res.error || 'An error occurred while logging in');
+        message.error(res.error)
+      } else {
+        console.log('Login success', res);
+        message.success("Login Successful")
+        router.push("/agreementpage")
+      }
+    } catch (err : any) {
+      console.error('Unexpected error:', err);
+      setError('Unexpected error occurred');
+      message.error(err.message)
+    } finally {
       setLoading(false);
-      setError(res.error || 'An error occurred while logging in');
-    } else {
-      console.log('Login success', res);
-      setLoading(false);
-      router.push('/agreementpage');
     }
-  }
+  };  
 
   useEffect(() => {
     if (redirectError && !hasDisplayedRedirectError) {
       hasDisplayedRedirectError = true
       message.error(redirectError)
     }
+    if (session)
+      redirect("/dashboard/home")
   }, [])
 
   if(!session && !sessionStatus)

@@ -18,7 +18,7 @@ export default async function RootLayout({
     redirect("/auth/login?error=Please login")
   }
   return (
-    <div>
+    <div className="w-full h-full">
       {children}
     </div>
   );

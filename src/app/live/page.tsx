@@ -10,7 +10,7 @@ import { RiLiveFill } from "react-icons/ri"
 
 const Live = () => {
     return (
-        <div className="relative w-full flex flex-col pr-[190px] gap-4">
+        <div className="relative h-full w-full flex flex-col pr-[190px] gap-4">
             <Flex
                 justify="space-between"
                 align="center"
@@ -34,7 +34,7 @@ const Live = () => {
                 </div>
                 <Controls />
             </Flex>
-            <div className="flex relative w-full">
+            <div className="flex relative w-full h-full">
                 <LiveView />
             </div>
         </div>

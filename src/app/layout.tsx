@@ -7,6 +7,7 @@ import { IsClientCtxProvider } from "@/context/isClientCtx";
 import { LiveProvider } from "@/context/live";
 import { Suspense } from "react";
 import PageLoader from "@components/loaders/pageLoader";
+import HydrationLoader from "@components/loaders/hydrationLoader";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -23,14 +24,16 @@ export default function RootLayout({
   return (
     <html lang="en" className="h-full">
       <body className={`${inter.className} h-full`}>
-        <Suspense>
-          <IsClientCtxProvider>
-            <LiveProvider>
-              <ToastContainer />
-              {children}
-            </LiveProvider>
-          </IsClientCtxProvider>
-        </Suspense>
+        <HydrationLoader>
+          <Suspense>
+            <IsClientCtxProvider>
+              <LiveProvider>
+                <ToastContainer />
+                {children}
+              </LiveProvider>
+            </IsClientCtxProvider>
+          </Suspense>
+        </HydrationLoader>
       </body>
     </html>
   );

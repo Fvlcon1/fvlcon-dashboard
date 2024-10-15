@@ -1,11 +1,13 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Avatar, Button, CssBaseline, TextField, Typography, Container, Box, Grid } from '@mui/material';
+import { Avatar, Button, CssBaseline, TextField, Typography, Container, Box, Grid, CircularProgress } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import SecretAgentIcon from '../../../assets/FVLCON3.png';
 import UserPool from '../components/UserPool';
 import '../../styles/index.css';  // Custom styles
+import { useRouter } from 'next/navigation';
+import { message } from 'antd';
 
 // Dark theme configuration with Orbitron font
 const theme = createTheme({
@@ -26,25 +28,57 @@ const theme = createTheme({
 
 export default function SignUp() {
   const [email, setEmail] = useState<string>('');
+  const [firstname, setFirstname] = useState<string>('');
+  const [companyCode, setCompanyCode] = useState<string>('');
+  const [lastname, setLastname] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [confirmPassword, setConfirmPassword] = useState<string>('');
   const [error, setError] = useState<string>('');
+  const [loading, setLoading] = useState<boolean>(false);
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const router = useRouter()
+
+  const handleSubmit = async (event : any) => {
     event.preventDefault();
-    if (password !== confirmPassword) {
-      setError('Passwords do not match');
-      return;
-    }
 
-    UserPool.signUp(email, password, [], [], (err, data) => {
-      if (err) {
-        console.error(err);
-        setError(err.message || 'An error occurred');
+    const formData = new FormData(event.target);
+    const data = {
+      firstName: formData.get("firstname"),
+      lastName: formData.get("lastname"),
+      email: formData.get("email"),
+      companyCode: formData.get("companyCode"),
+      password: formData.get("password"),
+    };
+
+    setLoading(true);
+    setError("");
+
+    // Redirect to the verification page immediately
+
+    try {
+      const response = await fetch("/api/auth/signup", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        message.error(result.error)
+        setError(result.error || 'Something went wrong.');
       } else {
-        console.log(data);
+        message.success("Sign up successful")
+        router.push('/auth/login')
       }
-    });
+    } catch (error : any) {
+      console.error("Error registering user:", error);
+      setError(error || 'An unexpected error occurred.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -74,6 +108,76 @@ export default function SignUp() {
           </Typography>
           <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1, width: '100%' }}>
             <Grid container spacing={2}>
+            <Grid item xs={12}>
+              <TextField
+                  fullWidth
+                  id="companyCode"
+                  label="Company Code"
+                  name="companyCode"
+                  autoComplete="companyCode"
+                  autoFocus
+                  value={companyCode}
+                  onChange={(event) => setCompanyCode(event.target.value)}
+                  variant="outlined"
+                  color="primary"
+                  sx={{
+                    '& label.Mui-focused': { color: 'white' },
+                    '& .MuiInput-underline:after': { borderBottomColor: 'white' },
+                    '& .MuiOutlinedInput-root': {
+                      '& fieldset': { borderColor: 'white' },
+                      '&:hover fieldset': { borderColor: 'white' },
+                      '&.Mui-focused fieldset': { borderColor: 'white' },
+                    },
+                    fontFamily: 'Orbitron, sans-serif', // Orbitron applied here
+                  }}
+                />
+            </Grid>
+            <Grid item xs={12}>
+                <TextField
+                  fullWidth
+                  id="firstname"
+                  label="First Name"
+                  name="firstname"
+                  autoComplete="firstname"
+                  value={firstname}
+                  onChange={(event) => setFirstname(event.target.value)}
+                  variant="outlined"
+                  color="primary"
+                  sx={{
+                    '& label.Mui-focused': { color: 'white' },
+                    '& .MuiInput-underline:after': { borderBottomColor: 'white' },
+                    '& .MuiOutlinedInput-root': {
+                      '& fieldset': { borderColor: 'white' },
+                      '&:hover fieldset': { borderColor: 'white' },
+                      '&.Mui-focused fieldset': { borderColor: 'white' },
+                    },
+                    fontFamily: 'Orbitron, sans-serif', // Orbitron applied here
+                  }}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  fullWidth
+                  id="lastname"
+                  label="Last Name"
+                  name="lastname"
+                  autoComplete="lastname"
+                  value={lastname}
+                  onChange={(event) => setLastname(event.target.value)}
+                  variant="outlined"
+                  color="primary"
+                  sx={{
+                    '& label.Mui-focused': { color: 'white' },
+                    '& .MuiInput-underline:after': { borderBottomColor: 'white' },
+                    '& .MuiOutlinedInput-root': {
+                      '& fieldset': { borderColor: 'white' },
+                      '&:hover fieldset': { borderColor: 'white' },
+                      '&.Mui-focused fieldset': { borderColor: 'white' },
+                    },
+                    fontFamily: 'Orbitron, sans-serif', // Orbitron applied here
+                  }}
+                />
+              </Grid>
               <Grid item xs={12}>
                 <TextField
                   fullWidth
@@ -81,7 +185,6 @@ export default function SignUp() {
                   label="Email Address"
                   name="email"
                   autoComplete="email"
-                  autoFocus
                   value={email}
                   onChange={(event) => setEmail(event.target.value)}
                   variant="outlined"
@@ -154,11 +257,12 @@ export default function SignUp() {
             )}
             <Button
               type="submit"
+              disabled={loading}
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
             >
-              Sign Up
+              {loading ? <CircularProgress size={24} color="inherit" /> : 'Sign Up'}
             </Button>
           </Box>
         </Box>

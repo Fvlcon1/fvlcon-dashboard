@@ -10,7 +10,7 @@ export default function RootLayout({
 }>) {
   return (
     <SessionProvider>
-      <div className="w-full max-w-[1500px]">
+      <div className="w-full">
         {children}
       </div>
     </SessionProvider>

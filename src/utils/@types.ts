@@ -112,6 +112,7 @@ export type ImageCardType = {
 }
 
 export type overflow = "visible" | "hidden" | "clip" | "scroll" | "auto"
+export type IPosition = "top" | "bottom" | "left" | "right"
 
 export type FetchState<T> = {
   isLoading?: boolean;

@@ -5,6 +5,7 @@ import { ReactNode } from "react";
 const Popover = ({
   show,
   close,
+  onClick,
   children,
   style,
   content,
@@ -12,6 +13,7 @@ const Popover = ({
 }: {
   show: boolean;
   close: () => void;
+  onClick?: () => void;
   children?: ReactNode;
   content?: ReactNode;
   style? : string

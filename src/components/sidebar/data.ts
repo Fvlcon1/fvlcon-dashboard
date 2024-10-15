@@ -2,11 +2,14 @@ import { FaCircleUser, FaFileContract, FaFolderClosed, FaMap } from "react-icons
 import { IoFileTrayFull, IoSettings } from "react-icons/io5";
 import { MdDashboard } from "react-icons/md";
 import { RiLiveFill } from "react-icons/ri";
+import ProfilePopup from "./components/profilePopup";
 
 export const bottomPagesData = [
     {
         name : 'Profile',
         icon : FaCircleUser,
+        showTootip : false,
+        component : ProfilePopup,
         active : true,
         url : '/profile'
     },
@@ -22,6 +25,8 @@ export const rightPages = [
     {
         name : 'Profile',
         icon : FaCircleUser,
+        component : ProfilePopup,
+        showTootip : false,
         active : true,
         url : '/profile'
     },

@@ -75,15 +75,20 @@ const Left = () => {
                         <Tooltip
                             key={index}
                             placement="right"
-                            title={item.name}
+                            title={item.showTootip ? item.name : ''}
                         >
                             <div
-                                className={`p-3 rounded-md duration-500 hover:duration-300 hover:opacity-[0.6] hover:scale-[0.95] cursor-pointer`}
+                                className={`p-3 rounded-md duration-500 cursor-pointer`}
                             >
-                                <item.icon
-                                    className={`${item.active ? 'opacity-100' : 'opacity-100'}`}
-                                    color={theme.colors.bg.alt2}
-                                />
+                                {
+                                    item.component ?
+                                    <item.component />
+                                    :
+                                    <item.icon
+                                        className={`hover:duration-300 hover:opacity-[0.6] hover:scale-[0.95] cursor-pointer`}
+                                        color={theme.colors.bg.alt2}
+                                    />
+                                }
                             </div>
                         </Tooltip>
                     ))
