@@ -3,9 +3,11 @@ import { AnimatePresence, motion } from 'framer-motion';
 
 const Overlay = ({
     children,
+    className,
     onClick
 }: {
     children?: ReactNode;
+    className? : string
     onClick?: () => void;
 }) => {
     return (
@@ -19,7 +21,7 @@ const Overlay = ({
             exit={{ 
                 opacity: 0
             }}
-            className="fixed flex justify-center items-center top-0 left-0 z-[100] w-full h-full bg-[#00000000] backdrop-filter backdrop-blur-lg"
+            className={`fixed flex justify-center items-center top-0 left-0 z-[100] w-[100vw] h-[100vh] bg-[#00000000] backdrop-filter backdrop-blur-lg ${className}`}
         >
             <div className="fixed flex top-0 left-0 z-[-1] w-full h-full"
                 onClick={onClick}

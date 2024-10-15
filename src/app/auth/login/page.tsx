@@ -9,7 +9,8 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import SecretAgentIcon from '../../../assets/FVLCON3.png';
 import '../../styles/index.css';
 import { signIn, useSession } from "next-auth/react";
-import { message } from 'antd';
+import { message, Spin } from 'antd';
+import PageLoader from '@components/page loader/pageLoader';
 
 const theme = createTheme({
   palette: {
@@ -33,7 +34,7 @@ const Login: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>('');
   const router = useRouter();
-  const { data: session } = useSession();
+  const { data: session, status : sessionStatus } = useSession();
   const params = useSearchParams()
 
   if(session)
@@ -69,6 +70,9 @@ const Login: React.FC = () => {
       message.error(redirectError)
     }
   },[])
+
+  if(!session && !sessionStatus)
+    return <PageLoader />
 
   return (
     <ThemeProvider theme={theme}>

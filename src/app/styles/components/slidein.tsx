@@ -30,7 +30,7 @@ const Slidein = ({
                         ? -20
                         : 0
             }}
-            whileInView={{ 
+            animate={{ 
                 opacity: 1, 
                 y : 0,
                 x : 0

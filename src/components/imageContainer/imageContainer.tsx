@@ -18,7 +18,28 @@ const ImageContainer = ({
                 <div className="w-full flex h-full bg-bg-secondary rounded-xl p-[15px]">
                     <div className="w-full flex h-full bg-bg-primary rounded-lg p-[1px] justify-center items-center overflow-hidden">
                         {
-                            !image ?
+                            image ?
+                            <Flex
+                                width="fit-content"
+                                height="100%"
+                                background="blue"
+                                direction="column"
+                                align='center'
+                                gap={0}
+                            >
+                                <Image 
+                                    src={image.url}
+                                    alt="Selected Image"
+                                    width={0}
+                                    height={0}
+                                    style={{
+                                        width : 'fit-content',
+                                        height : '100%',
+                                    }}
+                                    className="hover:scale-[1.05] duration-300"
+                                />
+                            </Flex>
+                            :
                             <Flex
                                 width="fit-content"
                                 direction="column"
@@ -42,27 +63,6 @@ const ImageContainer = ({
                                         Drag and drop and image / click an image to start
                                     </AppTypography>
                                 </Flex>
-                            </Flex>
-                            :
-                            <Flex
-                                width="fit-content"
-                                height="100%"
-                                background="blue"
-                                direction="column"
-                                align='center'
-                                gap={0}
-                            >
-                                <Image 
-                                    src={image.url}
-                                    alt="Selected Image"
-                                    width={0}
-                                    height={0}
-                                    style={{
-                                        width : 'fit-content',
-                                        height : '100%',
-                                    }}
-                                    className="hover:scale-[1.05] duration-300"
-                                />
                             </Flex>
                         }
                     </div>

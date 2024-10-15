@@ -1,9 +1,7 @@
 import { ReactNode } from "react";
 import LoadModels from "./home/components/load models/loadModels";
-import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
 import { getServerSession } from "next-auth";
-import { message } from "antd"
 import { authOptions } from "../api/auth/[...nextauth]/authOptions";
 
 export default async function RootLayout({
