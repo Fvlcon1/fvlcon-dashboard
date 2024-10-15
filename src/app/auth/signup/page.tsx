@@ -1,100 +1,91 @@
-'use client'
+'use client';
 
-import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
-import CssBaseline from '@mui/material/CssBaseline';
-import TextField from '@mui/material/TextField';
-import Link from '@mui/material/Link';
-import Grid from '@mui/material/Grid';
-import Box from '@mui/material/Box';
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import Typography from '@mui/material/Typography';
-import Container from '@mui/material/Container';
+import React, { useState } from 'react';
+import { Avatar, Button, CssBaseline, TextField, Typography, Container, Box, Grid } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import SecretAgentIcon from '../../../assets/FVLCON3.png';
 import UserPool from '../components/UserPool';
+import '../../styles/index.css';  // Custom styles
 
-// Dark theme configuration
+// Dark theme configuration with Orbitron font
 const theme = createTheme({
   palette: {
     mode: 'dark',
     primary: {
       main: '#ffffff',
     },
-    secondary: {
-      main: '#ffffff',
+    background: {
+      default: '#121212',
+      paper: '#1c1c1c',
     },
   },
   typography: {
-    fontFamily: [
-      'Merriweather',
-      'serif',
-    ].join(','),
+    fontFamily: 'Orbitron, sans-serif',
   },
 });
 
-function Copyright(props : any) {
-  return (
-    <Typography variant="body2" color="text.secondary" align="center" {...props}>
-      {'Copyright © '}
-      <Link color="inherit" href="https://mui.com/">
-        Fvlcon
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  );
-}
-
 export default function SignUp() {
-    const handleSubmit = (event : any) => {
-        event.preventDefault();
-        const formData = new FormData(event.currentTarget);
-        const email = formData.get('email') || '';
-        const password = formData.get('password');
-    
-        UserPool.signUp(email as string, password as string, [], [], (err : any, data : any) => {
-          if (err) {
-            console.error(err);
-          } else {
-            console.log(data);
-          }
-        });
-    
-        console.log({
-          email: email,
-          password: password,
-        });
-      };
+  const [email, setEmail] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
+  const [confirmPassword, setConfirmPassword] = useState<string>('');
+  const [error, setError] = useState<string>('');
+
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (password !== confirmPassword) {
+      setError('Passwords do not match');
+      return;
+    }
+
+    UserPool.signUp(email, password, [], [], (err, data) => {
+      if (err) {
+        console.error(err);
+        setError(err.message || 'An error occurred');
+      } else {
+        console.log(data);
+      }
+    });
+  };
 
   return (
     <ThemeProvider theme={theme}>
-      <Container component="main" maxWidth="xs">
-        <CssBaseline />
+      <CssBaseline />
+      <Container component="main" maxWidth="xs" sx={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        minHeight: '100vh',
+        fontFamily: 'Orbitron, sans-serif', // Ensure it's applied globally
+      }}>
         <Box
           sx={{
-            marginTop: 8,
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
-            color: 'white', 
           }}
         >
-          <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-            <LockOutlinedIcon />
+          <Avatar
+            sx={{ mt: -3, bgcolor: 'transparent', width: 72, height: 72 }}
+          >
+            <img src={SecretAgentIcon.src} alt="Secret Agent Icon" style={{ width: '100%', height: '90%' }} />
           </Avatar>
-          <Typography component="h1" variant="h5">
-            Sign up
+          <Typography component="h2" variant="h6" sx={{ mt: 2, letterSpacing: 2, color: theme.palette.primary.main }}>
+            SIGN UP
           </Typography>
-          <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
+          <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1, width: '100%' }}>
             <Grid container spacing={2}>
               <Grid item xs={12}>
                 <TextField
-                  required
                   fullWidth
                   id="email"
                   label="Email Address"
                   name="email"
                   autoComplete="email"
+                  autoFocus
+                  value={email}
+                  onChange={(event) => setEmail(event.target.value)}
+                  variant="outlined"
+                  color="primary"
                   sx={{
                     '& label.Mui-focused': { color: 'white' },
                     '& .MuiInput-underline:after': { borderBottomColor: 'white' },
@@ -102,19 +93,23 @@ export default function SignUp() {
                       '& fieldset': { borderColor: 'white' },
                       '&:hover fieldset': { borderColor: 'white' },
                       '&.Mui-focused fieldset': { borderColor: 'white' },
-                    }
+                    },
+                    fontFamily: 'Orbitron, sans-serif', // Orbitron applied here
                   }}
                 />
               </Grid>
               <Grid item xs={12}>
                 <TextField
-                  required
                   fullWidth
                   name="password"
                   label="Password"
                   type="password"
                   id="password"
                   autoComplete="new-password"
+                  value={password}
+                  onChange={(event) => setPassword(event.target.value)}
+                  variant="outlined"
+                  color="primary"
                   sx={{
                     '& label.Mui-focused': { color: 'white' },
                     '& .MuiInput-underline:after': { borderBottomColor: 'white' },
@@ -122,25 +117,68 @@ export default function SignUp() {
                       '& fieldset': { borderColor: 'white' },
                       '&:hover fieldset': { borderColor: 'white' },
                       '&.Mui-focused fieldset': { borderColor: 'white' },
-                    }
+                    },
+                    fontFamily: 'Orbitron, sans-serif',
+                  }}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  fullWidth
+                  name="confirmPassword"
+                  label="Confirm Password"
+                  type="password"
+                  id="confirmPassword"
+                  autoComplete="new-password"
+                  value={confirmPassword}
+                  onChange={(event) => setConfirmPassword(event.target.value)}
+                  variant="outlined"
+                  color="primary"
+                  sx={{
+                    '& label.Mui-focused': { color: 'white' },
+                    '& .MuiInput-underline:after': { borderBottomColor: 'white' },
+                    '& .MuiOutlinedInput-root': {
+                      '& fieldset': { borderColor: 'white' },
+                      '&:hover fieldset': { borderColor: 'white' },
+                      '&.Mui-focused fieldset': { borderColor: 'white' },
+                    },
+                    fontFamily: 'Orbitron, sans-serif',
                   }}
                 />
               </Grid>
             </Grid>
+            {error && (
+              <Typography variant="body2" color="error" align="center" sx={{ mt: 3 }}>
+                {error}
+              </Typography>
+            )}
             <Button
               type="submit"
               fullWidth
               variant="contained"
-              sx={{ mt: 3, mb: 2, bgcolor: 'secondary.main' }}
+              sx={{ mt: 3, mb: 2 }}
             >
               Sign Up
             </Button>
-            <Grid container justifyContent="flex-end">
-            
-            </Grid>
           </Box>
         </Box>
-        <Copyright sx={{ mt: 5 }} />
+        <Box
+          sx={{
+            position: 'fixed',
+            bottom: 0,
+            left: 0,
+            width: '100%',
+            backgroundColor: '#121212',
+            padding: '8px',
+            textAlign: 'center',
+            color: '#aaaaaa',
+            fontFamily: 'Orbitron, sans-serif',
+            fontSize: '0.75rem',
+            zIndex: 100,
+          }}
+        >
+          ©️ 2024 • BLVCK SAPPHIRE • All Rights Reserved
+        </Box>
       </Container>
     </ThemeProvider>
   );
