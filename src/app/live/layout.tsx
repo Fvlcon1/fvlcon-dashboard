@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import TrackingProvider from "./context/trackingContext";
 import { redirect } from "next/navigation";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../api/auth/[...nextauth]/authOptions";
@@ -19,8 +18,8 @@ export default async function RootLayout({
     redirect("/auth/login?error=Please login")
   }
   return (
-    <TrackingProvider>
+    <div>
       {children}
-    </TrackingProvider>
+    </div>
   );
 }
