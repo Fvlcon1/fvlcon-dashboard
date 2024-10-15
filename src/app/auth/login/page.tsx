@@ -36,13 +36,13 @@ const Login: React.FC = () => {
   const { data: session } = useSession();
   const params = useSearchParams()
 
-  if(session)
+  if (session)
     redirect("/dashboard/home")
 
   const redirectError = params.get("error")
   let hasDisplayedRedirectError = false
 
-  const handleSubmit = async (e:any) => {
+  const handleSubmit = async (e: any) => {
     e.preventDefault(); // Prevent default form submission behavior
     setLoading(true);
 
@@ -63,12 +63,12 @@ const Login: React.FC = () => {
     }
   }
 
-  useEffect(()=>{
-    if(redirectError && !hasDisplayedRedirectError){
+  useEffect(() => {
+    if (redirectError && !hasDisplayedRedirectError) {
       hasDisplayedRedirectError = true
       message.error(redirectError)
     }
-  },[])
+  }, [])
 
   return (
     <ThemeProvider theme={theme}>
@@ -91,7 +91,7 @@ const Login: React.FC = () => {
           >
             <img src={SecretAgentIcon.src} alt="Secret Agent Icon" style={{ width: '100%', height: '90%' }} />
           </Avatar>
-          <Typography component="h2" variant="h5" sx={{ mt: 2, letterSpacing: 2, color: theme.palette.primary.main }}>
+          <Typography component="h2" variant="h6" sx={{ mt: 2, letterSpacing: 2, color: theme.palette.primary.main }}>
             LOGIN
           </Typography>
           <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1, width: '100%' }}>
