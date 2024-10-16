@@ -6,6 +6,7 @@ import MenuItems from "@components/popover/menuItems";
 import Popover from "@components/popover/popover"
 import theme from "@styles/theme";
 import { signOut } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import { useContext, useState } from "react";
 import { BiLogOut } from "react-icons/bi";
 import { FaCircleUser } from "react-icons/fa6";
@@ -16,10 +17,14 @@ const ProfilePopup = ({
     position? : IPosition
 }) => {
     const [showMenu, setShowMenu] = useState(false)
+    const router = useRouter()
     const [menuItems, setMenuItems] = useState<menuItemsTypes[]>([
         {
           name: `Logout`,
-          onClick: () => signOut({redirect : true}),
+          onClick: () => {
+            signOut({redirect : false})
+            router.push('/')
+          },
           icon: <BiLogOut color={theme.colors.text.secondary}/>,
           closeOnClick : true
         },
