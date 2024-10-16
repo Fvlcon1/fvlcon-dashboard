@@ -26,10 +26,10 @@ const Popover = ({
       case "bottom":
         return "top-full left-0";
       case "left":
-        return "right-full top-0 transform -translate-y-1/2";
+        return "right-[120%] top-0";
       case "right":
       default:
-        return "left-full top-0 transform -translate-y-1/2";
+        return "left-[120%] top-0";
     }
   };
 
@@ -40,7 +40,7 @@ const Popover = ({
         {show && (
           <ClickAwayListener onClickAway={close}>
             <motion.div
-              className={`absolute z-50 bg-bg-tetiary border-[1px] border-solid border-bg-quantinary rounded-lg shadow-xl ${getPositionClass()} ${style}`}
+              className={`Popover absolute overflow-hidden z-50 bg-bg-tetiary border-[1px] border-solid border-bg-quantinary rounded-lg shadow-xl ${getPositionClass()} ${style}`}
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}

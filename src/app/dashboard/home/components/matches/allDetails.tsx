@@ -1,14 +1,20 @@
+'use client'
+
 import { checkFaceDetails } from "@/utils/@types"
+import Popover from "@components/popover/popover"
 import AppTypography from "@styles/components/appTypography"
 import theme from "@styles/theme"
 import { FaLocationArrow, FaRegFileLines } from "react-icons/fa6"
 import { HiUserCircle } from "react-icons/hi"
+import CriminalRecord from "./criminalRecord"
+import { useState } from "react"
 
 const AllDetails = ({
     details
 } : {
     details? : checkFaceDetails
 }) => {
+    const [showCriminalRecords, setShowCriminalRecords] = useState(false)
     return (
         <div className="flex flex-col gap-5">
             <div className="flex flex-col gap-1">
@@ -127,12 +133,26 @@ const AllDetails = ({
                         </AppTypography>
                         {
                             details?.CriminalRecord ?
-                            <AppTypography
-                                textColor="royalblue"
-                                className="hover:!underline !cursor-pointer hover:!opacity-70"
+                            <Popover
+                                show={showCriminalRecords}
+                                close={() => setShowCriminalRecords(false)}
+                                content={ <CriminalRecord 
+                                    isVisible={showCriminalRecords}
+                                    setIsVisible={setShowCriminalRecords}
+                                    data={details.CriminalRecord}
+                                /> }
+                                style="!border-none !bg-transparent"
+                                position="top"
                             >
-                                View
-                            </AppTypography>
+                                <div onClick={()=>setShowCriminalRecords(prev => !prev)} className="top-[-8px]">
+                                    <AppTypography
+                                        textColor="royalblue"
+                                        className="hover:!underline !cursor-pointer hover:!opacity-70"
+                                    >
+                                        View
+                                    </AppTypography>
+                                </div>
+                            </Popover>
                             :
                             <AppTypography>
                                 N/A

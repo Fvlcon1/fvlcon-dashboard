@@ -15,7 +15,7 @@ const Controls = ({
     title? : string
 }) => {
     return (
-        <div className="sticky z-[1] backdrop-filter backdrop-blur-lg top-0 left-0 w-full bg-[#141414e7] border-solid border-b-[1px] border-b-bg-quantinary">
+        <div className="sticky rounded-t-xl z-[1] backdrop-filter backdrop-blur-lg top-0 left-0 w-full bg-[#141414e7] border-solid border-b-[1px] border-b-bg-quantinary">
             <Flex
                 justify="space-between"
                 padding="5px 20px"
@@ -24,9 +24,9 @@ const Controls = ({
                 <Flex
                     width="fit-content"
                 >
-                    <div className="w-[9px] h-[9px] rounded-full bg-orange-500"></div>
-                    <div className="w-[9px] h-[9px] rounded-full bg-green-500"></div>
-                    <div className="w-[9px] h-[9px] rounded-full bg-red-500"></div>
+                    <div className="w-[9px] h-[9px] rounded-full bg-bg-alt1"></div>
+                    <div className="w-[9px] h-[9px] rounded-full bg-bg-alt1"></div>
+                    <div className="w-[9px] h-[9px] rounded-full bg-bg-alt1"></div>
                 </Flex>
                 <AppTypography
                     textColor={theme.colors.text.primary}
