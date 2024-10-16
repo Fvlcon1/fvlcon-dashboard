@@ -21,7 +21,7 @@
     "@react-email/render": "^1.0.1",
     "amazon-cognito-identity-js": "^6.3.12",
     "antd": "^5.20.0",
-    "aws-sdk": "^2.1673.0",
+    "aws-sdk": "^2.1691.0",
     "axios": "^1.7.4",
     "bcryptjs": "^2.4.3",
     "dotenv": "^16.4.5",

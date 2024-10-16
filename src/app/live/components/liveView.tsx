@@ -8,6 +8,7 @@ import theme from "@styles/theme";
 import ClickableTab from "@components/clickable/clickabletab";
 import { FaCaretLeft, FaCaretRight } from "react-icons/fa6";
 import { activeCameraType } from "@/utils/@types";
+import { getHLSStreamURL } from "../utils/getHlsUrl";
 
 const LiveView = () => {
     const {
@@ -61,6 +62,7 @@ const LiveView = () => {
     }, [activeCameras, numberOfCamerasPerPage]);
 
     useEffect(() => {
+        getHLSStreamURL("my_stream_name")
         setScreenHeight(window.innerHeight);
         const handleResize = () => {
             setScreenHeight(window.innerHeight);
@@ -93,6 +95,7 @@ const LiveView = () => {
                                             url={cam.url}
                                             id={`liveContainer${index}`}
                                             gridClass={gridClass}
+                                            streamName={cam.streamName}
                                         />
                                     ))
                                 }

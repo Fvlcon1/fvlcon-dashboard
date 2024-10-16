@@ -3,28 +3,41 @@ import Controls from "./controls"
 import { liveContext } from "@/context/live"
 import Player from 'next-video/player';
 import theme from "@styles/theme";
+import { getHLSStreamURL } from "../../utils/getHlsUrl";
 
 const LiveContainer = ({
     url,
     id,
-    gridClass
+    gridClass,
+    streamName
 } : {
     url : string,
     gridClass? : string,
-    id : string
+    id : string,
+    streamName? : string
 }) => {
     const liveRef = useRef<HTMLDivElement>(null)
     const [liveHeight, setLiveHeight] = useState(0)
+    const [streamURL, setStreamURL] = useState<string>()
     const { activeCameras, numberOfCamerasPerPage } = useContext(liveContext)
     const resizeLiveHeight = () => {
         const cameraWidth = liveRef.current?.offsetWidth
         if(cameraWidth)
             setLiveHeight(cameraWidth / (16/9))
     }
+
+    const setUpStream = async () => {
+        if(streamName){
+            const url = await getHLSStreamURL(streamName)
+            setStreamURL(url)
+        }
+    }
+
     useEffect(()=>{
         resizeLiveHeight()
     },[gridClass])
     useEffect(() => {
+        setUpStream()
         window.addEventListener('resize', resizeLiveHeight);
         return ()=> window.removeEventListener('resize', resizeLiveHeight)
     }, []);
@@ -50,7 +63,7 @@ const LiveContainer = ({
                     allow="accelerometer; autoplay; clipboard-write"
                 /> */}
                 <Player
-                    src={url}
+                    src={streamURL}
                     controls
                     style={{ height: '100%' }}
                     accentColor={theme.colors.bg.secondary}

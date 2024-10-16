@@ -170,6 +170,7 @@ export type activeCameraType = {
   url : string,
   location? : string
   coordinates? : number[]
+  streamName? : string
 }
 
 export type fvlconizedFaceType = {
