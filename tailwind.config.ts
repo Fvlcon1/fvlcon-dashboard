@@ -13,7 +13,7 @@ const config: Config = {
     extend: {
       colors : cssColors,
       boxShadow: {
-        'custom-shadow': '0px 6px 38px -15px rgba(0,0,0,1);',
+        'custom-shadow': '0px 6px 38px -10px rgba(0,0,0,1);',
       },
       backgroundImage: {
         'gradient-container': 'linear-gradient(to bottom, rgba(12,12,12,1) 0%, rgba(5,5,5,0) 80%)',

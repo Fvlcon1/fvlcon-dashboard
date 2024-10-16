@@ -40,7 +40,7 @@ const Popover = ({
         {show && (
           <ClickAwayListener onClickAway={close}>
             <motion.div
-              className={`Popover absolute overflow-hidden z-50 bg-bg-tetiary border-[1px] border-solid border-bg-quantinary rounded-lg shadow-xl ${getPositionClass()} ${style}`}
+              className={`Popover absolute overflow-hidden z-50 bg-bg-tetiary border-[1px] border-solid border-bg-quantinary rounded-lg shadow-custom-shadow ${getPositionClass()} ${style}`}
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}

@@ -144,7 +144,7 @@ const AllDetails = ({
                                 style="!border-none !bg-transparent"
                                 position="top"
                             >
-                                <div onClick={()=>setShowCriminalRecords(prev => !prev)} className="top-[-8px]">
+                                <div onClick={()=>setShowCriminalRecords(prev => !prev)} className="mt-[-4px]">
                                     <AppTypography
                                         textColor="royalblue"
                                         className="hover:!underline !cursor-pointer hover:!opacity-70"
