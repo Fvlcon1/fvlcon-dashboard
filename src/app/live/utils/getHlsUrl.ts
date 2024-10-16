@@ -3,7 +3,7 @@ import AWS from 'aws-sdk';
 AWS.config.update({
     region: "us-east-1",
     accessKeyId: process.env.AKIAU6GDZN7ULFFYL5NA,
-    secretAccessKey: process.env.AWS_SECRET_KEY,
+    secretAccessKey: process.env.AWS_SECRET_KEY_ID,
   });
 
   // Initialize KVS client
