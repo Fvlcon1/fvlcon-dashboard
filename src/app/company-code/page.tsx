@@ -7,7 +7,6 @@ import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import Image from 'next/image';
 import logoImage from '../../assets/FVLCON3.png';
 import '../styles/index.css';
-import { useSession } from 'next-auth/react';
 
 const theme = createTheme({
   palette: {
@@ -28,10 +27,6 @@ const theme = createTheme({
 const CompanyCodePage: React.FC = () => {
   const [companyCode, setCompanyCode] = useState<string>('');
   const router = useRouter();
-  const { data: session, status : sessionStatus } = useSession();
-
-  if (session)
-    redirect("/dashboard/home")
 
   const handleCodeSubmit = () => {
     // Validate the code before pushing

@@ -30,7 +30,7 @@ const Home: React.FC = () => {
   const router = useRouter();
 
   const handleAgree = () => {
-    router.push('/dashboard/home');
+    window.location.href = '/dashboard/home'
   };
 
   return (

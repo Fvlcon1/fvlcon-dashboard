@@ -40,6 +40,7 @@ const Main = () => {
     const [videoTimestamp, setVideoTimestamp] = useState<number>(0)
     const [isVideoPlaying, setIsVideoPlaying] = useState<boolean>(false)
     const [occurance, setOccurance] = useState<occurance>()
+    const [isPageLoaded, setIsPageLoaded] = useState(false)
     const [distinctFaces, setDistinctFaces] = useState<FetchState<canvasTypes[]>>({
         isEmpty : false,
         isLoading : false,

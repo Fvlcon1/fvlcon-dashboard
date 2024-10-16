@@ -43,15 +43,19 @@ const Login: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
+    console.log("start")
   
     try {
       const res = await signIn("credentials", {
         redirect: false,
         email,
         password,
+        callbackUrl : '/auth/login'
       });
   
       if (res?.error) {
+        console.log({res})
+        console.log("lsdkfj")
         console.error('Login error:', res.error);
         setError(res.error || 'An error occurred while logging in');
         message.error(res.error)
