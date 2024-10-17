@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction } from "react"
+import React, { Dispatch, SetStateAction, useEffect } from "react"
 import Flex from "@styles/components/flex"
 import MatchCard from "./MatchCard"
 import { useState } from "react"
@@ -26,6 +26,21 @@ const Matches = ({
     setOccurance: Dispatch<SetStateAction<occurance | undefined>>
 }) => {
     const [displayFaces, setDisplayFaces] = useState(false)
+    const [sortedFaces, setSortedFaces] = useState<checkedFaceType[]>([])
+    const sortMatches = () => {
+        const matches : checkedFaceType[] = []
+        const unmatched : checkedFaceType[] = []
+        faces.data?.map((face, index) => {
+            if(face.matchedPerson)
+                return matches.push(face)
+            unmatched.push(face)
+        })
+        setSortedFaces([...matches, ...unmatched])
+    }
+
+    useEffect(()=>{
+        sortMatches()
+    },[])
     return (
         <>
             <motion.div  
@@ -80,7 +95,7 @@ const Matches = ({
                                         // </div>
                                     }
                                     {
-                                        [...faces.data].map((item, index : number) => (
+                                        sortedFaces.map((item, index : number) => (
                                             <MatchCard
                                                 originalImage={item.originalImage}
                                                 matchedImage={item.matchedImage}

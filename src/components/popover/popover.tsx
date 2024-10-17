@@ -1,6 +1,6 @@
 import { ClickAwayListener } from "@mui/base";
 import { AnimatePresence, motion } from "framer-motion";
-import { ReactNode } from "react";
+import { ReactNode, useEffect } from "react";
 
 const Popover = ({
   show,
@@ -40,7 +40,7 @@ const Popover = ({
         {show && (
           <ClickAwayListener onClickAway={close}>
             <motion.div
-              className={`Popover absolute overflow-hidden z-50 bg-bg-tetiary border-[1px] border-solid border-bg-quantinary rounded-lg shadow-custom-shadow ${getPositionClass()} ${style}`}
+              className={`Popover absolute z-50 bg-bg-tetiary border-[1px] border-solid border-bg-quantinary rounded-lg shadow-custom-shadow ${getPositionClass()} ${style}`}
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}

@@ -24,7 +24,7 @@ const Controls = () => {
     setLayoutMenuItems((prev) =>
       prev.map((item, i) => ({
         ...item,
-        active: i === index ? state ?? true : false,
+        active: i === index ? state !== undefined ? state : true : false,
       }))
     );
   };
@@ -56,6 +56,13 @@ const Controls = () => {
       icon: <MdDashboardCustomize color={theme.colors.text.secondary}/>,
       dropdown: [
         { 
+          name: "1", 
+          onClick: () => {
+            setNumberOfCamerasPerPage(1)
+          }, 
+          closeOnClick: true 
+        },
+        { 
             name: "4", 
             onClick: () => {
               setNumberOfCamerasPerPage(4)
@@ -82,6 +89,10 @@ const Controls = () => {
       icon: <FaGear color={theme.colors.text.secondary} size={13}/>,
     },
   ]);
+
+  useEffect(()=>{
+    console.log({layoutMenuItems})
+  },[layoutMenuItems])
 
   return (
     <Flex width="fit-content" align="center" gap={0}>

@@ -24,6 +24,8 @@ const LiveView = () => {
 
     const getGridClass = () => {;
         switch (true) {
+            case numberOfCamerasPerPage === 1:
+              return "grid-cols-1 grid-rows-1";
             case numberOfCamerasPerPage <= 4:
               return "grid-cols-2 grid-rows-2";
             case numberOfCamerasPerPage <= 6:

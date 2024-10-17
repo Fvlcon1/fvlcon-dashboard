@@ -49,7 +49,7 @@ const segmentFaces = async (url : string, setLogs: Dispatch<SetStateAction<logsT
       .withAgeAndGender();
     console.log({detections})
     setLogs(prev => [...prev, {log : {content : "Segmentation successful"}, date : new Date()}])
-    setLogs(prev => [...prev, {log : {content : "Croping segments..."}, date : new Date()}])
+    setLogs(prev => [...prev, {log : {content : "Cropping segments..."}, date : new Date()}])
   
     const faces = getFaceCanvas(detections, img)
     setLogs(prev => [...prev, {log : {content : "Segments successlly cropped"}, date : new Date()}])
