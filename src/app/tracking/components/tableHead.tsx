@@ -16,7 +16,7 @@ const TableHead = () => {
                             size={13}
                         />
                         <Text textColor={theme.colors.text.primary}>
-                            Match
+                            Captured
                         </Text>
                     </div>
                 </th>

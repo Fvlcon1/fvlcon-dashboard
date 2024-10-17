@@ -36,11 +36,12 @@ const Matches = ({
             unmatched.push(face)
         })
         setSortedFaces([...matches, ...unmatched])
+        console.log([...matches, ...unmatched])
     }
 
     useEffect(()=>{
         sortMatches()
-    },[])
+    },[faces])
     return (
         <>
             <motion.div  
