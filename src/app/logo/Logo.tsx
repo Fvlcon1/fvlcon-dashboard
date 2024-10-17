@@ -70,8 +70,8 @@ const HomePage = () => {
         />
 
         <Typography
-          variant="h1"
-          className="text-3xl font-thin text-gray-300 user-select-none"
+          variant="h5"
+          className="text-2xl font-thin text-gray-300 user-select-none"
           style={{ zIndex: 10, textShadow: '0 0 5px rgba(0, 0, 0, 0.8)' }}
         >
           {typedText}

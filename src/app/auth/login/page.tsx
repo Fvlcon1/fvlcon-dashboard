@@ -1,16 +1,14 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { redirect, useParams, useRouter, useSearchParams } from 'next/navigation';
-import { CognitoUser, AuthenticationDetails } from 'amazon-cognito-identity-js';
-import userPool from '../components/UserPool';
+import { redirect, useRouter, useSearchParams } from 'next/navigation';
 import { Avatar, Button, CssBaseline, TextField, Typography, Container, Box, Grid, CircularProgress } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import SecretAgentIcon from '../../../assets/FVLCON3.png';
 import '../../styles/index.css';
 import { signIn, useSession } from "next-auth/react";
-import { message, Spin } from 'antd';
-import PageLoader from '@components/loaders/pageLoader';
+import { message } from 'antd';
+import Link from 'next/link';
 
 const theme = createTheme({
   palette: {
@@ -34,56 +32,42 @@ const Login: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>('');
   const router = useRouter();
-  const { data: session, status : sessionStatus } = useSession();
+  const { data: session } = useSession();
   const params = useSearchParams()
+
+  if (session)
+    redirect("/dashboard/home")
 
   const redirectError = params.get("error")
   let hasDisplayedRedirectError = false
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: any) => {
     e.preventDefault();
     setLoading(true);
-    console.log("start")
-  
-    try {
-      const res = await signIn("credentials", {
-        redirect: false,
-        email,
-        password,
-        callbackUrl : '/auth/login'
-      });
-  
-      if (res?.error) {
-        console.log({res})
-        console.log("lsdkfj")
-        console.error('Login error:', res.error);
-        setError(res.error || 'An error occurred while logging in');
-        message.error(res.error)
-      } else {
-        console.log('Login success', res);
-        message.success("Login Successful")
-        router.push("/agreementpage")
-      }
-    } catch (err : any) {
-      console.error('Unexpected error:', err);
-      setError('Unexpected error occurred');
-      message.error(err.message)
-    } finally {
+
+    const res = await signIn("credentials", {
+      redirect: false,
+      email,
+      password,
+    });
+
+    if (res?.error) {
+      console.error('Login error', res.error);
       setLoading(false);
+      setError(res.error || 'An error occurred while logging in');
+    } else {
+      console.log('Login success', res);
+      setLoading(false);
+      router.push('/agreementpage');
     }
-  };  
+  }
 
   useEffect(() => {
     if (redirectError && !hasDisplayedRedirectError) {
       hasDisplayedRedirectError = true
       message.error(redirectError)
     }
-    if (session)
-      redirect("/dashboard/home")
   }, [])
-
-  if(!session && !sessionStatus)
-    return <PageLoader />
 
   return (
     <ThemeProvider theme={theme}>
@@ -106,7 +90,7 @@ const Login: React.FC = () => {
           >
             <img src={SecretAgentIcon.src} alt="Secret Agent Icon" style={{ width: '100%', height: '90%' }} />
           </Avatar>
-          <Typography component="h2" variant="h6" sx={{ mt: 2, letterSpacing: 2, color: theme.palette.primary.main }}>
+          <Typography component="h6" variant="h5" sx={{ mt: 2, letterSpacing: 2, color: theme.palette.primary.main }}>
             LOGIN
           </Typography>
           <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1, width: '100%' }}>
@@ -172,6 +156,26 @@ const Login: React.FC = () => {
             >
               {loading ? <CircularProgress size={24} color="inherit" /> : 'Sign In'}
             </Button>
+            {/* adding Forgot Password link aligned to the right */}
+            <Grid container justifyContent="flex-end">
+              <Grid item>
+                <Link href="/forgot-password" passHref>
+                  <Typography
+                    sx={{
+                      color: '#aaa',
+                      fontSize: '0.85rem',
+                      textDecoration: 'none',
+                      fontFamily: 'Roboto, sans-serif',  // overriding font to Roboto
+                      '&:hover': {
+                        textDecoration: 'underline',
+                      },
+                    }}
+                  >
+                    Forgot Password?
+                  </Typography>
+                </Link>
+              </Grid>
+            </Grid>
           </Box>
         </Box>
         <Box

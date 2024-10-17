@@ -1,107 +1,139 @@
-'use client'
+'use client';
 
-import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
-import CssBaseline from '@mui/material/CssBaseline';
-import TextField from '@mui/material/TextField';
-import Link from '@mui/material/Link';
-import Grid from '@mui/material/Grid';
-import Box from '@mui/material/Box';
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import Typography from '@mui/material/Typography';
-import Container from '@mui/material/Container';
+import React, { useState } from 'react';
+import { redirect } from 'next/navigation';
+import { CognitoUser } from 'amazon-cognito-identity-js';
+import userPool from '../components/UserPool';
+import { Avatar, Button, CssBaseline, TextField, Typography, Container, Box, Grid } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { CognitoUserPool, CognitoUser } from 'amazon-cognito-identity-js';
-import { useState } from 'react';
+import SecretAgentIcon from '../../../assets/FVLCON3.png';
+import '../../styles/index.css';
 
-const UserPool = new CognitoUserPool({
-  UserPoolId: "eu-north-1_bA7RndLAT",
-  ClientId: "3f5v8keobedm2otis1htctnk6h"
+const theme = createTheme({
+  palette: {
+    mode: 'dark',
+    primary: {
+      main: '#ffffff',
+    },
+    background: {
+      default: '#121212',
+      paper: '#1c1c1c',
+    },
+  },
+  typography: {
+    fontFamily: 'Orbitron, sans-serif',
+  },
 });
 
-function VerificationPage() {
+const VerificationPage: React.FC = () => {
   const [email, setEmail] = useState('');
   const [verificationCode, setVerificationCode] = useState('');
   const [verificationSuccess, setVerificationSuccess] = useState(false);
   const [verificationError, setVerificationError] = useState('');
 
-  const handleVerification = (event : any) => {
+  const handleVerification = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    const user = new CognitoUser({ Username: email, Pool: UserPool });
-    user.confirmRegistration(verificationCode, true, (err, result) => {
+    const user = new CognitoUser({ Username: email, Pool: userPool });
+    user.confirmRegistration(verificationCode, true, (err) => {
       if (err) {
         setVerificationError(err.message || 'Verification error');
         return;
       }
-      console.log('Verification successful', result);
+      console.log('Verification successful');
       setVerificationSuccess(true);
     });
   };
 
-  const defaultTheme = createTheme();
-
   return (
-    <ThemeProvider theme={defaultTheme}>
-      <Container component="main" maxWidth="xs">
-        <CssBaseline />
-        <Box
-          sx={{
-            marginTop: 8,
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-          }}
-        >
-          <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-            <LockOutlinedIcon />
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <Container component="main" maxWidth="xs" sx={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        minHeight: '100vh'
+      }}>
+        <Box sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+        }}>
+          <Avatar sx={{ m: 1, bgcolor: 'transparent', width: 72, height: 72 }}>
+            <img src={SecretAgentIcon.src} alt="Secret Agent Icon" style={{ width: '100%', height: '90%' }} />
           </Avatar>
-          <Typography component="h1" variant="h5">
+          <Typography component="h6" variant="h5" sx={{ color: theme.palette.primary.main }}>
             Email Verification
           </Typography>
           {verificationSuccess ? (
-            <Box sx={{ mt: 3 }}>
+            <Box sx={{ mt: 0 }}>
               <Typography component="p" variant="body1" align="center" color="success">
                 Email verification successful!
               </Typography>
               <Button
-                component={Link}
+                component="a"
                 href="/reset-password"
                 variant="outlined"
                 fullWidth
                 color="primary"
-                sx={{ mt: 3 }}
+                sx={{ mt: 0 }}
               >
                 Reset Password
               </Button>
             </Box>
           ) : (
-            <Box component="form" noValidate onSubmit={handleVerification} sx={{ mt: 3 }}>
-              <TextField
-                margin="normal"
-                required
-                fullWidth
-                id="email"
-                label="Email Address"
-                name="email"
-                autoComplete="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-              <TextField
-                margin="normal"
-                required
-                fullWidth
-                name="verificationCode"
-                label="Verification Code"
-                type="text"
-                id="verificationCode"
-                autoComplete="off"
-                value={verificationCode}
-                onChange={(e) => setVerificationCode(e.target.value)}
-              />
+            <Box component="form" noValidate onSubmit={handleVerification} sx={{ mt: 1, width: '100%' }}>
+              <Grid container spacing={0}>
+                <Grid item xs={12}>
+                  <TextField
+                    margin="normal"
+                    required
+                    fullWidth
+                    id="email"
+                    label="Email Address"
+                    name="email"
+                    autoComplete="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    variant="outlined"
+                    color="primary"
+                    sx={{
+                      '& label.Mui-focused': { color: 'white' },
+                      '& .MuiOutlinedInput-root': {
+                        '& fieldset': { borderColor: 'white' },
+                        '&:hover fieldset': { borderColor: 'white' },
+                        '&.Mui-focused fieldset': { borderColor: 'white' },
+                      }
+                    }}
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    margin="normal"
+                    required
+                    fullWidth
+                    name="verificationCode"
+                    label="Verification Code"
+                    type="text"
+                    id="verificationCode"
+                    autoComplete="off"
+                    value={verificationCode}
+                    onChange={(e) => setVerificationCode(e.target.value)}
+                    variant="outlined"
+                    color="primary"
+                    sx={{
+                      '& label.Mui-focused': { color: 'white' },
+                      '& .MuiOutlinedInput-root': {
+                        '& fieldset': { borderColor: 'white' },
+                        '&:hover fieldset': { borderColor: 'white' },
+                        '&.Mui-focused fieldset': { borderColor: 'white' },
+                      }
+                    }}
+                  />
+                </Grid>
+              </Grid>
               {verificationError && (
-                <Typography variant="body2" color="error" align="center" sx={{ mt: 1 }}>
+                <Typography variant="body2" color="error" align="center" sx={{ mt: 0 }}>
                   {verificationError}
                 </Typography>
               )}
@@ -109,17 +141,33 @@ function VerificationPage() {
                 type="submit"
                 fullWidth
                 variant="contained"
-                color="primary"
-                sx={{ mt: 3, mb: 2 }}
+                sx={{ mt: 0, mb: 0 }}
               >
                 Verify
               </Button>
             </Box>
           )}
         </Box>
+        <Box
+          sx={{
+            position: 'fixed',
+            bottom: 0,
+            left: 0,
+            width: '100%',
+            backgroundColor: '#121212',
+            padding: '4px',
+            textAlign: 'center',
+            color: '#aaaaaa',
+            fontFamily: 'Orbitron, sans-serif',
+            fontSize: '0.75rem',
+            zIndex: 100,
+          }}
+        >
+          ©️ 2024 • BLVCK SAPPHIRE • All Rights Reserved
+        </Box>
       </Container>
     </ThemeProvider>
   );
-}
+};
 
 export default VerificationPage;
