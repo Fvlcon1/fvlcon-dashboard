@@ -221,9 +221,7 @@ const Main = () => {
             setLogs(prev => [...prev, {log : {content : "Fvlconized successfully"}, date : new Date()}])
             if (faces && faces.length > 0) {
                 const validFaces = faces.filter(face => face !== undefined) as checkedFaceType[];
-                setMatchedFaces(prev => ({
-                    data : prev.data ? [...prev.data, ...validFaces] : validFaces,
-                }));
+                setMatchedFaces({data : validFaces})
             } else {
                 toast.error("No match found!")
                 !matchedFaces.data && setMatchedFaces({isEmpty : true})
