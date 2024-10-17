@@ -19,7 +19,7 @@ const MenuItems = ({
         <div key={index}>
           {item.dropdown ? (
             <Popover
-              show={item.active !== undefined ? item.active : true}
+              show={item.active ?? false}
               close={() => {
                 if (item.setActive) item.setActive(index, false);
               }}

@@ -124,11 +124,11 @@ export type FetchState<T> = {
 export type menuItemsTypes = {
   name: string;
   onClick?: (index: number, id : string) => void;
-  setActive?: (index: number, active: boolean) => void;
+  setActive?: (index: number, active : boolean) => void;
   icon?: ReactNode;
   closeOnClick?: boolean;
   dropdown?: menuItemsTypes[];
-  active?: boolean;
+  active: boolean;
 };
 
 export type cameraFolderType = {

@@ -25,7 +25,7 @@ const ItemsComponent = ({
         onClick={() => {
           if (handleAnyItemClick) handleAnyItemClick();
           if (item.closeOnClick && closeFunction) closeFunction();
-          if (item.setActive)  item.setActive(index, item.active === undefined ? true : !item.active);
+          if (item.setActive)  item.setActive(index, !item.active);
           if (item.onClick) item.onClick(index, id);
         }}
       >

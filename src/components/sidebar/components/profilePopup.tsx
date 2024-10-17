@@ -26,7 +26,8 @@ const ProfilePopup = ({
             router.push('/')
           },
           icon: <BiLogOut color={theme.colors.text.secondary}/>,
-          closeOnClick : true
+          closeOnClick : true,
+          active : false
         },
       ]);
     return (

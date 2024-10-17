@@ -20,11 +20,11 @@ const Controls = () => {
   const [showLayoutMenu, setShowLayoutMenu] = useState(false);
   const { numberOfCamerasPerPage, setNumberOfCamerasPerPage } = useContext(liveContext);
 
-  const setActive = (index: number, state?: boolean) => {
+  const setActive = (index: number, state: boolean) => {
     setLayoutMenuItems((prev) =>
       prev.map((item, i) => ({
         ...item,
-        active: i === index ? state !== undefined ? state : true : false,
+        active: i === index ? state : false,
       }))
     );
   };
@@ -52,7 +52,8 @@ const Controls = () => {
     {
       name: `CPP: ${numberOfCamerasPerPage}`,
       onClick: () => {},
-      setActive: (index: number, active: boolean) => setActive(index, active),
+      active : false,
+      setActive: (index: number, active : boolean) => setActive(index, active),
       icon: <MdDashboardCustomize color={theme.colors.text.secondary}/>,
       dropdown: [
         { 
@@ -60,26 +61,30 @@ const Controls = () => {
           onClick: () => {
             setNumberOfCamerasPerPage(1)
           }, 
-          closeOnClick: true 
+          closeOnClick: true,
+          active : false
         },
         { 
             name: "4", 
             onClick: () => {
               setNumberOfCamerasPerPage(4)
             }, 
-            closeOnClick: true 
+            closeOnClick: true,
+            active : false
         },
         { 
             name: "9", 
             onClick: () => {
                 setNumberOfCamerasPerPage(9)
               }, 
-            closeOnClick: true 
+            closeOnClick: true,
+            active : false
         },
         { 
             name: "12", 
             onClick: () => {setNumberOfCamerasPerPage(12)}, 
-            closeOnClick: true 
+            closeOnClick: true,
+            active : false
         },
       ],
     },
@@ -87,6 +92,7 @@ const Controls = () => {
       name: "Delete",
       onClick: () => {},
       icon: <FaGear color={theme.colors.text.secondary} size={13}/>,
+      active : false
     },
   ]);
 

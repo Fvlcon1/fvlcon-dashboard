@@ -210,16 +210,19 @@ const FolderList = ({
             onClick: (index, id)=>rename(id),
             closeOnClick: true,
             icon: <FaEdit color={theme.colors.text.secondary} size={14} />,
+            active : false
         },
         {
             name: "Add +",
             onClick: () => addCamera(),
             closeOnClick: true,
             icon: <IoIosAddCircle color={theme.colors.text.secondary} size={14} />,
+            active : false
         },
         {
             name: "Delete",
             onClick: (index, id) => {deleteCam(folders, id, setFolders)},
+            active : false,
             closeOnClick: true,
             icon: <MdDeleteSweep color={theme.colors.text.secondary} />,
         },
@@ -345,12 +348,14 @@ const FolderList = ({
             onClick: (index, id)=>rename(id),
             closeOnClick: true,
             icon: <FaEdit color={theme.colors.text.secondary} size={14} />,
+            active : false
         },
         {
             name: "Add Folder",
             onClick: (index, id)=>addNewFolder(id),
             closeOnClick: true,
             icon: <AiFillFolderAdd color={theme.colors.text.secondary} size={14} />,
+            active : false
         },
         {
             name: "Add Cam",
@@ -361,12 +366,14 @@ const FolderList = ({
             }),
             closeOnClick: true,
             icon: <RiVideoAddFill color={theme.colors.text.secondary} size={14} />,
+            active : false
         },
         {
             name: "Delete",
             onClick: (index, id) => {deleteCam(folders, id, setFolders)},
             closeOnClick: true,
             icon: <MdDeleteSweep color={theme.colors.text.secondary} />,
+            active : false
         },
     ];
 

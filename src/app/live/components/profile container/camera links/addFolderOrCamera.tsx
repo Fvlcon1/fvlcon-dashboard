@@ -41,6 +41,7 @@ const AddFolderOrCamera = () => {
             name: "Add Folder",
             onClick: addNewFolder,
             closeOnClick: true,
+            active : false,
             icon: <AiFillFolderAdd color={theme.colors.text.secondary} size={14} />,
         },
         {
@@ -51,6 +52,7 @@ const AddFolderOrCamera = () => {
             }),
             closeOnClick: true,
             icon: <RiVideoAddFill color={theme.colors.text.secondary} size={14} />,
+            active : false
         },
     ];
     return (
