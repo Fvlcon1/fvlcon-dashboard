@@ -44,7 +44,7 @@ const LiveContainer = ({
     return (
         <div
             ref={liveRef}
-            className={`bg-bg-secondary flex flex-col relative rounded-lg max-h-full overflow-hidden h-fit`}
+            className={`bg-bg-secondary flex flex-col relative rounded-lg max-h-full h-fit`}
         >
             <Controls id={id} />
             <div 

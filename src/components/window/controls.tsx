@@ -18,7 +18,7 @@ const Controls = ({
         <div className="sticky rounded-t-xl z-[1] backdrop-filter backdrop-blur-lg top-0 left-0 w-full bg-[#141414e7] border-solid border-b-[1px] border-b-bg-quantinary">
             <Flex
                 justify="space-between"
-                padding="5px 20px"
+                padding="5px 10px 5px 10px"
                 align="center"
             >
                 <Flex
