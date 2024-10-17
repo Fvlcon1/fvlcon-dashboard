@@ -6,14 +6,6 @@ import ProfilePopup from "./components/profilePopup";
 
 export const bottomPagesData = [
     {
-        name : 'Profile',
-        icon : FaCircleUser,
-        showTootip : false,
-        component : ProfilePopup,
-        active : true,
-        url : '/profile'
-    },
-    {
         name : 'Settings',
         icon : IoSettings,
         active : false,
