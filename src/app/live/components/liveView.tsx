@@ -94,6 +94,7 @@ const LiveView = () => {
                                     item.map((cam, index: number) => (
                                         <LiveContainer 
                                             key={index}
+                                            index={index}
                                             url={cam.url}
                                             id={`liveContainer${index}`}
                                             gridClass={gridClass}

@@ -30,14 +30,14 @@ export const LiveProvider = ({ children }: { children: ReactNode }) => {
             location : 'Osu Accra',
             streamName : "my_stream_name",
             coordinates : [5.558, -0.187]
-        // },
-        // {
-        //     id : '2',
-        //     url : "https://stream.fvlcon.app:8888/towncouncil/channel_3",
-        //     location : 'East legon, Accra',
-        //     streamName : "my_stream_name",
-        //     coordinates : [5.65, -0.163]
-        // },
+        },
+        {
+            id : '2',
+            url : "https://stream.fvlcon.app:8888/towncouncil/channel_3",
+            location : 'East legon, Accra',
+            streamName : "stream2",
+            coordinates : [5.65, -0.163]
+        },
         // {
         //     id : '4',
         //     url : "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
@@ -51,7 +51,7 @@ export const LiveProvider = ({ children }: { children: ReactNode }) => {
         //     location : 'Kokomlemle, new town',
         //     streamName : "my_stream_name",
         //     coordinates : [5.5655, -0.2077]
-        },
+        // },
     ])
     const [numberOfCamerasPerPage, setNumberOfCamerasPerPage] = useState<number>(4)
     const [folders, setFolders] = useState<FolderOrCamera[]>(camExplorerData);

@@ -4,17 +4,20 @@ import { liveContext } from "@/context/live"
 import Player from 'next-video/player';
 import theme from "@styles/theme";
 import { getHLSStreamURL } from "../../utils/getHlsUrl";
+import { faceTracking } from "@/utils/faceTracking";
 
 const LiveContainer = ({
     url,
     id,
     gridClass,
-    streamName
+    streamName,
+    index
 } : {
     url : string,
     gridClass? : string,
     id : string,
     streamName? : string
+    index : number
 }) => {
     const liveRef = useRef<HTMLDivElement>(null)
     const [liveHeight, setLiveHeight] = useState(0)
@@ -33,13 +36,43 @@ const LiveContainer = ({
         }
     }
 
+    const startTracking = () => {
+        const customPlayer = document.getElementById(id)
+        ?.querySelector('mux-player')
+        ?.shadowRoot
+        ?.querySelector('media-theme')
+        ?.querySelector('mux-video')
+        ?.shadowRoot
+        if (customPlayer) {
+            const videoElement = customPlayer.querySelector('video') as HTMLVideoElement;
+            if (videoElement) {
+              console.log('Video element found:', videoElement);
+              faceTracking(videoElement, `CanvasContainer${id}`)
+            } else {
+              console.log('Video element not found inside the shadow DOM');
+            }
+        } else {
+            console.log('customPlayer DOM not found');
+          }
+    }
+
     useEffect(()=>{
         resizeLiveHeight()
     },[gridClass])
+    
     useEffect(() => {
+        const streamSetupInterval = setInterval(() => {
+            setUpStream()
+        }, 60000);
+        setTimeout(() => {
+            startTracking()
+        }, 3000);
         setUpStream()
         window.addEventListener('resize', resizeLiveHeight);
-        return ()=> window.removeEventListener('resize', resizeLiveHeight)
+        return ()=> {
+            window.removeEventListener('resize', resizeLiveHeight)
+            clearInterval(streamSetupInterval)
+        }
     }, []);
     return (
         <div
@@ -62,15 +95,20 @@ const LiveContainer = ({
                     allowFullScreen
                     allow="accelerometer; autoplay; clipboard-write"
                 /> */}
-                <Player
-                    src={streamURL}
-                    controls
-                    style={{ height: '100%' }}
-                    accentColor={theme.colors.bg.secondary}
-                    playbackRates={[0.2, 0.5, 0.7, 1, 1.2, 1.5, 1.7, 2]}
-                    placeholder="Stream"
-                    autoPlay={true}
-                />
+                <div id={id} className="w-full h-full relative">
+                    <div id={`CanvasContainer${id}`} className="canvasContainer w-full h-full absolute pointer-events-none z-10 top-0 left-0">
+
+                    </div>
+                    <Player
+                        src={streamURL}
+                        controls
+                        style={{ height: '100%' }}
+                        accentColor={theme.colors.bg.secondary}
+                        playbackRates={[0.2, 0.5, 0.7, 1, 1.2, 1.5, 1.7, 2]}
+                        placeholder="Stream"
+                        autoPlay={true}
+                    />
+                </div>
             </div>
         </div>
     )

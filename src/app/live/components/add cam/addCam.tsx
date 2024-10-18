@@ -48,6 +48,7 @@ const AddCam = ({
         setDisplay(false)
         setActiveCameras(prev => [...prev, {
             id : `${prev.length + 1}`,
+            streamName : 'stream2',
             url : "http://52.20.249.108:8888/towncouncil/channel_1/"
         }])
     }

@@ -16,7 +16,7 @@ export const isModelsLoaded = () => {
 }
 
 export const loadModels = async () => {
-  const modelPath = '/model';
+  const modelPath = '/models';
   try {
     await faceapi.nets.ssdMobilenetv1.loadFromUri(modelPath);
     await faceapi.nets.tinyYolov2.loadFromUri(modelPath);
