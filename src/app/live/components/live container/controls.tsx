@@ -19,7 +19,7 @@ const Controls = ({
 }) => {
     const [showMap, setShowMap] = useState(false)
     return (
-        <div className="w-full abosolute z-10 top-0 bg-bg-quantinary h-[30px] flex gap-1 items-center px-2">
+        <div className="w-full abosolute z-10 top-0 bg-bg-quantinary h-[30px] rounded-t-lg flex gap-1 items-center px-2">
             <div className="flex w-full justify-between items-center">
                 <Flex
                     width="fit-content"
