@@ -51,7 +51,6 @@ const Login: React.FC = () => {
         redirect: false,
         email,
         password,
-        callbackUrl : '/agreementpage'
       });
   
       if (res?.error) {
@@ -61,7 +60,7 @@ const Login: React.FC = () => {
       } else {
         console.log('Login success', res);
         message.success("Login Successful")
-        router.push("/agreementpage")
+        window.location.href = '/agreementpage'
       }
     } catch (err : any) {
       console.error('Unexpected error:', err);
