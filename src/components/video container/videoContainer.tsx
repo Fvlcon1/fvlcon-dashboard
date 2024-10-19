@@ -18,7 +18,8 @@ const VideoContainer = ({
     onPause,
     occurances,
     fvlconizing,
-    videoTimestamp
+    videoTimestamp,
+    seekVideoTimestamp
 } : {
     video?: imagesType
     logs : logsType[],
@@ -27,6 +28,7 @@ const VideoContainer = ({
     onPause?: () => void
     fvlconizing : boolean
     videoTimestamp : number
+    seekVideoTimestamp: number
     occurances?: {
         index: number;
         content: fvlconizedFaceType[];
@@ -97,6 +99,10 @@ const VideoContainer = ({
         setStamps();
         updateDivWidth();
     }, [occurances]);
+
+    useEffect(() => {
+        handleSetPlayerTimestamp(seekVideoTimestamp)
+    }, [seekVideoTimestamp]);
 
     useEffect(() => {
         if (video) {

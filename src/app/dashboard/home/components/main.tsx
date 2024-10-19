@@ -38,6 +38,7 @@ const Main = () => {
     const [imageSrc, setImageSrc] = useState<string>()
     const [videoSrc, setVideoSrc] = useState<string>()
     const [videoTimestamp, setVideoTimestamp] = useState<number>(0)
+    const [seekVideoTimestamp, setSeekVideoTimestamp] = useState<number>(0)
     const [isVideoPlaying, setIsVideoPlaying] = useState<boolean>(false)
     const [occurance, setOccurance] = useState<occurance>()
     const [isPageLoaded, setIsPageLoaded] = useState(false)
@@ -287,8 +288,11 @@ const Main = () => {
     },[fvlconizing])
 
     useEffect(()=>{
-        occurance?.content[0] && setVideoTimestamp(occurance?.content[0].Timestamp / 1000)
-        console.log(occurance?.content[0].Timestamp)
+        if(occurance?.content[0]){
+            setVideoTimestamp(occurance?.content[0].Timestamp / 1000)
+            setSeekVideoTimestamp(occurance?.content[0].Timestamp / 1000)
+        }
+        console.log("set")
     },[occurance])
 
     return (
@@ -310,6 +314,7 @@ const Main = () => {
                             logs={logs}
                             setVideoTimestamp={setVideoTimestamp}
                             videoTimestamp={videoTimestamp}
+                            seekVideoTimestamp={seekVideoTimestamp}
                             occurances={occurance}
                             fvlconizing={fvlconizing}
                         />

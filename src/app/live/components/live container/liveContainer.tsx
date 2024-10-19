@@ -4,7 +4,7 @@ import { liveContext } from "@/context/live"
 import Player from 'next-video/player';
 import theme from "@styles/theme";
 import { getHLSStreamURL } from "../../utils/getHlsUrl";
-import { faceTracking } from "@/utils/faceTracking";
+import  FaceTracking from "@/utils/faceTracking";
 
 const LiveContainer = ({
     url,
@@ -23,10 +23,20 @@ const LiveContainer = ({
     const [liveHeight, setLiveHeight] = useState(0)
     const [streamURL, setStreamURL] = useState<string>()
     const { activeCameras, numberOfCamerasPerPage } = useContext(liveContext)
+    const [canvasSize, setCanvasSize] = useState({
+        width : 0,
+        height : 0
+    })
     const resizeLiveHeight = () => {
         const cameraWidth = liveRef.current?.offsetWidth
-        if(cameraWidth)
+        if(cameraWidth){
             setLiveHeight(cameraWidth / (16/9))
+            setCanvasSize({
+                width : cameraWidth,
+                height : cameraWidth / (16/9)
+            })
+
+        }
     }
 
     const setUpStream = async () => {
@@ -47,7 +57,7 @@ const LiveContainer = ({
             const videoElement = customPlayer.querySelector('video') as HTMLVideoElement;
             if (videoElement) {
               console.log('Video element found:', videoElement);
-              faceTracking(videoElement, `CanvasContainer${id}`)
+            //   faceTracking(videoElement, `CanvasContainer${id}`)
             } else {
               console.log('Video element not found inside the shadow DOM');
             }
@@ -63,7 +73,7 @@ const LiveContainer = ({
     useEffect(() => {
         const streamSetupInterval = setInterval(() => {
             setUpStream()
-        }, 60000);
+        }, 60000 * 3);
         setTimeout(() => {
             startTracking()
         }, 3000);
