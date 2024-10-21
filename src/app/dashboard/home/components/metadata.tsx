@@ -38,10 +38,10 @@ const Metadata = () => {
                             Meta Info
                         </AppTypography>
                         <AppTypography>
-                            name : {metadata.name}
+                            Name : {metadata.name}
                         </AppTypography>
                         <AppTypography>
-                            size : {metadata.size}
+                            Size : {metadata.size}
                         </AppTypography>
                         <AppTypography>
                             Type : {metadata.type}

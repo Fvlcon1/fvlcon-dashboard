@@ -23,6 +23,7 @@ const LiveContainer = ({
     const [liveHeight, setLiveHeight] = useState(0)
     const [streamURL, setStreamURL] = useState<string>()
     const { activeCameras, numberOfCamerasPerPage } = useContext(liveContext)
+    const [videoElement, setVideoElement] = useState<HTMLVideoElement>()
     const [canvasSize, setCanvasSize] = useState({
         width : 0,
         height : 0
@@ -55,6 +56,8 @@ const LiveContainer = ({
         ?.shadowRoot
         if (customPlayer) {
             const videoElement = customPlayer.querySelector('video') as HTMLVideoElement;
+            if(videoElement)
+                setVideoElement(videoElement)
             if (videoElement) {
               console.log('Video element found:', videoElement);
             //   faceTracking(videoElement, `CanvasContainer${id}`)
@@ -89,6 +92,11 @@ const LiveContainer = ({
             ref={liveRef}
             className={`bg-bg-secondary flex flex-col relative rounded-lg max-h-full h-fit`}
         >
+            <FaceTracking 
+                canvasSize={canvasSize}
+                canvasContainerID={`CanvasContainer${id}`}
+                videoElement={videoElement}
+            />
             <Controls id={id} />
             <div 
                 className="w-full flex flex-grow justify-center items-center"
