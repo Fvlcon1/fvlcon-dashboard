@@ -22,6 +22,7 @@ import { getSingleFace } from "@/utils/model/getSingleFace"
 import { getImageURLFromBoundingBox } from "@/utils/getImageURLFromBoundingBox"
 import useTimer from "@/utils/useTimer"
 import Text from "@styles/components/text"
+import { protectedAPI } from "@/utils/api/api"
 
 let fileEx : any = undefined
 
@@ -133,7 +134,6 @@ const Main = () => {
     
     const groupFacesByIndex = (faces : fvlconizedFaceType[]) => {
         faces.map((item) => groupSingleFaceByIndex(item))
-        console.log({facesGroupedByIndex})
     }
 
     const groupSingleFaceByIndex = (face : fvlconizedFaceType) => {
@@ -292,7 +292,6 @@ const Main = () => {
             setVideoTimestamp(occurance?.content[0].Timestamp / 1000)
             setSeekVideoTimestamp(occurance?.content[0].Timestamp / 1000)
         }
-        console.log("set")
     },[occurance])
 
     return (

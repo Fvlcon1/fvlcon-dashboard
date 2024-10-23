@@ -1,10 +1,13 @@
 'use client'
 
 import Flex from "@styles/components/flex"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import Cameras from "./cameras"
 import Head from "./head"
 import Search from "./search"
+import { protectedAPI } from "@/utils/api/api"
+
+const privateApi = new protectedAPI()
 
 const Cameralinks = () => {
     const [showSearch, setShowSearch] = useState(false)

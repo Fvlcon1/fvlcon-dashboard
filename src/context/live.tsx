@@ -3,6 +3,8 @@
 import { imagesType } from '@/app/dashboard/home/components/images/controls';
 import { camExplorerData } from '@/app/live/components/profile container/camera links/camExplorerData';
 import { activeCameraType, FolderOrCamera } from '@/utils/@types';
+import { protectedAPI } from '@/utils/api/api';
+import { message } from 'antd';
 import React, { createContext, useState, ReactNode } from 'react';
 import { Dispatch } from 'react';
 
@@ -38,23 +40,9 @@ export const LiveProvider = ({ children }: { children: ReactNode }) => {
             streamName : "stream2",
             coordinates : [5.65, -0.163]
         },
-        // {
-        //     id : '4',
-        //     url : "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
-        //     location : 'Spintex, Accra',
-        //     streamName : "my_stream_name",
-        //     coordinates : [5.6316, -0.1229]
-        // },
-        // {
-        //     id : '5',
-        //     url : "https://b-61687957.kinesisvideo.us-east-1.amazonaws.com/hls/v1/getHLSMasterPlaylist.m3u8?SessionToken=CiBvnJwsJ3RF4OqXt1l1mfRt1CFrQtcZZ0tbS4YDHWHKZxIQ-1eHThDwhJkmxnuCbigpVhoZAYljNZaUescsE4aPFKDxg6bMwCB0d7ZhwSIgf5NZ0Nfo7dV0E0b2IIXZjpZiMXOoMz69k6tdK9_QOz4~",
-        //     location : 'Kokomlemle, new town',
-        //     streamName : "my_stream_name",
-        //     coordinates : [5.5655, -0.2077]
-        // },
     ])
     const [numberOfCamerasPerPage, setNumberOfCamerasPerPage] = useState<number>(4)
-    const [folders, setFolders] = useState<FolderOrCamera[]>(camExplorerData);
+    const [folders, setFolders] = useState<FolderOrCamera[]>([]);
     return (
         <liveContext.Provider value={{ 
             activeCameras,

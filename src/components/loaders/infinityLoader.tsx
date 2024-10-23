@@ -4,7 +4,13 @@ const InfinityLoader = ({
     size? : number
 }) => {
     return (
-        <div className={`${size ? `w-[${size}px] h-[${size}px]` : 'h-[50px] w-[50px]'}`}>
+        <div 
+            className={``}
+            style={{
+                width : size ? `${size}px` : '50px',
+                height : size ? `${size}px` : '50px'
+            }}
+        >
             <img src="/assets/prod/infinityLoader.svg" />
         </div>
     )

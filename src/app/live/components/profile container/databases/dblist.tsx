@@ -1,16 +1,28 @@
+'use client'
+
 import AppTypography from "@styles/components/appTypography"
 import Flex from "@styles/components/flex"
 import theme from "@styles/theme"
-import { Fragment } from "react"
+import { Fragment, useEffect, useState } from "react"
 import { MdLocalPolice } from "react-icons/md"
+import Skeleton from "react-loading-skeleton"
 
 const DBlist = () => {
+    const [databases, setDatabases] = useState(false)
+
+    useEffect(()=>{
+        setTimeout(() => {
+            setDatabases(true)
+        }, 5000);
+    })
+
     return (
         <Flex
             direction="column"
             padding="8px"
         >
             {
+                databases ?
                 [1,2,3].map((item, index:number) => (
                     <Fragment
                         key={index}
@@ -33,6 +45,12 @@ const DBlist = () => {
                         }
                     </Fragment>
                 ))
+                :
+                <Skeleton
+                    count={3} 
+                    baseColor={theme.colors.bg.tetiary}
+                    highlightColor={theme.colors.bg.alt1}
+                />
             }
         </Flex>
     )

@@ -21,6 +21,7 @@ import { AiFillFolderAdd } from "react-icons/ai";
 import { FaEdit } from "react-icons/fa";
 import { addNewCamera } from "@/app/live/utils/addNewCamera";
 import { getFolderLength, getCamLength } from '../../../utils/getCamOrFolderLength';
+import { addNewFolder, getChangedFolderName, getRenamingElement, handleFolderNameChangeRecursive, rename, unsetSelect, updateFolderOpenProperty, updateItemById } from "@/app/live/utils/helpers";
 
 const FolderList = ({
     camOrfolder,
@@ -40,22 +41,6 @@ const FolderList = ({
         setActiveCameras,
     } = useContext(liveContext);
 
-    const updateFolderOpenProperty = (
-        items: FolderOrCamera[],
-        folderId: string,
-        state?: boolean
-    ): FolderOrCamera[] => {
-        return items.map((item) => {
-            if (item.type === 'folder') {
-                if (item.id === folderId) {
-                    return {
-                        ...item, open: state !== undefined ? state : !item.open
-                    };
-                }
-                return { ...item, cameras: updateFolderOpenProperty(item.cameras, folderId, state) };
-            }
-            return item;
-    })};
 
     const changeCamName = (cam: cameraType): cameraType => {
         if (cam.renaming) {
@@ -68,52 +53,12 @@ const FolderList = ({
         return cam;
     }
 
-    const getChangedFolderName = (folder: FolderOrCamera): FolderOrCamera | undefined => {
-        if(folder.type === 'folder'){
-            if (folder.renaming) {
-                return {
-                    ...folder,
-                    folderName: `${foldername}`,
-                    renaming: false
-                };
-            }
-        } else {
-            if(folder.type === 'camera'){
-                if (folder.renaming) {
-                    return {
-                        ...folder,
-                        name: `${foldername}`,
-                        renaming: false
-                    };
-                }
-            }
-        }
-        return undefined;
-    }
-
-    const handleFolderNameChangeRecursive = (folder: FolderOrCamera): FolderOrCamera => {
-        const updatedFolder = getChangedFolderName(folder);
-        if (updatedFolder) return updatedFolder;
-
-        if(folder.type === 'folder'){
-            if (folder.cameras) {
-                return {
-                    ...folder,
-                    cameras: folder.cameras.map((cam) =>
-                        handleFolderNameChangeRecursive(cam)
-                    ),
-                };
-            }
-        }
-        return folder;
-    };
-
     const handleFolderNameChange = (e?: FormEvent<HTMLFormElement>) => {
         e?.preventDefault();
         setFolders((prev) =>
             prev.map((item) => {
                 if (item.type === "folder") {
-                    const folder = getChangedFolderName(item);
+                    const folder = getChangedFolderName(item, foldername);
                     if (folder) {
                         return folder;
                     }
@@ -121,7 +66,7 @@ const FolderList = ({
                         return {
                             ...item,
                             cameras: item.cameras.map((cam) =>
-                                handleFolderNameChangeRecursive(cam)
+                                handleFolderNameChangeRecursive(cam, foldername)
                             ),
                         };
                     } else {
@@ -138,56 +83,11 @@ const FolderList = ({
         );
     };
 
-    const unsetSelectRecursion = (folder: FolderOrCamera) : FolderOrCamera => {
-        if(folder.select){
-            return {
-                ...folder,
-                select : false
-            }
-        } 
-        if(folder.type === 'folder' && folder.cameras){
-            return {
-                ...folder,
-                cameras : folder.cameras.map((item, index) => unsetSelectRecursion(item))
-            }
-        } else {
-            return folder
-        }
-    }
-
-    const unsetSelect = () => {
-        setFolders(prev => 
-            prev.map((item, index) => unsetSelectRecursion(item))
-        )
-    }
-
     const setFolderVisibility = (id: string, state?: boolean) => {
         setFolders((prev) => updateFolderOpenProperty(prev, id, state));
     };
 
-    const updateItemById = (
-        items: FolderOrCamera[],
-        id: string,
-        update: Partial<cameraFolderType | cameraType>
-    ): FolderOrCamera[] => {
-        return items.map((item) => {
-            if (item.id === id) {
-                if (item.type === 'folder') {
-                    return { ...item, ...(update as Partial<cameraFolderType>) };
-                }
-                if (item.type === 'camera') {
-                    return { ...item, ...(update as Partial<cameraType>) };
-                }
-            }
-            if (item.type === "folder") {
-                return {
-                    ...item,
-                    cameras: updateItemById(item.cameras, id, update),
-                };
-            }
-            return item;
-        });
-    };
+
 
     const setHover = (id: string, state?: boolean) => {
         setFolders((prev) => updateItemById(prev, id, { hover: state !== undefined ? state : true }));
@@ -207,7 +107,7 @@ const FolderList = ({
     const cameraMenuItems: menuItemsTypes[] = [
         {
             name: "Rename",
-            onClick: (index, id)=>rename(id),
+            onClick: (index, id)=>rename(id, setFolders, setFoldername),
             closeOnClick: true,
             icon: <FaEdit color={theme.colors.text.secondary} size={14} />,
             active : false
@@ -228,131 +128,17 @@ const FolderList = ({
         },
     ];
 
-    const getkNewlyCreatedFolder = (folders : FolderOrCamera[], length : number) : FolderOrCamera => {
-        const folder = folders.map((folder, i) => {
-            if(folder.type === 'folder'){
-                if(folder.id === `folder${length}`)
-                    return folder
-                return getkNewlyCreatedFolder(folder.cameras, length)
-            }
-        })
-        return folder.filter((item, i) => item !== undefined)[0]
-    }
-
-    const getRenamingElement = (folders : FolderOrCamera[]) : FolderOrCamera => {
-        const folder = folders.map((folder, i) => {
-            if(folder.type === 'folder'){
-                if(folder.renaming)
-                    return folder
-                return getRenamingElement(folder.cameras)
-            } else {
-                if(folder.renaming)
-                    return folder
-            }
-        })
-        return folder.filter((item, i) => item !== undefined)[0]
-    }
-
-    const renameFolder = (folder : FolderOrCamera, folderID : string) : FolderOrCamera => {
-        if(folder.id === folderID){
-            return {
-                ...folder,
-                renaming : true,
-                select : true
-            }
-        } else {
-            if(folder.type === 'folder' && folder.cameras){
-                return {
-                    ...folder,
-                    cameras : folder.cameras.map((item, index) => renameFolder(item, folderID))
-                }
-            } else {
-                return folder
-            }
-        }
-    }
-
-    const rename = (folderID : string) => {
-        setFolders(prev => 
-            prev.map((folder, index) => renameFolder(folder, folderID))
-        )
-        setFoldername('')
-    }
-
-    const addFolderToSubFolder = (folder : cameraFolderType, folderID? : string) : cameraFolderType => {
-        if(folder.id === folderID){
-            return {
-                ...folder,
-                cameras : [
-                    ...folder.cameras,
-                    {
-                        id: `folder${getFolderLength(folders) + 1}`,
-                        type: "folder",
-                        folderName: `New Folder${getFolderLength(folders) + 1}`,
-                        open : false,
-                        hover: false,
-                        cameras : [],
-                        renaming : true,
-                        select : true,
-                        activeMenu : false
-                    }
-                ]
-            }
-        } else {
-            if(folder.cameras){
-                return {
-                    ...folder,
-                    cameras : folder.cameras.map((item, i) => {
-                        if(item.type === 'folder'){
-                            return addFolderToSubFolder(item, folderID)
-                        } else {
-                            return item
-                        }
-                    })
-                }
-            } else {
-                return folder
-            }
-        }
-    }
-
-    const addNewFolder = (folderID? : string) => {
-        if(folderID){
-            setFolders(prev => prev.map((item, i) => {
-                if(item.type === 'folder'){
-                    return addFolderToSubFolder(item, folderID)
-                } else {
-                    return item
-                }
-            }))
-        } else {
-            setFolders(prev => [
-                ...prev,
-                {
-                    id: `folder${getFolderLength(folders) + 1}`,
-                    type: "folder",
-                    folderName: `New Folder${getFolderLength(folders) + 1}`,
-                    open : false,
-                    hover: false,
-                    cameras : [],
-                    renaming : true,
-                    activeMenu : false
-                }
-            ])
-        }
-    }
-
     const folderMenuItems: menuItemsTypes[] = [
         {
             name: "Rename",
-            onClick: (index, id)=>rename(id),
+            onClick: (index, id)=>rename(id, setFolders, setFoldername),
             closeOnClick: true,
             icon: <FaEdit color={theme.colors.text.secondary} size={14} />,
             active : false
         },
         {
             name: "Add Folder",
-            onClick: (index, id)=>addNewFolder(id),
+            onClick: (index, id)=>addNewFolder(folders, setFolders, id),
             closeOnClick: true,
             icon: <AiFillFolderAdd color={theme.colors.text.secondary} size={14} />,
             active : false
@@ -397,7 +183,7 @@ const FolderList = ({
                 if(renamingInputRef.current){
                     setTimeout(() => {
                         renamingInputRef.current?.select()
-                        unsetSelect()
+                        unsetSelect(setFolders)
                     }, 200);
                 }
             }
@@ -474,7 +260,7 @@ const FolderList = ({
                         <motion.div
                             className={`flex transition-all duration-300 ease-in-out ${
                                 camOrfolder.open ? "max-h-[200px]" : "max-h-0"
-                            } flex-col gap-1 pl-5`}
+                            } flex-col gap-1 pl-3`}
                         >
                             <div className="flex pl-1 border-l-[1px] border-l-bg-alt1 border-solid flex-col">
                                 {camOrfolder.cameras.map((cam, index) => (

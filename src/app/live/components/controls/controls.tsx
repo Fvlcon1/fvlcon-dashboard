@@ -96,10 +96,6 @@ const Controls = () => {
     },
   ]);
 
-  useEffect(()=>{
-    console.log({layoutMenuItems})
-  },[layoutMenuItems])
-
   return (
     <Flex width="fit-content" align="center" gap={0}>
       <Popover

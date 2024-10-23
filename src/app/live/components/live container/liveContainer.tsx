@@ -42,8 +42,12 @@ const LiveContainer = ({
 
     const setUpStream = async () => {
         if(streamName){
-            const url = await getHLSStreamURL(streamName)
-            setStreamURL(url)
+            try {
+                const url = await getHLSStreamURL(streamName)
+                setStreamURL(url)
+            } catch (error) {
+                console.log({error})
+            }
         }
     }
 
@@ -59,7 +63,6 @@ const LiveContainer = ({
             if(videoElement)
                 setVideoElement(videoElement)
             if (videoElement) {
-              console.log('Video element found:', videoElement);
             //   faceTracking(videoElement, `CanvasContainer${id}`)
             } else {
               console.log('Video element not found inside the shadow DOM');

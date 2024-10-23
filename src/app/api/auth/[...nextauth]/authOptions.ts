@@ -3,6 +3,13 @@ import CredentialsProvider from 'next-auth/providers/credentials';
 import bcrypt from 'bcryptjs';
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import prisma from '@/lib/prisma'; // Adjust this import based on your setup
+import jwt from 'jsonwebtoken';
+import { cookies } from 'next/headers'
+
+const setTokenCookie = async (token : string) => {
+  const cookieStore = await cookies()
+  cookieStore.set('token', token)
+}
 
 export const authOptions : NextAuthOptions = {
     providers: [
@@ -14,26 +21,22 @@ export const authOptions : NextAuthOptions = {
         },
         authorize : async (credentials) => {
           if(!credentials?.email || !credentials.password){
-            console.log({credentials})
             return null
           }
-          // Replace this with your own logic to find the user
+          
           const user = await prisma.user.findUnique({
             where: { email : credentials.email }
           });
-  
-          // If user exists and passwords match, return user
-          if (user && await bcrypt.compare(credentials?.password, user.password)) { // Ideally, you should hash passwords
+
+          if (user && await bcrypt.compare(credentials?.password, user.password)) {
             return user;
           } else {
-            // Return null if user is not found or password doesn't match
             return null;
           }
         },
       })
     ],
-  
-    // Use JSON Web Tokens for session instead of database sessions
+
     session: {
       strategy: 'jwt',
       maxAge: 60 * 60 // 1h
@@ -47,13 +50,13 @@ export const authOptions : NextAuthOptions = {
   
     // Customize callbacks
     callbacks: {
-      jwt : async ({token, user}) => {
-        // Initial sign-in, add user info to the token
+      jwt: async ({ token, user }) => {
         if (user) {
-          token.id = user.id;
-          token.name = user.name;
+          const signedToken = jwt.sign({ email: user.email, userId : user.id }, process.env.JWT_SECRET || 'secretJWT', {expiresIn : '1h'});
+          setTokenCookie(signedToken)
           token.email = user.email;
         }
+    
         return token;
       },
       session : async ({session, token}) => {

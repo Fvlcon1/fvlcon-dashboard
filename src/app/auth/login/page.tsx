@@ -44,7 +44,6 @@ const Login: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
-    console.log("start")
   
     try {
       const res = await signIn("credentials", {
