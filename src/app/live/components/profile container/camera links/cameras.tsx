@@ -106,7 +106,8 @@ const Cameras = () => {
                 getStreams(folderArray)
             }
         } catch (error) {
-            message.error("Error getting folder")
+            setFolderState(null)
+            message.error("Error getting folders")
             console.log({error})
         }
     }
