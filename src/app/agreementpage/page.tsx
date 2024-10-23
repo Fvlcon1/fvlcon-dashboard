@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { useRouter } from 'next/navigation';
-import { CssBaseline, Container, Typography } from '@mui/material';
+import { CssBaseline, Container, Typography, Button } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
@@ -30,7 +30,7 @@ const Home: React.FC = () => {
   const router = useRouter();
 
   const handleAgree = () => {
-    window.location.href = '/dashboard/home'
+    window.location.href = '/dashboard/home';
   };
 
   return (
@@ -43,10 +43,10 @@ const Home: React.FC = () => {
           position: 'relative',
           display: 'flex',
           flexDirection: 'column',
-          justifyContent: 'center', // Center vertically
-          alignItems: 'center', // Center horizontally
-          minHeight: '100vh', // Make the container take the full height
-          textAlign: 'center', // Center text horizontally
+          justifyContent: 'center',
+          alignItems: 'center',
+          minHeight: '100vh',
+          textAlign: 'center',
         }}
       >
         <Image
@@ -65,7 +65,7 @@ const Home: React.FC = () => {
           }}
         />
 
-        {/* Secure System Message */}
+
         <motion.div
           initial={{ opacity: 0, y: 100 }}
           animate={{ opacity: 1, y: 0 }}
@@ -83,28 +83,33 @@ const Home: React.FC = () => {
             }}
           >
             This is a secure system for access by authorized individuals only. The right to use this system is restricted to authorized individuals only and is not transferable to any other person or entity. By clicking{' '}
-            <Typography
-              variant="body2"
-              sx={{
-                display: 'inline',
-                cursor: 'pointer',
-                color: '#19c2ca', // Highlight color
-                fontFamily: 'inherit',
-                fontWeight: 'bold',
-              }}
-              onClick={handleAgree}
-              component={motion.span}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              Agree
-            </Typography>{' '}
+
+            Agree
+
             you acknowledge, understand, and further agree that you are authorized and you will observe and be bound by the{' '}
-            <Link href="" className="text-[#19c2ca]">Access and Terms of Use Agreement</Link>.
+            <Link href="" className="text-[#2f8085]">Access and Terms of Use Agreement</Link>.
           </Typography>
+
+
+          <Button
+            variant="contained"
+            onClick={handleAgree}
+            sx={{
+              mt: 1,
+              backgroundColor: '#2f8085',
+              color: '#000000',
+              fontFamily: 'Arial, sans-serif',
+              textTransform: 'none',
+              '&:hover': {
+                backgroundColor: '#174d50',
+              },
+            }}
+          >
+            Agree
+          </Button>
         </motion.div>
 
-        {/* Footer */}
+
         <Typography
           sx={{
             position: 'fixed',
@@ -125,3 +130,9 @@ const Home: React.FC = () => {
 };
 
 export default Home;
+
+
+
+
+
+
