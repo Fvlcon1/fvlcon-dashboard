@@ -2,7 +2,7 @@ import axios from 'axios'
 import Cookies from 'universal-cookie'
 
 const cookies = new Cookies()
-const baseURL = "http://10.40.32.189:3000"
+const baseURL = "https://fvlcon-backend.onrender.com"
 
 const getHeaders = () => {
     return {
