@@ -43,12 +43,22 @@ const Right = () => {
                         ))
                         :
                         [1,2,3,4,5,6].map((item, index : number) => (
-                            <Skeleton
-                                key={index}
-                                height={100}
-                                baseColor={theme.colors.bg.tetiary}
-                                highlightColor={theme.colors.bg.alt1}
-                            />
+                            <div key={index} className="flex flex-col gap-1">
+                                <Skeleton
+                                    height={100}
+                                    baseColor={theme.colors.bg.tetiary}
+                                    highlightColor={theme.colors.bg.alt1}
+                                />
+                                <Skeleton
+                                    baseColor={theme.colors.bg.tetiary}
+                                    highlightColor={theme.colors.bg.alt1}
+                                />
+                                <Skeleton
+                                    width={'50%'}
+                                    baseColor={theme.colors.bg.tetiary}
+                                    highlightColor={theme.colors.bg.alt1}
+                                />
+                            </div>
                         ))
                     }
                 </div>

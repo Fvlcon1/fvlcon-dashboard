@@ -41,12 +41,12 @@ const Cameras = () => {
     }
 
     /**
-     * Arranges folders and streams, thus puts streams and folders into their respective folders
+     * Arranges streams, thus puts streams into their respective folders
      * @param streams any
      */
     const organizeStreams = (streams : any, folderArray : FolderOrCamera[]) => {
         let streamsAndFolders : FolderOrCamera[] = folderArray
-        const newFoldersAndStreams : FolderOrCamera[] = streams.map((stream : any, index : number) => {
+        streams.map((stream : any, index : number) => {
             const NewStream : cameraType = {
                 id: stream.id,
                 type: "camera",
@@ -62,7 +62,6 @@ const Cameras = () => {
                 return [...folderArray, NewStream]
             }
         })
-        console.log({streamsAndFolders})
         setFolders(streamsAndFolders)
         setTimeout(() => {
             setFolderState(null)
