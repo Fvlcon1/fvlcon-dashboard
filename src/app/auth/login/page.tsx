@@ -36,7 +36,7 @@ const Login: React.FC = () => {
   const params = useSearchParams()
 
   if (session)
-    window.location.href = "/dashboard/home"
+    window.location.href = "/agreementpage"
 
   const redirectError = params.get("error")
   let hasDisplayedRedirectError = false
