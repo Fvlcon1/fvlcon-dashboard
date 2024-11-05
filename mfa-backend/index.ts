@@ -121,6 +121,7 @@ app.use(cors());
 app.use(express.json());
 
 const sendgridApiKey = process.env.SENDGRID_API_KEY;
+console.log(sendgridApiKey)
 if (!sendgridApiKey) {
     throw new Error("SENDGRID_API_KEY is not defined in the environment variables.");
 }

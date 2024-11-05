@@ -8,6 +8,7 @@ const getLocationNameFromCordinates = async (coordinates : number[]) => {
             appid : '12d9154b1f1c1178b34d1b238de0b6f4'
         }
     })
+    console.log({response})
     return response.data[0]
 }
 

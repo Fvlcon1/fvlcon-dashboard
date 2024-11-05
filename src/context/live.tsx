@@ -26,16 +26,23 @@ export const liveContext = createContext<{
 
 export const LiveProvider = ({ children }: { children: ReactNode }) => {
     const [activeCameras, setActiveCameras] = useState<activeCameraType[]>([
+        // {
+        //     id : '1',
+        //     url : "https://stream.fvlcon.app:8888/towncouncil/channel_1",
+        //     location : 'Osu Accra',
+        //     streamName : "my_stream_name",
+        //     coordinates : [5.558, -0.187]
+        // },
+        // {
+        //     id : '2',
+        //     url : "https://stream.fvlcon.app:8888/towncouncil/channel_3",
+        //     location : 'East legon, Accra',
+        //     streamName : "stream2",
+        //     coordinates : [5.65, -0.163]
+        // },
         {
-            id : '1',
-            url : "https://stream.fvlcon.app:8888/towncouncil/channel_1",
-            location : 'Osu Accra',
-            streamName : "my_stream_name",
-            coordinates : [5.558, -0.187]
-        },
-        {
-            id : '2',
-            url : "https://stream.fvlcon.app:8888/towncouncil/channel_3",
+            id : '3',
+            url : "https://80cf-154-161-50-146.ngrok-free.app/video_feed",
             location : 'East legon, Accra',
             streamName : "stream2",
             coordinates : [5.65, -0.163]

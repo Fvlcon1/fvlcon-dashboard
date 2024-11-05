@@ -8,10 +8,13 @@ export enum ITrackingDataTypes {
 export type IPersonTrackingType = {
     name : string,
     type : ITrackingDataTypes,
+    streamName : string,
     alias : string,
     lastSeen : string,
     coordinates : LatLngExpression & number[],
-    timeSeen : Date
+    timeSeen : Date,
+    S3Key : string,
+    imageUrl? : string
 }
 
 export type ITrackingWaypointsType = {

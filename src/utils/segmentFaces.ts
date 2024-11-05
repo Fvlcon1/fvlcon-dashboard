@@ -3,7 +3,7 @@ import { DetailedHTMLProps, Dispatch, ImgHTMLAttributes, MutableRefObject, RefOb
 import { getFaceCanvas } from './getFaceCanvas';
 import { canvasTypes, logsType } from './@types';
 import axios from 'axios';
-import { toast } from 'react-toastify';
+import { message } from 'antd';
 
 export const isModelsLoaded = () => {
   if(
@@ -141,7 +141,7 @@ export const awsSegmentation = async (file: File, setLogs: Dispatch<SetStateActi
     setLogs(prev => ([
       ...prev, { date : new Date(), log : { content : "Generating presigned URL..." } }
     ]))
-    const { data: { presignedUrl, videoKey } } = await axios.get("https://pr77ql49be.execute-api.us-east-1.amazonaws.com/Prod/upload-video");
+    const { data: { presignedUrl, videoKey } } = await axios.get("https://bnmasi9tba.execute-api.us-east-1.amazonaws.com/Prod/upload-video");
     console.log({ presignedUrl, videoKey });
     setLogs(prev => ([
       ...prev, { date : new Date(), log : { content : `Successfully generated presigned url: ${presignedUrl}`, maxLines : 2 } }
@@ -194,7 +194,7 @@ const uploadToS3 = async (presignedUrl: string, file: File) => {
 
 const startVideoAnalysis = async (videoKey: string) => {
   try {
-    const response = await axios.post("https://pr77ql49be.execute-api.us-east-1.amazonaws.com/Prod/upload-video", { videoKey });
+    const response = await axios.post("https://bnmasi9tba.execute-api.us-east-1.amazonaws.com/Prod/upload-video", { videoKey });
     console.log("Analysis started:", response);
 
     if (response.status !== 200) {
@@ -212,7 +212,7 @@ const pollJobStatus = async (jobId: string, videoKey: string, jobType: string, s
   return new Promise((resolve, reject) => {
     const intervalId = setInterval(async () => {
       try {
-        const { data: jobStatusData } = await axios.get("https://pr77ql49be.execute-api.us-east-1.amazonaws.com/Prod/check-job-status", {
+        const { data: jobStatusData } = await axios.get("https://bnmasi9tba.execute-api.us-east-1.amazonaws.com/Prod/check-job-status", {
           params: { jobId, jobType, videoKey }
         });
 
@@ -222,16 +222,16 @@ const pollJobStatus = async (jobId: string, videoKey: string, jobType: string, s
           setLogs(prev => ([
             ...prev, { date : new Date(), log : { content : "Video analysis successful" } }
           ]))
-          toast.success("Fvlconizing Successful");
+          message.success("Fvlconizing Successful");
           clearInterval(intervalId);
           resolve(jobStatusData);
         } else if (jobStatusData.status === 'FAILED') {
-          toast.error(jobStatusData.statusMessage);
+          message.error(jobStatusData.statusMessage);
           clearInterval(intervalId);
           reject(new Error("Recognition failed"));
         }
       } catch (error: any) {
-        toast.error(`Failed to get job status: ${error.message}`);
+        message.error(`Failed to get job status: ${error.response?.data || error.message}`);
         clearInterval(intervalId);
         reject(new Error(`Polling failed: ${error.message}`));
       }
@@ -242,7 +242,7 @@ const pollJobStatus = async (jobId: string, videoKey: string, jobType: string, s
 
 
 const handleError = (error: any) => {
-  toast.error(`${error.message}`);
+  message.error(`${error.response?.data || error.message}`);
   console.error("An error occurred:", {
     message: error.message,
     details: error.response?.data || null

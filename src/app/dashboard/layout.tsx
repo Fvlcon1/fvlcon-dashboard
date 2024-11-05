@@ -14,6 +14,7 @@ export default async function RootLayout({
     redirect("/auth/login?error=Please login")
   }
   return (
+    session &&
     <div className="w-full max-w-[1500px]">
       {children}
       <LoadModels />

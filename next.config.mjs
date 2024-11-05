@@ -14,7 +14,12 @@ const nextConfig = {
             {
               protocol: "https",
               hostname: "facialdetectionstack-face-images.s3.amazonaws.com",
-            },]
+            },
+            {
+              protocol: "https",
+              hostname: "sam-app-3-detected-faces-bucket.s3.us-east-1.amazonaws.com",
+            },
+          ]
       },
 };
 

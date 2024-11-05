@@ -45,7 +45,7 @@ const Button = ({
         background : (onHover && !disabled)
                       ? hover?.background 
                       ? hover?.background 
-                      : background ?? theme.colors.bg.alt1
+                      : background ?? theme.colors.bg.quantinary
                       : theme.colors.bg.tetiary,
         padding : padding ?? '7px 15px',
         border : border,

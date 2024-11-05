@@ -4,33 +4,143 @@ import Text from "@styles/components/text"
 import RightControls from "./rightControls"
 import { IoImage } from "react-icons/io5"
 import theme from "@styles/theme"
-import { useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import DndImage from "./dndImage"
-import PersonResultContainer from "./PersonResultContainer"
+import PersonResultContainer, { PersonResultContainerType } from "./PersonResultContainer"
 import Divider from "@components/divider/divider"
-import { personTrackingData } from "./data"
+import { protectedAPI, unprotectedAPI } from "@/utils/api/api"
+import { ITrackingDataTypes } from "./types"
+import { API_URL } from "@/utils/constants"
+import axios from "axios"
+import { parseCoordinates } from "@/utils/parseCoordinate"
+import { LatLngExpression } from "leaflet"
+import getLocationNameFromCordinates from "@/utils/getLocationNameFromCoordinates"
+import Skeleton from "react-loading-skeleton"
+import { trackingContext } from "../context/trackingContext"
+import { message } from "antd"
+
+const privateAPI = new protectedAPI()
+const publicAPI = new unprotectedAPI()
 
 const Right = () => {
+    const [newPersonTrackingData, setPersonTrackingData] = useState<{ status: 'loading' | null, data: PersonResultContainerType[] }>({ status: null, data: [] })
+    const { imageUrl, setImageUrl } = useContext(trackingContext)
+
+    const getTrackingData = async (imageUrl: string) => {
+        setPersonTrackingData({ status: 'loading', data: [] })
+        try {
+            const { data: trackingData } = await privateAPI.post("/tracking/searchFaceByImage", {
+                collectionId: "rek-collection1",
+                base64Image: imageUrl
+            })
+
+            const { data: faceDetails } = await axios.get(`${API_URL}/${trackingData[0].FaceId}`)
+            const people: PersonResultContainerType[] = []
+
+            for (const data of trackingData) {
+                try {
+                    const { FaceId, Timestamp, coordinates, stream_name, S3Key } = data
+                    const arrayCoordinates = parseCoordinates(coordinates) as LatLngExpression & number[]
+                    const { name: locationName } = await getLocationNameFromCordinates([arrayCoordinates[1], arrayCoordinates[0]])
+
+                    const personResultsParams: PersonResultContainerType = {
+                        name: `${faceDetails.FirstName} ${faceDetails.LastName}`,
+                        type: ITrackingDataTypes.person,
+                        alias: "",
+                        lastSeen: locationName,
+                        coordinates: arrayCoordinates,
+                        timeSeen: new Date(Timestamp),
+                        status: null,
+                        streamName : stream_name,
+                        S3Key
+                    }
+                    people.push(personResultsParams)
+                } catch (error: any) {
+                    console.log({ error })
+                    message.error(error.response?.data.message ?? error.message)
+                }
+            }
+
+            const  delay = (ms : number) => {
+                return new Promise(resolve => setTimeout(resolve, ms));
+            }
+            
+            const updatePersonTrackingData = async (people : PersonResultContainerType[]) => {
+                for (let person of people) {
+                    setPersonTrackingData(prev => ({
+                        data: [...prev.data, person],
+                        status: null
+                    }));
+                    console.log({ person });
+                    await delay(100);
+                }
+            }
+
+            updatePersonTrackingData(people)
+        } catch (error: any) {
+            console.log({ error })
+            setPersonTrackingData({
+                status: null,
+                data: []
+            })
+            message.error(error.response?.data.message ?? error.message)
+        }
+    }
+
+    useEffect(() => {
+        if (imageUrl?.length) {
+            getTrackingData(imageUrl)
+        }
+    }, [imageUrl])
+
+    useEffect(() => {
+        console.log({ newPersonTrackingData })
+    }, [newPersonTrackingData])
+
     return (
-        <div className="w-[350px] p-3 flex h-full bg-gradient-container rounded-lg flex-col gap-2">
+        <div className="w-[25%] min-w-[330px] max-w-[350px] p-3 flex h-full bg-gradient-container overflow-y-auto rounded-lg flex-col gap-2">
             <RightControls />
-            {/* <DndImage /> */}
-            <div className="flex flex-col w-full overflow-y-auto">
-                {
-                    personTrackingData.map((item, index) => (
-                        <div
-                            key={index}
-                            className="flex flex-col w-[95%] duration-200 gap-3 pt-3 hover:bg-bg-secondary cursor-pointer"
-                        >
-                            <PersonResultContainer 
-                                {...item}
+            {
+                newPersonTrackingData.status === 'loading' ?
+                    [1, 2, 3, 4, 5, 6].map((item, index: number) => (
+                        <div key={index} className="flex flex-col gap-1">
+                            <Skeleton
+                                height={100}
+                                baseColor={theme.colors.bg.tetiary}
+                                highlightColor={theme.colors.bg.alt1}
                             />
-                            <Divider className="!w-full" />
+                            <Skeleton
+                                baseColor={theme.colors.bg.tetiary}
+                                highlightColor={theme.colors.bg.alt1}
+                            />
+                            <Skeleton
+                                width={'50%'}
+                                baseColor={theme.colors.bg.tetiary}
+                                highlightColor={theme.colors.bg.alt1}
+                            />
                         </div>
                     ))
-                }
-            </div>
+                    : newPersonTrackingData.data.length === 0 ?
+                        <DndImage />
+                        :
+                        <div className="flex flex-col w-full overflow-y-auto">
+                            {
+                                newPersonTrackingData.data.map((item, index) => (
+                                    <div
+                                        key={index}
+                                        className="flex flex-col w-[95%] duration-200 gap-3 pt-3 hover:bg-bg-secondary cursor-pointer"
+                                    >
+                                        <PersonResultContainer
+                                            {...item}
+                                        />
+                                        <Divider className="!w-full" />
+                                    </div>
+                                ))
+                            }
+                        </div>
+            }
         </div>
     )
 }
+
 export default Right

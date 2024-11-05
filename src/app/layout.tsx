@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { ToastContainer } from 'react-toastify';
@@ -6,7 +6,6 @@ import 'react-toastify/dist/ReactToastify.css';
 import { IsClientCtxProvider } from "@/context/isClientCtx";
 import { LiveProvider } from "@/context/live";
 import { Suspense } from "react";
-import PageLoader from "@components/loaders/pageLoader";
 import HydrationLoader from "@components/loaders/hydrationLoader";
 import 'react-loading-skeleton/dist/skeleton.css'
 

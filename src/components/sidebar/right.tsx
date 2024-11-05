@@ -4,16 +4,9 @@ import Flex from "@styles/components/flex"
 import theme from "@styles/theme"
 import { rightPages } from "./data"
 import { Tooltip } from "antd"
-import { usePathname } from "next/navigation"
-import { noTempalteRoutes } from "@/utils/constants"
 
 const Right = () => {
-    const pathname = usePathname()
-
-    const showTemplate = !noTempalteRoutes.includes(pathname)
-
     return (
-        showTemplate &&
         <div  className="w-[50px] fixed right-[16px] top-0 flex h-[100vh] py-4">
             <div className="w-full bg-bg-secondary h-full rounded-lg flex justify-center">
                 <Flex

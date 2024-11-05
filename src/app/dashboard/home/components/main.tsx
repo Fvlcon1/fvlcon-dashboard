@@ -23,6 +23,7 @@ import { getImageURLFromBoundingBox } from "@/utils/getImageURLFromBoundingBox"
 import useTimer from "@/utils/useTimer"
 import Text from "@styles/components/text"
 import { protectedAPI } from "@/utils/api/api"
+import { message } from "antd"
 
 let fileEx : any = undefined
 
@@ -82,7 +83,7 @@ const Main = () => {
                         isLoading : false
                     }))
                 }
-                type !== 'video' && toast.error("No face detected!")
+                type !== 'video' && message.error("No face detected!")
             } else {
                 statelessDistinctFaces = {
                     data : faces
@@ -207,7 +208,7 @@ const Main = () => {
             }
         } catch (error : any) {
             console.log({error})
-            toast.error(error.message)
+            message.error(error.message)
             setFvlconizing(false)
         }
     };
@@ -224,7 +225,7 @@ const Main = () => {
                 const validFaces = faces.filter(face => face !== undefined) as checkedFaceType[];
                 setMatchedFaces({data : validFaces})
             } else {
-                toast.error("No match found!")
+                message.error("No match found!")
                 !matchedFaces.data && setMatchedFaces({isEmpty : true})
             }
             setFvlconizing(false)

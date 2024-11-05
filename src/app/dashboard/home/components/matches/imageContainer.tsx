@@ -9,6 +9,7 @@ import theme from "@styles/theme"
 import { AnimatePresence } from "framer-motion"
 import Image from "next/image"
 import { useState } from "react"
+import ZoomImage from "@components/zoomImage/zoomImage"
 
 const ImageContainer = ({
     MiddleButtonTitle,
@@ -31,23 +32,12 @@ const ImageContainer = ({
         <>
             <AnimatePresence>
                 {
-                    zoom &&
-                    <Overlay
-                        onClick={()=>setZoom(false)}
-                    >
-                        <div 
-                            className="w-fit relative h-[70%] rounded-md bg-bg-primary flex justify-center items-center overflow-hidden"
-                            onClick={()=>setZoom(false)}
-                        >
-                            <img 
-                                src={imageURL} 
-                                alt="Uploaded Image"
-                                width={0}
-                                height={0}
-                                className={`rounded-lg w-auto h-full`}
-                            />
-                        </div>
-                    </Overlay>
+                    zoom && imageURL &&
+                    <ZoomImage 
+                        imageURL={imageURL}
+                        show={zoom}
+                        setShow={setZoom}
+                    />
                 }
             </AnimatePresence>
             <div 

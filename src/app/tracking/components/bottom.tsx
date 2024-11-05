@@ -20,12 +20,12 @@ const Bottom = () => {
     return (
         <div className="flex flex-1 gap-4">
             <CamDetails />
-            <div className="bg-gradient-container px-3 py-2 gap-2 flex flex-col flex-1 rounded-lg">
-                <div className="w-full justify-between flex items-center">
+            <div className="bg-gradient-container px-3 py-2 gap-2 flex flex-col flex-1 overflow-x-auto rounded-lg">
+                <div className="min-w-[500px] justify-between flex items-center">
                     <BottomHead />
                     <BottomControls />
                 </div>
-                <div className="w-full overflow-y-auto">
+                <div className="min-w-[500px]">
                     <table className="w-full">
                         <TableHead />
                         <TableBody />

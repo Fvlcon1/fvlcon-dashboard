@@ -38,7 +38,7 @@ const Controls = () => {
         if(inputRef.current?.value?.length && inputRef.current?.value?.length > 0){
             inputRef.current.value = ''
         }
-    }), [images]
+    }, [images])
 
     return (
         <div  className="fixed items-end right-[82px] gap-2 w-[150px] flex flex-col h-[100vh] py-4">
