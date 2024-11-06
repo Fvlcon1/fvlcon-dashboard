@@ -1,27 +1,36 @@
 'use client'
 
 import { createContext, Dispatch, ReactNode, SetStateAction, useState } from "react";
-import { IPersonTrackingType } from "../components/types";
+import { IPersonTrackingType, ITrackingWaypointsType } from "../components/types";
+import { LatLngExpression } from "leaflet";
 
 export const trackingContext = createContext<{
     showCameras : boolean,
     setShowCameras : Dispatch<SetStateAction<boolean>>
     imageUrl : string | undefined
     setImageUrl: Dispatch<SetStateAction<string | undefined>>
-    captureDetails? : IPersonTrackingType
-    setCaptureDetails : Dispatch<SetStateAction<IPersonTrackingType | undefined>>
+    captureDetails? : {data? : IPersonTrackingType, status? : 'loading'}
+    setCaptureDetails : Dispatch<SetStateAction<{data? : IPersonTrackingType, status? : 'loading'}>>
+    wayPoints?: ITrackingWaypointsType[]
+    setWayPoints: Dispatch<SetStateAction<ITrackingWaypointsType[]>>
+    setCenter: Dispatch<SetStateAction<(LatLngExpression & number[]) | undefined>>
+    center?: (LatLngExpression & number[])
 }>({
     showCameras : false,
     setShowCameras : ()=>{},
     imageUrl : '',
     setImageUrl : ()=>{},
-    setCaptureDetails : ()=>{}
+    setCaptureDetails : ()=>{},
+    setWayPoints : ()=>{},
+    setCenter : ()=>{},
 })
 
 const TrackingProvider = ({children} : {children : ReactNode}) => {
     const [showCameras, setShowCameras] = useState(true)
     const [imageUrl, setImageUrl] = useState<string>()
-    const [captureDetails, setCaptureDetails] = useState<IPersonTrackingType>()
+    const [captureDetails, setCaptureDetails] = useState<{data? : IPersonTrackingType, status? : 'loading'}>({})
+    const [wayPoints, setWayPoints] = useState<ITrackingWaypointsType[]>([])
+    const [center, setCenter] = useState<LatLngExpression & number[]>()
     return (
         <trackingContext.Provider
             value={{
@@ -30,7 +39,11 @@ const TrackingProvider = ({children} : {children : ReactNode}) => {
                 imageUrl,
                 setImageUrl,
                 captureDetails,
-                setCaptureDetails
+                setCaptureDetails,
+                wayPoints,
+                setWayPoints,
+                setCenter,
+                center
             }}
         >
             {children}

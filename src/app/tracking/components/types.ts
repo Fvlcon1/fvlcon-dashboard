@@ -2,8 +2,11 @@ import { LatLngExpression } from "leaflet"
 
 export enum ITrackingDataTypes {
     person = 'person',
-    plate = 'plate'
+    plate = 'plate',
+    all = 'all'
 }
+
+export type ITrackingDataType = 'all' | 'plate' | 'people'
 
 export type IPersonTrackingType = {
     name : string,

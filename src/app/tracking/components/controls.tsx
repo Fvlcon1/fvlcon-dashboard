@@ -8,60 +8,81 @@ import { useContext } from "react"
 import { FaCaretDown } from "react-icons/fa6"
 import { IoIosEye, IoIosEyeOff } from "react-icons/io"
 import { trackingContext } from "../context/trackingContext"
+import { ConfigProvider, DatePicker } from "antd"
 
 const Controls = () => {
     const {showCameras, setShowCameras} = useContext(trackingContext)
 
     return (
-        <div className="w-full flex justify-between">
-            <div className="flex gap-2">
-                <div 
-                    className="flex gap-1 p-2 px-3 rounded-lg hover:bg-bg-quantinary cursor-pointer bg-bg-tetiary items-center"
-                    onClick={()=>setShowCameras(prev => !prev)}
-                >
-                    {
-                        showCameras ?
-                        <IoIosEye
-                            color={theme.colors.text.secondary}
-                        />
-                        :
-                        <IoIosEyeOff
-                            color={theme.colors.text.secondary}
-                        />
+        <ConfigProvider
+            theme={{
+                components : {
+                    DatePicker : {
+                        activeBg : theme.colors.bg.tetiary,
+                        hoverBg : theme.colors.bg.quantinary,
+                        cellActiveWithRangeBg : theme.colors.bg.tetiary,
+                        hoverBorderColor : theme.colors.bg.alt1,
+                        cellHoverBg : theme.colors.bg.quantinary
                     }
-                    <Text>
-                        Show Cameras
-                    </Text>
-                </div>
-                <Searchbar
-                    className="bg-bg-secondary rounded-lg"
-                    inputStyle="bg-bg-secondary rounded-lg"
-                />
-            </div>
-            <div className="flex gap-2">
-                <div className="flex">
-                    <div className="rounded-l-lg bg-bg-tetiary hover:bg-bg-quantinary cursor-pointer gap-1 p-2 flex items-center px-4 border-r-[1px] border-r-solid border-bg-alt1">
+                },
+                token : {
+                    colorBgContainer : theme.colors.bg.tetiary,
+                    colorBorder : theme.colors.bg.quantinary,
+                    colorText : theme.colors.text.secondary,
+                    colorTextPlaceholder : theme.colors.text.secondary,
+                    colorIcon : theme.colors.text.primary,
+                    controlOutline : theme.colors.bg.quantinary,
+                    colorPrimary : theme.colors.text.tetiary,
+                    colorBgElevated : theme.colors.bg.tetiary,
+                    colorSplit : theme.colors.bg.quantinary
+                }
+            }}
+        >
+            <div className="w-full flex justify-between">
+                <div className="flex gap-2">
+                    <div 
+                        className="flex gap-1 p-2 px-3 rounded-lg hover:bg-bg-quantinary cursor-pointer bg-bg-tetiary items-center"
+                        onClick={()=>setShowCameras(prev => !prev)}
+                    >
+                        {
+                            showCameras ?
+                            <IoIosEye
+                                color={theme.colors.text.secondary}
+                            />
+                            :
+                            <IoIosEyeOff
+                                color={theme.colors.text.secondary}
+                            />
+                        }
                         <Text>
-                            Last 7 days
+                            Show Cameras
                         </Text>
-                        <FaCaretDown
-                            color={theme.colors.text.secondary}
+                    </div>
+                    <Searchbar
+                        className="bg-bg-secondary rounded-lg"
+                        inputStyle="bg-bg-secondary rounded-lg"
+                    />
+                </div>
+                <div className="flex gap-2">
+                    <div className="flex items-center gap-2">
+                        <DatePicker 
+                            showTime
+                            allowClear
+                        />
+                        <Text>
+                            To
+                        </Text>
+                        <DatePicker 
+                            showTime
+                            allowClear
                         />
                     </div>
-                    <div className="rounded-r-lg gap-1 cursor-pointer hover:bg-bg-quantinary bg-bg-tetiary p-2 flex items-center px-4">
-                        <Text>
-                            March 20 - March 30
-                        </Text>
-                        <FaCaretDown 
-                            color={theme.colors.text.secondary}
-                        />
-                    </div>
+                    <Button
+                        text="Start Tracking"
+                    />
                 </div>
-                <Button
-                    text="Start Tracking"
-                />
             </div>
-        </div>
+        </ConfigProvider>
     )
 }
 export default Controls

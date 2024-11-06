@@ -9,6 +9,7 @@ import { capitalizeString } from "@/utils/capitalizeString"
 import { useContext } from "react"
 import { trackingContext } from "../context/trackingContext"
 import { protectedAPI } from "@/utils/api/api"
+import { message } from "antd"
 
 export interface PersonResultContainerType extends IPersonTrackingType {
     status : 'loading' | null
@@ -25,13 +26,22 @@ const PersonResultContainer = ({
     streamName,
     S3Key
 } : PersonResultContainerType) => {
-    const {setCaptureDetails} = useContext(trackingContext)
+    const {setCaptureDetails, setCenter} = useContext(trackingContext)
 
     const handleSetCaptureDetails = async () => {
+        setCaptureDetails({status : 'loading'})
+        let imageUrl : string | undefined
         if(S3Key){
-            const {data : imageUrl} = await privateApi.get(`/tracking/generatePresignedUrl/${S3Key}`)
-            console.log({imageUrl})
-            setCaptureDetails({
+            try {
+                const response = await privateApi.get(`/tracking/generatePresignedUrl/${S3Key}`)
+                imageUrl = response?.data
+            } catch (error) {
+                console.log({error})
+                message.error("Error getting image url")
+            }
+        }
+        setCaptureDetails({
+            data : {
                 name,
                 type,
                 alias,
@@ -41,15 +51,17 @@ const PersonResultContainer = ({
                 streamName,
                 S3Key,
                 imageUrl
-            })
-        }
+            },
+            status : undefined
+        })
+        setCenter(coordinates)
     }
 
     return (
         <Pressable onClick={handleSetCaptureDetails}>
             <div className="w-full px-3 hover:scale-[0.95] duration-200 flex flex-col gap-1 rounded-md">
                 <div className="flex gap-2 items-center ml-[-1px]">
-                    <div className="rounded-md px-2 py-1 bg-bg-tetiary">
+                    <div className="rounded-md px-2 py-[2px] bg-bg-tetiary border-[1px] border-solid border-[#222222]">
                         <div className="mt-[-2px]">
                             <Text>
                                 {capitalizeString(type)}

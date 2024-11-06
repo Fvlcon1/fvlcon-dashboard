@@ -18,21 +18,24 @@ import getLocationNameFromCordinates from "@/utils/getLocationNameFromCoordinate
 import Skeleton from "react-loading-skeleton"
 import { trackingContext } from "../context/trackingContext"
 import { message } from "antd"
+import NoData from "./noData"
 
 const privateAPI = new protectedAPI()
 const publicAPI = new unprotectedAPI()
 
 const Right = () => {
     const [newPersonTrackingData, setPersonTrackingData] = useState<{ status: 'loading' | null, data: PersonResultContainerType[] }>({ status: null, data: [] })
+    const [filteredPersonTrackingData, setFilteredPersonTrackingData] = useState(newPersonTrackingData)
     const { imageUrl, setImageUrl } = useContext(trackingContext)
 
     const getTrackingData = async (imageUrl: string) => {
         setPersonTrackingData({ status: 'loading', data: [] })
         try {
-            const { data: trackingData } = await privateAPI.post("/tracking/searchFaceByImage", {
+            const response = await privateAPI.post("/tracking/searchFaceByImage", {
                 collectionId: "rek-collection1",
                 base64Image: imageUrl
             })
+            const trackingData = response?.data
 
             const { data: faceDetails } = await axios.get(`${API_URL}/${trackingData[0].FaceId}`)
             const people: PersonResultContainerType[] = []
@@ -41,7 +44,7 @@ const Right = () => {
                 try {
                     const { FaceId, Timestamp, coordinates, stream_name, S3Key } = data
                     const arrayCoordinates = parseCoordinates(coordinates) as LatLngExpression & number[]
-                    const { name: locationName } = await getLocationNameFromCordinates([arrayCoordinates[1], arrayCoordinates[0]])
+                    const {name : locationName} = await getLocationNameFromCordinates(arrayCoordinates)
 
                     const personResultsParams: PersonResultContainerType = {
                         name: `${faceDetails.FirstName} ${faceDetails.LastName}`,
@@ -58,6 +61,10 @@ const Right = () => {
                 } catch (error: any) {
                     console.log({ error })
                     message.error(error.response?.data.message ?? error.message)
+                    setPersonTrackingData( prev => ({
+                        ...prev,
+                        status: null,
+                    }))
                 }
             }
 
@@ -87,21 +94,24 @@ const Right = () => {
         }
     }
 
+    useEffect(()=>{
+        setFilteredPersonTrackingData(newPersonTrackingData)
+    },[newPersonTrackingData])
+
     useEffect(() => {
         if (imageUrl?.length) {
             getTrackingData(imageUrl)
         }
     }, [imageUrl])
 
-    useEffect(() => {
-        console.log({ newPersonTrackingData })
-    }, [newPersonTrackingData])
-
     return (
         <div className="w-[25%] min-w-[330px] max-w-[350px] p-3 flex h-full bg-gradient-container overflow-y-auto rounded-lg flex-col gap-2">
-            <RightControls />
+            <RightControls 
+                newPersonTrackingData={newPersonTrackingData}
+                setFilteredPersonTrackingData={setFilteredPersonTrackingData}
+            />
             {
-                newPersonTrackingData.status === 'loading' ?
+                filteredPersonTrackingData.status === 'loading' ?
                     [1, 2, 3, 4, 5, 6].map((item, index: number) => (
                         <div key={index} className="flex flex-col gap-1">
                             <Skeleton
@@ -120,24 +130,26 @@ const Right = () => {
                             />
                         </div>
                     ))
-                    : newPersonTrackingData.data.length === 0 ?
-                        <DndImage />
-                        :
-                        <div className="flex flex-col w-full overflow-y-auto">
-                            {
-                                newPersonTrackingData.data.map((item, index) => (
-                                    <div
-                                        key={index}
-                                        className="flex flex-col w-[95%] duration-200 gap-3 pt-3 hover:bg-bg-secondary cursor-pointer"
-                                    >
-                                        <PersonResultContainer
-                                            {...item}
-                                        />
-                                        <Divider className="!w-full" />
-                                    </div>
-                                ))
-                            }
-                        </div>
+                    :filteredPersonTrackingData.data.length === 0 && newPersonTrackingData.data.length !== 0 ?
+                    <NoData />
+                    : filteredPersonTrackingData.data.length === 0 ?
+                    <DndImage />
+                    :
+                    <div className="flex flex-col w-full overflow-y-auto">
+                        {
+                            filteredPersonTrackingData.data.map((item, index) => (
+                                <div
+                                    key={index}
+                                    className="flex flex-col w-[95%] duration-200 gap-3 pt-3 hover:bg-bg-secondary cursor-pointer"
+                                >
+                                    <PersonResultContainer
+                                        {...item}
+                                    />
+                                    <Divider className="!w-full" />
+                                </div>
+                            ))
+                        }
+                    </div>
             }
         </div>
     )

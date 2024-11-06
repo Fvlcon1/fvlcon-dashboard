@@ -79,7 +79,7 @@ const Login: React.FC = () => {
   useEffect(() => {
     if (redirectError && !hasDisplayedRedirectError) {
       hasDisplayedRedirectError = true;
-      message.error(redirectError);
+      message.warning(redirectError);
     }
   }, [redirectError]);
 

@@ -7,7 +7,9 @@ export const personTrackingData: IPersonTrackingType[] = [
         alias: 'Kwame Hustler',
         lastSeen: 'Osu, Accra',
         coordinates: [5.5580, -0.1870],  // Osu, Accra
-        timeSeen: new Date('2024-10-03T12:45:00')  
+        timeSeen: new Date('2024-10-03T12:45:00'),
+        streamName : 'my_stream_name',
+        S3Key : 'testKey.jpg'
     },
     {
         type: ITrackingDataTypes.person,
@@ -15,7 +17,9 @@ export const personTrackingData: IPersonTrackingType[] = [
         alias: 'Golden Voice',
         lastSeen: 'East Legon, Accra',
         coordinates: [5.6500, -0.1630],  // East Legon, Accra
-        timeSeen: new Date('2024-10-01T08:15:00')  
+        timeSeen: new Date('2024-10-01T08:15:00')  ,
+        streamName : 'my_stream_name',
+        S3Key : 'testKey.jpg'
     },
     {
         type: ITrackingDataTypes.person,
@@ -23,7 +27,9 @@ export const personTrackingData: IPersonTrackingType[] = [
         alias: 'Street King',
         lastSeen: 'Spintex, Accra',
         coordinates: [5.6316, -0.1229],  // Spintex, Accra
-        timeSeen: new Date('2024-10-04T14:00:00')  
+        timeSeen: new Date('2024-10-04T14:00:00')  ,
+        streamName : 'my_stream_name',
+        S3Key : 'testKey.jpg'
     },
     {
         type: ITrackingDataTypes.person,
@@ -31,7 +37,9 @@ export const personTrackingData: IPersonTrackingType[] = [
         alias: 'Black Sherif',
         lastSeen: 'Kokomlemle, New Town',
         coordinates: [5.5655, -0.2077],  // Kokomlemle, New Town
-        timeSeen: new Date('2024-10-05T10:30:00')  
+        timeSeen: new Date('2024-10-05T10:30:00')  ,
+        streamName : 'my_stream_name',
+        S3Key : 'testKey.jpg'
     },
     {
         type: ITrackingDataTypes.person,
@@ -39,7 +47,9 @@ export const personTrackingData: IPersonTrackingType[] = [
         alias: 'Night Runner',
         lastSeen: 'Labone, Accra',
         coordinates: [5.5647, -0.1747],  // Labone, Accra
-        timeSeen: new Date('2024-09-30T11:20:00')  
+        timeSeen: new Date('2024-09-30T11:20:00')  ,
+        streamName : 'my_stream_name',
+        S3Key : 'testKey.jpg'
     },
     {
         type: ITrackingDataTypes.person,
@@ -47,7 +57,9 @@ export const personTrackingData: IPersonTrackingType[] = [
         alias: 'Quick Feet',
         lastSeen: 'Madina, Accra',
         coordinates: [5.6802, -0.1657],  // Madina, Accra
-        timeSeen: new Date('2024-10-02T16:45:00')  
+        timeSeen: new Date('2024-10-02T16:45:00'),
+        streamName : 'my_stream_name',
+        S3Key : 'testKey.jpg'
     },
     {
         type: ITrackingDataTypes.person,
@@ -55,7 +67,9 @@ export const personTrackingData: IPersonTrackingType[] = [
         alias: 'Power Woman',
         lastSeen: 'Achimota, Accra',
         coordinates: [5.6154, -0.2341],  // Achimota, Accra
-        timeSeen: new Date('2024-09-29T09:30:00')  
+        timeSeen: new Date('2024-09-29T09:30:00'),
+        streamName : 'my_stream_name',
+        S3Key : 'testKey.jpg'
     },
     {
         type: ITrackingDataTypes.person,
@@ -63,7 +77,9 @@ export const personTrackingData: IPersonTrackingType[] = [
         alias: 'Silent Mover',
         lastSeen: 'Dansoman, Accra',
         coordinates: [5.5731, -0.2511],  // Dansoman, Accra
-        timeSeen: new Date('2024-10-04T13:10:00')  
+        timeSeen: new Date('2024-10-04T13:10:00'),
+        streamName : 'my_stream_name',
+        S3Key : 'testKey.jpg'
     },
     {
         type: ITrackingDataTypes.person,
@@ -71,7 +87,9 @@ export const personTrackingData: IPersonTrackingType[] = [
         alias: 'The Phantom',
         lastSeen: 'Adenta, Accra',
         coordinates: [5.7044, -0.1729],  // Adenta, Accra
-        timeSeen: new Date('2024-09-28T07:55:00')  
+        timeSeen: new Date('2024-09-28T07:55:00'),
+        streamName : 'my_stream_name',
+        S3Key : 'testKey.jpg'
     },
     {
         type: ITrackingDataTypes.person,
@@ -79,7 +97,9 @@ export const personTrackingData: IPersonTrackingType[] = [
         alias: 'Steel Gaze',
         lastSeen: 'Tema, Community 1',
         coordinates: [5.6786, -0.0177],  // Tema, Community 1
-        timeSeen: new Date('2024-10-05T15:00:00')  
+        timeSeen: new Date('2024-10-05T15:00:00'),
+        streamName : 'my_stream_name',
+        S3Key : 'testKey.jpg'
     }
 ];
 

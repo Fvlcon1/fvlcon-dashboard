@@ -1,24 +1,39 @@
-'use state'
+'use client';
 
-import Button from "@components/button/button"
-import Searchbar from "@components/search/search"
-import Text from "@styles/components/text"
-import theme from "@styles/theme"
-import { useContext, useEffect, useRef, useState } from "react"
-import { FaUserAlt } from "react-icons/fa"
-import { FaCaretDown, FaSort } from "react-icons/fa6"
-import { HiTemplate } from "react-icons/hi"
-import { IoImage } from "react-icons/io5"
-import { MdDoneAll } from "react-icons/md"
-import { trackingContext } from "../context/trackingContext"
+import Button from "@components/button/button";
+import Searchbar from "@components/search/search";
+import Text from "@styles/components/text";
+import theme from "@styles/theme";
+import { useContext, useEffect, useRef, useState } from "react";
+import { FaUserAlt } from "react-icons/fa";
+import { FaCaretDown, FaSort } from "react-icons/fa6";
+import { HiTemplate } from "react-icons/hi";
+import { IoImage } from "react-icons/io5";
+import { MdDoneAll } from "react-icons/md";
+import { trackingContext } from "../context/trackingContext";
+import { PersonResultContainerType } from "./PersonResultContainer";
+import { ITrackingDataType } from "./types";
 
-const RightControls = () => {
+const RightControls = ({
+    newPersonTrackingData,
+    setFilteredPersonTrackingData
+}: {
+    newPersonTrackingData: {
+        status: "loading" | null;
+        data: PersonResultContainerType[];
+    };
+    setFilteredPersonTrackingData: React.Dispatch<React.SetStateAction<{
+        status: "loading" | null;
+        data: PersonResultContainerType[];
+    }>>;
+}) => {
     const inputRef = useRef<HTMLInputElement | null>(null);
-    const {imageUrl, setImageUrl} = useContext(trackingContext)
+    const { imageUrl, setImageUrl } = useContext(trackingContext);
+    const [dataType, setDataType] = useState<'all' | 'plate' | 'person'>('all');
 
     const inputClicked = () => {
-        inputRef.current?.click()
-    }
+        inputRef.current?.click();
+    };
 
     const onFileSelected = (e: FileList | null) => {
         if (e) {
@@ -29,27 +44,54 @@ const RightControls = () => {
                     setImageUrl(base64String);
                 };
                 reader.readAsDataURL(file);
-                setImageUrl('')
+                setImageUrl('');
             }
         }
     };
 
-    useEffect(()=>{
-        if(inputRef.current?.value?.length && inputRef.current?.value?.length > 0){
-            inputRef.current.value = ''
+    const delay = (ms: number) => {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    };
+
+    const updatePersonTrackingData = async () => {
+        setFilteredPersonTrackingData({ data: [], status: null });
+        for (let person of newPersonTrackingData.data) {
+            setFilteredPersonTrackingData(prev => ({
+                ...prev,
+                data: [
+                    ...prev.data,
+                    ...(dataType === 'all' ? [person] : (dataType === person.type ? [person] : []))
+                ]
+            }));
+
+            await delay(100);
         }
-    }, [imageUrl])
+    };
+
+    const filterByType = () => {
+        updatePersonTrackingData();
+    };
+
+    useEffect(() => {
+        filterByType();
+    }, [dataType]);
+
+    useEffect(() => {
+        if (inputRef.current?.value?.length && inputRef.current?.value?.length > 0) {
+            inputRef.current.value = '';
+        }
+    }, [imageUrl]);
 
     return (
         <div className="w-full flex flex-col gap-2">
             <div className="flex gap-2 flex-wrap">
-                <input 
+                <input
                     ref={inputRef}
                     type="file"
-                    onChange={e=>onFileSelected(e.target.files)}
+                    onChange={e => onFileSelected(e.target.files)}
                     className="hidden"
                 />
-                <Button 
+                <Button
                     text=""
                     onClick={inputClicked}
                     className="border-dashed border-[1px] border-bg-alt1"
@@ -57,57 +99,52 @@ const RightControls = () => {
                         <IoImage
                             color={theme.colors.text.secondary}
                             size={15}
-                    />
+                        />
                     }
                 />
-                <div className={`flex gap-1 p-2 px-3 rounded-lg hover:bg-bg-quantinary cursor-pointer bg-bg-quantinary items-center`}>
+                <div
+                    className={`flex gap-1 p-2 px-3 rounded-lg hover:bg-bg-quantinary duration-200 cursor-pointer ${dataType === 'all' ? 'bg-bg-quantinary' : 'bg-bg-tetiary'} items-center`}
+                    onClick={() => setDataType("all")}
+                >
                     <MdDoneAll
-                        color={theme.colors.text.primary}
+                        color={dataType === 'all' ? theme.colors.text.primary : theme.colors.text.secondary}
+                        className="duration-200"
                         size={12}
                     />
-                    <Text textColor={theme.colors.text.primary}>
+                    <Text textColor={dataType === 'all' ? theme.colors.text.primary : theme.colors.text.secondary}>
                         All
                     </Text>
                 </div>
-                <div className="flex gap-1 p-2 px-3 rounded-lg hover:bg-bg-quantinary cursor-pointer bg-bg-tetiary items-center">
+                <div
+                    className={`flex gap-1 p-2 px-3 rounded-lg hover:bg-bg-quantinary duration-200 cursor-pointer ${dataType === 'person' ? 'bg-bg-quantinary' : 'bg-bg-tetiary'} items-center`}
+                    onClick={() => setDataType("person")}
+                >
                     <FaUserAlt
-                        color={theme.colors.text.secondary}
+                        color={dataType === 'person' ? theme.colors.text.primary : theme.colors.text.secondary}
+                        className="duration-200"
                         size={12}
                     />
-                    <Text>
+                    <Text textColor={dataType === 'person' ? theme.colors.text.primary : theme.colors.text.secondary}>
                         People
                     </Text>
                 </div>
-                <div className="flex gap-1 p-2 px-3 rounded-lg hover:bg-bg-quantinary cursor-pointer bg-bg-tetiary items-center">
+                <div
+                    className={`flex gap-1 p-2 px-3 rounded-lg hover:bg-bg-quantinary duration-200 cursor-pointer ${dataType === 'plate' ? 'bg-bg-quantinary' : 'bg-bg-tetiary'} items-center`}
+                    onClick={() => setDataType("plate")}
+                >
                     <HiTemplate
-                        color={theme.colors.text.secondary}
+                        color={dataType === 'plate' ? theme.colors.text.primary : theme.colors.text.secondary}
+                        className="duration-200"
                         size={12}
                     />
                     <Text
                         whiteSpace="nowrap"
+                        textColor={dataType === 'plate' ? theme.colors.text.primary : theme.colors.text.secondary}
                     >
                         Number plates
                     </Text>
                 </div>
             </div>
-            {/* <div className="flex">
-                <div className="rounded-l-lg bg-bg-tetiary hover:bg-bg-quantinary cursor-pointer gap-1 p-2 flex items-center px-4 border-r-[1px] border-r-solid border-bg-alt1">
-                    <Text>
-                        Last 7 days
-                    </Text>
-                    <FaCaretDown
-                        color={theme.colors.text.secondary}
-                    />
-                </div>
-                <div className="rounded-r-lg gap-1 cursor-pointer hover:bg-bg-quantinary bg-bg-tetiary p-2 flex items-center px-4">
-                    <Text>
-                        March 20 - March 30
-                    </Text>
-                    <FaCaretDown 
-                        color={theme.colors.text.secondary}
-                    />
-                </div>
-            </div> */}
             <div className="flex gap-2 w-full">
                 <Searchbar
                     className="bg-bg-secondary rounded-lg flex-1"
@@ -124,6 +161,7 @@ const RightControls = () => {
                 </div>
             </div>
         </div>
-    )
-}
-export default RightControls
+    );
+};
+
+export default RightControls;

@@ -27,6 +27,7 @@ const ZoomImage = ({
                             alt="Uploaded Image"
                             width={0}
                             height={0}
+                            sizes="large"
                             className={`rounded-lg w-auto h-full`}
                         />
                     </div>
