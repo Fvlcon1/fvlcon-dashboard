@@ -74,7 +74,8 @@ const Cameras = () => {
      */
     const getStreams = async (folderArray : FolderOrCamera[]) => {
         try {
-            const {data : streams} = await privateAPI.get("/stream/getAllStreams")
+            const response = await privateAPI.get("/stream/getAllStreams")
+            const streams = response?.data
             organizeStreams(streams, folderArray)
         } catch (error) {
             message.error("Error loading streams")
@@ -88,7 +89,8 @@ const Cameras = () => {
     const getFolders = async () => {
         setFolderState('loading')
         try {
-            const {data : folders} = await privateAPI.get("/cameraFolder/getAllFolders")
+            const response = await privateAPI.get("/cameraFolder/getAllFolders")
+            const folders = response?.data
             if(folders){
                 const folderArray : FolderOrCamera[] = folders.map((folder : any) => {
                     const newFolder : cameraFolderType = {
