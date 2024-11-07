@@ -26,7 +26,7 @@ const MapComponent = () => {
     const [zoom, setZoom] = useState<number>(12);
 
     const handleSetCaptureDetails = async (waypoint : ITrackingWaypointsType) => {
-        const {name, type, alias, lastSeen, coordinates, timeSeen, streamName, S3Key, faceId} = waypoint
+        const {name, type, alias, lastSeen, coordinates, timeSeen, streamName, S3Key, faceId, userId} = waypoint
         setCaptureDetails({status : 'loading'})
         let imageUrl : string | undefined
         if(S3Key){
@@ -49,7 +49,8 @@ const MapComponent = () => {
                 streamName,
                 S3Key,
                 imageUrl,
-                faceId
+                faceId,
+                userId
             },
             status : undefined
         })

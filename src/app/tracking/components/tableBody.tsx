@@ -5,14 +5,21 @@ import theme from "@styles/theme"
 import Image from "next/image"
 import MatchContainer from "./matchContainer"
 import { useState } from "react"
+import { IPersonTrackingType } from "./types"
+import getDate, { getRelativeTime, getTime } from "@/utils/getDate"
 
-const TableBody = () => {
+const TableBody = ({
+    trackingData
+} : {
+    trackingData : IPersonTrackingType[]
+}) => {
     const [onHover, setOnHover] = useState<boolean>(false)
     const [onPress, setOnPress] = useState<boolean>(false)
+
     return (
         <tbody>
             {
-                [1,2,3,].map((item, index) => (
+                trackingData.map((item, index) => (
                     <tr
                         key={index}
                         className={`${index % 2 === 1 ? 'bg-gradient-container-md' : ''} hover:scale-[0.98] cursor-pointer duration-200`}
@@ -26,13 +33,20 @@ const TableBody = () => {
                         </td>
                         <td className="py-4">
                             <div className="flex flex-col gap-0">
-                                <Text
-                                    textColor={theme.colors.text.primary}
-                                >
-                                    Chris Souad
-                                </Text>
+                                {
+                                    item.name ?
+                                    <Text
+                                        textColor={theme.colors.text.primary}
+                                    >
+                                        {item.name}
+                                    </Text>
+                                    :
+                                    <Text>
+                                        unknown
+                                    </Text>
+                                }
                                 <Text>
-                                    Shanghai, China
+                                    {item.alias}
                                 </Text>
                             </div>
                         </td>
@@ -41,10 +55,10 @@ const TableBody = () => {
                                 <Text
                                     textColor={theme.colors.text.primary}
                                 >
-                                    28th july 2024
+                                    {getDate(item.timeSeen)}
                                 </Text>
                                 <Text>
-                                    2 days ago | 12:00 pm
+                                    {getRelativeTime(item.timeSeen)} | {getTime(item.timeSeen)}
                                 </Text>
                             </div>
                         </td>

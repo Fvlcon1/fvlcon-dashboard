@@ -19,6 +19,7 @@ export type IPersonTrackingType = {
     S3Key : string,
     faceId : string,
     imageUrl? : string
+    userId : string
 }
 
 export interface ITrackingWaypointsType extends IPersonTrackingType {

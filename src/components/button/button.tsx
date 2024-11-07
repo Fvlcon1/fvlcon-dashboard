@@ -78,6 +78,9 @@ const Button = ({
               : color ?? theme.colors.text.primary
               : theme.colors.text.primary
           }
+          maxLines={1}
+          ellipsis
+          whiteSpace="nowrap"
         >
           <Flex 
               width="fit-content"

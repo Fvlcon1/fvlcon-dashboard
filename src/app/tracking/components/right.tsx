@@ -42,7 +42,7 @@ const Right = () => {
 
             for (const data of trackingData) {
                 try {
-                    const { FaceId, Timestamp, coordinates, stream_name, S3Key } = data
+                    const { FaceId, Timestamp, coordinates, stream_name, S3Key, userId } = data
                     const arrayCoordinates = parseCoordinates(coordinates)
                     const {name : locationName} = await getLocationNameFromCordinates(arrayCoordinates)
 
@@ -55,7 +55,8 @@ const Right = () => {
                         timeSeen: new Date(Timestamp),
                         faceId : FaceId,
                         streamName : stream_name,
-                        S3Key
+                        S3Key,
+                        userId
                     }
                     people.push(personResultsParams)
                 } catch (error: any) {
