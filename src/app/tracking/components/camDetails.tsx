@@ -5,16 +5,21 @@ import Text from "@styles/components/text"
 import theme from "@styles/theme"
 import Image from "next/image"
 import { useContext, useState } from "react"
-import { FaCamera, FaLocationArrow } from "react-icons/fa6"
+import { FaCamera, FaLocationArrow, FaVideo } from "react-icons/fa6"
 import { IoIosVideocam } from "react-icons/io"
 import { IoPin } from "react-icons/io5"
 import { MdOutlineShareLocation } from "react-icons/md"
 import { trackingContext } from "../context/trackingContext"
 import Skeleton from "react-loading-skeleton"
+import { getRelativeTime } from "@/utils/getDate"
 
 const CamDetails = () => {
     const [zoom, setZoom] = useState(false)
     const {captureDetails} = useContext(trackingContext)
+    const streamName = captureDetails?.data?.streamName
+    const lastSeen = captureDetails?.data?.lastSeen
+    const time = captureDetails?.data?.timeSeen
+    const coordinates = captureDetails?.data?.coordinates
 
     return (
         <>
@@ -93,11 +98,11 @@ const CamDetails = () => {
                     <div className="flex flex-col gap-2 overflow-y-hidden">
                         <div className="w-full py-2 px-3 gap-2 rounded-md bg-gradient-container flex flex-col">
                             <div className="flex gap-1 items-center">
-                                <FaCamera size={11} color={theme.colors.text.secondary}/>
+                                <FaVideo size={11} color={theme.colors.text.secondary}/>
                                 <Text>
-                                    Camera Name •
+                                    Stream name •
                                     <Text textColor={theme.colors.text.primary}>
-                                        &nbsp;Accra City Camera
+                                        &nbsp;{streamName}
                                     </Text>
                                 </Text>
                             </div>
@@ -106,7 +111,7 @@ const CamDetails = () => {
                                 <Text>
                                     Last seen •
                                     <Text textColor={theme.colors.text.primary}>
-                                        &nbsp;Ayeduase, new site
+                                        &nbsp;{time && getRelativeTime(time).charAt(0).toUpperCase() + getRelativeTime(time).slice(1)}
                                     </Text>
                                 </Text>
                             </div>
@@ -115,7 +120,7 @@ const CamDetails = () => {
                                 <Text>
                                     Location •
                                     <Text textColor={theme.colors.text.primary}>
-                                        &nbsp;Town council
+                                        &nbsp;{lastSeen}
                                     </Text>
                                 </Text>
                             </div>
@@ -124,7 +129,7 @@ const CamDetails = () => {
                                 <Text>
                                     Coordinates •
                                     <Text textColor={theme.colors.text.primary}>
-                                        &nbsp;5.23432, 30.23523
+                                        &nbsp;{coordinates && `${coordinates[0]}, ${coordinates[1]}`}
                                     </Text>
                                 </Text>
                             </div>

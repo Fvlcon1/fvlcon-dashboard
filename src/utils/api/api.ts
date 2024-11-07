@@ -1,3 +1,4 @@
+import { message } from 'antd';
 import axios from 'axios';
 import { signOut } from 'next-auth/react';
 import Cookies from 'universal-cookie';
@@ -44,6 +45,7 @@ export class protectedAPI {
 
   private handleAuthError = async (options?: IApiOptions) => {
     const prevUrlParam = options?.prevUrl ? `&prevUrl=${encodeURIComponent(options.prevUrl)}` : '';
+    message.warning("Unauthorized")
     // Sign out the user
     await signOut({ redirect: false });
     // Client-side redirect if `window` is available

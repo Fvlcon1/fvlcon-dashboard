@@ -17,14 +17,12 @@ export type IPersonTrackingType = {
     coordinates : LatLngExpression & number[],
     timeSeen : Date,
     S3Key : string,
+    faceId : string,
     imageUrl? : string
 }
 
-export type ITrackingWaypointsType = {
-    name : string,
-    lastSeen : string,
+export interface ITrackingWaypointsType extends IPersonTrackingType {
     coordinates : LatLngExpression & number[],
-    timeSeen : Date,
     radius : number,
     color? : string
     fillColor? : string

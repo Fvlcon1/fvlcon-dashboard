@@ -8,18 +8,53 @@ import { liveContext } from '@/context/live';
 import { trackingContext } from '../context/trackingContext';// Import useMap directly
 import './styles.css';
 import MapInternal from './mapInternal';
+import { ITrackingWaypointsType } from './types';
+import { protectedAPI } from '@/utils/api/api';
+import { message } from 'antd';
 
 const MapContainer = dynamic(() => import('react-leaflet').then(mod => mod.MapContainer), { ssr: false });
 const TileLayer = dynamic(() => import('react-leaflet').then(mod => mod.TileLayer), { ssr: false });
 const LocationMarker = dynamic(() => import('./marker').then(mod => mod.LocationMarker), { ssr: false });
 const TrackingMarker = dynamic(() => import('./marker').then(mod => mod.TrackingMarker), { ssr: false });
 const RoutingMachine = dynamic(() => import('./routingMachine'), { ssr: false });
+const privateApi = new protectedAPI()
 
 const MapComponent = () => {
-    const [wayPointsCoordinates, setWayPointsCoordinates] = useState<any>();
+    const [wayPointsCoordinates, setWayPointsCoordinates] = useState<(LatLngExpression & number[])[]>();
     const { activeCameras } = useContext(liveContext);
-    const { showCameras, wayPoints, center } = useContext(trackingContext);
+    const { showCameras, wayPoints, center, setCaptureDetails, setCenter } = useContext(trackingContext);
     const [zoom, setZoom] = useState<number>(12);
+
+    const handleSetCaptureDetails = async (waypoint : ITrackingWaypointsType) => {
+        const {name, type, alias, lastSeen, coordinates, timeSeen, streamName, S3Key, faceId} = waypoint
+        setCaptureDetails({status : 'loading'})
+        let imageUrl : string | undefined
+        if(S3Key){
+            try {
+                const response = await privateApi.get(`/tracking/generatePresignedUrl/${S3Key}`)
+                imageUrl = response?.data
+            } catch (error) {
+                console.log({error})
+                message.error("Error getting image url")
+            }
+        }
+        setCaptureDetails({
+            data : {
+                name,
+                type,
+                alias,
+                lastSeen,
+                coordinates,
+                timeSeen,
+                streamName,
+                S3Key,
+                imageUrl,
+                faceId
+            },
+            status : undefined
+        })
+        setCenter(waypoint.coordinates)
+    }
 
     // Function to retrieve coordinates from waypoints
     const getWaypointCoordinates = () => {
@@ -64,6 +99,7 @@ const MapComponent = () => {
                     <TrackingMarker
                         key={index}
                         position={[item.coordinates[0] + 0.0003, item.coordinates[1] - 0.0005] as LatLngExpression & number[]}
+                        onClick={()=>handleSetCaptureDetails(item)}
                     />
                 ))}
                 <RoutingMachine wayPointsCoordinates={wayPointsCoordinates} />

@@ -11,8 +11,7 @@ import { HiTemplate } from "react-icons/hi";
 import { IoImage } from "react-icons/io5";
 import { MdDoneAll } from "react-icons/md";
 import { trackingContext } from "../context/trackingContext";
-import { PersonResultContainerType } from "./PersonResultContainer";
-import { ITrackingDataType } from "./types";
+import { IPersonTrackingType, ITrackingDataType } from "./types";
 
 const RightControls = ({
     newPersonTrackingData,
@@ -20,11 +19,11 @@ const RightControls = ({
 }: {
     newPersonTrackingData: {
         status: "loading" | null;
-        data: PersonResultContainerType[];
+        data: IPersonTrackingType[];
     };
     setFilteredPersonTrackingData: React.Dispatch<React.SetStateAction<{
         status: "loading" | null;
-        data: PersonResultContainerType[];
+        data: IPersonTrackingType[];
     }>>;
 }) => {
     const inputRef = useRef<HTMLInputElement | null>(null);

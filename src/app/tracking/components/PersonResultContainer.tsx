@@ -11,9 +11,6 @@ import { trackingContext } from "../context/trackingContext"
 import { protectedAPI } from "@/utils/api/api"
 import { message } from "antd"
 
-export interface PersonResultContainerType extends IPersonTrackingType {
-    status : 'loading' | null
-}
 const privateApi = new protectedAPI()
 
 const PersonResultContainer = ({
@@ -24,9 +21,10 @@ const PersonResultContainer = ({
     coordinates,
     timeSeen,
     streamName,
-    S3Key
-} : PersonResultContainerType) => {
-    const {setCaptureDetails, setCenter} = useContext(trackingContext)
+    S3Key,
+    faceId
+} : IPersonTrackingType) => {
+    const {setCaptureDetails, setCenter, setWayPoints} = useContext(trackingContext)
 
     const handleSetCaptureDetails = async () => {
         setCaptureDetails({status : 'loading'})
@@ -40,20 +38,28 @@ const PersonResultContainer = ({
                 message.error("Error getting image url")
             }
         }
+        const captureDetailsData : IPersonTrackingType= {
+            name,
+            type,
+            alias,
+            lastSeen,
+            coordinates,
+            timeSeen,
+            streamName,
+            S3Key,
+            imageUrl,
+            faceId
+        }
         setCaptureDetails({
-            data : {
-                name,
-                type,
-                alias,
-                lastSeen,
-                coordinates,
-                timeSeen,
-                streamName,
-                S3Key,
-                imageUrl
-            },
+            data : captureDetailsData,
             status : undefined
         })
+        setWayPoints([
+            {
+                ...captureDetailsData,
+                radius: 10
+            }
+        ])
         setCenter(coordinates)
     }
 
@@ -69,7 +75,7 @@ const PersonResultContainer = ({
                         </div>
                     </div>
                     <Text>
-                        {getRelativeTime(timeSeen)}
+                        {getRelativeTime(timeSeen).charAt(0).toUpperCase() + getRelativeTime(timeSeen).slice(1)}
                     </Text>
                 </div>
                 <div className="flex gap-2">
@@ -92,7 +98,7 @@ const PersonResultContainer = ({
                                     size={13}
                                 />
                                 <Text>
-                                    Last seen
+                                    Location
                                 </Text>
                             </div>
                             <Text

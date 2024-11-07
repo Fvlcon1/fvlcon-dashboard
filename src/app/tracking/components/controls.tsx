@@ -9,24 +9,69 @@ import { FaCaretDown } from "react-icons/fa6"
 import { IoIosEye, IoIosEyeOff } from "react-icons/io"
 import { trackingContext } from "../context/trackingContext"
 import { ConfigProvider, DatePicker, message } from "antd"
+import { protectedAPI } from "@/utils/api/api"
+import { ITrackingWaypointsType } from "./types"
+import { parseCoordinates } from "@/utils/parseCoordinate"
+import getLocationNameFromCordinates from "@/utils/getLocationNameFromCoordinates"
+
+const privateAPI = new protectedAPI()
 
 const Controls = () => {
-    const {showCameras, setShowCameras} = useContext(trackingContext)
+    const {showCameras, setShowCameras, setWayPoints, captureDetails} = useContext(trackingContext)
     const [startDate, setStartDate] = useState<string | string[]>()
     const [endDate, setEndDate] = useState<string | string[]>()
 
-    const handleStartTracking = () => {
+    /**
+     * Convert start and end dates to right format and calls tracking function when user clicks on start tracking
+     * @returns 
+     */
+    const handleStartTracking = async () => {
         if(!startDate){
             console.error("Please input start date")
             return message.warning("Please input start date")
         }
         const processedStartDate : Date = new Date(startDate as string)
         const processedEndDate : Date = endDate ? new Date(endDate as string) : new Date()
+        await getTrackingData(processedStartDate, processedEndDate)
     }
 
-    useEffect(()=>{
-        console.log({startDate : startDate})
-    },[startDate])
+    /**
+     * Gets tracking data within a specific time range
+     * @param startTime Date
+     * @param endTime Date
+     */
+    const getTrackingData = async (startTime : Date, endTime : Date) => {
+        const faceId = captureDetails?.data?.faceId
+        if(!faceId)
+            return message.warning("Please select an object to track from the right panel")
+        if(startTime > endTime)
+            return message.warning("Start date must be less than end date")
+        try {
+            const response = await privateAPI.get("/tracking/getTrackingDataByTimeRange", {faceId, startTime, endTime })
+            const trackingData = response?.data
+            const wayPointsArray : ITrackingWaypointsType[] = []
+            
+            for(let data of trackingData){
+                const arrayCoordinates = parseCoordinates(data.coordinates)
+                const {name : locationName} = await getLocationNameFromCordinates(arrayCoordinates)
+                if(captureDetails.data)
+                    wayPointsArray.push({
+                        ...captureDetails.data,
+                        name: data.stream_name,
+                        lastSeen: locationName,
+                        coordinates: arrayCoordinates,
+                        timeSeen: data.Timestamp,
+                        S3Key : data.S3Key,
+                        radius: 10
+                    })
+            }
+            setWayPoints(wayPointsArray)
+        } catch (error) {
+            console.log({error})
+            message.error("Unable to get tracking data")
+        }
+    }
+
     return (
         <ConfigProvider
             theme={{

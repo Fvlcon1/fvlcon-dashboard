@@ -6,10 +6,10 @@ import { IoImage } from "react-icons/io5"
 import theme from "@styles/theme"
 import { useContext, useEffect, useState } from "react"
 import DndImage from "./dndImage"
-import PersonResultContainer, { PersonResultContainerType } from "./PersonResultContainer"
+import PersonResultContainer from "./PersonResultContainer"
 import Divider from "@components/divider/divider"
 import { protectedAPI, unprotectedAPI } from "@/utils/api/api"
-import { ITrackingDataTypes } from "./types"
+import { IPersonTrackingType, ITrackingDataTypes } from "./types"
 import { API_URL } from "@/utils/constants"
 import axios from "axios"
 import { parseCoordinates } from "@/utils/parseCoordinate"
@@ -24,7 +24,7 @@ const privateAPI = new protectedAPI()
 const publicAPI = new unprotectedAPI()
 
 const Right = () => {
-    const [newPersonTrackingData, setPersonTrackingData] = useState<{ status: 'loading' | null, data: PersonResultContainerType[] }>({ status: null, data: [] })
+    const [newPersonTrackingData, setPersonTrackingData] = useState<{ status: 'loading' | null, data: IPersonTrackingType[] }>({ status: null, data: [] })
     const [filteredPersonTrackingData, setFilteredPersonTrackingData] = useState(newPersonTrackingData)
     const { imageUrl, setImageUrl } = useContext(trackingContext)
 
@@ -38,29 +38,29 @@ const Right = () => {
             const trackingData = response?.data
 
             const { data: faceDetails } = await axios.get(`${API_URL}/${trackingData[0].FaceId}`)
-            const people: PersonResultContainerType[] = []
+            const people: IPersonTrackingType[] = []
 
             for (const data of trackingData) {
                 try {
                     const { FaceId, Timestamp, coordinates, stream_name, S3Key } = data
-                    const arrayCoordinates = parseCoordinates(coordinates) as LatLngExpression & number[]
+                    const arrayCoordinates = parseCoordinates(coordinates)
                     const {name : locationName} = await getLocationNameFromCordinates(arrayCoordinates)
 
-                    const personResultsParams: PersonResultContainerType = {
+                    const personResultsParams: IPersonTrackingType = {
                         name: `${faceDetails.FirstName} ${faceDetails.LastName}`,
                         type: ITrackingDataTypes.person,
                         alias: "",
                         lastSeen: locationName,
                         coordinates: arrayCoordinates,
                         timeSeen: new Date(Timestamp),
-                        status: null,
+                        faceId : FaceId,
                         streamName : stream_name,
                         S3Key
                     }
                     people.push(personResultsParams)
                 } catch (error: any) {
                     console.log({ error })
-                    message.error(error.response?.data.message ?? error.message)
+                    message.error("Error fetching data")
                     setPersonTrackingData( prev => ({
                         ...prev,
                         status: null,
@@ -72,7 +72,7 @@ const Right = () => {
                 return new Promise(resolve => setTimeout(resolve, ms));
             }
             
-            const updatePersonTrackingData = async (people : PersonResultContainerType[]) => {
+            const updatePersonTrackingData = async (people : IPersonTrackingType[]) => {
                 for (let person of people) {
                     setPersonTrackingData(prev => ({
                         data: [...prev.data, person],
