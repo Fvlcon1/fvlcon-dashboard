@@ -8,10 +8,12 @@ import { LuSearch } from "react-icons/lu"
 
 const Searchbar = ({
     className,
-    inputStyle
+    inputStyle,
+    placeholder
 } : {
     className? : string
     inputStyle? : string
+    placeholder? : string
 }) => {
 
     const [searchValue, setSearchValue] = useState('')
@@ -20,7 +22,7 @@ const Searchbar = ({
     return (
         <div className={`flex w-[250px] ${className}`}>
             <Input 
-                placeholder="Search anything"
+                placeholder={placeholder ?? "Search anything"}
                 content={searchValue}
                 setContent={setSearchValue}
                 className={`!w-full !px-3 !py-[10px] ${inputStyle}`}

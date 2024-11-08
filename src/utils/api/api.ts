@@ -4,7 +4,7 @@ import { signOut } from 'next-auth/react';
 import Cookies from 'universal-cookie';
 
 const cookies = new Cookies();
-const baseURL = "http://localhost:5001";
+const baseURL = process.env.NEXT_PUBLIC_API_BASE_URL
 
 const getHeaders = () => {
   return {

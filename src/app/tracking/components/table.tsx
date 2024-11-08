@@ -21,6 +21,7 @@ const privateAPI = new protectedAPI();
 
 const Table = () => {
     const { data: sessionData, status } = useSession();
+    const [originalImageUrl, setOriginalImageUrl] = useState<string>()
     const router = useRouter();
 
     useEffect(() => {
@@ -57,13 +58,24 @@ const Table = () => {
                 const getFaceDetails = await axios.get(`${API_URL}/${trackingData[0].FaceId}`);
                 faceDetails = getFaceDetails.data
             }
-
+            setOriginalImageUrl(faceDetails.imageUrl)
+            
             const people: IPersonTrackingType[] = [];
             for (const data of trackingData) {
                 const { FaceId, Timestamp, coordinates, stream_name, S3Key, userId } = data;
+                let capturedImageUrl : string | undefined
+                if(S3Key){
+                    try {
+                        const getCapturedImageUrl = await privateAPI.get(`/tracking/generatePresignedUrl/${S3Key}`)
+                        capturedImageUrl = getCapturedImageUrl?.data
+                    } catch (error) {
+                        console.log({error})
+                        message.error("Error getting original image url")
+                    }
+                }
                 const arrayCoordinates = parseCoordinates(coordinates);
                 const { name: locationName } = await getLocationNameFromCordinates(arrayCoordinates);
-
+                
                 const personResultsParams: IPersonTrackingType = {
                     name: `${faceDetails.FirstName} ${faceDetails.MiddleName} ${faceDetails.LastName}`,
                     type: ITrackingDataTypes.person,
@@ -74,7 +86,8 @@ const Table = () => {
                     faceId: FaceId,
                     streamName: stream_name,
                     S3Key,
-                    userId
+                    userId,
+                    imageUrl : capturedImageUrl
                 };
                 people.push(personResultsParams);
             }
@@ -103,7 +116,10 @@ const Table = () => {
                 <TableHead />
                 {
                     newPersonTrackingData.data.length !== 0 &&
-                    <TableBody trackingData={newPersonTrackingData.data} />
+                    <TableBody 
+                        trackingData={newPersonTrackingData.data} 
+                        originalImageUrl={originalImageUrl}
+                    />
                 }
             </table>
             {

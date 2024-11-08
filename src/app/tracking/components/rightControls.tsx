@@ -148,8 +148,9 @@ const RightControls = ({
                 <Searchbar
                     className="bg-bg-secondary rounded-lg flex-1"
                     inputStyle="bg-bg-secondary rounded-lg"
+                    placeholder="Search person name or number plate"
                 />
-                <div className="flex gap-1 p-2 px-3 rounded-lg hover:bg-bg-quantinary cursor-pointer bg-bg-tetiary items-center">
+                {/* <div className="flex gap-1 p-2 px-3 rounded-lg hover:bg-bg-quantinary cursor-pointer bg-bg-tetiary items-center">
                     <FaSort
                         color={theme.colors.text.secondary}
                         size={12}
@@ -157,7 +158,7 @@ const RightControls = ({
                     <Text>
                         Sort
                     </Text>
-                </div>
+                </div> */}
             </div>
         </div>
     );
