@@ -148,7 +148,7 @@ const RightControls = ({
                 <Searchbar
                     className="bg-bg-secondary rounded-lg flex-1"
                     inputStyle="bg-bg-secondary rounded-lg"
-                    placeholder="Search person name or number plate"
+                    placeholder="Search number plates"
                 />
                 {/* <div className="flex gap-1 p-2 px-3 rounded-lg hover:bg-bg-quantinary cursor-pointer bg-bg-tetiary items-center">
                     <FaSort
