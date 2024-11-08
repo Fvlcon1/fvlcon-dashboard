@@ -24,7 +24,7 @@ const Bottom = () => {
             <div className="bg-gradient-container px-3 py-2 gap-2 flex flex-col flex-1 overflow-x-auto rounded-lg">
                 <div className="min-w-[500px] justify-between flex items-center">
                     <BottomHead />
-                    <BottomControls />
+                    {/* <BottomControls /> */}
                 </div>
                 <Table />
             </div>

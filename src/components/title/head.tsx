@@ -17,7 +17,7 @@ const Head = ({
         >
             {/* <div className="w-[7px] h-[25px] bg-bg-alt1 rounded-full"></div> */}
             <AppTypography
-                textColor={theme.colors.text.primary}
+                textColor={theme.colors.main.primary}
                 size={TypographySize.HM}
                 {...typographyProps}
             >

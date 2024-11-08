@@ -1,5 +1,6 @@
 import Text from "@styles/components/text"
 import theme from "@styles/theme"
+import { FaLocationArrow } from "react-icons/fa6"
 import { IoPersonCircle } from "react-icons/io5"
 import { MdDateRange } from "react-icons/md"
 import { PiDetectiveFill } from "react-icons/pi"
@@ -44,12 +45,12 @@ const TableHead = () => {
                 </th>
                 <th className="py-2">
                     <div className="flex gap-1 items-center">
-                        <TbGenderMale
+                        <FaLocationArrow
                             color={theme.colors.text.primary}
                             size={13}
                         />
                         <Text textColor={theme.colors.text.primary}>
-                            Gender
+                            Location
                         </Text>
                     </div>
                 </th>

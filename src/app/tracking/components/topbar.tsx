@@ -9,7 +9,7 @@ const Topbar = () => {
             <div className="flex items-center gap-4">
                 <div className="flex items-center gap-2">
                     <FaMap
-                        color={theme.colors.text.primary}
+                        color={theme.colors.main.primary}
                         className="mt-[2px]"
                     />
                     <Head

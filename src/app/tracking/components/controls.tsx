@@ -13,6 +13,7 @@ import { protectedAPI } from "@/utils/api/api"
 import { ITrackingWaypointsType } from "./types"
 import { parseCoordinates } from "@/utils/parseCoordinate"
 import getLocationNameFromCordinates from "@/utils/getLocationNameFromCoordinates"
+import { hexOpacity } from "@/utils/hexOpacity"
 
 const privateAPI = new protectedAPI()
 
@@ -47,8 +48,12 @@ const Controls = () => {
         if(startTime > endTime)
             return message.warning("Start date must be less than end date")
         try {
+            message.loading("Loading...", 100)
             const response = await privateAPI.get("/tracking/getTrackingDataByTimeRange", {faceId, startTime, endTime })
+            message.destroy()
             const trackingData = response?.data
+            if(trackingData.length === 0)
+                message.info("No tracking data available")
             const wayPointsArray : ITrackingWaypointsType[] = []
             
             for(let data of trackingData){
@@ -78,9 +83,10 @@ const Controls = () => {
                 components : {
                     DatePicker : {
                         activeBg : theme.colors.bg.tetiary,
-                        hoverBg : theme.colors.bg.quantinary,
+                        activeBorderColor : `${theme.colors.main.primary}${hexOpacity(40)}`,
+                        hoverBg : theme.colors.bg.tetiary,
                         cellActiveWithRangeBg : theme.colors.bg.tetiary,
-                        hoverBorderColor : theme.colors.bg.alt1,
+                        hoverBorderColor : `${theme.colors.main.primary}${hexOpacity(40)}`,
                         cellHoverBg : theme.colors.bg.quantinary
                     }
                 },
@@ -137,7 +143,7 @@ const Controls = () => {
                             showTime
                             allowClear
                             placeholder="End date"
-                            onChange={(date, dateToString)=>setStartDate(dateToString)}
+                            onChange={(date, dateToString)=>setEndDate(dateToString)}
                         />
                     </div>
                     <Button

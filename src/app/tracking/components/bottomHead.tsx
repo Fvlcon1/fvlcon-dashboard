@@ -7,15 +7,15 @@ const BottomHead = () => {
     return (
         <div className="flex gap-1 items-center pl-2 ">
             <LuHistory
-                color={theme.colors.text.primary}
+                color={theme.colors.text.secondary}
                 size={13}
             />
             <Text
-                textColor={theme.colors.text.primary}
+                textColor={theme.colors.text.secondary}
             >
-                Recents • 
+                Recents
             </Text>
-            <div className="flex gap-1 items-center cursor-pointer hover:scale-[0.995] hover:opacity-[0.8] duration-100">
+            {/* <div className="flex gap-1 items-center cursor-pointer hover:scale-[0.995] hover:opacity-[0.8] duration-100">
                 <Text>
                     Accra City Camera
                 </Text>
@@ -23,7 +23,7 @@ const BottomHead = () => {
                     color={theme.colors.text.secondary}
                     size={13}
                 />
-            </div>
+            </div> */}
         </div>
     )
 }

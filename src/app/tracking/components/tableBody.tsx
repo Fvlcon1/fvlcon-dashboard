@@ -7,6 +7,7 @@ import MatchContainer from "./matchContainer"
 import { useState } from "react"
 import { IPersonTrackingType } from "./types"
 import getDate, { getRelativeTime, getTime } from "@/utils/getDate"
+import { capitalizeString } from "@/utils/capitalizeString"
 
 const TableBody = ({
     trackingData
@@ -38,7 +39,7 @@ const TableBody = ({
                                     <Text
                                         textColor={theme.colors.text.primary}
                                     >
-                                        {item.name}
+                                        {capitalizeString(item.name)}
                                     </Text>
                                     :
                                     <Text>
@@ -64,7 +65,7 @@ const TableBody = ({
                         </td>
                         <td className="py-4">
                             <Text>
-                                Male
+                                {item.lastSeen}
                             </Text>
                         </td>
                     </tr>

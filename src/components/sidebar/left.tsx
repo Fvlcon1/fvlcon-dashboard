@@ -12,6 +12,7 @@ import { bottomPagesData, pagesData } from "./data"
 import { Tooltip } from 'antd'
 import Link from "next/link"
 import { usePathname } from "next/navigation"
+import { hexOpacity } from "@/utils/hexOpacity"
 
 const Left = () => {
     const [pages, setPages] = useState(pagesData)
@@ -46,13 +47,16 @@ const Left = () => {
                                 href={item.url}
                                 className={`w-full flex relative items-center justify-center cursor-pointer`}
                             >
-                                <div className={`absolute left-0 w-[4px] h-[25px] rounded-full ${item.active ? 'bg-text-primary' : 'bg-none'} duration-500`}></div>
+                                <div className={`absolute left-0 w-[4px] h-[25px] rounded-full ${item.active ? 'bg-main-primary' : 'bg-none'} duration-500`}></div>
                                 <div
-                                    className={`p-3 rounded-md ${item.active ? 'bg-bg-quantinary' : 'bg-none'} duration-500 hover:duration-300 hover:opacity-[0.6] hover:scale-[0.95]`}
+                                    className={`p-3 rounded-md duration-500 hover:duration-300 hover:opacity-[0.6] hover:scale-[0.95]`}
+                                    style={{
+                                        backgroundColor : item.active ? `${theme.colors.main.primary}${hexOpacity(10)}` : 'transparent'
+                                    }}
                                 >
                                     <item.icon
                                         className={`${item.active ? 'opacity-100' : 'opacity-100'}`}
-                                        color={item.active ? theme.colors.text.primary : theme.colors.bg.alt2}
+                                        color={item.active ? theme.colors.main.primary : theme.colors.bg.alt2}
                                     />
                                 </div>
                             </Link> 

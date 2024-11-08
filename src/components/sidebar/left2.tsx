@@ -1,5 +1,6 @@
 'use client'
 
+import { hexOpacity } from "@/utils/hexOpacity"
 import AppTypography from "@styles/components/appTypography"
 import Flex from "@styles/components/flex"
 import { TypographyBold, TypographySize } from "@styles/style.types"
@@ -44,7 +45,10 @@ const Left2 = () => {
                 pages.map((item, index : number) => (
                     <Link
                         href={item.url} 
-                        className={`p-2 px-4 ${item.active ? 'bg-bg-quantinary' : 'bg-none'} rounded-full cursor-pointer duration-500 hover:duration-300 hover:opacity-[0.6] hover:scale-[0.95]`}
+                        className={`p-2 px-4 rounded-full cursor-pointer duration-500 hover:duration-300 hover:opacity-[0.6] hover:scale-[0.95]`}
+                        style={{
+                            backgroundColor : item.active ? `${theme.colors.main.primary}${hexOpacity(10)}` : '',
+                        }}
                         key={index}
                     >
                         <Flex
@@ -52,11 +56,11 @@ const Left2 = () => {
                             gap={4}
                         >
                             <item.icon 
-                                color={item.active ? theme.colors.text.primary : theme.colors.text.secondary}
+                                color={item.active ? theme.colors.main.primary : theme.colors.text.secondary}
                             />
                             <AppTypography
-                                textColor={item.active ? theme.colors.text.primary : theme.colors.text.secondary}
-                                bold={item.active ? TypographyBold.sm : TypographyBold.sm}
+                                textColor={item.active ? theme.colors.main.primary : theme.colors.text.secondary}
+                                bold={item.active ? TypographyBold.sm2 : TypographyBold.sm}
                                 className="duration-500"
                                 size={TypographySize.body}
                             >

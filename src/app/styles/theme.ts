@@ -14,6 +14,9 @@ export const colors = {
         alt1 : '#2C2C2C',
         alt2 : '#474747'
     },
+    main : {
+        primary : '#2f9f8d'
+    }
 }
 
 export const cssColors = {
@@ -29,6 +32,9 @@ export const cssColors = {
         quantinary : 'var(--bg-quantinary)',
         alt1 : 'var(--bg-alt1)',
     },
+    main : {
+        primary : 'var(--main-primary)'
+    }
 }
 
 export const theme = {

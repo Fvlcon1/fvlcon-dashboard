@@ -54,7 +54,8 @@ const Table = () => {
             const trackingData = response?.data;
             let faceDetails: any;
             if (trackingData.length) {
-                faceDetails = await axios.get(`${API_URL}/${trackingData[0].FaceId}`);
+                const getFaceDetails = await axios.get(`${API_URL}/${trackingData[0].FaceId}`);
+                faceDetails = getFaceDetails.data
             }
 
             const people: IPersonTrackingType[] = [];
@@ -64,7 +65,7 @@ const Table = () => {
                 const { name: locationName } = await getLocationNameFromCordinates(arrayCoordinates);
 
                 const personResultsParams: IPersonTrackingType = {
-                    name: `${faceDetails.FirstName} ${faceDetails.LastName}`,
+                    name: `${faceDetails.FirstName} ${faceDetails.MiddleName} ${faceDetails.LastName}`,
                     type: ITrackingDataTypes.person,
                     alias: "",
                     lastSeen: locationName,
@@ -77,7 +78,7 @@ const Table = () => {
                 };
                 people.push(personResultsParams);
             }
-
+            console.log({people})
             setPersonTrackingData({ data: people, status: null });
         } catch (error) {
             console.error(error);
