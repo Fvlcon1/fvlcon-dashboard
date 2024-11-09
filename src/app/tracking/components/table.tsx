@@ -57,6 +57,8 @@ const Table = () => {
             if (trackingData.length) {
                 const getFaceDetails = await axios.get(`${API_URL}/${trackingData[0].FaceId}`);
                 faceDetails = getFaceDetails.data
+            } else {
+                return setPersonTrackingData(prev => ({ ...prev, status: null }));
             }
             setOriginalImageUrl(faceDetails.imageUrl)
             
@@ -94,7 +96,7 @@ const Table = () => {
             console.log({people})
             setPersonTrackingData({ data: people, status: null });
         } catch (error) {
-            console.error(error);
+            console.error({error});
             message.error("Error fetching data");
             setPersonTrackingData(prev => ({ ...prev, status: null }));
         }

@@ -56,11 +56,11 @@ const Cameras = () => {
                 active: false,
             }
             if(stream.cameraFolderId){
-                streamsAndFolders = recursivelySetStreamOrFolders(folderArray, NewStream, stream.cameraFolderId)
-                return streamsAndFolders
+                streamsAndFolders = recursivelySetStreamOrFolders(streamsAndFolders, NewStream, stream.cameraFolderId)
             } else {
-                return [...folderArray, NewStream]
+                streamsAndFolders = [...streamsAndFolders, NewStream]
             }
+            console.log({streamsAndFolders})
         })
         setFolders(streamsAndFolders)
         setTimeout(() => {

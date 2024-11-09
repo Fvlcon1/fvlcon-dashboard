@@ -114,7 +114,11 @@ const PersonResultContainer = ({
                                 color={theme.colors.text.secondary}
                                 size={13}
                             />
-                            <Text>
+                            <Text
+                                whiteSpace="nowrap"
+                                ellipsis
+                                maxLines={1}
+                            >
                                 {`${coordinates[0]}, ${coordinates[1]}`}
                             </Text>
                         </div>
