@@ -60,7 +60,7 @@ const Login: React.FC = () => {
         message.success("Login Successful");
 
 
-        await axios.post('http://localhost:5001/setup-mfa', { email });
+        await axios.post('http://localhost:5002/setup-mfa', { email });
 
         // Redirect to MFA validation page
         // router.push('/auth/mfa');

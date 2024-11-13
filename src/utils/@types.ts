@@ -186,3 +186,11 @@ export type occurance = {
   index: number;
   content: fvlconizedFaceType[];
 }
+export interface WebSocketMessage {
+  action: string;
+  data: any;
+}
+export interface UseWebSocketReturn {
+  messages: WebSocketMessage[];
+  sendMessage: (message: WebSocketMessage) => void;
+}

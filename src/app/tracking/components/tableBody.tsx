@@ -5,7 +5,7 @@ import theme from "@styles/theme"
 import Image from "next/image"
 import MatchContainer from "./matchContainer"
 import { useContext, useState } from "react"
-import { IPersonTrackingType } from "./types"
+import { IPersonTrackingType, IPersonTrackingWithImageType } from "./types"
 import getDate, { getRelativeTime, getTime } from "@/utils/getDate"
 import { capitalizeString } from "@/utils/capitalizeString"
 import ZoomImage from "@components/zoomImage/zoomImage"
@@ -13,19 +13,18 @@ import { trackingContext } from "../context/trackingContext"
 
 const TableBody = ({
     trackingData,
-    originalImageUrl
 } : {
-    trackingData : IPersonTrackingType[]
-    originalImageUrl? : string
+    trackingData : IPersonTrackingWithImageType[]
 }) => {
     const [onHover, setOnHover] = useState<boolean>(false)
     const [onPress, setOnPress] = useState<boolean>(false)
     const [originalImageZoom, setOriginalImageZoom] = useState(false)
     const [capturedImageZoom, setCapturedImageZoom] = useState(false)
     const [capturedImageUrl, setCapturedImageUrl] = useState<string>()
+    const [originalImageUrl, setOriginalImageUrl] = useState<string>()
     const {setCaptureDetails, setWayPoints, setCenter} = useContext(trackingContext)
 
-    const handleItemClick = (data : IPersonTrackingType) => {
+    const handleItemClick = (data : IPersonTrackingWithImageType) => {
         setCaptureDetails({
             data,
             status : undefined
@@ -71,19 +70,20 @@ const TableBody = ({
                         >
                             <td className="py-4 pl-4">
                                 <MatchContainer 
-                                    originalImageUrl={originalImageUrl}
+                                    originalImageUrl={item.originalImageUrl}
                                     capturedImageUrl={item.imageUrl}
                                     originalImageZoom={originalImageZoom}
                                     setOriginalImageZoom={setOriginalImageZoom}
                                     capturedImageZoom={capturedImageZoom}
                                     setCapturedImageZoom={setCapturedImageZoom}
                                     setCapturedImageUrl={setCapturedImageUrl}
+                                    setOriginalImageUrl={setOriginalImageUrl}
                                 />
                             </td>
                             <td className="py-4">
                                 <div className="flex flex-col gap-0">
                                     {
-                                        item.name ?
+                                        item.name.length > 2 ?
                                         <Text
                                             textColor={theme.colors.text.primary}
                                         >

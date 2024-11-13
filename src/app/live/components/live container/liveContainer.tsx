@@ -81,7 +81,7 @@ const LiveContainer = ({
             setUpStream()
         }, 60000 * 3);
         setTimeout(() => {
-            startTracking()
+            // startTracking()
         }, 3000);
         setUpStream()
         window.addEventListener('resize', resizeLiveHeight);
@@ -107,7 +107,7 @@ const LiveContainer = ({
                     height : `${liveHeight}px`
                 }}
             >
-                <iframe 
+                {/* <iframe 
                     src={url}
                     title="stream"
                     width={'100%'}
@@ -115,13 +115,13 @@ const LiveContainer = ({
                     id={id}
                     allowFullScreen
                     allow="accelerometer; autoplay; clipboard-write"
-                />
-                {/* <div id={id} className="w-full h-full relative">
+                /> */}
+                <div id={id} className="w-full h-full relative">
                     <div id={`CanvasContainer${id}`} className="canvasContainer w-full h-full absolute pointer-events-none z-10 top-0 left-0">
 
                     </div>
                     <Player
-                        src={streamURL}
+                        src={url}
                         controls
                         style={{ height: '100%' }}
                         accentColor={theme.colors.bg.secondary}
@@ -129,7 +129,7 @@ const LiveContainer = ({
                         placeholder="Stream"
                         autoPlay={true}
                     />
-                </div> */}
+                </div>
             </div>
         </div>
     )

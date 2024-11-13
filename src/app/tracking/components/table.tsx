@@ -3,7 +3,7 @@
 import axios from "axios";
 import TableBody from "./tableBody";
 import TableHead from "./tableHead";
-import { IPersonTrackingType, ITrackingDataTypes } from "./types";
+import { IPersonTrackingType, IPersonTrackingWithImageType, ITrackingDataTypes } from "./types";
 import { API_URL } from "@/utils/constants";
 import { protectedAPI } from "@/utils/api/api";
 import { useContext, useEffect, useState } from "react";
@@ -16,6 +16,7 @@ import { useRouter } from "next/navigation";
 import NoData from "./noData";
 import Skeleton from "react-loading-skeleton";
 import theme from "@styles/theme";
+import InfinityLoader from "@components/loaders/infinityLoader";
 
 const privateAPI = new protectedAPI();
 
@@ -32,7 +33,7 @@ const Table = () => {
     }, [status, router]);
 
     const { captureDetails } = useContext(trackingContext);
-    const [newPersonTrackingData, setPersonTrackingData] = useState<{ status: 'loading' | null, data: IPersonTrackingType[] }>({ status: null, data: [] });
+    const [newPersonTrackingData, setPersonTrackingData] = useState<{ status: 'loading' | null, data: IPersonTrackingWithImageType[] }>({ status: null, data: [] });
     const [endDate, setEndDate] = useState<Date>(new Date());
     const [startDate, setStartDate] = useState<Date>(() => {
         const sevenDaysAgo = new Date(endDate);
@@ -43,7 +44,6 @@ const Table = () => {
     const getTrackingHistory = async () => {
         const userId = sessionData?.user.userId;
         if (!userId) return;
-
         setPersonTrackingData({ data: [], status: 'loading' });
 
         try {
@@ -53,43 +53,27 @@ const Table = () => {
                 endTime: endDate
             });
             const trackingData = response?.data;
-            let faceDetails: any;
-            if (trackingData.length) {
-                const getFaceDetails = await axios.get(`${API_URL}/${trackingData[0].FaceId}`);
-                faceDetails = getFaceDetails.data
-            } else {
-                return setPersonTrackingData(prev => ({ ...prev, status: null }));
-            }
-            setOriginalImageUrl(faceDetails.imageUrl)
             
-            const people: IPersonTrackingType[] = [];
+            const people: IPersonTrackingWithImageType[] = [];
             for (const data of trackingData) {
-                const { FaceId, Timestamp, coordinates, stream_name, S3Key, userId } = data;
-                let capturedImageUrl : string | undefined
-                if(S3Key){
-                    try {
-                        const getCapturedImageUrl = await privateAPI.get(`/tracking/generatePresignedUrl/${S3Key}`)
-                        capturedImageUrl = getCapturedImageUrl?.data
-                    } catch (error) {
-                        console.log({error})
-                        message.error("Error getting original image url")
-                    }
-                }
+                const {details} = data
+                const { FaceId, Timestamp, coordinates, stream_name, S3Key, userId, imageUrl } = data;
                 const arrayCoordinates = parseCoordinates(coordinates);
-                const { name: locationName } = await getLocationNameFromCordinates(arrayCoordinates);
+                const location = await getLocationNameFromCordinates(arrayCoordinates);
                 
-                const personResultsParams: IPersonTrackingType = {
-                    name: `${faceDetails.FirstName} ${faceDetails.MiddleName} ${faceDetails.LastName}`,
+                const personResultsParams: IPersonTrackingWithImageType = {
+                    name: `${details?.FirstName ?? ''} ${details?.MiddleName ?? ''} ${details?.LastName ?? ''}`,
                     type: ITrackingDataTypes.person,
                     alias: "",
-                    lastSeen: locationName,
+                    lastSeen: location?.name ?? 'Unknown',
                     coordinates: arrayCoordinates,
                     timeSeen: new Date(Timestamp),
                     faceId: FaceId,
                     streamName: stream_name,
                     S3Key,
                     userId,
-                    imageUrl : capturedImageUrl
+                    imageUrl,
+                    originalImageUrl : details?.imageUrl ?? ''
                 };
                 people.push(personResultsParams);
             }
@@ -113,30 +97,19 @@ const Table = () => {
     }
 
     return (
-        <div className="min-w-[500px] overflow-y-auto">
-            <table className="w-full">
+        <div className="min-w-[200px] max-w-full h-full overflow-auto">
+            <table className="w-full min-w-[1000px]">
                 <TableHead />
                 {
                     newPersonTrackingData.data.length !== 0 &&
-                    <TableBody 
-                        trackingData={newPersonTrackingData.data} 
-                        originalImageUrl={originalImageUrl}
-                    />
+                    <TableBody trackingData={newPersonTrackingData.data} />
                 }
             </table>
             {
                 newPersonTrackingData.status === 'loading' ? 
-                (
-                    [1, 2, 3, 4, 5, 6].map((item, index: number) => (
-                        <div key={index} className="flex flex-col gap-1">
-                            <Skeleton
-                                height={75}
-                                baseColor={theme.colors.bg.tetiary}
-                                highlightColor={theme.colors.bg.alt1}
-                            />
-                        </div>
-                    ))
-                ) 
+                <div className="w-full h-full flex justify-center items-center">
+                    <InfinityLoader />
+                </div>
                 :
                 newPersonTrackingData.status === null && newPersonTrackingData.data.length === 0 && 
                 <NoData />

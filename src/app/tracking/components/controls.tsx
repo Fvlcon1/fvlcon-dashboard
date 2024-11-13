@@ -58,12 +58,12 @@ const Controls = () => {
             
             for(let data of trackingData){
                 const arrayCoordinates = parseCoordinates(data.coordinates)
-                const {name : locationName} = await getLocationNameFromCordinates(arrayCoordinates)
+                const location = await getLocationNameFromCordinates(arrayCoordinates)
                 if(captureDetails.data)
                     wayPointsArray.push({
                         ...captureDetails.data,
                         name: data.stream_name,
-                        lastSeen: locationName,
+                        lastSeen: location?.name ?? 'Unknown',
                         coordinates: arrayCoordinates,
                         timeSeen: data.Timestamp,
                         S3Key : data.S3Key,

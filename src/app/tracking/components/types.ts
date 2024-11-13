@@ -22,6 +22,10 @@ export type IPersonTrackingType = {
     userId : string
 }
 
+export interface IPersonTrackingWithImageType extends IPersonTrackingType {
+    originalImageUrl? : string
+}
+
 export interface ITrackingWaypointsType extends IPersonTrackingType {
     coordinates : LatLngExpression & number[],
     radius : number,

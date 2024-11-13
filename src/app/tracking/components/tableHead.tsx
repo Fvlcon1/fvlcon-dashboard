@@ -27,7 +27,10 @@ const TableHead = () => {
                             color={theme.colors.text.primary}
                             size={13}
                         />
-                        <Text textColor={theme.colors.text.primary}>
+                        <Text 
+                            textColor={theme.colors.text.primary}
+                            whiteSpace="nowrap"
+                        >
                             Identified Person
                         </Text>
                     </div>

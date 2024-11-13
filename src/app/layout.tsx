@@ -22,7 +22,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="h-full">
+    <html lang="en" className="h-full max-w-full">
       <body className={`${inter.className} h-full`}>
         <HydrationLoader>
           <Suspense>

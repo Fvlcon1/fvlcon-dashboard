@@ -10,20 +10,35 @@ import Button from "@components/button/button"
 import AnalysisResults from "./analysis results/analysisResults"
 import Skeleton from "react-loading-skeleton"
 import { useEffect, useState } from "react"
+import useWebSocket from "@/utils/useWebsocket"
+import { getUserDetailsFromTrackingData } from "../utils/getUserDetailsFromTrackingData"
+import { IPersonTrackingType, IPersonTrackingWithImageType } from "@/app/tracking/components/types"
 
 const Right = () => {
-    const [analysisResults, setAnalysisResults] = useState(false)
+    const [analysisResults, setAnalysisResults] = useState(true)
+    const { messages } = useWebSocket(process.env.NEXT_PUBLIC_WEBSOCKET_URL!, message => onMessageUpdate(message));
+    const [isMessageUpdated, setIsMessageUpdated] = useState(false)
+    const [detections, setDetections] = useState<IPersonTrackingWithImageType[]>([])
+
+    const onMessageUpdate = async (message : any) => {
+        console.log("updated")
+        setIsMessageUpdated(true)
+        const getDetails = await getUserDetailsFromTrackingData(message)
+        if(getDetails){
+            setDetections(prev => [...prev, getDetails])
+        }
+        setIsMessageUpdated(false)
+    }
 
     useEffect(()=>{
-        setTimeout(() => {
-            setAnalysisResults(true)
-        }, 4000);
-    })
+        console.log({detections})
+    },[detections])
 
     return (
         <div className="fixed top-0 right-[60px] w-[210px] h-[100vh] py-4 px-6 gap-3">
             <Flex
                 direction="column"
+                height="100%"
                 gap={20}
             >
                 <Flex
@@ -33,17 +48,28 @@ const Right = () => {
                         text="Clear"
                     />
                 </Flex>
-                <div className="flex flex-col w-full h-full rounded-lg gap-3 overflow-y-auto">
+                <div className="flex flex-col w-full h-full rounded-lg gap-1 bg-gradient-container items-center px-2 p-1 overflow-y-auto">
+                    {
+                        isMessageUpdated &&
+                        <div className="w-full">
+                            <Skeleton
+                                height={100}
+                                baseColor={theme.colors.bg.tetiary}
+                                highlightColor={theme.colors.bg.alt1}
+                            />
+                        </div>
+                    }
                     {
                         analysisResults ?
-                        [1,2,3].map((item, index : number) => (
+                        [...detections].reverse().map((item, index : number) => (
                             <AnalysisResults 
                                 key={index}
+                                detections={item}
                             />
                         ))
                         :
                         [1,2,3,4,5,6].map((item, index : number) => (
-                            <div key={index} className="flex flex-col gap-1">
+                            <div key={index} className="flex flex-col w-full gap-1">
                                 <Skeleton
                                     height={100}
                                     baseColor={theme.colors.bg.tetiary}

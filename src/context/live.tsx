@@ -42,7 +42,7 @@ export const LiveProvider = ({ children }: { children: ReactNode }) => {
         // },
         {
             id : '3',
-            url : "https://a1cdc4176b2f45c2f8d84fc72ff92e62.serveo.net/video_feed",
+            url : "http://localhost:8080/index.m3u8",
             location : 'East legon, Accra',
             streamName : "stream2",
             coordinates : [5.65, -0.163]

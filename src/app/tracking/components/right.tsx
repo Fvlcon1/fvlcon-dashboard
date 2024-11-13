@@ -44,13 +44,13 @@ const Right = () => {
                 try {
                     const { FaceId, Timestamp, coordinates, stream_name, S3Key, userId } = data
                     const arrayCoordinates = parseCoordinates(coordinates)
-                    const {name : locationName} = await getLocationNameFromCordinates(arrayCoordinates)
+                    const location = await getLocationNameFromCordinates(arrayCoordinates)
 
                     const personResultsParams: IPersonTrackingType = {
                         name: `${faceDetails.FirstName} ${faceDetails.LastName}`,
                         type: ITrackingDataTypes.person,
                         alias: "",
-                        lastSeen: locationName,
+                        lastSeen: location?.name ?? 'Unknown',
                         coordinates: arrayCoordinates,
                         timeSeen: new Date(Timestamp),
                         faceId : FaceId,
