@@ -8,6 +8,7 @@ import prisma from '@/lib/prisma'; // Adjust based on your setup
 import { Resend } from 'resend'; // Assuming you're using Resend for sending emails
 import dotenv from 'dotenv';
 import jwt from 'jsonwebtoken';
+import { cookies } from "next/headers";
 
 dotenv.config();
 const resend = new Resend(process.env.RESEND_API_KEY);
@@ -18,7 +19,7 @@ const setTokenCookie = async (token: string) => {
 };
 
 export const authOptions: NextAuthOptions = {
-  debug: true,
+  debug: process.env.NODE_ENV === 'development', // Debugging in development only
 
   providers: [
     CredentialsProvider({
@@ -29,51 +30,51 @@ export const authOptions: NextAuthOptions = {
         companyCode: { label: "Company Code", type: "text", placeholder: "your-company-code" }
       },
       authorize: async (credentials) => {
-        if (!credentials?.email || !credentials.password || !credentials.companyCode) {
-          return null;
-        }
+        if (!credentials?.email || !credentials.password || !credentials.companyCode) return null;
 
-        // Find the user with matching email
-        const user = await prisma.user.findUnique({
-          where: { email: credentials.email },
-        });
-
-        // Check if user exists, company code matches, and password is correct
+        const user = await prisma.user.findUnique({ where: { email: credentials.email } });
         if (user && user.companyCode === credentials.companyCode) {
           const isPasswordValid = await bcrypt.compare(credentials.password, user.password);
-
-          if (isPasswordValid) {
-            // Step 1: Generate a 2FA code
-            const twoFactorCode = Math.floor(100000 + Math.random() * 900000).toString();
-
-            // Step 2: Save the 2FA code in the database with an expiration time
-            const twoFactorRecord = await prisma.twoFactor.create({
-              data: {
-                userId: user.id,
-                twoFactorCode: twoFactorCode,
-                expiresAt: new Date(Date.now() + 5 * 60 * 1000), // Code expires after 5 minutes
-              },
-            });
-
-            // Step 3: Send the 2FA code to the user via email
-            await resend.emails.send({
-              from: 'Fvlcon <info@fvlcon.co>',
-              to: [user.email],
-              subject: 'Your 2FA Code',
-              html: `<p>Your 2FA code is: <strong>${twoFactorCode}</strong></p>`,
-            });
-
-            // Return user information along with a flag indicating 2FA is required
-            return { 
-              ...user, 
-              twoFactorId: twoFactorRecord.id, // Store the 2FA record ID in the session 
-              twoFactorRequired: true // Indicate that 2FA verification is pending
-            };
-          }
+          if (isPasswordValid) return user;
         }
-        return null; // Invalid credentials
+        return null;
       },
-    })
+    }),
+    CredentialsProvider({
+      id: 'mfa',
+      name: 'Mfa',
+      credentials: {
+        userId: { label: "userId", type: "text" },
+        email: { label: "email", type: "text" },
+      },
+      authorize: async (credentials) => {
+        if (!credentials?.userId || !credentials.email) return null;
+
+        const twoFactorCode = Math.floor(100000 + Math.random() * 900000).toString();
+
+        try {
+          await prisma.twoFactor.create({
+            data: {
+              userId: credentials.userId,
+              twoFactorCode,
+              expiresAt: new Date(Date.now() + 5 * 60 * 1000),
+            },
+          });
+
+          await resend.emails.send({
+            from: 'Fvlcon <info@fvlcon.co>',
+            to: [credentials.email],
+            subject: 'Your 2FA Code',
+            html: `<p>Your 2FA code is: <strong>${twoFactorCode}</strong></p>`,
+          });
+        } catch (err) {
+          console.error('Error in MFA flow:', err);
+          throw new Error('Error generating or sending 2FA code');
+        }
+
+        return null;
+      },
+    }),
   ],
 
   session: {
@@ -90,9 +91,8 @@ export const authOptions: NextAuthOptions = {
   callbacks: {
     jwt: async ({ token, user }) => {
       if (user) {
-        // If the user is logging in and requires 2FA, mark them as requiring 2FA
-        token.twoFactorRequired = user.twoFactorRequired;
-        token.twoFactorId = user.twoFactorId;
+        token.email = user.email;
+        token.userId = user.id;
       }
       return token;
     },
@@ -100,10 +100,9 @@ export const authOptions: NextAuthOptions = {
       if (session.user) {
         session.user.email = token.email;
         session.user.userId = token.userId;
-        session.user.twoFactorRequired = token.twoFactorRequired; // Track the 2FA status
       }
       return session;
-    }
+    },
   },
 
   adapter: PrismaAdapter(prisma),

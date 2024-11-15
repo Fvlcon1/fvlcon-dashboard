@@ -2,10 +2,10 @@ import { NextResponse } from 'next/server';
 import prisma from '@/lib/prisma'; // Ensure this import is correct
 import { NextApiRequest } from 'next';
 
-export async function POST(req: NextApiRequest) {
+export async function POST(req: any) {
   try {
     // Extract email and 2FA code from request body
-    const { email, code } = await req.json();
+    const { email, code } = await req;
 
     // Perform the query to find the TwoFactor record based on the User's email
     const twoFactorRecord = await prisma.twoFactor.findFirst({

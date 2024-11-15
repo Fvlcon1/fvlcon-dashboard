@@ -25,15 +25,9 @@ export default function LoginForm() {
     });
 
     if (result?.error) {
-      setError('Invalid email, password, or company code');
+      setError('Invalid email or password');
     } else {
-      const isMfaVerified = result?.user?.mfaVerified;
-
-      if (isMfaVerified) {
-        router.push('/dashboard/home');
-      } else {
-        router.push(`/auth/mfa?email=${encodeURIComponent(email)}`);
-      }
+      router.push(`/auth/mfa?email=${email}`);
     }
   };
 
