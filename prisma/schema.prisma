@@ -8,17 +8,18 @@ datasource db {
 }
 
 model User {
-  id            String         @id @default(cuid())
-  firstName     String         @db.VarChar(255)
-  lastName      String         @db.VarChar(255)
-  email         String         @unique
-  password      String
-  companyCode   String         @db.VarChar(50)
-  emailVerified Boolean        @default(false)
-  createdAt     DateTime       @default(now())
-  updatedAt     DateTime       @updatedAt
-  Stream        Stream[]
-  verifications Verification[] @relation("UserVerifications")
+  id             String         @id @default(cuid())
+  firstName      String         @db.VarChar(255)
+  lastName       String         @db.VarChar(255)
+  email          String         @unique
+  password       String
+  companyCode    String         @db.VarChar(50)
+  emailVerified  Boolean        @default(false)
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+  Stream         Stream[]
+  verifications  Verification[] @relation("UserVerifications")
+  twoFactorCodes TwoFactor[]    @relation("UserTwoFactors")
 }
 
 model Verification {
@@ -38,4 +39,14 @@ model Stream {
   User    User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([id, name])
+}
+
+// New model to store 2FA codes for users
+model TwoFactor {
+  id            String   @id @default(cuid())
+  userId        String
+  twoFactorCode String
+  createdAt     DateTime @default(now())
+  expiresAt     DateTime
+  user          User     @relation("UserTwoFactors", fields: [userId], references: [id], onDelete: Cascade)
 }
