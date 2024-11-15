@@ -23,7 +23,8 @@ const PersonResultContainer = ({
     streamName,
     S3Key,
     faceId,
-    userId
+    userId,
+    id
 } : IPersonTrackingType) => {
     const {setCaptureDetails, setCenter, setWayPoints} = useContext(trackingContext)
 
@@ -40,6 +41,7 @@ const PersonResultContainer = ({
             }
         }
         const captureDetailsData : IPersonTrackingType= {
+            id,
             name,
             type,
             alias,

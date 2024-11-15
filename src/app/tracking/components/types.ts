@@ -9,6 +9,7 @@ export enum ITrackingDataTypes {
 export type ITrackingDataType = 'all' | 'plate' | 'people'
 
 export type IPersonTrackingType = {
+    id : string,
     name : string,
     type : ITrackingDataTypes,
     streamName : string,
@@ -24,6 +25,16 @@ export type IPersonTrackingType = {
 
 export interface IPersonTrackingWithImageType extends IPersonTrackingType {
     originalImageUrl? : string
+}
+
+export type IPlateTrackingType = {
+    id : string
+    plateNumber : string
+    timestamp : string
+    coordinates : string
+    locationName : string
+    imageUrl : string
+    type : string
 }
 
 export interface ITrackingWaypointsType extends IPersonTrackingType {

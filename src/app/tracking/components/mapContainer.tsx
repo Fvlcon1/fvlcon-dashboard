@@ -8,9 +8,12 @@ import { liveContext } from '@/context/live';
 import { trackingContext } from '../context/trackingContext';// Import useMap directly
 import './styles.css';
 import MapInternal from './mapInternal';
-import { ITrackingWaypointsType } from './types';
+import { IPersonTrackingType, ITrackingDataTypes, ITrackingWaypointsType } from './types';
 import { protectedAPI } from '@/utils/api/api';
 import { message } from 'antd';
+import { usePathname, useSearchParams } from 'next/navigation';
+import { parseCoordinates } from '@/utils/parseCoordinate';
+import getLocationNameFromCordinates from '@/utils/getLocationNameFromCoordinates';
 
 const MapContainer = dynamic(() => import('react-leaflet').then(mod => mod.MapContainer), { ssr: false });
 const TileLayer = dynamic(() => import('react-leaflet').then(mod => mod.TileLayer), { ssr: false });
@@ -22,11 +25,12 @@ const privateApi = new protectedAPI()
 const MapComponent = () => {
     const [wayPointsCoordinates, setWayPointsCoordinates] = useState<(LatLngExpression & number[])[]>();
     const { activeCameras } = useContext(liveContext);
-    const { showCameras, wayPoints, center, setCaptureDetails, setCenter } = useContext(trackingContext);
+    const { showCameras, wayPoints, center, setCaptureDetails, setCenter, setWayPoints } = useContext(trackingContext);
     const [zoom, setZoom] = useState<number>(12);
+    const searchParams = useSearchParams()
 
     const handleSetCaptureDetails = async (waypoint : ITrackingWaypointsType) => {
-        const {name, type, alias, lastSeen, coordinates, timeSeen, streamName, S3Key, faceId, userId} = waypoint
+        const {name, type, alias, lastSeen, coordinates, timeSeen, streamName, S3Key, faceId, userId, id} = waypoint
         setCaptureDetails({status : 'loading'})
         let imageUrl : string | undefined
         if(S3Key){
@@ -40,6 +44,7 @@ const MapComponent = () => {
         }
         setCaptureDetails({
             data : {
+                id,
                 name,
                 type,
                 alias,
@@ -65,12 +70,66 @@ const MapComponent = () => {
         }
     };
 
+    const getTrackingDataBasedOnParams = async () => {
+        const id = searchParams.get('personTrackingId')
+        setCaptureDetails({status : 'loading'})
+        
+        try {
+            const response = await privateApi.get(`/tracking/getTrackingDataById/${id}`)
+            const trackingData = response?.data
+            if(trackingData){
+                const {name, type, coordinates, stream_name, S3Key,imageUrl, FaceId, UserId, Id, Timestamp} = trackingData
+                console.log({name, type, coordinates, stream_name, S3Key,imageUrl, FaceId, UserId, Id, Timestamp})
+                const arrayCoordinates = parseCoordinates(coordinates)
+                const location = await getLocationNameFromCordinates(arrayCoordinates)
+                const captureDetailsData : IPersonTrackingType = {
+                    id : Id,
+                    alias: "",
+                    lastSeen: location?.name ?? 'Unknown',
+                    coordinates: arrayCoordinates,
+                    timeSeen: new Date(Timestamp),
+                    faceId: FaceId,
+                    streamName: stream_name,
+                    name: ``,
+                    type : type ?? ITrackingDataTypes.person,
+                    S3Key,
+                    imageUrl,
+                    userId : UserId
+                }
+                setCaptureDetails({
+                    data : captureDetailsData,
+                    status : undefined
+                })
+                setWayPoints([
+                    {
+                        ...captureDetailsData,
+                        radius: 10
+                    }
+                ])
+                setCenter(arrayCoordinates)
+            } else {
+                setCaptureDetails({
+                    status : undefined
+                })
+            }
+        } catch (error) {
+            console.log({error})
+            message.error("Error fetching data")
+        }
+        
+    }
+
     useEffect(() => {
         getWaypointCoordinates();
-        setTimeout(() => {
-            setZoom(15);
-        }, 3000);
     }, [wayPoints]);
+
+    useEffect(()=>{
+        getTrackingDataBasedOnParams()
+    },[searchParams])
+
+    useEffect(()=>{
+        console.log({params : searchParams.get('personTrackingId')})
+    },[])
 
     return (
         <div className="w-full relative overflow-hidden flex justify-center items-center rounded-lg bg-bg-secondary h-full">
