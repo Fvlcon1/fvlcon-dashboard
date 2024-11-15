@@ -37,61 +37,70 @@ const Right = () => {
             })
             const trackingData = response?.data
 
-            const { data: faceDetails } = await axios.get(`${API_URL}/${trackingData[0].FaceId}`)
-            const people: IPersonTrackingType[] = []
-
-            for (const data of trackingData) {
-                try {
-                    const { FaceId, Timestamp, coordinates, stream_name, S3Key, userId } = data
-                    const arrayCoordinates = parseCoordinates(coordinates)
-                    const location = await getLocationNameFromCordinates(arrayCoordinates)
-
-                    const personResultsParams: IPersonTrackingType = {
-                        name: `${faceDetails.FirstName} ${faceDetails.LastName}`,
-                        type: ITrackingDataTypes.person,
-                        alias: "",
-                        lastSeen: location?.name ?? 'Unknown',
-                        coordinates: arrayCoordinates,
-                        timeSeen: new Date(Timestamp),
-                        faceId : FaceId,
-                        streamName : stream_name,
-                        S3Key,
-                        userId
+            if(trackingData.length > 0){
+                const { data: faceDetails } = await axios.get(`${API_URL}/${trackingData[0]?.FaceId}`)
+                const people: IPersonTrackingType[] = []
+    
+                for (const data of trackingData) {
+                    try {
+                        const { FaceId, Timestamp, coordinates, stream_name, S3Key, userId, Id } = data
+                        const arrayCoordinates = parseCoordinates(coordinates)
+                        const location = await getLocationNameFromCordinates(arrayCoordinates)
+    
+                        const personResultsParams: IPersonTrackingType = {
+                            id : Id,
+                            name: `${faceDetails.FirstName} ${faceDetails.LastName}`,
+                            type: ITrackingDataTypes.person,
+                            alias: "",
+                            lastSeen: location?.name ?? 'Unknown',
+                            coordinates: arrayCoordinates,
+                            timeSeen: new Date(Timestamp),
+                            faceId : FaceId,
+                            streamName : stream_name,
+                            S3Key,
+                            userId
+                        }
+                        people.push(personResultsParams)
+                    } catch (error: any) {
+                        console.log({ error })
+                        message.error("Error fetching data")
+                        setPersonTrackingData( prev => ({
+                            ...prev,
+                            status: null,
+                        }))
                     }
-                    people.push(personResultsParams)
-                } catch (error: any) {
-                    console.log({ error })
-                    message.error("Error fetching data")
-                    setPersonTrackingData( prev => ({
-                        ...prev,
-                        status: null,
-                    }))
                 }
+                const  delay = (ms : number) => {
+                    return new Promise(resolve => setTimeout(resolve, ms));
+                }
+                
+                const updatePersonTrackingData = async (people : IPersonTrackingType[]) => {
+                    for (let person of people) {
+                        setPersonTrackingData(prev => ({
+                            data: [...prev.data, person],
+                            status: null
+                        }));
+                        console.log({ person });
+                        await delay(100);
+                    }
+                }
+    
+                updatePersonTrackingData(people)
+            } else {
+                message.warning("No data found", 5)
+                setPersonTrackingData( prev => ({
+                    ...prev,
+                    status: null,
+                }))
             }
 
-            const  delay = (ms : number) => {
-                return new Promise(resolve => setTimeout(resolve, ms));
-            }
-            
-            const updatePersonTrackingData = async (people : IPersonTrackingType[]) => {
-                for (let person of people) {
-                    setPersonTrackingData(prev => ({
-                        data: [...prev.data, person],
-                        status: null
-                    }));
-                    console.log({ person });
-                    await delay(100);
-                }
-            }
-
-            updatePersonTrackingData(people)
         } catch (error: any) {
             console.log({ error })
             setPersonTrackingData({
                 status: null,
                 data: []
             })
-            message.error(error.response?.data.message ?? error.message)
+            message.error("Error fetching data")
         }
     }
 

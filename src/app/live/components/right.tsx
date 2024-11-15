@@ -12,13 +12,14 @@ import Skeleton from "react-loading-skeleton"
 import { useEffect, useState } from "react"
 import useWebSocket from "@/utils/useWebsocket"
 import { getUserDetailsFromTrackingData } from "../utils/getUserDetailsFromTrackingData"
-import { IPersonTrackingType, IPersonTrackingWithImageType } from "@/app/tracking/components/types"
+import { IPersonTrackingType, IPersonTrackingWithImageType, IPlateTrackingType } from "@/app/tracking/components/types"
+import Divider from "@components/divider/divider"
 
 const Right = () => {
     const [analysisResults, setAnalysisResults] = useState(true)
     const { messages } = useWebSocket(process.env.NEXT_PUBLIC_WEBSOCKET_URL!, message => onMessageUpdate(message));
     const [isMessageUpdated, setIsMessageUpdated] = useState(false)
-    const [detections, setDetections] = useState<IPersonTrackingWithImageType[]>([])
+    const [detections, setDetections] = useState<(IPersonTrackingWithImageType | IPlateTrackingType)[]>([])
 
     const onMessageUpdate = async (message : any) => {
         console.log("updated")
@@ -46,6 +47,7 @@ const Right = () => {
                 >
                     <Button
                         text="Clear"
+                        onClick={()=>setDetections([])}
                     />
                 </Flex>
                 <div className="flex flex-col w-full h-full rounded-lg gap-1 bg-gradient-container items-center px-2 p-1 overflow-y-auto">
@@ -62,10 +64,14 @@ const Right = () => {
                     {
                         analysisResults ?
                         [...detections].reverse().map((item, index : number) => (
-                            <AnalysisResults 
-                                key={index}
-                                detections={item}
-                            />
+                            <>
+                                <AnalysisResults 
+                                    key={index}
+                                    detections={item.type === "person" ? item as IPersonTrackingType : undefined}
+                                    plateDetections={item.type === "plate" ? item as IPlateTrackingType: undefined}
+                                />
+                                {index !== (detections.length - 1) && <Divider />}
+                            </>
                         ))
                         :
                         [1,2,3,4,5,6].map((item, index : number) => (
