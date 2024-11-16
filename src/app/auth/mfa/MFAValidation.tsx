@@ -85,6 +85,7 @@ export default function MFAValidation({
       const data = await response.json();
       if (response.ok) {
         setIsLoading(false)
+        message.success("Login Successful")
         onSuccess()
       } else {
         setMessage(data.message || 'Invalid verification code. Please try again.');
