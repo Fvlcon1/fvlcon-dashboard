@@ -1,289 +1,158 @@
-'use client';
+'use client'
 
-import React, { useState } from 'react';
-import { Avatar, Button, CssBaseline, TextField, Typography, Container, Box, Grid, CircularProgress } from '@mui/material';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
-import SecretAgentIcon from '../../../assets/FVLCON3.png';
-import UserPool from '../components/UserPool';
-import '../../styles/index.css';  // Custom styles
-import { useRouter } from 'next/navigation';
-import { message } from 'antd';
-
-// Dark theme configuration with Orbitron font
-const theme = createTheme({
-  palette: {
-    mode: 'dark',
-    primary: {
-      main: '#ffffff',
-    },
-    background: {
-      default: '#121212',
-      paper: '#1c1c1c',
-    },
-  },
-  typography: {
-    fontFamily: 'Orbitron, sans-serif',
-  },
-});
+import { useState } from 'react'
+import { motion } from 'framer-motion'
+import { User, Lock, Mail, Building } from 'lucide-react'
+import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 
 export default function SignUp() {
-  const [email, setEmail] = useState<string>('');
-  const [firstname, setFirstname] = useState<string>('');
-  const [companyCode, setCompanyCode] = useState<string>('');
-  const [lastname, setLastname] = useState<string>('');
-  const [password, setPassword] = useState<string>('');
-  const [confirmPassword, setConfirmPassword] = useState<string>('');
-  const [error, setError] = useState<string>('');
-  const [loading, setLoading] = useState<boolean>(false);
-
+  const [companyCode, setCompanyCode] = useState('')
+  const [firstname, setFirstname] = useState('')
+  const [lastname, setLastname] = useState('')
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [errorMessage, setErrorMessage] = useState('')
   const router = useRouter()
 
-  const handleSubmit = async (event : any) => {
-    event.preventDefault();
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    setErrorMessage('') // Reset any previous error message
 
-    const formData = new FormData(event.target);
-    const data = {
-      firstName: formData.get("firstname"),
-      lastName: formData.get("lastname"),
-      email: formData.get("email"),
-      companyCode: formData.get("companyCode"),
-      password: formData.get("password"),
-    };
-
-    setLoading(true);
-    setError("");
-
-    // Redirect to the verification page immediately
-
+    const data = { companyCode, firstName: firstname,
+      lastName: lastname, email, password }
+    
     try {
-      const response = await fetch("/api/auth/signup", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+      const response = await fetch('/api/auth/signup', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),
-      });
+      })
 
-      const result = await response.json();
-
-      if (!response.ok) {
-        message.error(result.error)
-        setError(result.error || 'Something went wrong.');
-      } else {
-        message.success("Sign up successful")
+      if (response.ok) {
+        console.log('Signup successful')
         router.push('/auth/login')
+      } else {
+        const result = await response.json()
+        setErrorMessage(result.error || 'Signup failed')
       }
-    } catch (error : any) {
-      console.error("Error registering user:", error);
-      setError(error || 'An unexpected error occurred.');
-    } finally {
-      setLoading(false);
+    } catch (error) {
+      console.error('Error signing up:', error)
+      setErrorMessage('An error occurred. Please try again.')
     }
-  };
+  }
 
   return (
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <Container component="main" maxWidth="xs" sx={{
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        minHeight: '100vh',
-        fontFamily: 'Orbitron, sans-serif', // Ensure it's applied globally
-      }}>
-        <Box
-          sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-          }}
-        >
-          <Avatar
-            sx={{ mt: -3, bgcolor: 'transparent', width: 72, height: 72 }}
-          >
-            <img src={SecretAgentIcon.src} alt="Secret Agent Icon" style={{ width: '100%', height: '90%' }} />
-          </Avatar>
-          <Typography component="h2" variant="h6" sx={{ mt: 2, letterSpacing: 2, color: theme.palette.primary.main }}>
-            SIGN UP
-          </Typography>
-          <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1, width: '100%' }}>
-            <Grid container spacing={2}>
-            <Grid item xs={12}>
-              <TextField
-                  fullWidth
-                  id="companyCode"
-                  label="Company Code"
-                  name="companyCode"
-                  autoComplete="companyCode"
-                  autoFocus
-                  value={companyCode}
-                  onChange={(event) => setCompanyCode(event.target.value)}
-                  variant="outlined"
-                  color="primary"
-                  sx={{
-                    '& label.Mui-focused': { color: 'white' },
-                    '& .MuiInput-underline:after': { borderBottomColor: 'white' },
-                    '& .MuiOutlinedInput-root': {
-                      '& fieldset': { borderColor: 'white' },
-                      '&:hover fieldset': { borderColor: 'white' },
-                      '&.Mui-focused fieldset': { borderColor: 'white' },
-                    },
-                    fontFamily: 'Orbitron, sans-serif', // Orbitron applied here
-                  }}
-                />
-            </Grid>
-            <Grid item xs={12}>
-                <TextField
-                  fullWidth
-                  id="firstname"
-                  label="First Name"
-                  name="firstname"
-                  autoComplete="firstname"
-                  value={firstname}
-                  onChange={(event) => setFirstname(event.target.value)}
-                  variant="outlined"
-                  color="primary"
-                  sx={{
-                    '& label.Mui-focused': { color: 'white' },
-                    '& .MuiInput-underline:after': { borderBottomColor: 'white' },
-                    '& .MuiOutlinedInput-root': {
-                      '& fieldset': { borderColor: 'white' },
-                      '&:hover fieldset': { borderColor: 'white' },
-                      '&.Mui-focused fieldset': { borderColor: 'white' },
-                    },
-                    fontFamily: 'Orbitron, sans-serif', // Orbitron applied here
-                  }}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  fullWidth
-                  id="lastname"
-                  label="Last Name"
-                  name="lastname"
-                  autoComplete="lastname"
-                  value={lastname}
-                  onChange={(event) => setLastname(event.target.value)}
-                  variant="outlined"
-                  color="primary"
-                  sx={{
-                    '& label.Mui-focused': { color: 'white' },
-                    '& .MuiInput-underline:after': { borderBottomColor: 'white' },
-                    '& .MuiOutlinedInput-root': {
-                      '& fieldset': { borderColor: 'white' },
-                      '&:hover fieldset': { borderColor: 'white' },
-                      '&.Mui-focused fieldset': { borderColor: 'white' },
-                    },
-                    fontFamily: 'Orbitron, sans-serif', // Orbitron applied here
-                  }}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  fullWidth
-                  id="email"
-                  label="Email Address"
-                  name="email"
-                  autoComplete="email"
-                  value={email}
-                  onChange={(event) => setEmail(event.target.value)}
-                  variant="outlined"
-                  color="primary"
-                  sx={{
-                    '& label.Mui-focused': { color: 'white' },
-                    '& .MuiInput-underline:after': { borderBottomColor: 'white' },
-                    '& .MuiOutlinedInput-root': {
-                      '& fieldset': { borderColor: 'white' },
-                      '&:hover fieldset': { borderColor: 'white' },
-                      '&.Mui-focused fieldset': { borderColor: 'white' },
-                    },
-                    fontFamily: 'Orbitron, sans-serif', // Orbitron applied here
-                  }}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  fullWidth
-                  name="password"
-                  label="Password"
-                  type="password"
-                  id="password"
-                  autoComplete="new-password"
-                  value={password}
-                  onChange={(event) => setPassword(event.target.value)}
-                  variant="outlined"
-                  color="primary"
-                  sx={{
-                    '& label.Mui-focused': { color: 'white' },
-                    '& .MuiInput-underline:after': { borderBottomColor: 'white' },
-                    '& .MuiOutlinedInput-root': {
-                      '& fieldset': { borderColor: 'white' },
-                      '&:hover fieldset': { borderColor: 'white' },
-                      '&.Mui-focused fieldset': { borderColor: 'white' },
-                    },
-                    fontFamily: 'Orbitron, sans-serif',
-                  }}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  fullWidth
-                  name="confirmPassword"
-                  label="Confirm Password"
-                  type="password"
-                  id="confirmPassword"
-                  autoComplete="new-password"
-                  value={confirmPassword}
-                  onChange={(event) => setConfirmPassword(event.target.value)}
-                  variant="outlined"
-                  color="primary"
-                  sx={{
-                    '& label.Mui-focused': { color: 'white' },
-                    '& .MuiInput-underline:after': { borderBottomColor: 'white' },
-                    '& .MuiOutlinedInput-root': {
-                      '& fieldset': { borderColor: 'white' },
-                      '&:hover fieldset': { borderColor: 'white' },
-                      '&.Mui-focused fieldset': { borderColor: 'white' },
-                    },
-                    fontFamily: 'Orbitron, sans-serif',
-                  }}
-                />
-              </Grid>
-            </Grid>
-            {error && (
-              <Typography variant="body2" color="error" align="center" sx={{ mt: 3 }}>
-                {error}
-              </Typography>
-            )}
-            <Button
+    <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
+      <motion.div
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="w-full max-w-md"
+      >
+        <form onSubmit={handleSubmit} className="bg-white shadow-xl rounded-lg px-8 pt-6 pb-8 mb-4">
+          <h2 className="text-2xl font-bold text-gray-800 mb-6 text-center">Create an Account</h2>
+          
+          {errorMessage && <p className="text-red-500 text-center mb-4">{errorMessage}</p>}
+
+          <div className="mb-4">
+            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="companyCode">
+              Company Code
+            </label>
+            <div className="relative">
+              <input
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-black pl-10"
+                id="companyCode"
+                type="text"
+                placeholder="Enter your company code"
+                value={companyCode}
+                onChange={(e) => setCompanyCode(e.target.value)}
+              />
+              <Building className="absolute left-3 top-2.5 h-5 w-5 text-gray-400" />
+            </div>
+          </div>
+
+          <div className="mb-4">
+            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="firstname">
+              First Name
+            </label>
+            <div className="relative">
+              <input
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-black pl-10"
+                id="firstname"
+                type="text"
+                placeholder="Enter your first name"
+                value={firstname}
+                onChange={(e) => setFirstname(e.target.value)}
+              />
+              <User className="absolute left-3 top-2.5 h-5 w-5 text-gray-400" />
+            </div>
+          </div>
+
+          <div className="mb-4">
+            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="lastname">
+              Last Name
+            </label>
+            <div className="relative">
+              <input
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-black pl-10"
+                id="lastname"
+                type="text"
+                placeholder="Enter your last name"
+                value={lastname}
+                onChange={(e) => setLastname(e.target.value)}
+              />
+              <User className="absolute left-3 top-2.5 h-5 w-5 text-gray-400" />
+            </div>
+          </div>
+
+          <div className="mb-4">
+            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="email">
+              Email
+            </label>
+            <div className="relative">
+              <input
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-black pl-10"
+                id="email"
+                type="email"
+                placeholder="Enter your email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+              <Mail className="absolute left-3 top-2.5 h-5 w-5 text-gray-400" />
+            </div>
+          </div>
+
+          <div className="mb-6">
+            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="password">
+              Password
+            </label>
+            <div className="relative">
+              <input
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:ring-2 focus:ring-black pl-10"
+                id="password"
+                type="password"
+                placeholder="Create a password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+              <Lock className="absolute left-3 top-2.5 h-5 w-5 text-gray-400" />
+            </div>
+          </div>
+
+          <div className="flex items-center justify-center">
+            <button
+              className="bg-black hover:bg-gray-800 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full transition duration-300 ease-in-out"
               type="submit"
-              disabled={loading}
-              fullWidth
-              variant="contained"
-              sx={{ mt: 3, mb: 2 }}
             >
-              {loading ? <CircularProgress size={24} color="inherit" /> : 'Sign Up'}
-            </Button>
-          </Box>
-        </Box>
-        <Box
-          sx={{
-            position: 'fixed',
-            bottom: 0,
-            left: 0,
-            width: '100%',
-            backgroundColor: '#121212',
-            padding: '8px',
-            textAlign: 'center',
-            color: '#aaaaaa',
-            fontFamily: 'Orbitron, sans-serif',
-            fontSize: '0.75rem',
-            zIndex: 100,
-          }}
-        >
-          ©️ 2024 • BLVCK SAPPHIRE • All Rights Reserved
-        </Box>
-      </Container>
-    </ThemeProvider>
-  );
+              Sign Up
+            </button>
+          </div>
+        </form>
+        <p className="text-center text-gray-500 text-xs">
+          &copy;2024 Blvck Sapphire. All rights reserved.
+        </p>
+      </motion.div>
+    </div>
+  )
 }

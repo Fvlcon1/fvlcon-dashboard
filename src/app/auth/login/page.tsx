@@ -1,89 +1,85 @@
 'use client';
-
+import { motion } from 'framer-motion';
+import { User, Lock, Building } from 'lucide-react';
+import { signIn } from 'next-auth/react';
+import { authrorization } from '@/utils/api/authorization';
+import { message } from 'antd';
+import MFAValidation from '../mfa/MFAValidation';
 import React, { useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Avatar, Button, CssBaseline, TextField, Typography, Container, Box, Grid, CircularProgress } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import SecretAgentIcon from '../../../assets/FVLCON3.png';
 import '../../styles/index.css';
-import { signIn, useSession } from "next-auth/react";
-import { message } from 'antd';
 import Link from 'next/link';
-import axios from 'axios';
 
-const theme = createTheme({
-  palette: {
-    mode: 'dark',
-    primary: {
-      main: '#ffffff',
-    },
-    background: {
-      default: '#121212',
-      paper: '#1c1c1c',
-    },
-  },
-  typography: {
-    fontFamily: 'Orbitron, sans-serif',
-  },
-});
-
-const Login: React.FC = () => {
-  const [email, setEmail] = useState<string>('');
-  const [password, setPassword] = useState<string>('');
+export default function LoginForm() {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [companyCode, setCompanyCode] = useState('');
+  const [error, setError] = useState<string | null>(null);
+  const [showMfa, setShowMfa] = useState(false)
   const [loading, setLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string>('');
   const router = useRouter();
-  const { data: session } = useSession();
-  const params = useSearchParams();
-
-  if (session) router.push("/auth/mfa");
-
-  const redirectError = params.get("error");
-  let hasDisplayedRedirectError = false;
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setLoading(true);
+    setError(null); // Clear previous errors
+    setLoading(true)
 
-    try {
-      const res = await signIn("credentials", {
-        redirect: false,
-        email,
-        password,
-      });
+    const auth = await authrorization({
+      email,
+      password,
+      companyCode,
+    })
 
-      if (res?.error) {
-        console.error('Login error:', res.error);
-        setError(res.error || 'An error occurred while logging in');
-        message.error(res.error);
-      } else {
-        message.success("Login Successful");
-
-
-        await axios.post('http://localhost:5002/setup-mfa', { email });
-
-        // Redirect to MFA validation page
-        // router.push('/auth/mfa');
-        router.push(`/auth/mfa?email=${encodeURIComponent(email)}`);
-
-      }
-    } catch (err: any) {
-      console.error('Unexpected error:', err);
-      setError('Unexpected error occurred');
-      message.error(err.message);
-    } finally {
-      setLoading(false);
+    if (!auth) {
+      setError('Invalid email or password');
+      setLoading(false)
+    } else {
+      setShowMfa(true)
+      setLoading(false)
     }
   };
 
-  useEffect(() => {
-    if (redirectError && !hasDisplayedRedirectError) {
-      hasDisplayedRedirectError = true;
-      message.warning(redirectError);
+  const handleMfaSubmit = async () => {
+    const result = await signIn('credentials', {
+      redirect : false,
+      email,
+      password,
+      companyCode,
+    })
+
+    if(result?.error){
+      message.error("Error signing in")
+    } else {
+      router.push(`/dashboard/home`);
     }
-  }, [redirectError]);
+  }
+
+  const theme = createTheme({
+    palette: {
+      mode: 'dark',
+      primary: {
+        main: '#ffffff',
+      },
+      background: {
+        default: '#121212',
+        paper: '#1c1c1c',
+      },
+    },
+    typography: {
+      fontFamily: 'Orbitron, sans-serif',
+    },
+  });
 
   return (
+    showMfa ?
+    <MFAValidation 
+      email={email}
+      onSuccess={handleMfaSubmit}
+    />
+    :
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <Container component="main" maxWidth="xs" sx={{
@@ -104,11 +100,34 @@ const Login: React.FC = () => {
               <Grid item xs={12}>
                 <TextField
                   fullWidth
+                  id="companyCode"
+                  label="Company Code"
+                  name="companyCode"
+                  autoComplete="companyCode"
+                  autoFocus
+                  value={companyCode}
+                  onChange={(event) => setCompanyCode(event.target.value)}
+                  variant="outlined"
+                  color="primary"
+                  sx={{
+                    '& label.Mui-focused': { color: 'white' },
+                    '& .MuiInput-underline:after': { borderBottomColor: 'white' },
+                    '& .MuiOutlinedInput-root': {
+                      '& fieldset': { borderColor: 'white' },
+                      '&:hover fieldset': { borderColor: 'white' },
+                      '&.Mui-focused fieldset': { borderColor: 'white' },
+                    }
+                  }}
+                />
+              </Grid>
+
+              <Grid item xs={12}>
+                <TextField
+                  fullWidth
                   id="email"
                   label="Email Address"
                   name="email"
                   autoComplete="email"
-                  autoFocus
                   value={email}
                   onChange={(event) => setEmail(event.target.value)}
                   variant="outlined"
@@ -124,6 +143,7 @@ const Login: React.FC = () => {
                   }}
                 />
               </Grid>
+
               <Grid item xs={12}>
                 <TextField
                   fullWidth
@@ -201,6 +221,4 @@ const Login: React.FC = () => {
       </Container>
     </ThemeProvider>
   );
-};
-
-export default Login;
+}

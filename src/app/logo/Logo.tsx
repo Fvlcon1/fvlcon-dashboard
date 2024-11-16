@@ -39,7 +39,7 @@ const HomePage = () => {
       return () => clearInterval(interval);
     } else {
       setTimeout(() => {
-        router.push('/company-code');
+        router.push('auth/login');
       }, 2000);
     }
   }, [currentIndex, fvlconText, router]);
