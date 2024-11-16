@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Mail, RefreshCw } from 'lucide-react';
 import { useRouter, useSearchParams } from 'next/navigation';
+import { message } from 'antd';
 
 export default function MFAValidation({
   email,
@@ -16,7 +17,7 @@ export default function MFAValidation({
   const [code, setCode] = useState(Array(6).fill(''));
   const [error, setError] = useState<string | null>(null);
   const [timer, setTimer] = useState(5*60);
-  const [message, setMessage] = useState<string | null>(null);
+  const [errMessage, setMessage] = useState<string | null>(null);
   const [canResend, setCanResend] = useState(false);
   const [isResending, setIsResending] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -61,12 +62,14 @@ export default function MFAValidation({
 
     if (!email) {
       setMessage('Email is missing. Please retry.');
+      message.warning('Email is missing. Please retry.');
       return;
     }
 
     const fullCode = code.join('');
       if (fullCode.length !== 6) {
           setMessage("Please enter a 6-digit code.");
+          message.warning("Please enter a 6-digit code.");
           setIsLoading(false);
           return;
       }
@@ -85,11 +88,13 @@ export default function MFAValidation({
         onSuccess()
       } else {
         setMessage(data.message || 'Invalid verification code. Please try again.');
+        message.error(data.message || 'Invalid verification code. Please try again.');
         setIsLoading(false)
       }
     } catch {
       setIsLoading(false)
       setMessage('Something went wrong. Please try again.');
+      message.error('Something went wrong. Please try again.');
     }
   };
 
@@ -143,7 +148,7 @@ export default function MFAValidation({
               {isResending ? 'Resending...' : 'Resend code'}
           </button>
 
-          {message && <p style={styles.message}>{message}</p>}
+          {errMessage && <p style={styles.message}>{errMessage}</p>}
       </div>
   </div>
   );
