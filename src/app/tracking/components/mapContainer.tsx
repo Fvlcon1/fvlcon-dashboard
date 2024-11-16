@@ -113,6 +113,9 @@ const MapComponent = () => {
                 })
             }
         } catch (error) {
+            setCaptureDetails({
+                status : undefined
+            })
             console.log({error})
             message.error("Error fetching data")
         }
@@ -124,7 +127,8 @@ const MapComponent = () => {
     }, [wayPoints]);
 
     useEffect(()=>{
-        getTrackingDataBasedOnParams()
+        if(searchParams.get('personTrackingId'))
+            getTrackingDataBasedOnParams()
     },[searchParams])
 
     useEffect(()=>{
