@@ -19,8 +19,8 @@ export const authrorization = async ({
   
     const user = await publicApi.post("/auth/login", {
       email : email,
-      password : "Password000!",
-      companyCode : "123"
+      password : password,
+      companyCode : companyCode
     })
     if (user) return user
     return null
