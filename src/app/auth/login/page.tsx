@@ -50,12 +50,7 @@ export default function LoginForm() {
       companyCode,
     })
 
-    if(result?.error !== null || result?.error){
-      console.log({error})
-      message.error("Error signing in")
-    } else {
-      router.push(`/dashboard/home`);
-    }
+    router.push(`/dashboard/home`);
   }
 
   const theme = createTheme({
