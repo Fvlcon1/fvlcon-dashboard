@@ -26,27 +26,27 @@ export const liveContext = createContext<{
 
 export const LiveProvider = ({ children }: { children: ReactNode }) => {
     const [activeCameras, setActiveCameras] = useState<activeCameraType[]>([
+        {
+            id : '1',
+            url : "https://stream.fvlcon.app:8888/towncouncil/channel_1",
+            location : 'Osu Accra',
+            streamName : "my_stream_name",
+            coordinates : [5.558, -0.187]
+        },
         // {
-        //     id : '1',
-        //     url : "https://stream.fvlcon.app:8888/towncouncil/channel_1",
-        //     location : 'Osu Accra',
-        //     streamName : "my_stream_name",
-        //     coordinates : [5.558, -0.187]
+        //     id : '2',
+        //     url : "https://cbf4b2cd1097c77aaca841704baf7ec5.serveo.net/video_stream",
+        //     location : 'East legon, Accra',
+        //     streamName : "stream2",
+        //     coordinates : [5.65, -0.163]
         // },
-        {
-            id : '2',
-            url : "https://cbf4b2cd1097c77aaca841704baf7ec5.serveo.net/video_stream",
-            location : 'East legon, Accra',
-            streamName : "stream2",
-            coordinates : [5.65, -0.163]
-        },
-        {
-            id : '3',
-            url : "https://63ff329fba3ea428cf30d60dccb666c6.serveo.net/video_feed",
-            location : 'East legon, Accra',
-            streamName : "stream2",
-            coordinates : [5.65, -0.163]
-        },
+        // {
+        //     id : '3',
+        //     url : "https://63ff329fba3ea428cf30d60dccb666c6.serveo.net/video_feed",
+        //     location : 'East legon, Accra',
+        //     streamName : "stream2",
+        //     coordinates : [5.65, -0.163]
+        // },
     ])
     const [numberOfCamerasPerPage, setNumberOfCamerasPerPage] = useState<number>(4)
     const [folders, setFolders] = useState<FolderOrCamera[]>([]);

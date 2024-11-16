@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Dispatch, SetStateAction } from 'react';
 import { motion } from 'framer-motion';
 import { Mail, RefreshCw } from 'lucide-react';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -9,14 +9,19 @@ import { message } from 'antd';
 export default function MFAValidation({
   email,
   onSuccess,
+  timer,
+  setTimer,
+  resendHandler
 } : {
   email? : string
   onSuccess : ()=>void
+  timer : number
+  setTimer: Dispatch<SetStateAction<number>>
+  resendHandler : ()=>void
 }) {
   const [verificationCode, setVerificationCode] = useState('');
   const [code, setCode] = useState(Array(6).fill(''));
   const [error, setError] = useState<string | null>(null);
-  const [timer, setTimer] = useState(5*60);
   const [errMessage, setMessage] = useState<string | null>(null);
   const [canResend, setCanResend] = useState(false);
   const [isResending, setIsResending] = useState(false);
@@ -101,14 +106,13 @@ export default function MFAValidation({
 
   const handleResendCode = async () => {
     setCanResend(false);
-    setTimer(60 * 5);
+    setIsResending(true)
     try {
-      await fetch('/api/auth/resend-2fa', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email }),
-      });
+      await resendHandler()
+      setIsResending(false)
+      setTimer(5 * 60)
     } catch {
+      setIsResending(false)
       setError('Failed to resend verification code.');
     }
   };

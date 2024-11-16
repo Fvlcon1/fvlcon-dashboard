@@ -21,6 +21,7 @@ export default function LoginForm() {
   const [showMfa, setShowMfa] = useState(false)
   const [loading, setLoading] = useState<boolean>(false);
   const router = useRouter();
+  const [timer, setTimer] = useState(5*60);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -41,6 +42,23 @@ export default function LoginForm() {
       setLoading(false)
     }
   };
+
+  const resendHandler = async () => {
+    const auth = await authrorization({
+      email,
+      password,
+      companyCode,
+    })
+    
+    if (!auth) {
+      setError('Invalid email or password');
+      setLoading(false)
+    } else {
+      message.success("Code sent successfully")
+      setShowMfa(true)
+      setLoading(false)
+    }
+  }
 
   const handleMfaSubmit = async () => {
     const result = await signIn('credentials', {
@@ -74,6 +92,9 @@ export default function LoginForm() {
     <MFAValidation 
       email={email}
       onSuccess={handleMfaSubmit}
+      timer={timer}
+      setTimer={setTimer}
+      resendHandler={resendHandler}
     />
     :
     <ThemeProvider theme={theme}>
