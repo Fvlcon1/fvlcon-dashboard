@@ -15,7 +15,7 @@ export default function MFAValidation({
   const [verificationCode, setVerificationCode] = useState('');
   const [code, setCode] = useState(Array(6).fill(''));
   const [error, setError] = useState<string | null>(null);
-  const [timer, setTimer] = useState(30);
+  const [timer, setTimer] = useState(5*60);
   const [message, setMessage] = useState<string | null>(null);
   const [canResend, setCanResend] = useState(false);
   const [isResending, setIsResending] = useState(false);
@@ -32,6 +32,12 @@ export default function MFAValidation({
     }
     return () => clearInterval(interval);
   }, [timer, canResend]);
+
+  const formatTime = (timeInSeconds : number) => {
+    const minutes = Math.floor(timeInSeconds / 60);
+    const seconds = timeInSeconds % 60;
+    return `${minutes}:${seconds.toString().padStart(2, '0')}`; // Format with leading zero for seconds
+  };
 
   const handleChange = (index: number, value: string) => {
     if (/^\d?$/.test(value)) {
@@ -89,7 +95,7 @@ export default function MFAValidation({
 
   const handleResendCode = async () => {
     setCanResend(false);
-    setTimer(30);
+    setTimer(60 * 5);
     try {
       await fetch('/api/auth/resend-2fa', {
         method: 'POST',
@@ -108,7 +114,7 @@ export default function MFAValidation({
           <p style={styles.instruction}>
               A verification code has been sent to <strong>{email}</strong>
           </p>
-          <p style={styles.timer}>The code will expire in {timer}.</p>
+          <p style={styles.timer}>The code will expire in {formatTime(timer)}.</p>
 
           <div style={styles.codeContainer}>
               {code.map((digit, index) => (
