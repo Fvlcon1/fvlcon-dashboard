@@ -50,7 +50,7 @@ export default function LoginForm() {
       companyCode,
     })
 
-    if(result?.error){
+    if(result?.error !== null || result?.error){
       console.log({error})
       message.error("Error signing in")
     } else {
