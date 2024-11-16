@@ -51,6 +51,7 @@ export default function LoginForm() {
     })
 
     if(result?.error){
+      console.log({error})
       message.error("Error signing in")
     } else {
       router.push(`/dashboard/home`);
