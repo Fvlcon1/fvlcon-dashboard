@@ -8,8 +8,14 @@ import prisma from '@/lib/prisma'; // Adjust based on your setup
 import { Resend } from 'resend'; // Assuming you're using Resend for sending emails
 import dotenv from 'dotenv';
 import jwt from 'jsonwebtoken';
+import { cookies } from "next/headers";
 dotenv.config();
 const resend = new Resend(process.env.RESEND_API_KEY);
+
+const setTokenCookie = async (token : string) => {
+  const cookieStore = await cookies()
+  cookieStore.set('token', token)
+}
 
 export const authOptions: NextAuthOptions = {
   debug: process.env.NODE_ENV === 'development', // Debugging in development only
@@ -53,11 +59,17 @@ export const authOptions: NextAuthOptions = {
   callbacks: {
     jwt: async ({ token, user }) => {
       if (user) {
-        token.email = user.email;
-        token.userId = user.id;
+          const signedToken = jwt.sign(
+              { email: user.email, userId: user.id },
+              process.env.JWT_SECRET || 'secretJWT',
+              { expiresIn: '1h' }
+          );
+          await setTokenCookie(signedToken);
+          token.email = user.email;
+          token.userId = user.id;  // Add userId to the token
       }
       return token;
-    },
+  },
     session: async ({ session, token }) => {
       if (session.user) {
         session.user.email = token.email;
