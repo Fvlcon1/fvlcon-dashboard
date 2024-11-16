@@ -6,8 +6,7 @@ import MFAValidation from './MFAValidation';
 const App: React.FC = () => {
   return (
     <div>
-
-      <MFAValidation />
+      <MFAValidation onSuccess={()=>{}} />
     </div>
   );
 };

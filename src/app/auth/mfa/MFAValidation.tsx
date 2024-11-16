@@ -5,14 +5,23 @@ import { motion } from 'framer-motion';
 import { Mail, RefreshCw } from 'lucide-react';
 import { useRouter, useSearchParams } from 'next/navigation';
 
-export default function MFAValidation() {
+export default function MFAValidation({
+  email,
+  onSuccess,
+} : {
+  email? : string
+  onSuccess : ()=>void
+}) {
   const [verificationCode, setVerificationCode] = useState('');
+  const [code, setCode] = useState(Array(6).fill(''));
   const [error, setError] = useState<string | null>(null);
   const [timer, setTimer] = useState(30);
+  const [message, setMessage] = useState<string | null>(null);
   const [canResend, setCanResend] = useState(false);
+  const [isResending, setIsResending] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   const searchParams = useSearchParams();
-  const email = searchParams.get('email'); // Extract email from query params
 
   useEffect(() => {
     let interval: NodeJS.Timeout;
@@ -24,30 +33,57 @@ export default function MFAValidation() {
     return () => clearInterval(interval);
   }, [timer, canResend]);
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleChange = (index: number, value: string) => {
+    if (/^\d?$/.test(value)) {
+        const newCode = [...code];
+        newCode[index] = value;
+        setCode(newCode);
+
+        if (value && index < 5) {
+            const nextInput = document.getElementById(`code-${index + 1}`);
+            if (nextInput) nextInput.focus();
+        } else if (!value && index > 0) {
+            const prevInput = document.getElementById(`code-${index - 1}`);
+            if (prevInput) prevInput.focus();
+        }
+    }
+  };
+
+  const handleSubmit = async (e: any) => {
     e.preventDefault();
     setError(null);
 
     if (!email) {
-      setError('Email is missing. Please retry.');
+      setMessage('Email is missing. Please retry.');
       return;
     }
 
+    const fullCode = code.join('');
+      if (fullCode.length !== 6) {
+          setMessage("Please enter a 6-digit code.");
+          setIsLoading(false);
+          return;
+      }
+
     try {
+      setIsLoading(true)
       const response = await fetch('/api/auth/verify-2fa', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, code: verificationCode }),
+        body: JSON.stringify({ email, code : code.join("") }),
       });
 
       const data = await response.json();
       if (response.ok) {
-        router.push('/dashboard/home');
+        setIsLoading(false)
+        onSuccess()
       } else {
-        setError(data.message || 'Invalid verification code. Please try again.');
+        setMessage(data.message || 'Invalid verification code. Please try again.');
+        setIsLoading(false)
       }
     } catch {
-      setError('Something went wrong. Please try again.');
+      setIsLoading(false)
+      setMessage('Something went wrong. Please try again.');
     }
   };
 
@@ -66,86 +102,127 @@ export default function MFAValidation() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-100 to-gray-200 p-4">
-      <motion.div
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-        className="w-full max-w-md bg-white shadow-lg rounded-lg"
-      >
-        <form
-          onSubmit={handleSubmit}
-          className="px-8 py-6 space-y-6"
-          aria-labelledby="mfa-header"
-        >
-          <h2
-            id="mfa-header"
-            className="text-2xl font-semibold text-center text-gray-800"
-          >
-            Two-Factor Authentication
-          </h2>
-          {error && (
-            <motion.p
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              className="text-red-600 text-sm"
-            >
-              {error}
-            </motion.p>
-          )}
-          <p className="text-gray-600 text-sm text-center">
-            We've sent a verification code to your email. Enter it below.
+    <div style={styles.outerContainer}>
+      <div style={styles.container}>
+          <h2 style={styles.title}>Verify Your Email Address</h2>
+          <p style={styles.instruction}>
+              A verification code has been sent to <strong>{email}</strong>
           </p>
-          <div>
-            <label
-              htmlFor="verificationCode"
-              className="block text-gray-700 text-sm font-medium"
-            >
-              Verification Code
-            </label>
-            <div className="relative mt-1">
-              <input
-                id="verificationCode"
-                type="text"
-                className="w-full py-2 px-3 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 pl-10"
-                placeholder="Enter verification code"
-                value={verificationCode}
-                onChange={(e) => setVerificationCode(e.target.value)}
-                required
-                aria-describedby="codeHelpText"
-              />
-              <Mail className="absolute top-2.5 left-3 h-5 w-5 text-gray-400" />
-            </div>
-            <p id="codeHelpText" className="mt-2 text-xs text-gray-500">
-              Enter the 6-digit code sent to your email.
-            </p>
+          <p style={styles.timer}>The code will expire in {timer}.</p>
+
+          <div style={styles.codeContainer}>
+              {code.map((digit, index) => (
+                  <input
+                      key={index}
+                      id={`code-${index}`}
+                      type="text"
+                      value={digit}
+                      onChange={(e) => handleChange(index, e.target.value)}
+                      maxLength={1}
+                      onKeyDown={(e) => e.key === "Enter" && e.preventDefault()}
+                      style={styles.input}
+                  />
+              ))}
           </div>
-          <div className="flex justify-between items-center">
-            <button
-              type="button"
-              className={`text-sm flex items-center ${
-                canResend
-                  ? 'text-indigo-600 hover:text-indigo-800'
-                  : 'text-gray-400 cursor-not-allowed'
-              }`}
-              onClick={handleResendCode}
-              disabled={!canResend}
-            >
-              <RefreshCw className="h-4 w-4 mr-1" />
-              {canResend ? 'Resend Code' : `Resend in ${timer}s`}
-            </button>
-          </div>
-          <button
-            type="submit"
-            className="w-full bg-indigo-600 text-white py-2 px-4 rounded-lg hover:bg-indigo-700 transition duration-300"
-          >
-            Verify
+
+          <button style={styles.button} onClick={handleSubmit} disabled={isLoading}>
+              {isLoading ? 'Verifying...' : 'Verify'}
           </button>
-        </form>
-        <p className="text-center text-gray-500 text-xs py-4">
-          &copy;2024 Blvck Sapphire. All rights reserved.
-        </p>
-      </motion.div>
-    </div>
+
+          <button
+              style={styles.linkButton}
+              onClick={handleResendCode}
+              disabled={isResending}
+          >
+              {isResending ? 'Resending...' : 'Resend code'}
+          </button>
+
+          {message && <p style={styles.message}>{message}</p>}
+      </div>
+  </div>
   );
 }
+
+const styles = {
+  outerContainer: {
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      height: '100vh',
+      backgroundColor: '#121212',
+      color: '#ffffff',
+  },
+  container: {
+      display: 'flex',
+      flexDirection: 'column' as 'column',
+      alignItems: 'center',
+      justifyContent: 'center',
+      padding: '20px',
+      maxWidth: '400px',
+      width: '100%',
+      fontFamily: 'Arial, sans-serif',
+      backgroundColor: '#1e1e1e',
+      border: '1px solid #333',
+      borderRadius: '8px',
+      boxShadow: '0 4px 12px rgba(0, 0, 0, 0.5)',
+  },
+  title: {
+      fontSize: '18px',
+      fontWeight: 'bold' as 'bold',
+      color: '#ffffff',
+      textAlign: 'center' as 'center',
+  },
+  instruction: {
+      fontSize: '14px',
+      color: '#b0b0b0',
+      textAlign: 'center' as 'center',
+      marginBottom: '10px',
+  },
+  timer: {
+      fontSize: '14px',
+      color: '#ff5722',
+      textAlign: 'center' as 'center',
+      marginBottom: '20px',
+  },
+  codeContainer: {
+      display: 'flex',
+      gap: '10px',
+      marginBottom: '20px',
+  },
+  input: {
+      width: '40px',
+      height: '40px',
+      textAlign: 'center' as 'center',
+      fontSize: '18px',
+      border: '1px solid #555',
+      borderRadius: '5px',
+      backgroundColor: '#333',
+      color: '#ffffff',
+  },
+  button: {
+      width: '100%',
+      padding: '10px',
+      fontSize: '16px',
+      color: '#ffffff',
+      backgroundColor: '#4CAF50',
+      border: 'none',
+      borderRadius: '5px',
+      cursor: 'pointer',
+      marginBottom: '20px',
+  },
+  linkButton: {
+      color: '#4CAF50',
+      background: 'none',
+      border: 'none',
+      cursor: 'pointer',
+      textDecoration: 'underline',
+      fontSize: '14px',
+      marginTop: '10px',
+  },
+  message: {
+      color: '#ff5722',
+      fontSize: '14px',
+      textAlign: 'center' as 'center',
+      marginTop: '10px',
+  },
+};
