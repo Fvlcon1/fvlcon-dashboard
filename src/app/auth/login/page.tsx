@@ -61,14 +61,24 @@ export default function LoginForm() {
   }
 
   const handleMfaSubmit = async () => {
-    const result = await signIn('credentials', {
-      redirect : false,
-      email,
-      password,
-      companyCode,
-    })
-
-    router.push(`/dashboard/home`);
+    try {
+      const result = await signIn('credentials', {
+        redirect : false,
+        email,
+        password,
+        companyCode,
+      })
+  
+      if(!result?.error){
+        router.push(`/agreementpage`);
+      } else {
+        message.error("Error signing in")
+        console.log(result.error)
+      }
+    } catch (error) {
+      message.error("Error signing in")
+      console.log({error})
+    }
   }
 
   const theme = createTheme({
