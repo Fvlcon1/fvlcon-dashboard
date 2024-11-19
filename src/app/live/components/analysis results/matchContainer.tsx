@@ -66,7 +66,7 @@ const MatchContainer = ({
                             size={TypographySize.xs2}
                             textColor={theme.colors.text.primary}
                         >
-                            98%
+                            {detections.similarity}
                         </Text>
                     </div>
                     <div className="w-[65px] h-[65px] overflow-hidden bg-bg-secondary relative rounded-md">

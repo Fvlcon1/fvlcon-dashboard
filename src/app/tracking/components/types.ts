@@ -21,6 +21,7 @@ export type IPersonTrackingType = {
     faceId : string,
     imageUrl? : string
     userId : string
+    similarity? : number
 }
 
 export interface IPersonTrackingWithImageType extends IPersonTrackingType {
@@ -31,10 +32,11 @@ export type IPlateTrackingType = {
     id : string
     plateNumber : string
     timestamp : string
-    coordinates : string
+    coordinates : LatLngExpression & number[];
     locationName : string
     imageUrl : string
     type : string
+    userId : string
 }
 
 export interface ITrackingWaypointsType extends IPersonTrackingType {
@@ -42,4 +44,27 @@ export interface ITrackingWaypointsType extends IPersonTrackingType {
     radius : number,
     color? : string
     fillColor? : string
+}
+
+export interface IPlateTrackingWaypoints extends IPlateTrackingType {
+    coordinates : LatLngExpression & number[],
+    radius : number,
+    color? : string
+    fillColor? : string
+}
+
+export type IPlateOrPerson = IPersonTrackingType | IPlateTrackingType
+
+export interface ICamDetilasPersonDataType {
+    streamName : string,
+    lastSeen : string,
+    time : Date
+    coordinates: LatLngExpression & number[]
+}
+
+export interface ICamDetailsPlate {
+    numberPlate : string,
+    lastSeen : string,
+    time : Date
+    coordinates: LatLngExpression & number[]
 }

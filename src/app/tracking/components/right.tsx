@@ -9,7 +9,7 @@ import DndImage from "./dndImage"
 import PersonResultContainer from "./PersonResultContainer"
 import Divider from "@components/divider/divider"
 import { protectedAPI, unprotectedAPI } from "@/utils/api/api"
-import { IPersonTrackingType, ITrackingDataTypes } from "./types"
+import { IPersonTrackingType, IPlateOrPerson, IPlateTrackingType, ITrackingDataTypes } from "./types"
 import { API_URL } from "@/utils/constants"
 import axios from "axios"
 import { parseCoordinates } from "@/utils/parseCoordinate"
@@ -19,13 +19,15 @@ import Skeleton from "react-loading-skeleton"
 import { trackingContext } from "../context/trackingContext"
 import { message } from "antd"
 import NoData from "./noData"
+import PlateContainer from "./plateContainer"
 
 const privateAPI = new protectedAPI()
 const publicAPI = new unprotectedAPI()
 
 const Right = () => {
     const [newPersonTrackingData, setPersonTrackingData] = useState<{ status: 'loading' | null, data: IPersonTrackingType[] }>({ status: null, data: [] })
-    const [filteredPersonTrackingData, setFilteredPersonTrackingData] = useState(newPersonTrackingData)
+    const [searchResults, setSearchResults] = useState<{status: 'loading' | null, data: IPlateOrPerson[]}>({status : null, data : []})
+    const [filteredSearchResults, setFilteredSearchResults] = useState(searchResults)
     const { imageUrl, setImageUrl } = useContext(trackingContext)
 
     const getTrackingData = async (imageUrl: string) => {
@@ -105,7 +107,7 @@ const Right = () => {
     }
 
     useEffect(()=>{
-        setFilteredPersonTrackingData(newPersonTrackingData)
+        setSearchResults(newPersonTrackingData)
     },[newPersonTrackingData])
 
     useEffect(() => {
@@ -117,49 +119,60 @@ const Right = () => {
     return (
         <div className="w-[25%] min-w-[330px] max-w-[350px] p-3 flex h-full bg-gradient-container overflow-y-auto rounded-lg flex-col gap-2">
             <RightControls 
+                searchResults={searchResults}
+                setSearchResults={setSearchResults}
                 newPersonTrackingData={newPersonTrackingData}
-                setFilteredPersonTrackingData={setFilteredPersonTrackingData}
+                setFilteredSearchResults={setFilteredSearchResults}
             />
             {
-                filteredPersonTrackingData.status === 'loading' ?
-                    [1, 2, 3, 4, 5, 6].map((item, index: number) => (
-                        <div key={index} className="flex flex-col gap-1">
-                            <Skeleton
-                                height={100}
-                                baseColor={theme.colors.bg.tetiary}
-                                highlightColor={theme.colors.bg.alt1}
-                            />
-                            <Skeleton
-                                baseColor={theme.colors.bg.tetiary}
-                                highlightColor={theme.colors.bg.alt1}
-                            />
-                            <Skeleton
-                                width={'50%'}
-                                baseColor={theme.colors.bg.tetiary}
-                                highlightColor={theme.colors.bg.alt1}
-                            />
-                        </div>
-                    ))
-                    :filteredPersonTrackingData.data.length === 0 && newPersonTrackingData.data.length !== 0 ?
-                    <NoData />
-                    : filteredPersonTrackingData.data.length === 0 ?
-                    <DndImage />
-                    :
-                    <div className="flex flex-col w-full overflow-y-auto">
-                        {
-                            filteredPersonTrackingData.data.map((item, index) => (
-                                <div
-                                    key={index}
-                                    className="flex flex-col w-[95%] duration-200 gap-3 pt-3 hover:bg-bg-secondary cursor-pointer"
-                                >
+                filteredSearchResults.data.length > 0 ? 
+                <div className="flex flex-col w-full overflow-y-auto">
+                    {
+                        filteredSearchResults.data.map((item, index) => (
+                            <div
+                                key={index}
+                                className="flex flex-col w-[95%] duration-200 gap-3 pt-3 hover:bg-bg-secondary cursor-pointer"
+                            >
+                                {
+                                    item.type === ITrackingDataTypes.person ?
                                     <PersonResultContainer
-                                        {...item}
+                                        {...item as IPersonTrackingType}
                                     />
-                                    <Divider className="!w-full" />
-                                </div>
-                            ))
-                        }
+                                    :
+                                    item.type === ITrackingDataTypes.plate &&
+                                    <PlateContainer
+                                        {...item as IPlateTrackingType}
+                                    />
+                                }
+                                <Divider className="!w-full" />
+                            </div>
+                        ))
+                    }
+                </div>
+                :
+                searchResults.status === 'loading' ?
+                [1, 2, 3, 4, 5, 6].map((item, index: number) => (
+                    <div key={index} className="flex flex-col gap-1">
+                        <Skeleton
+                            height={100}
+                            baseColor={theme.colors.bg.tetiary}
+                            highlightColor={theme.colors.bg.alt1}
+                        />
+                        <Skeleton
+                            baseColor={theme.colors.bg.tetiary}
+                            highlightColor={theme.colors.bg.alt1}
+                        />
+                        <Skeleton
+                            width={'50%'}
+                            baseColor={theme.colors.bg.tetiary}
+                            highlightColor={theme.colors.bg.alt1}
+                        />
                     </div>
+                ))
+                :filteredSearchResults.data.length === 0 && searchResults.data.length !== 0 ?
+                <NoData />
+                : filteredSearchResults.data.length === 0 &&
+                <DndImage />
             }
         </div>
     )

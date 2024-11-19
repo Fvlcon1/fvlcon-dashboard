@@ -11,7 +11,8 @@ const privateAPI = new protectedAPI()
 export const getUserDetailsFromTrackingData = async (trackingData : any) : Promise<IPersonTrackingWithImageType | IPlateTrackingType | undefined>  => {
     try {
         const {details} = trackingData
-        const { FaceId, Timestamp, coordinates, stream_name, S3Key, userId, imageUrl, type, Id, plateNumber, locationName } = trackingData;
+        console.log({trackingData})
+        const { FaceId, Timestamp, coordinates, stream_name, S3Key, userId, UserId, imageUrl, type, Id, plateNumber, locationName, Similarity } = trackingData;
         const arrayCoordinates = parseCoordinates(coordinates);
         const location = await getLocationNameFromCordinates(arrayCoordinates);
         
@@ -23,7 +24,8 @@ export const getUserDetailsFromTrackingData = async (trackingData : any) : Promi
                 locationName,
                 coordinates,
                 timestamp : Timestamp,
-                type
+                type,
+                userId : UserId
             };
             return plateDetails
         } else {
@@ -40,6 +42,7 @@ export const getUserDetailsFromTrackingData = async (trackingData : any) : Promi
                 S3Key,
                 userId,
                 imageUrl,
+                similarity : Similarity,
                 originalImageUrl : details?.imageUrl ?? ''
             };
             return userDetails

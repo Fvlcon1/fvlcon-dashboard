@@ -1,12 +1,17 @@
+'use client'
+
 import Searchbar from '@components/search/search';
 import Flex from '@styles/components/flex';
 import { AnimatePresence, motion } from 'framer-motion';
+import { useState } from 'react';
 
 const Search = ({
     showSearch
 } : {
     showSearch? : boolean
 }) => {
+    const [searchValue, setSearchValue] = useState<string>('')
+
     return (
         <AnimatePresence>
             {
@@ -24,6 +29,8 @@ const Search = ({
                     <Flex>
                         <Searchbar
                             inputStyle="!bg-bg-tetiary"
+                            setSearchValue={setSearchValue}
+                            searchValue={searchValue}
                         />
                     </Flex>
                 </motion.div>

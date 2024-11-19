@@ -4,7 +4,7 @@ import ZoomImage from "@components/zoomImage/zoomImage"
 import Text from "@styles/components/text"
 import theme from "@styles/theme"
 import Image from "next/image"
-import { useContext, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import { FaCamera, FaLocationArrow, FaVideo } from "react-icons/fa6"
 import { IoIosVideocam } from "react-icons/io"
 import { IoPin } from "react-icons/io5"
@@ -12,14 +12,41 @@ import { MdOutlineShareLocation } from "react-icons/md"
 import { trackingContext } from "../context/trackingContext"
 import Skeleton from "react-loading-skeleton"
 import { getRelativeTime } from "@/utils/getDate"
+import { ICamDetailsPlate, ICamDetilasPersonDataType, IPersonTrackingType, IPlateTrackingType, ITrackingDataTypes } from "./types"
+import CamDetailsLoader from "./camDetailsLoader"
+import CamDetailsPerson from "./camDetailsPerson"
+import CamDetailsPlate from "./camDetailsPlate"
 
 const CamDetails = () => {
     const [zoom, setZoom] = useState(false)
     const {captureDetails} = useContext(trackingContext)
-    const streamName = captureDetails?.data?.streamName
-    const lastSeen = captureDetails?.data?.lastSeen
-    const time = captureDetails?.data?.timeSeen
     const coordinates = captureDetails?.data?.coordinates
+    const [personData, setPersonData] = useState<ICamDetilasPersonDataType>()
+    const [plateData, setPlateData] = useState<ICamDetailsPlate>()
+
+    const setDetails = () => {
+        if(captureDetails?.data?.type === ITrackingDataTypes.person){
+            const transformedCaptureDetails = captureDetails.data as IPersonTrackingType
+            setPersonData({
+                streamName : transformedCaptureDetails.streamName,
+                lastSeen : transformedCaptureDetails.lastSeen,
+                time : transformedCaptureDetails.timeSeen,
+                coordinates : transformedCaptureDetails.coordinates
+            })
+        } else if(captureDetails?.data?.type === ITrackingDataTypes.plate){
+            const transformedCaptureDetails = captureDetails.data as IPlateTrackingType
+            setPlateData({
+                numberPlate : transformedCaptureDetails.plateNumber,
+                lastSeen : transformedCaptureDetails.locationName,
+                time : new Date(transformedCaptureDetails.timestamp),
+                coordinates : transformedCaptureDetails.coordinates
+            })
+        }
+    }
+
+    useEffect(()=>{
+        setDetails()
+    },[captureDetails])
 
     return (
         <>
@@ -33,37 +60,7 @@ const CamDetails = () => {
             }
             {
                 captureDetails?.status === 'loading' ?
-                <div className="w-[35%]">
-                    <Skeleton
-                        height={200}
-                        baseColor={theme.colors.bg.tetiary}
-                        highlightColor={theme.colors.bg.alt1}
-                    />
-                    <>
-                        <Skeleton
-                            height={20}
-                            baseColor={theme.colors.bg.tetiary}
-                            highlightColor={theme.colors.bg.alt1}
-                        />
-                        <Skeleton
-                            height={20}
-                            baseColor={theme.colors.bg.tetiary}
-                            highlightColor={theme.colors.bg.alt1}
-                        />
-                        <Skeleton
-                            height={20}
-                            width={'80%'}
-                            baseColor={theme.colors.bg.tetiary}
-                            highlightColor={theme.colors.bg.alt1}
-                        />
-                        <Skeleton
-                            height={20}
-                            width={'40%'}
-                            baseColor={theme.colors.bg.tetiary}
-                            highlightColor={theme.colors.bg.alt1}
-                        />
-                    </>
-                </div>
+                <CamDetailsLoader />
                 : captureDetails?.data &&
                 <div className="bg-gradient-container w-[35%] p-3 rounded-lg flex flex-col gap-2">
                     <div 
@@ -95,46 +92,13 @@ const CamDetails = () => {
                             </div>
                         }
                     </div>
-                    <div className="flex flex-col gap-2 overflow-y-hidden">
-                        <div className="w-full py-2 px-3 gap-2 rounded-md bg-gradient-container flex flex-col">
-                            <div className="flex gap-1 items-center">
-                                <FaVideo size={11} color={theme.colors.text.secondary}/>
-                                <Text>
-                                    Stream name •
-                                    <Text textColor={theme.colors.text.primary}>
-                                        &nbsp;{streamName}
-                                    </Text>
-                                </Text>
-                            </div>
-                            <div className="flex gap-1 items-center">
-                                <FaLocationArrow size={11} color={theme.colors.text.secondary}/>
-                                <Text>
-                                    Last seen •
-                                    <Text textColor={theme.colors.text.primary}>
-                                        &nbsp;{time && getRelativeTime(time).charAt(0).toUpperCase() + getRelativeTime(time).slice(1)}
-                                    </Text>
-                                </Text>
-                            </div>
-                            <div className="flex gap-1 items-center">
-                                <IoPin size={11} color={theme.colors.text.secondary}/>
-                                <Text>
-                                    Location •
-                                    <Text textColor={theme.colors.text.primary}>
-                                        &nbsp;{lastSeen}
-                                    </Text>
-                                </Text>
-                            </div>
-                            <div className="flex gap-1 items-center">
-                                <MdOutlineShareLocation size={11} color={theme.colors.text.secondary}/>
-                                <Text>
-                                    Coordinates •
-                                    <Text textColor={theme.colors.text.primary}>
-                                        &nbsp;{coordinates && `${coordinates[0]}, ${coordinates[1]}`}
-                                    </Text>
-                                </Text>
-                            </div>
-                        </div>
-                    </div>
+                    {
+                        captureDetails.data.type === ITrackingDataTypes.person ?
+                        <CamDetailsPerson personData={personData}/>
+                        :
+                        captureDetails.data.type === ITrackingDataTypes.plate &&
+                        <CamDetailsPlate plateData={plateData}/>
+                    }
                 </div>
             }
         </>

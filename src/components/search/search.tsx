@@ -3,20 +3,22 @@
 import Dropdown from "@components/input/dropown"
 import Input from "@components/input/input"
 import theme from "@styles/theme"
-import { useState } from "react"
+import { Dispatch, SetStateAction, useState } from "react"
 import { LuSearch } from "react-icons/lu"
 
 const Searchbar = ({
     className,
     inputStyle,
-    placeholder
+    placeholder,
+    searchValue,
+    setSearchValue
 } : {
     className? : string
     inputStyle? : string
     placeholder? : string
+    setSearchValue: Dispatch<SetStateAction<string>>
+    searchValue: string
 }) => {
-
-    const [searchValue, setSearchValue] = useState('')
     const [dropdownValue, setDropdownValue] = useState('')
 
     return (

@@ -18,6 +18,8 @@ import { MdPermMedia } from "react-icons/md"
 
 const Topbar = () => {
     const [showDatabase, setShowDatabase] = useState(false)
+    const [searchValue, setSearchValue] = useState<string>('')
+
     return (
         <div className="flex w-full items-center justify-between px-1">
             <div className="flex items-center gap-4">
@@ -35,7 +37,11 @@ const Topbar = () => {
                         title="Fvlcon Media Lab"
                     />
                 </div>
-                <Searchbar className="!w-[350px]"/>
+                <Searchbar 
+                    className="!w-[350px]"
+                    setSearchValue={setSearchValue}
+                    searchValue={searchValue}
+                />
             </div>
             <Flex
                 width="fit-content"

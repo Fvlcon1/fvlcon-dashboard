@@ -4,35 +4,69 @@ import Button from "@components/button/button";
 import Searchbar from "@components/search/search";
 import Text from "@styles/components/text";
 import theme from "@styles/theme";
-import { useContext, useEffect, useRef, useState } from "react";
+import { Dispatch, SetStateAction, useContext, useEffect, useRef, useState } from "react";
 import { FaUserAlt } from "react-icons/fa";
 import { FaCaretDown, FaSort } from "react-icons/fa6";
 import { HiTemplate } from "react-icons/hi";
 import { IoImage } from "react-icons/io5";
 import { MdDoneAll } from "react-icons/md";
 import { trackingContext } from "../context/trackingContext";
-import { IPersonTrackingType, ITrackingDataType } from "./types";
+import { IPersonTrackingType, IPlateOrPerson, IPlateTrackingType, ITrackingDataType, ITrackingDataTypes } from "./types";
+import { protectedAPI } from "@/utils/api/api";
+import { parseCoordinates } from "@/utils/parseCoordinate";
 
+const privateApi = new protectedAPI()
 const RightControls = ({
     newPersonTrackingData,
-    setFilteredPersonTrackingData
+    setFilteredSearchResults,
+    setSearchResults,
+    searchResults
 }: {
     newPersonTrackingData: {
         status: "loading" | null;
         data: IPersonTrackingType[];
     };
-    setFilteredPersonTrackingData: React.Dispatch<React.SetStateAction<{
+    setFilteredSearchResults: Dispatch<SetStateAction<{
         status: "loading" | null;
-        data: IPersonTrackingType[];
-    }>>;
+        data: IPlateOrPerson[];
+    }>>
+    setSearchResults: Dispatch<SetStateAction<{status: 'loading' | null, data: IPlateOrPerson[]}>>
+    searchResults: {status: 'loading' | null, data: IPlateOrPerson[]}
 }) => {
     const inputRef = useRef<HTMLInputElement | null>(null);
     const { imageUrl, setImageUrl } = useContext(trackingContext);
     const [dataType, setDataType] = useState<'all' | 'plate' | 'person'>('all');
+    const [searchValue, setSearchValue] = useState<string>('')
 
     const inputClicked = () => {
         inputRef.current?.click();
     };
+
+    const handleSearchValueChange = async () => {
+        setSearchResults({status : 'loading', data : []})
+        const getSearchResults = await privateApi.get("/tracking/searchNumberPlatePartial", {numberPlate : searchValue})
+        const numberPlates = getSearchResults?.data
+        const plateArray : IPlateOrPerson[] = []
+        if(numberPlates?.length > 0){
+            for(let plate of numberPlates){
+                const plateObject : IPlateTrackingType = {
+                    id: plate?.Id.S,
+                    plateNumber: plate.plateNumber.S,
+                    timestamp: plate.Timestamp.S,
+                    coordinates: parseCoordinates(plate.coordinates.S),
+                    locationName: plate.locationName.S,
+                    imageUrl: plate.imageUrl.S,
+                    userId: plate.UserId.S,
+                    type: ITrackingDataTypes.plate,
+                }
+                plateArray.push(plateObject)
+            }
+            setSearchResults({status : null, data : plateArray})
+            console.log({plateArray})
+        } else {
+            setSearchResults({status : null, data : newPersonTrackingData.data ?? []})
+        }
+    }
 
     const onFileSelected = (e: FileList | null) => {
         if (e) {
@@ -53,13 +87,13 @@ const RightControls = ({
     };
 
     const updatePersonTrackingData = async () => {
-        setFilteredPersonTrackingData({ data: [], status: null });
-        for (let person of newPersonTrackingData.data) {
-            setFilteredPersonTrackingData(prev => ({
+        setFilteredSearchResults({ data: [], status: null });
+        for (let item of searchResults.data) {
+            setFilteredSearchResults(prev => ({
                 ...prev,
                 data: [
                     ...prev.data,
-                    ...(dataType === 'all' ? [person] : (dataType === person.type ? [person] : []))
+                    ...(dataType === 'all' ? [item] : (dataType === item.type ? [item] : []))
                 ]
             }));
 
@@ -73,13 +107,17 @@ const RightControls = ({
 
     useEffect(() => {
         filterByType();
-    }, [dataType]);
+    }, [dataType, searchResults]);
 
     useEffect(() => {
         if (inputRef.current?.value?.length && inputRef.current?.value?.length > 0) {
             inputRef.current.value = '';
         }
     }, [imageUrl]);
+
+    useEffect(()=>{
+        handleSearchValueChange()
+    }, [searchValue])
 
     return (
         <div className="w-full flex flex-col gap-2">
@@ -149,6 +187,9 @@ const RightControls = ({
                     className="bg-bg-secondary rounded-lg flex-1"
                     inputStyle="bg-bg-secondary rounded-lg"
                     placeholder="Search number plates"
+                    searchValue={searchValue}
+                    setSearchValue={(setSearchValue)}
+                    
                 />
                 {/* <div className="flex gap-1 p-2 px-3 rounded-lg hover:bg-bg-quantinary cursor-pointer bg-bg-tetiary items-center">
                     <FaSort

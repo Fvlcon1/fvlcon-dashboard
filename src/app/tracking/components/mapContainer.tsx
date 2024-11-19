@@ -8,7 +8,7 @@ import { liveContext } from '@/context/live';
 import { trackingContext } from '../context/trackingContext';// Import useMap directly
 import './styles.css';
 import MapInternal from './mapInternal';
-import { IPersonTrackingType, ITrackingDataTypes, ITrackingWaypointsType } from './types';
+import { IPersonTrackingType, IPlateTrackingWaypoints, ITrackingDataTypes, ITrackingWaypointsType } from './types';
 import { protectedAPI } from '@/utils/api/api';
 import { message } from 'antd';
 import { usePathname, useSearchParams } from 'next/navigation';
@@ -29,7 +29,12 @@ const MapComponent = () => {
     const [zoom, setZoom] = useState<number>(12);
     const searchParams = useSearchParams()
 
-    const handleSetCaptureDetails = async (waypoint : ITrackingWaypointsType) => {
+    const handleSetCaptureDetails = async (waypoint : ITrackingWaypointsType | IPlateTrackingWaypoints) => {
+        if(waypoint.type === ITrackingDataTypes.person)
+            await handleSetPersonCaptureDetails(waypoint as ITrackingWaypointsType)
+    }
+
+    const handleSetPersonCaptureDetails = async (waypoint : ITrackingWaypointsType) => {
         const {name, type, alias, lastSeen, coordinates, timeSeen, streamName, S3Key, faceId, userId, id} = waypoint
         setCaptureDetails({status : 'loading'})
         let imageUrl : string | undefined
