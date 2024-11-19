@@ -55,7 +55,7 @@ const RightControls = ({
                     timestamp: plate.Timestamp.S,
                     coordinates: parseCoordinates(plate.coordinates.S),
                     locationName: plate.locationName.S,
-                    imageUrl: plate.imageUrl.S,
+                    imageUrl: plate.imageUrl,
                     userId: plate.UserId.S,
                     type: ITrackingDataTypes.plate,
                 }

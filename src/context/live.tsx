@@ -28,7 +28,7 @@ export const LiveProvider = ({ children }: { children: ReactNode }) => {
     const [activeCameras, setActiveCameras] = useState<activeCameraType[]>([
         {
             id : '1',
-            url : "https://stream.fvlcon.app:8888/towncouncil/channel_1",
+            url : "https://60db6bc2b547d1008a76cf0720e5d109.serveo.net/video_feed",
             location : 'Osu Accra',
             streamName : "my_stream_name",
             coordinates : [5.558, -0.187]

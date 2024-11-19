@@ -31,6 +31,10 @@ const nextConfig = {
               protocol: "https",
               hostname: "sam-app-3-number-plate-capture-bucket.s3.amazonaws.com",
             },
+            {
+              protocol: "https",
+              hostname: "sam-app-3-number-plate-capture-bucket.s3.us-east-1.amazonaws.com",
+            },
           ]
       },
 };
