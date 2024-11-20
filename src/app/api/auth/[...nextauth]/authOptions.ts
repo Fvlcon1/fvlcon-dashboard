@@ -29,16 +29,21 @@ export const authOptions: NextAuthOptions = {
         companyCode: { label: "Company Code", type: "text", placeholder: "your-company-code" }
       },
       authorize: async (credentials) => {
-        if (!credentials?.email || !credentials.password || !credentials.companyCode) return null;
-  
-        const user = await prisma.user.findUnique({ where: { email : credentials.email } });
-        if (user && user.companyCode === credentials.companyCode) {
-          const isPasswordValid = await bcrypt.compare(credentials.password, user.password);
-          if (isPasswordValid){
-            return user
-          };
-          return null
-        } else {
+        try {
+          if (!credentials?.email || !credentials.password || !credentials.companyCode) return null;
+    
+          const user = await prisma.user.findUnique({ where: { email : credentials.email } });
+          if (user && user.companyCode === credentials.companyCode) {
+            const isPasswordValid = await bcrypt.compare(credentials.password, user.password);
+            if (isPasswordValid){
+              return user
+            };
+            return null
+          } else {
+            return null
+          }
+        } catch (error) {
+          console.log({error})
           return null
         }
       },
