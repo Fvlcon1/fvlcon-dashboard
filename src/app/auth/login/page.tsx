@@ -69,6 +69,7 @@ export default function LoginForm() {
         companyCode,
       })
   
+      console.log({result})
       if(!result?.error){
         router.push(`/agreementpage`);
       } else {
