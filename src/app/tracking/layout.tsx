@@ -16,7 +16,7 @@ export default async function RootLayout({
 }>) {
   const session = await getServerSession(authOptions);
   if(!session){
-    redirect("/auth/login?error=Please login")
+    redirect("/auth/login")
   }
   return (
     <TrackingProvider>

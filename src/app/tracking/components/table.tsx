@@ -28,7 +28,7 @@ const Table = () => {
     useEffect(() => {
         // Redirect to login if the session is unauthenticated
         if (status === "unauthenticated") {
-            router.push("/auth/login?error=Please login");
+            router.push("/auth/login");
         }
     }, [status, router]);
 

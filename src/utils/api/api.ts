@@ -50,7 +50,7 @@ export class protectedAPI {
     await signOut({ redirect: false });
     // Client-side redirect if `window` is available
     if (typeof window !== 'undefined') {
-      window.location.href = `/auth/login?error=Please login${prevUrlParam}`;
+      window.location.href = `/auth/login`;
     }
   };
 }
