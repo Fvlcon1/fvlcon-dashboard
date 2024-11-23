@@ -6,6 +6,7 @@ import { Mail, RefreshCw } from 'lucide-react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { message } from 'antd';
 import { formatTime } from '@/utils/formatTime';
+import theme from '@styles/theme';
 
 export default function MFAValidation({
   email,
@@ -215,14 +216,14 @@ const styles = {
       padding: '10px',
       fontSize: '16px',
       color: '#ffffff',
-      backgroundColor: '#4CAF50',
+      backgroundColor: theme.colors.main.primary,
       border: 'none',
       borderRadius: '5px',
       cursor: 'pointer',
       marginBottom: '20px',
   },
   linkButton: {
-      color: '#4CAF50',
+      color: theme.colors.main.primary,
       background: 'none',
       border: 'none',
       cursor: 'pointer',
