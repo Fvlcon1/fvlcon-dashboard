@@ -141,7 +141,7 @@ export const awsSegmentation = async (file: File, setLogs: Dispatch<SetStateActi
     setLogs(prev => ([
       ...prev, { date : new Date(), log : { content : "Generating presigned URL..." } }
     ]))
-    const { data: { presignedUrl, videoKey } } = await axios.get("https://bnmasi9tba.execute-api.us-east-1.amazonaws.com/Prod/upload-video");
+    const { data: { presignedUrl, videoKey } } = await axios.get("https://l33yu4v0ic.execute-api.us-east-1.amazonaws.com/Prod/upload-video");
     console.log({ presignedUrl, videoKey });
     setLogs(prev => ([
       ...prev, { date : new Date(), log : { content : `Successfully generated presigned url: ${presignedUrl}`, maxLines : 2 } }
@@ -194,7 +194,7 @@ const uploadToS3 = async (presignedUrl: string, file: File) => {
 
 const startVideoAnalysis = async (videoKey: string) => {
   try {
-    const response = await axios.post("https://bnmasi9tba.execute-api.us-east-1.amazonaws.com/Prod/upload-video", { videoKey });
+    const response = await axios.post("https://l33yu4v0ic.execute-api.us-east-1.amazonaws.com/Prod/upload-video", { videoKey });
     console.log("Analysis started:", response);
 
     if (response.status !== 200) {
@@ -212,7 +212,7 @@ const pollJobStatus = async (jobId: string, videoKey: string, jobType: string, s
   return new Promise((resolve, reject) => {
     const intervalId = setInterval(async () => {
       try {
-        const { data: jobStatusData } = await axios.get("https://bnmasi9tba.execute-api.us-east-1.amazonaws.com/Prod/check-job-status", {
+        const { data: jobStatusData } = await axios.get("https://l33yu4v0ic.execute-api.us-east-1.amazonaws.com/Prod/check-job-status", {
           params: { jobId, jobType, videoKey }
         });
 

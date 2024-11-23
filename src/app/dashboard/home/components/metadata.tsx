@@ -1,4 +1,6 @@
 import { imageUploadContext } from "@/context/imageUpload"
+import { formatFileSize } from "@/utils/formatFileSize"
+import { getRelativeTime } from "@/utils/getDate"
 import AppTypography from "@styles/components/appTypography"
 import Flex from "@styles/components/flex"
 import Slidein from "@styles/components/slidein"
@@ -41,13 +43,13 @@ const Metadata = () => {
                             Name : {metadata.name}
                         </AppTypography>
                         <AppTypography>
-                            Size : {metadata.size}
+                            Size : {formatFileSize(metadata.size || 0 )}
                         </AppTypography>
                         <AppTypography>
                             Type : {metadata.type}
                         </AppTypography>
                         <AppTypography>
-                            Last Modified : {metadata.lastModified}
+                            Last Modified : {metadata.lastModified && getRelativeTime(new Date(metadata.lastModified))}
                         </AppTypography>
                     </Flex>
                 }

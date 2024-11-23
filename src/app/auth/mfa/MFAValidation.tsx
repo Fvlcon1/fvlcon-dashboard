@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import { Mail, RefreshCw } from 'lucide-react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { message } from 'antd';
+import { formatTime } from '@/utils/formatTime';
 
 export default function MFAValidation({
   email,
@@ -38,12 +39,6 @@ export default function MFAValidation({
     }
     return () => clearInterval(interval);
   }, [timer, canResend]);
-
-  const formatTime = (timeInSeconds : number) => {
-    const minutes = Math.floor(timeInSeconds / 60);
-    const seconds = timeInSeconds % 60;
-    return `${minutes}:${seconds.toString().padStart(2, '0')}`; // Format with leading zero for seconds
-  };
 
   const handleChange = (index: number, value: string) => {
     if (/^\d?$/.test(value)) {

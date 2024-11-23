@@ -10,6 +10,7 @@ import AllLogs from "./allLogs"
 import Slidein from "@styles/components/slidein"
 import { AnimatePresence, motion } from 'framer-motion';
 import { logsType } from "@/utils/@types"
+import { formatTime } from "@/utils/formatTime"
 
 const Logs = ({
     logs,
@@ -57,7 +58,7 @@ const Logs = ({
                                     </AppTypography>
                                 </div>
                                 <AppTypography textColor={theme.colors.text.primary}>
-                                    {`${time.seconds}s`}
+                                    {`${formatTime(time.seconds)}`}
                                 </AppTypography>
                             </div>
                             <Flex

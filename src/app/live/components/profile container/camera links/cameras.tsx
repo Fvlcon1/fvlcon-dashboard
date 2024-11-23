@@ -114,11 +114,7 @@ const Cameras = () => {
     }
 
     useEffect(()=>{
-        console.log({folders})
-    },[folders])
-
-    useEffect(()=>{
-        getFolders()
+        // getFolders()
     },[])
 
     return (
