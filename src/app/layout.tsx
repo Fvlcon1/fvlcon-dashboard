@@ -8,6 +8,7 @@ import { LiveProvider } from "@/context/live";
 import { Suspense } from "react";
 import HydrationLoader from "@components/loaders/hydrationLoader";
 import 'react-loading-skeleton/dist/skeleton.css'
+import AntdConfigProvider from "@components/antd/configProvider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -27,10 +28,12 @@ export default function RootLayout({
         <HydrationLoader>
           <Suspense>
             <IsClientCtxProvider>
-              <LiveProvider>
-                <ToastContainer />
-                {children}
-              </LiveProvider>
+              <AntdConfigProvider>
+                <LiveProvider>
+                  <ToastContainer />
+                  {children}
+                </LiveProvider>
+              </AntdConfigProvider>
             </IsClientCtxProvider>
           </Suspense>
         </HydrationLoader>

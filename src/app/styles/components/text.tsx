@@ -20,7 +20,8 @@ const Text = ({
     fontfamily,
     maxLines,
     lineHeight,
-    whiteSpace
+    whiteSpace,
+    onClick
 } : AppTypographyProps) => {
 
     const [onHover, setOnHover] = useState<boolean>(false)
@@ -51,6 +52,7 @@ const Text = ({
             }}
             onMouseOver={()=>setOnHover(true)}
             onMouseLeave={()=>setOnHover(false)}
+            onClick={onClick}
         >
             {children}
         </span>

@@ -33,13 +33,13 @@ export const LiveProvider = ({ children }: { children: ReactNode }) => {
             streamName : "my_stream_name",
             coordinates : [5.558, -0.187]
         },
-        // {
-        //     id : '2',
-        //     url : "https://cbf4b2cd1097c77aaca841704baf7ec5.serveo.net/video_stream",
-        //     location : 'East legon, Accra',
-        //     streamName : "stream2",
-        //     coordinates : [5.65, -0.163]
-        // },
+        {
+            id : '2',
+            url : "https://cbf4b2cd1097c77aaca841704baf7ec5.serveo.net/video_stream",
+            location : 'Kumasi',
+            streamName : "stream2",
+            coordinates : [6.669450646774655, -1.5176043915812956]
+        },
         // {
         //     id : '3',
         //     url : "https://63ff329fba3ea428cf30d60dccb666c6.serveo.net/video_feed",

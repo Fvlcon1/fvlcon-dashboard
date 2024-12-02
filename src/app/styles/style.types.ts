@@ -26,6 +26,7 @@ export interface AppTypographyProps {
   ellipsis? : boolean
   maxLines? : number
   lineHeight? : number
+  onClick? : ()=>void
   whiteSpace? : 'normal' | 'pre' | 'nowrap' | 'pre-wrap' | 'pre-line' | 'break-spaces' | 'white-space-collapse' | 'text-wrap' | 'white-space-trim'
 }
 

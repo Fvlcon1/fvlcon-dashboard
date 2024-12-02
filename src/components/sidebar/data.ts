@@ -59,6 +59,6 @@ export const pagesData =[
         name : 'Activity Log',
         icon : FaFileContract,
         active : false,
-        url : '/log'
+        url : '/activityLog/fvlconizationLogs'
     },
 ]
