@@ -4,7 +4,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "../api/auth/[...nextauth]/authOptions";
 import LeftSidebar from "./components/leftSidebar";
 import Wrapper from "./components/wrapper";
-import "./components/antdCustomStyle.css"
+import "./components/antdCustomstyle.css"
 
 export const metadata: Metadata = {
   title: "Activity log",
