@@ -47,3 +47,7 @@ body {
     text-wrap: balance;
   }
 }
+
+:where(.css-dev-only-do-not-override-1rocoxx).ant-picker .ant-picker-input >input {
+  font-size: 12px;
+}
