@@ -1,7 +1,7 @@
-/* :where(.css-dev-only-do-not-override-1rocoxx).ant-picker .ant-picker-input >input {
+:where(.css-dev-only-do-not-override-1rocoxx).ant-picker .ant-picker-input >input {
     font-size: 12px;
-} */
+}
 
 :where(.css-1rocoxx).ant-picker .ant-picker-input >input {
-    font-size: 12;
+    font-size: 12px;
 }
