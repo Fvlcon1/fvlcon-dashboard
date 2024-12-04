@@ -10,12 +10,14 @@ import Searchbar from "@components/search/search"
 import theme from "@styles/theme"
 import { RiLiveFill } from "react-icons/ri"
 import { useState } from "react"
+import DvlaRecord from "@components/records/dvlaRecord/dvlaRecord"
 
 const Live = () => {
     const [searchValue, setSearchValue] = useState<string>('')
 
     return (
         <div className="relative h-full w-full flex flex-col pr-[190px] gap-4">
+            {/* <DvlaRecord /> */}
             <Flex
                 justify="space-between"
                 align="center"

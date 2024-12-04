@@ -7,12 +7,14 @@ const OverlayWindow = ({
     display, 
     setDisplay,
     children,
-    title
+    title,
+    windowStyle
 } : {
     display : boolean,
     setDisplay : Dispatch<SetStateAction<boolean>>
     children? : ReactNode
-    title? : string
+    title? : string,
+    windowStyle? : string
 }) => {
     return (
         <AnimatePresence>
@@ -25,6 +27,7 @@ const OverlayWindow = ({
                         open={display}
                         setOpen={setDisplay}
                         title={title}
+                        windowStyle={windowStyle}
                     >
                         {children}
                     </Window>

@@ -14,7 +14,8 @@ const Window = ({
     children,
     title,
     className,
-    direction
+    direction,
+    windowStyle
 } : {
     open : boolean
     setOpen : Dispatch<SetStateAction<boolean>>
@@ -22,6 +23,7 @@ const Window = ({
     title? : string
     className? : string
     direction? : IPosition
+    windowStyle? : string
 }) => {
     return (
         <motion.div
@@ -46,7 +48,7 @@ const Window = ({
                 opacity : 0,
                 y : -50
             }} 
-            className={`max-w-[1000px] w-[70%] shadow-custom-shadow border-solid border-[1px] border-bg-quantinary overflow-x-hidden overflow-y-auto relative h-[600px] bg-bg-secondary rounded-xl ${className}`}
+            className={`${windowStyle} max-w-[1000px] w-[70%] shadow-custom-shadow border-solid border-[1px] border-bg-quantinary overflow-x-hidden overflow-y-auto relative h-[600px] bg-bg-secondary rounded-xl ${className}`}
         >
             <Controls 
                 open={open}
