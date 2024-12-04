@@ -15,6 +15,7 @@ const List = ({
             {
                 data.map((item, index) => (
                     <div 
+                        key={index}
                         className={`w-full py-3 px-4 rounded-md flex gap-1`}
                         style={{
                             backgroundColor : index % 2 === 0 ? evenBg ?? theme.colors.bg.tetiary : oddBg ??  ''
