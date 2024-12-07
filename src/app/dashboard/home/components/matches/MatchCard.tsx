@@ -14,6 +14,7 @@ import { FaExpand } from "react-icons/fa6"
 import ExpandMatch from './expandMatch';
 import { TbListDetails } from "react-icons/tb"
 import { fvlconizedFaceType, occurance } from '../../../../../utils/@types';
+import NiaRecord from "@components/records/NIA record/niaRecord"
 
 const MatchCard = ({
     title,
@@ -58,7 +59,7 @@ const MatchCard = ({
     },[currentOccurance])
     return (
         <>
-            <ExpandMatch 
+            {/* <ExpandMatch 
                 match={{
                     matchedImage,
                     originalImage,
@@ -70,6 +71,10 @@ const MatchCard = ({
                 setDisplay={setExpand}
                 currentOccurance={currentOccurance}
                 setOccurance={setOccurance}
+            /> */}
+            <NiaRecord 
+                visible={expand}
+                setVisible={setExpand}
             />
             <div 
                 className={`p-3 py-2 min-w-[400px] cursor-pointer w-[400px] h-fit flex flex-col gap-1 rounded-lg bg-gradient-container-black ${getSelectedOccurenceClass() ?? ''}`}
