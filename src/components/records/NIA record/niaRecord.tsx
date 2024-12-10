@@ -283,7 +283,7 @@ const NiaRecord = ({
                         <Text
                             textColor={theme.colors.text.primary}
                         >
-                            Father's hometown
+                            {"Father's hometown"}
                         </Text>
                         <List 
                             data={fathersHometown}
@@ -295,7 +295,7 @@ const NiaRecord = ({
                         <Text
                             textColor={theme.colors.text.primary}
                         >
-                            Mother's details
+                            {"Mother's details"}
                         </Text>
                         <List 
                             data={motherDetails}
@@ -307,7 +307,7 @@ const NiaRecord = ({
                         <Text
                             textColor={theme.colors.text.primary}
                         >
-                            Mother's hometown
+                            {"Mother's hometown"}
                         </Text>
                         <List 
                             data={mothersHometown}
