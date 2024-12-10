@@ -24,14 +24,14 @@ const Head = () => {
                     Databases
                 </AppTypography>
             </Flex>
-            <Flex
+            {/* <Flex
                 width="fit-content"
                 gap={0}
             >
                 <Button
                     text='Add +'
                 />
-            </Flex>
+            </Flex> */}
         </Flex>
     )
 }

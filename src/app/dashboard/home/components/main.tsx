@@ -13,17 +13,9 @@ import Matches from "./matches/matches"
 import Metadata from "./metadata"
 import { isImageFile, isVideoFile } from "@/utils/getFileType"
 import VideoContainer from "@components/video container/videoContainer"
-import segmentFaces, { awsSegmentation, handleVideoPlay, isModelsLoaded, loadModels, videoSegmentation } from "@/utils/segmentFaces"
-import { canvasTypes, checkedFaceType, FetchState, fvlconizedFaceType, logsType, occurance } from "@/utils/@types"
-import checkEachFace from "@/utils/model/checkEachFace"
-import generateVideoThumbnail from "@/utils/generateVideoThumbnail"
-import { toast } from "react-toastify"
-import { getSingleFace } from "@/utils/model/getSingleFace"
-import { getImageURLFromBoundingBox } from "@/utils/getImageURLFromBoundingBox"
 import useTimer from "@/utils/useTimer"
-import Text from "@styles/components/text"
-import { protectedAPI } from "@/utils/api/api"
-import { message } from "antd"
+import { HomeContext } from "../context/homeContext"
+import { useAnalysis } from "../utils/useAnalysis"
 
 let fileEx : any = undefined
 
@@ -33,207 +25,41 @@ const Main = () => {
         setSelectedImage,
     } = useContext(imageUploadContext)
 
-    const [displayMatches, setDisplayMatches] = useState(false)
-    const [displayFaces, setDisplayFaces] = useState(false)
-    const [fvlconizing, setFvlconizing] = useState(false)
-    const [fileExtension, setFileExtension] = useState<string>()
-    const [imageSrc, setImageSrc] = useState<string>()
-    const [videoSrc, setVideoSrc] = useState<string>()
-    const [videoTimestamp, setVideoTimestamp] = useState<number>(0)
-    const [seekVideoTimestamp, setSeekVideoTimestamp] = useState<number>(0)
-    const [isVideoPlaying, setIsVideoPlaying] = useState<boolean>(false)
-    const [occurance, setOccurance] = useState<occurance>()
-    const [isPageLoaded, setIsPageLoaded] = useState(false)
-    const [distinctFaces, setDistinctFaces] = useState<FetchState<canvasTypes[]>>({
-        isEmpty : false,
-        isLoading : false,
-    })
-    const [matchedFaces, setMatchedFaces] = useState<FetchState<checkedFaceType[]>>({
-        isEmpty : false,
-        isLoading : false
-    })
+    const {
+        setVideoSrc,
+        setImageSrc,
+        setDistinctFaces,
+        setMatchedFaces,
+        setDisplayFaces,
+        setDisplayMatches,
+        setFileExtension,
+        fvlconizing,
+        occurance,
+        setVideoTimestamp,
+        setSeekVideoTimestamp,
+        imageSrc,
+        videoSrc,
+        fileExtension,
+        displayMatches,
+        displayFaces,
+        logs,
+        setLogs,
+        setOccurance,
+        distinctFaces,
+        matchedFaces
+    } = useContext(HomeContext)
+
     const imageRef = useRef<HTMLImageElement>(null);
     const videoRef = useRef<HTMLVideoElement>(null);
-    let statelessDistinctFaces : FetchState<canvasTypes[]> = {
-        isEmpty : false,
-        isLoading : false,
-    }
-    const [logs, setLogs] = useState<logsType[]>([])
     const { seconds, start : startTimer, stop : stopTimer, reset : resetTimer, setSeconds} = useTimer();
+
+    const {
+        handleAnalyze,
+        handleFalconize
+    } = useAnalysis(imageRef)
 
     let imageSplit = []
     let filename = undefined
-
-    // Sets the segmented faces to be displayed
-    const setFaces = (faces : { dataUrl: string, label: string }[] | undefined, type? : 'video' | 'image') => {
-        if(faces){
-            if(faces.length === 0){
-                if(!distinctFaces.data){
-                    if(type !== 'video'){
-                        statelessDistinctFaces = {isEmpty : true}
-                        setDistinctFaces(prev => ({isEmpty : true}))
-                    }
-                } else {
-                    statelessDistinctFaces = {
-                        ...statelessDistinctFaces.data,
-                        isLoading : false
-                    }
-                    setDistinctFaces(prev => ({
-                        ...prev,
-                        isLoading : false
-                    }))
-                }
-                type !== 'video' && message.error("No face detected!")
-            } else {
-                statelessDistinctFaces = {
-                    data : faces
-                }
-                setDistinctFaces(prev => ({
-                    data : faces
-                }))   
-            }   
-        } else {
-            setDistinctFaces(prev => ({isEmpty : true}))
-        }
-    }
-
-    // Handles the segmentation of images and specific video timestamps
-    const handleAnalyze = async (onlyAnalyze? : boolean) => {
-        if(onlyAnalyze)
-            setFvlconizing(true)
-        setDisplayFaces(true)
-        setDistinctFaces(prev => ({
-            ...prev,
-            isLoading : true,
-        }))
-        if(selectedImage && fileEx && imageRef.current !== null){
-            if(isImageFile(fileEx)){
-                const faces = await segmentFaces(selectedImage.url, setLogs)
-                faces && setFaces(faces)
-            } else if(isVideoFile(fileEx)){
-                const thumbnail = await generateVideoThumbnail(selectedImage.url, videoTimestamp)
-                thumbnail ? setImageSrc(thumbnail) : console.log("unable to generate thumbnail")
-                const faces = await segmentFaces(thumbnail, setLogs)
-                faces && setFaces(faces)
-            } else {
-                console.log("invalid file format")
-                setDistinctFaces({error : "Invalid file format"})
-            }
-            if(onlyAnalyze)
-                setFvlconizing(false)
-        } else {
-            setFvlconizing(false)
-            setDistinctFaces({error : "No image selected"})
-            console.log("No Image Selected")
-        }
-    }
-
-    let facesGroupedByIndex : {
-        index : number,
-        content : fvlconizedFaceType[],
-    }[] = []
-    
-    const groupFacesByIndex = (faces : fvlconizedFaceType[]) => {
-        faces.map((item) => groupSingleFaceByIndex(item))
-    }
-
-    const groupSingleFaceByIndex = (face : fvlconizedFaceType) => {
-        let isIndexed = false
-        facesGroupedByIndex = facesGroupedByIndex.map((item) => {
-            if(item.index === face.Person.Index){
-                isIndexed = true
-                return {
-                    index : item.index,
-                    content : [...item.content, face]
-                }
-            } else {
-                return item
-            }
-        })
-        if(!isIndexed){
-            facesGroupedByIndex.push({
-                index : face.Person.Index,
-                content : [face]
-            })
-        }
-    }
-
-    const getResultsContainingFaceMatches = (results : fvlconizedFaceType[]) => {
-        for(let item of results){
-            if(item.FaceMatches.length > 0)
-                return item
-        }
-    }
-
-    const handleFalconize = async () => {
-        setMatchedFaces(prev => ({
-            ...prev,
-            isLoading : true
-        }));
-        setDisplayMatches(true);
-        try {
-            if(isVideoFile(fileEx) && selectedImage && selectedImage.fullFile){
-                setFvlconizing(true)
-                const matchedFaces =  await awsSegmentation(selectedImage!.fullFile, setLogs) //Both segmentation and fvlconizing using aws
-                if(!matchedFaces){
-                    setFvlconizing(false)
-                    return setMatchedFaces({error : "Error fvlconizing video"})
-                }
-                groupFacesByIndex(matchedFaces.results)  //Categorized faces by index
-                if(facesGroupedByIndex){
-                    const checkedFaces = await Promise.all(facesGroupedByIndex.map(async (face) => {
-                        const resultsContainingFacesMatches = getResultsContainingFaceMatches(face.content) // gets a single item in the category which has a face match
-                        const faceMatch = resultsContainingFacesMatches?.FaceMatches[0]
-                        let details : any = undefined
-                        if(faceMatch)
-                            details = await getSingleFace(faceMatch.Face.FaceId);
-                        const boundingBox = (resultsContainingFacesMatches ?? face.content[0]).Person.Face.BoundingBox
-                        const match : checkedFaceType = {
-                            matchedPerson: faceMatch?.Face.ExternalImageId,
-                            similarity: faceMatch?.Similarity,
-                            originalImage: await getImageURLFromBoundingBox(boundingBox, await generateVideoThumbnail(selectedImage.url, (resultsContainingFacesMatches ?? face.content[0]).Timestamp / 1000)),
-                            matchedImage: details?.imageUrl,
-                            faceid: faceMatch?.Face.FaceId,
-                            occurances : face,
-                            details
-                        }
-                        return match
-                    }))
-                    setMatchedFaces({ data : checkedFaces })
-                    setOccurance(checkedFaces[0].occurances)
-                }
-                setFvlconizing(false)
-            } else {
-                ImageFvlconization()
-            }
-        } catch (error : any) {
-            console.log({error})
-            message.error(error.message)
-            setFvlconizing(false)
-        }
-    };
-
-    const ImageFvlconization = async () => {
-        setFvlconizing(true)
-        await handleAnalyze()
-        setDisplayMatches(true);
-        if(statelessDistinctFaces.data){
-            setLogs(prev => [...prev, {log : {content : "Fvlconizing..."}, date : new Date()}])
-            const faces = await checkEachFace(statelessDistinctFaces);
-            setLogs(prev => [...prev, {log : {content : "Fvlconized successfully"}, date : new Date()}])
-            if (faces && faces.length > 0) {
-                const validFaces = faces.filter(face => face !== undefined) as checkedFaceType[];
-                setMatchedFaces({data : validFaces})
-            } else {
-                message.error("No match found!")
-                !matchedFaces.data && setMatchedFaces({isEmpty : true})
-            }
-            setFvlconizing(false)
-        } else {
-            setMatchedFaces({error : 'No Image Segmented'})
-            setFvlconizing(false)
-        }
-    }
 
     const changeImageRef = async () => {
         if(selectedImage && fileEx){
@@ -246,10 +72,6 @@ const Main = () => {
     }
 
     const clearDistinctFaces = () => {
-        statelessDistinctFaces = {
-            isEmpty : false,
-            isLoading : false,
-        }
         setDistinctFaces({
             isEmpty : false,
             isLoading : false,
@@ -311,12 +133,6 @@ const Main = () => {
                         selectedImage && fileExtension && isVideoFile(fileExtension) ?
                         <VideoContainer 
                             video={selectedImage}
-                            logs={logs}
-                            setVideoTimestamp={setVideoTimestamp}
-                            videoTimestamp={videoTimestamp}
-                            seekVideoTimestamp={seekVideoTimestamp}
-                            occurances={occurance}
-                            fvlconizing={fvlconizing}
                         />
                         : selectedImage && fileExtension && isImageFile(fileExtension) ?
                         <Flex

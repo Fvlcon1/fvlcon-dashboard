@@ -16,6 +16,14 @@ const DBlist = () => {
         }, 5000);
     })
 
+    const db = [
+        "National Security",
+        "Ghana Immigration",
+        "Ghana Prisons",
+        "NIA",
+        "Ghana Poilce Sercvice"
+    ]
+
     return (
         <Flex
             direction="column"
@@ -23,24 +31,24 @@ const DBlist = () => {
         >
             {
                 databases ?
-                [1,2,3].map((item, index:number) => (
+                db.map((item, index:number) => (
                     <Fragment
                         key={index}
                     >
                         <Flex
                             align="center"
                         >
-                            <MdLocalPolice
+                            {/* <MdLocalPolice
                                 color={theme.colors.text.secondary}
-                            />
+                            /> */}
                             <AppTypography
                                 textColor={theme.colors.text.secondary}
                             >
-                                Ghana Police Service
+                                {item}
                             </AppTypography>
                         </Flex>
                         {
-                            index < 2 &&
+                            index < db.length - 1 &&
                             <div className="w-full h-[1px] bg-bg-quantinary"></div>
                         }
                     </Fragment>

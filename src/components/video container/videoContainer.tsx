@@ -7,33 +7,26 @@ import theme from "@styles/theme";
 import { imagesType } from "@/app/dashboard/home/components/images/controls";
 import Player from 'next-video/player';
 import Slidein from "@styles/components/slidein";
-import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
+import { Dispatch, SetStateAction, useContext, useEffect, useRef, useState } from "react";
 import { fvlconizedFaceType, logsType } from "@/utils/@types";
+import { HomeContext } from "@/app/dashboard/home/context/homeContext";
 
 const VideoContainer = ({
     video,
-    logs,
-    setVideoTimestamp,
     onPlay,
     onPause,
-    occurances,
-    fvlconizing,
-    videoTimestamp,
-    seekVideoTimestamp
 } : {
     video?: imagesType
-    logs : logsType[],
-    setVideoTimestamp: Dispatch<SetStateAction<number>>
     onPlay?: () => void
     onPause?: () => void
-    fvlconizing : boolean
-    videoTimestamp : number
-    seekVideoTimestamp: number
-    occurances?: {
-        index: number;
-        content: fvlconizedFaceType[];
-    }
 }) => {
+    const {
+        logs,
+        occurance,
+        fvlconizing,
+        seekVideoTimestamp,
+        setVideoTimestamp,
+    } = useContext(HomeContext)
     const playerRef = useRef<HTMLVideoElement | null>(null);
     const [duration, setDuration] = useState(0);
     const [seekBlocks, setSeekBlocks] = useState<(fvlconizedFaceType | undefined)[]>([]);
@@ -58,7 +51,7 @@ const VideoContainer = ({
     }, [seekBlocks]);
 
     const setStamps = () => {
-        let stamps = occurances?.content;
+        let stamps = occurance?.content;
         let localSeekBlock: (fvlconizedFaceType | undefined)[] = [];
         for (let i = 0; i < duration * 2; i++) {
             if (stamps) {
@@ -98,7 +91,7 @@ const VideoContainer = ({
     useEffect(() => {
         setStamps();
         updateDivWidth();
-    }, [occurances]);
+    }, [occurance]);
 
     useEffect(() => {
         handleSetPlayerTimestamp(seekVideoTimestamp)

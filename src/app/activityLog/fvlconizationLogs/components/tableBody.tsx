@@ -8,25 +8,33 @@ import { Fragment, useState } from "react"
 import { FaExternalLinkAlt } from "react-icons/fa"
 import { FaCircle, FaRegCircleDot } from "react-icons/fa6"
 import { MdCloudDownload } from "react-icons/md"
+import { FvlconizationLogsTypes } from "./fvlconizationLogs.types"
+import { getRelativeTime, getTime } from "@/utils/getDate"
+import { TypographySize } from "@styles/style.types"
 
-const TableBody = () => {
+const TableBody = ({
+    data
+} : {
+    data : FvlconizationLogsTypes[]
+}) => {
     const [zoom, setZoom] = useState(false)
+    const [zoomImage, setZoomImage] = useState('')
     return (
         <>
             <ZoomImage
                 setShow={setZoom}
                 show={zoom}
-                imageURL={require('@/assets/dev/image1.png')} 
+                imageURL={zoomImage} 
             />
             <tbody>
                 {
-                    [1,2,3,4].map((item, index) => (
+                    data.map((item, index) => (
                         <Fragment key={index}>
-                            <tr>
+                            <tr className="hover:bg-bg-secondary duration-200">
                                 <td className="pl-2">
                                     <div className="flex w-fit px-3 py-1 border-[1px] border-solid border-bg-quantinary rounded-full bg-bg-secondary">
                                         <Text>
-                                            image
+                                            {item.type}
                                         </Text>
                                     </div>
                                 </td>
@@ -36,45 +44,63 @@ const TableBody = () => {
                                             alt="img"
                                             fill
                                             className="hover:scale-[1.3] duration-300 object-cover cursor-pointer"
-                                            src={require('@/assets/dev/image1.png')}
-                                            onClick={()=>setZoom(prev => !prev)}
+                                            src={item.uploadedImageUrl}
+                                            onClick={()=>{
+                                                setZoomImage(item.uploadedImageUrl)
+                                                setZoom(prev => !prev)
+                                            }}
                                         />
                                     </div>
                                 </td>
                                 <td>
-                                    <Text
-                                        textColor={theme.colors.text.primary}
-                                    >
-                                        John Dramani Mahama
-                                    </Text>
+                                    <div className="flex flex-col">
+                                        {
+                                            item.identifiedPeople.map((person, index) => (
+                                                person.length > 3 ?
+                                                <Text
+                                                    textColor={theme.colors.text.primary}
+                                                    key={index}
+                                                >
+                                                    {person}
+                                                </Text>
+                                                :
+                                                <Text key={index}>
+                                                    Unknown
+                                                </Text>
+                                            ))
+                                        }
+                                    </div>
                                 </td>
                                 <td>
                                     <div className="flex flex-col gap-0">
                                         <Text
                                             textColor={theme.colors.text.primary}
                                         >
-                                            28th July, 2024
+                                            {new Date(item.date).toDateString()}
                                         </Text>
                                         <Text>
-                                            2 Days ago | 12 PM
+                                            {getRelativeTime(new Date(item.date))} | {getTime(new Date(item.date))}
                                         </Text>
                                     </div>
                                 </td>
                                 <td>
                                     <div className="flex items-center gap-2">
                                         <Text>
-                                            53s
+                                            {item.timeElapsed}s
                                         </Text>
                                         <Progress
                                             type="circle" 
-                                            percent={90}
+                                            percent={item.accuracy}
                                             size={50}
                                             strokeColor={theme.colors.main.primary}
                                             trailColor={`${theme.colors.main.primary}${hexOpacity(20)}`}
                                             strokeWidth={8}
                                             format={(percent) => (
-                                                <Text textColor={theme.colors.text.primary}>
-                                                    {percent}%
+                                                <Text 
+                                                    textColor={theme.colors.text.primary}
+                                                    size={TypographySize.xs}
+                                                >
+                                                    {Number(item.accuracy).toFixed(1)}%
                                                 </Text>
                                             )}
                                         />
@@ -87,7 +113,7 @@ const TableBody = () => {
                                             size={10}
                                         />
                                         <Text textColor={theme.colors.text.primary}>
-                                            Successful
+                                            {item.status}
                                         </Text>
                                     </div>
                                 </td>

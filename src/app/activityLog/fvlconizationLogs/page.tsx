@@ -4,12 +4,27 @@ import Text from "@styles/components/text"
 import theme from "@styles/theme"
 import Controls from "./components/controls"
 import Table from "./components/table"
-import { useState } from "react"
+import { useContext, useEffect, useState } from "react"
+import { protectedAPI } from "@/utils/api/api"
+import { FvlconizationLogsTypes } from "./components/fvlconizationLogs.types"
+import groupLogsByDate from "./utils/groupsLogsByDate"
+import { fvlocnizationLogsContext } from "./context/fvlconizationLogsContext"
+import useFvlconizationLogs from "./utils/useFvlconizationLogs"
+
+const privateApi = new protectedAPI()
 
 const FvlconizationLogs = () => {
     const [expandToday, setExpandToday] = useState(true)
     const [expandYesterday, setExpandYesterday] = useState(false)
     const [expandEarlier, setExpandEarlier] = useState(false)
+
+    const {fvlconizationLogs, setFvlconizationLogs} = useContext(fvlocnizationLogsContext)
+    const {today, yesterday, earlier} = groupLogsByDate(fvlconizationLogs)
+    const {getFvlconizationLogs} = useFvlconizationLogs()
+
+    useEffect(()=>{
+        getFvlconizationLogs()
+    },[])
 
     return (
         <div className="flex flex-col gap-4">
@@ -25,16 +40,19 @@ const FvlconizationLogs = () => {
                 title="Today"
                 expand={expandToday}
                 setExpand={setExpandToday}
+                data={today}
             />
             <Table 
                 title="Yesterday"
                 expand={expandYesterday}
                 setExpand={setExpandYesterday}
+                data={yesterday}
             />
             <Table 
                 title="Ealier"
                 expand={expandEarlier}
                 setExpand={setExpandEarlier}
+                data={earlier}
             />
         </div>
     )

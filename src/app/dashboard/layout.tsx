@@ -3,6 +3,7 @@ import LoadModels from "./home/components/load models/loadModels";
 import { redirect } from "next/navigation";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../api/auth/[...nextauth]/authOptions";
+import { HomeContextProvider } from "./home/context/homeContext";
 
 export default async function RootLayout({
   children,
@@ -15,9 +16,11 @@ export default async function RootLayout({
   }
   return (
     session &&
-    <div className="w-full max-w-[1500px]">
-      {children}
-      <LoadModels />
-    </div>
+    <HomeContextProvider>
+      <div className="w-full max-w-[1500px]">
+        {children}
+        <LoadModels />
+      </div>
+    </HomeContextProvider>
   );
 }

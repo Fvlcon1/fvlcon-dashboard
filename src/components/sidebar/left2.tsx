@@ -33,8 +33,7 @@ const Left2 = () => {
             prev.map((item, i) => 
               item.url === pathname ? { ...item, active: true } : { ...item, active: false }
             )
-          );
-        console.log(pathname)
+          )
     },[pathname])
 
     return (
