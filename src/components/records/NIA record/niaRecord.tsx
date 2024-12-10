@@ -271,7 +271,7 @@ const NiaRecord = ({
                         <Text
                             textColor={theme.colors.text.primary}
                         >
-                            Father's details
+                            {"Father's details"}
                         </Text>
                         <List 
                             data={fatherDetails}
