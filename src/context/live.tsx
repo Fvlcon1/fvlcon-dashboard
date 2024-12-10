@@ -28,14 +28,14 @@ export const LiveProvider = ({ children }: { children: ReactNode }) => {
     const [activeCameras, setActiveCameras] = useState<activeCameraType[]>([
         {
             id : '1',
-            url : "https://ljexe63ri7c60g-4000.proxy.runpod.net/k",
+            url : "https://ljexe63ri7c60g-4000.proxy.runpod.net/",
             location : 'Osu Accra',
             streamName : "my_stream_name",
             coordinates : [5.558, -0.187]
         },
         {
             id : '2',
-            url : "https://ljexe63ri7c60g-3000.proxy.runpod.net/k",
+            url : "https://ljexe63ri7c60g-3000.proxy.runpod.net/",
             location : 'Kumasi',
             streamName : "stream2",
             coordinates : [6.669450646774655, -1.5176043915812956]
