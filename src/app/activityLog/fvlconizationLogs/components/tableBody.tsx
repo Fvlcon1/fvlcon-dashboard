@@ -11,6 +11,7 @@ import { MdCloudDownload } from "react-icons/md"
 import { FvlconizationLogsTypes } from "./fvlconizationLogs.types"
 import { getRelativeTime, getTime } from "@/utils/getDate"
 import { TypographySize } from "@styles/style.types"
+import NoData from "@components/NoData/noData"
 
 const TableBody = ({
     data
@@ -19,6 +20,9 @@ const TableBody = ({
 }) => {
     const [zoom, setZoom] = useState(false)
     const [zoomImage, setZoomImage] = useState('')
+    const getValidPeople = () => {
+        
+    }
     return (
         <>
             <ZoomImage
@@ -28,6 +32,9 @@ const TableBody = ({
             />
             <tbody>
                 {
+                    data.length < 1?
+                    <tr><td colSpan={100}><NoData /></td></tr>
+                    :
                     data.map((item, index) => (
                         <Fragment key={index}>
                             <tr className="hover:bg-bg-secondary duration-200">
@@ -56,17 +63,19 @@ const TableBody = ({
                                     <div className="flex flex-col">
                                         {
                                             item.identifiedPeople.map((person, index) => (
-                                                person.length > 3 ?
-                                                <Text
-                                                    textColor={theme.colors.text.primary}
-                                                    key={index}
-                                                >
-                                                    {person}
-                                                </Text>
-                                                :
-                                                <Text key={index}>
-                                                    Unknown
-                                                </Text>
+                                                index < 3 && (
+                                                    person.length > 3 ?
+                                                    <Text
+                                                        textColor={theme.colors.text.primary}
+                                                        key={index}
+                                                    >
+                                                        {person}
+                                                    </Text>
+                                                    :
+                                                    <Text key={index}>
+                                                        Unknown
+                                                    </Text>
+                                                )
                                             ))
                                         }
                                     </div>

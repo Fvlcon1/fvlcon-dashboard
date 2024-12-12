@@ -15,6 +15,7 @@ const useFvlconizationLogs = () => {
             type? : string
         }
     ) => {
+        setFvlconizationLogs({status : 'loading'})
         const logs = await privateApi.get("/fvlconizationLogs/getAllFvlconizationLogs", {
             startDate : params?.startDate,
             endDate : params?.endDate,
@@ -23,7 +24,7 @@ const useFvlconizationLogs = () => {
         })
         const data = logs?.data
         if(data.length < 1){
-            setFvlconizationLogs([])
+            setFvlconizationLogs({data : []})
         }
         const cleanedLogs : FvlconizationLogsTypes[] = data.map((item : any) => {
             const accuracy = item.media[0].accuracy
@@ -42,7 +43,7 @@ const useFvlconizationLogs = () => {
             }
         })
         console.log({cleanedLogs})
-        setFvlconizationLogs(cleanedLogs)
+        setFvlconizationLogs({data : cleanedLogs})
     }
     return {
         getFvlconizationLogs

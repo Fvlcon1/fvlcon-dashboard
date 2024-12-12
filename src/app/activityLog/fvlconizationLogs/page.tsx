@@ -10,6 +10,7 @@ import { FvlconizationLogsTypes } from "./components/fvlconizationLogs.types"
 import groupLogsByDate from "./utils/groupsLogsByDate"
 import { fvlocnizationLogsContext } from "./context/fvlconizationLogsContext"
 import useFvlconizationLogs from "./utils/useFvlconizationLogs"
+import LoadingSkeleton from "./components/loadingSkeleton"
 
 const privateApi = new protectedAPI()
 
@@ -19,7 +20,7 @@ const FvlconizationLogs = () => {
     const [expandEarlier, setExpandEarlier] = useState(false)
 
     const {fvlconizationLogs, setFvlconizationLogs} = useContext(fvlocnizationLogsContext)
-    const {today, yesterday, earlier} = groupLogsByDate(fvlconizationLogs)
+    const {today, yesterday, earlier} = groupLogsByDate(fvlconizationLogs.data)
     const {getFvlconizationLogs} = useFvlconizationLogs()
 
     useEffect(()=>{
@@ -36,24 +37,31 @@ const FvlconizationLogs = () => {
                 </Text>
                 <Controls />
             </div>
-            <Table 
-                title="Today"
-                expand={expandToday}
-                setExpand={setExpandToday}
-                data={today}
-            />
-            <Table 
-                title="Yesterday"
-                expand={expandYesterday}
-                setExpand={setExpandYesterday}
-                data={yesterday}
-            />
-            <Table 
-                title="Ealier"
-                expand={expandEarlier}
-                setExpand={setExpandEarlier}
-                data={earlier}
-            />
+            {
+                fvlconizationLogs.status === 'loading' ?
+                <LoadingSkeleton />
+                :
+                <>
+                    <Table 
+                        title="Today"
+                        expand={expandToday}
+                        setExpand={setExpandToday}
+                        data={today}
+                    />
+                    <Table 
+                        title="Yesterday"
+                        expand={expandYesterday}
+                        setExpand={setExpandYesterday}
+                        data={yesterday}
+                    />
+                    <Table 
+                        title="Ealier"
+                        expand={expandEarlier}
+                        setExpand={setExpandEarlier}
+                        data={earlier}
+                    />
+                </>
+            }
         </div>
     )
 }

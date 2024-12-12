@@ -1,6 +1,6 @@
 import { FvlconizationLogsTypes } from "../components/fvlconizationLogs.types";
 
-const groupLogsByDate = (logs: FvlconizationLogsTypes[]) => {
+const groupLogsByDate = (logs?: FvlconizationLogsTypes[]) => {
     const today = new Date();
     const yesterday = new Date(today);
     yesterday.setDate(today.getDate() - 1);
@@ -9,7 +9,7 @@ const groupLogsByDate = (logs: FvlconizationLogsTypes[]) => {
     const yesterdayLogs: FvlconizationLogsTypes[] = [];
     const earlierLogs: FvlconizationLogsTypes[] = [];
   
-    logs.forEach((log) => {
+    logs?.forEach((log) => {
       const logDate = new Date(log.date);
   
       // Remove time component from date for comparison
