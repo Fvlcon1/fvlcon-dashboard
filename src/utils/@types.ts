@@ -98,7 +98,7 @@ export type checkedFaceType = {
     index: number;
     content: fvlconizedFaceType[];
   }
-  details ?: checkFaceDetails
+  details ?: any
 }
 
 export type ImageCardType = {

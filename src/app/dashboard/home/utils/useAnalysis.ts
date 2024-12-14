@@ -142,6 +142,8 @@ export const useAnalysis = (imageRef: RefObject<HTMLImageElement>) => {
             const faces = await checkEachFace(statelessDistinctFaces);
             setLogs(prev => [...prev, {log : {content : "Fvlconized successfully"}, date : new Date()}])
             if (faces && faces.length > 0) {
+                const validFaces = faces.filter(face => face !== undefined) as checkedFaceType[];
+                setMatchedFaces({data : validFaces})
                 const filteredFaces = faces.filter((face) => face !== undefined)
                 
                     const faceDetails : faceDetailsType[] = await Promise.all(filteredFaces.map(async (face) => {
@@ -179,7 +181,6 @@ export const useAnalysis = (imageRef: RefObject<HTMLImageElement>) => {
                         }
                     }))
                     if(faceDetails){
-                        const validFaces = faces.filter(face => face !== undefined) as checkedFaceType[];
                         try {
                             const uploadImageFilename = `${nanoid()}-${new Date().toISOString()}`;
                             const uploadUrl = await privateApi.get("/fvlconizationLogs/getUploadPresignedUrl", {filename : uploadImageFilename})
@@ -191,7 +192,6 @@ export const useAnalysis = (imageRef: RefObject<HTMLImageElement>) => {
                                     console.log("Unable to upload 'Upload image'")
                                     message.error("Error storing logs")
                                 }
-                                setMatchedFaces({data : validFaces})
                                 storeFvlcoinzationResults({
                                     uploadedImageS3key : uploadImageFilename,
                                     media : faceDetails,
@@ -217,7 +217,9 @@ export const useAnalysis = (imageRef: RefObject<HTMLImageElement>) => {
     }
 
     const groupFacesByIndex = (faces : fvlconizedFaceType[]) => {
+        console.log({faces})
         faces.map((item) => groupSingleFaceByIndex(item, facesGroupedByIndex))
+        console.log({facesGroupedByIndex})
     }
 
     const getResultsContainingFaceMatches = (results : fvlconizedFaceType[]) => {
@@ -261,8 +263,9 @@ export const useAnalysis = (imageRef: RefObject<HTMLImageElement>) => {
                         }
                         return match
                     }))
+                    console.log({checkedFaces})
                     setMatchedFaces({ data : checkedFaces })
-                    setOccurance(checkedFaces[0].occurances)
+                    setOccurance(checkedFaces[0]?.occurances)
                 }
                 setFvlconizing(false)
             } else {

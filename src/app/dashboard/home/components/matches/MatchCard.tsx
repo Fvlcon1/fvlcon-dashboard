@@ -57,6 +57,9 @@ const MatchCard = ({
     useEffect(()=>{
         console.log({occ1 : currentOccurance, occ2 : occurances})
     },[currentOccurance])
+    useEffect(()=>{
+        console.log({details})
+    },[])
     return (
         <>
             {/* <ExpandMatch 
@@ -75,6 +78,7 @@ const MatchCard = ({
             <NiaRecord 
                 visible={expand}
                 setVisible={setExpand}
+                data={details}
             />
             <div 
                 className={`p-3 py-2 min-w-[400px] cursor-pointer w-[400px] h-fit flex flex-col gap-1 rounded-lg bg-gradient-container-black ${getSelectedOccurenceClass() ?? ''}`}

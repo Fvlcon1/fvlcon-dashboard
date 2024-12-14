@@ -1,9 +1,11 @@
+'use client'
+
 import Divider from "@components/divider/divider"
 import OverlayWindow from "@components/window/overlayWindow"
 import Text from "@styles/components/text"
 import { TypographySize } from "@styles/style.types"
 import theme from "@styles/theme"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import List from "../components/list"
 import Container from "../components/container"
 import Image from "next/image"
@@ -11,99 +13,116 @@ import ZoomImage from "@components/zoomImage/zoomImage"
 
 const NiaRecord = ({
     visible,
-    setVisible
+    setVisible,
+    data
 } : {
     visible : boolean,
     setVisible : React.Dispatch<React.SetStateAction<boolean>>
+    data? : any
 }) => {
     const [zoom, setZoom] = useState(false)
+    const {
+        applicationDetails : appDetes,
+        personDetails : personDetes, 
+        birthDetails : birthDetes, 
+        placeOfBirth : POB, 
+        hometown : htown, 
+        occupation : occup, 
+        residentialAddress : RAdress, 
+        fatherDetails : fatherDetes,
+        fathersHometown : fatherHtown,
+        mothersDetails : motherDetes,
+        mothersHometown : motherHtown,
+        nextOfKin : NOK,
+        verificationDocument : verificationDoc,
+        contact : cont,
+        institutionalIds : IIds,
+        imageUrl
+    } = data ?? {}
     const applicationDetails = [
-        ["Type of application", "Citizen"],
-        ["Type of Request", "Issuance"],
-        ["Date of Application", (new Date("09-09-24")).toDateString()],
-        ["Interviewer NID number", "GHA-712172562-7"],
-        ["Registration centre number", "030432001"]
+        ["Type of application", appDetes?.typeOfApplication],
+        ["Type of Request", appDetes?.typeOfRequest],
+        ["Date of Application", (new Date(appDetes?.dateOfApplication)).toDateString()],
+        ["Interviewer NID number", appDetes?.interviewerNidNumber],
+        ["Registration centre number", appDetes?.registrationCentreNumber]
     ]
-    const personDetails1 = [
-        ["Surname", "Nedjoh"],
-        ["Forenames", "Prince Edem"],
-        ["Maiden or previous names", ""],
-        ["Height", "172"],
+    const personDetails = [
+        ["Surname", personDetes?.surname],
+        ["Forenames", personDetes?.forenames],
+        ["Height", personDetes?.height],
+        ["Colour of eyes", personDetes?.colourOfEyes],
+        ["Colour of hair", personDetes?.colourOfHair],
+        ["Disability code", personDetes?.disabilityCode],
+        ["Level of education", personDetes?.levelOfEducation],
     ]
-    const personDetails2 = [
-        ["Colour of eyes", "Brown"],
-        ["Colour of hair", "Black"],
-        ["Disability code", "001"],
-        ["Level of education", "Tetiary"],
-    ]
-    const birthDetails1 = [
-        ["Birth Certificate number", "040701-2236-2023"],
-        ["Date issued", (new Date(11-8-23)).toDateString()],
-        ["Date of birth", (new Date(6-5-2002)).toDateString()],
-    ]
-    const birthDetails2 = [
-        ["Nationality at birth", "GHA"],
-        ["Current nationality", "GHA"],
+    const birthDetails = [
+        ["Birth Certificate number", birthDetes?.birthCertificateNumber],
+        ["Date issued", birthDetes?.dateIssued],
+        ["Date of birth", birthDetes?.dateOfBirth],
+        ["Nationality at birth", birthDetes?.nationalityAtBirth],
+        ["Current nationality", birthDetes?.currentNationality],
     ]
     const placeOfBirth = [
-        ["Village/town", "Kpando"],
-        ["Region code", "004"],
-        ["District/State", "441"]
+        ["Village/town", POB?.villageTown],
+        ["Region code", POB?.regionCode],
+        ["District/State", POB?.districtState]
     ]
     const hometown = [
-        ["Village/town", "Kpando"],
-        ["Region code", "004"],
-        ["District/State", "441"]
+        ["Village/town", htown?.villageTown],
+        ["Region/code", htown?.regionCode],
+        ["District/State", htown?.districtState]
     ]
     const occupation = [
-        ["Occupation", "9002"]
+        ["Occupation", occup?.occupation]
     ]
-    const residentialAddress1 = [
-        ["Village/town", "Lebanon"],
-        ["Region/Country", "003"],
-        ["District/State", "303"],
-    ]
-    const residentialAddress2 = [
-        ["Community area name", "Zone 3"],
-        ["ZIP/Postal code", "GB 065"],
-        ["Digital Address", "GB-089-3782"]
+    const residentialAddress = [
+        ["Village/town", RAdress?.villageTown],
+        ["Region/Country", RAdress?.regionCountry],
+        ["District/State", RAdress?.districtState],
+        ["Community area name", RAdress?.communityAreaName],
+        ["ZIP/Postal code", RAdress?.zipPostalCode],
+        ["Digital Address", RAdress?.digitalAddress]
     ]
     const fatherDetails = [
-        ["Full name of father", "Nedjoh Christopher"],
-        ["Nationality", "GHA"],
-        ["Is father alive", "Yes"]
+        ["Full name of father", fatherDetes?.fullNameOfFather],
+        ["Nationality", fatherDetes?.nationality],
+        ["Is father alive", fatherDetes?.isFatherAlive]
     ]
     const fathersHometown = [
-        ["Village/town", "Anfoega"],
-        ["Region/code", "004"],
-        ["District/State", "441"],
+        ["Village/town", fatherHtown?.villageTown],
+        ["Region/code", fatherHtown?.regionCode],
+        ["District/State", fatherHtown?.districtState],
     ]
     const motherDetails = [
-        ["Full name of father", "Grace Christopher"],
-        ["Nationality", "GHA"],
-        ["Is Mother alive", "Yes"]
+        ["Full name of Mother", motherDetes?.fullNameOfMother],
+        ["Nationality", motherDetes?.nationality],
+        ["Is Mother alive", motherDetes?.isMotherAlive]
     ]
     const mothersHometown = [
-        ["Village/town", "Kpando"],
-        ["Region/code", "004"],
-        ["District/State", "441"],
+        ["Village/town", motherHtown?.villageTown],
+        ["Region/code", motherHtown?.regionCode],
+        ["District/State", motherHtown?.districtState],
     ]
     const NextOfKin = [
-        ["Next of kin", "Nedjoh Christopher (Father)"],
-        ["Address", "0203398484, Ashiaman"]
+        ["Next of kin", NOK?.nextOfKin],
+        ["Address", NOK?.address]
     ]
     const verificationDocument = [
-        ["type",  "Birth certificate"],
-        ["Document number / NID",  "04070-2236-2023"],
-        ["Date issued",  (new Date("7-18-20")).toDateString()],
+        ["type",  verificationDoc?.type],
+        ["Document number / NID",  verificationDoc?.documentNumberNid],
+        ["Date issued",  verificationDoc?.dateIssued],
     ]
     const contact = [
-        ["Local phone number",  "0204459845"],
+        ["Local phone number",  cont?.localPhoneNumber],
     ] 
     const institutionalIds = [
-        ["Voter's Id number",  "2481010394"],
-        ["Date issued",  (new Date("7-18-20")).toDateString()],
+        ["Voter's Id number",  IIds?.votersIdNumber],
+        ["Date issued",  IIds?.dateIssued],
     ]
+
+    useEffect(()=>{
+        console.log({data})
+    },[])
     return (
         <OverlayWindow
             title="NIA record, Ghana"
@@ -127,239 +146,302 @@ const NiaRecord = ({
                     />
                 </div>
             </div>
-            <div className="w-full p-8 flex flex-col gap-6">
-                <div className="w-full flex justify-between gap-2 items-center">
-                    <div className="flex gap-3 items-center">
-                        <div className="h-[100px] w-[100px] rounded-full bg-bg-quantinary relative overflow-hidden">
-                            <Image
-                                alt="img"
-                                fill
-                                className="hoverscale-[1.3] duration-300 object-cover cursor-pointer"
-                                src={require('@/assets/dev/profile1.jpg')}
-                                onClick={()=>setZoom(prev => !prev)}
+            {
+                data &&
+                <div className="w-full p-8 flex flex-col gap-6">
+                    <div className="w-full flex justify-between gap-2 items-center">
+                        <div className="flex gap-3 items-center">
+                            <div className="h-[100px] w-[100px] rounded-full bg-bg-quantinary relative overflow-hidden">
+                                <Image
+                                    alt="img"
+                                    fill
+                                    className="hoverscale-[1.3] duration-300 object-cover cursor-pointer"
+                                    src={imageUrl ?? ''}
+                                    onClick={()=>setZoom(prev => !prev)}
+                                />
+                            </div>
+                            <div className="flex flex-col gap-0">
+                                <Text
+                                    size={TypographySize.HM}
+                                    textColor={theme.colors.text.primary}
+                                >
+                                    {`${personDetes.surname} ${personDetes.forenames}`}
+                                </Text>
+                                <Text>
+                                    {`${RAdress?.zipPostalCode}`}
+                                </Text>
+                                <Text>
+                                    {`${RAdress?.communityAreaName}, ${RAdress?.villageTown}`}
+                                </Text>
+                            </div>
+                        </div>
+                        <div className="flex gap-4 items-center">
+                            <div className="h-[70px] w-[80px] relative">
+                                <Image
+                                    alt="img"
+                                    fill
+                                    className="duration-300 object-cover cursor-pointer"
+                                    src={require('@/assets/dev/coagh.png')}
+                                />
+                            </div>
+                            <div className="h-[65px] w-[230px] relative mt-[5px]">
+                                <Image
+                                    alt="img"
+                                    fill
+                                    className="duration-300 object-cover cursor-pointer"
+                                    src={require('@/assets/dev/nia-logo.png')}
+                                />
+                            </div>
+                        </div>
+                    </div>
+                    <Container 
+                        title="Application Details"
+                    >
+                        <div className="w-full p-4 flex gap-2">
+                            <List 
+                                data={applicationDetails}
+                                evenBg={theme.colors.bg.secondary}
                             />
                         </div>
-                        <div className="flex flex-col gap-0">
+                    </Container>
+
+                    <Container 
+                        title="Person Details"
+                    >
+                        <div className="w-full p-4 flex gap-2">
+                            <List 
+                                data={personDetails}
+                                evenBg={theme.colors.bg.secondary}
+                                first={4}
+                            />
+                            <List 
+                                data={personDetails}
+                                evenBg={theme.colors.bg.secondary}
+                                last={4}
+                            />
+                        </div>
+                    </Container>
+
+                    <Container 
+                        title="Birth Details"
+                    >
+                        <div className="w-full p-4 flex gap-2">
+                            <List 
+                                data={birthDetails}
+                                evenBg={theme.colors.bg.secondary}
+                                first={3}
+                            />
+                            <List 
+                                data={birthDetails}
+                                evenBg={theme.colors.bg.secondary}
+                                last={3}
+                            />
+                        </div>
+                        <Divider />
+                        <div className="w-full p-4 flex flex-col gap-2">
                             <Text
-                                size={TypographySize.HM}
                                 textColor={theme.colors.text.primary}
                             >
-                                Prince Edem Nedjoh
+                                Place of birth
                             </Text>
-                            <Text>
-                                P.O. Box 2990
-                            </Text>
-                            <Text>
-                                North Canashie, Accra
-                            </Text>
+                            <div className="w-full flex gap-2">
+                                <List 
+                                    data={placeOfBirth}
+                                    evenBg={theme.colors.bg.secondary}
+                                    first={2}
+                                />
+                                <List 
+                                    data={placeOfBirth}
+                                    evenBg={theme.colors.bg.secondary}
+                                    last={2}
+                                />
+                            </div>
                         </div>
-                    </div>
-                    <div className="flex gap-4 items-center">
-                        <div className="h-[70px] w-[80px] relative">
-                            <Image
-                                alt="img"
-                                fill
-                                className="duration-300 object-cover cursor-pointer"
-                                src={require('@/assets/dev/coagh.png')}
+                        <Divider />
+                        <div className="w-full p-4 flex flex-col gap-2">
+                            <Text
+                                textColor={theme.colors.text.primary}
+                            >
+                                Hometown
+                            </Text>
+                            <div className="w-full flex gap-2">
+                                <List 
+                                    data={hometown}
+                                    evenBg={theme.colors.bg.secondary}
+                                    first={2}
+                                />
+                                <List 
+                                    data={hometown}
+                                    evenBg={theme.colors.bg.secondary}
+                                    last={2}
+                                />
+                            </div>
+                        </div>
+                    </Container>
+
+                    <Container 
+                        title="Occupation"
+                    >
+                        <div className="w-full p-4 flex gap-2">
+                            <List 
+                                data={occupation}
+                                evenBg={theme.colors.bg.secondary}
                             />
                         </div>
-                        <div className="h-[65px] w-[230px] relative mt-[5px]">
-                            <Image
-                                alt="img"
-                                fill
-                                className="duration-300 object-cover cursor-pointer"
-                                src={require('@/assets/dev/nia-logo.png')}
+                    </Container>
+
+                    <Container 
+                        title="Residential Address"
+                    >
+                        <div className="w-full p-4 flex gap-2">
+                            <List 
+                                data={residentialAddress}
+                                evenBg={theme.colors.bg.secondary}
+                                first={3}
+                            />
+                            <List 
+                                data={residentialAddress}
+                                evenBg={theme.colors.bg.secondary}
+                                last={3}
                             />
                         </div>
-                    </div>
+                    </Container>
+
+                    <Container 
+                        title="Applicants Parentage"
+                    >
+                        <div className="w-full p-4 flex flex-col gap-2">
+                            <Text
+                                textColor={theme.colors.text.primary}
+                            >
+                                {"Father's details"}
+                            </Text>
+                            <div className="w-full flex gap-2">
+                                <List 
+                                    data={fatherDetails}
+                                    evenBg={theme.colors.bg.secondary}
+                                    first={2}
+                                />
+                                <List 
+                                    data={fatherDetails}
+                                    evenBg={theme.colors.bg.secondary}
+                                    last={2}
+                                />
+                            </div>
+                        </div>
+                        <Divider />
+                        <div className="w-full p-4 flex flex-col gap-2">
+                            <Text
+                                textColor={theme.colors.text.primary}
+                            >
+                                {"Father's hometown"}
+                            </Text>
+                            <div className="w-full flex gap-2">
+                                <List 
+                                    data={fathersHometown}
+                                    evenBg={theme.colors.bg.secondary}
+                                    first={2}
+                                />
+                                <List 
+                                    data={fathersHometown}
+                                    evenBg={theme.colors.bg.secondary}
+                                    last={2}
+                                />
+                            </div>
+                        </div>
+                        <Divider />
+                        <div className="w-full p-4 flex flex-col gap-2">
+                            <Text
+                                textColor={theme.colors.text.primary}
+                            >
+                                {"Mother's details"}
+                            </Text>
+                            <div className="w-full flex gap-2">
+                                <List 
+                                    data={motherDetails}
+                                    evenBg={theme.colors.bg.secondary}
+                                    first={2}
+                                />
+                                <List 
+                                    data={motherDetails}
+                                    evenBg={theme.colors.bg.secondary}
+                                    last={2}
+                                />
+                            </div>
+                        </div>
+                        <Divider />
+                        <div className="w-full p-4 flex flex-col gap-2">
+                            <Text
+                                textColor={theme.colors.text.primary}
+                            >
+                                {"Mother's hometown"}
+                            </Text>
+                            <div className="w-full flex gap-2">
+                                <List 
+                                    data={mothersHometown}
+                                    evenBg={theme.colors.bg.secondary}
+                                    first={2}
+                                />
+                                <List 
+                                    data={mothersHometown}
+                                    evenBg={theme.colors.bg.secondary}
+                                    last={2}
+                                />
+                            </div>
+                        </div>
+                    </Container>
+
+                    <Container 
+                        title="Next of kin"
+                    >
+                        <div className="w-full p-4 flex gap-2">
+                            <List 
+                                data={NextOfKin}
+                                evenBg={theme.colors.bg.secondary}
+                            />
+                        </div>
+                    </Container>
+
+                    <Container 
+                        title="Verification document"
+                    >
+                        <div className="w-full p-4 flex gap-2">
+                            <List 
+                                data={verificationDocument}
+                                evenBg={theme.colors.bg.secondary}
+                                first={2}
+                            />
+                            <List 
+                                data={verificationDocument}
+                                evenBg={theme.colors.bg.secondary}
+                                last={2}
+                            />
+                        </div>
+                    </Container>
+
+                    <Container 
+                        title="Contact"
+                    >
+                        <div className="w-full p-4 flex gap-2">
+                            <List 
+                                data={contact}
+                                evenBg={theme.colors.bg.secondary}
+                            />
+                        </div>
+                    </Container>
+
+                    <Container 
+                        title="Instituitional Ids"
+                    >
+                        <div className="w-full p-4 flex gap-2">
+                            <List 
+                                data={institutionalIds}
+                                evenBg={theme.colors.bg.secondary}
+                            />
+                        </div>
+                    </Container>
                 </div>
-                <Container 
-                    title="Application Details"
-                >
-                    <div className="w-full p-4 flex gap-2">
-                        <List 
-                            data={applicationDetails}
-                            evenBg={theme.colors.bg.secondary}
-                        />
-                    </div>
-                </Container>
-
-                <Container 
-                    title="Person Details"
-                >
-                    <div className="w-full p-4 flex gap-2">
-                        <List 
-                            data={personDetails1}
-                            evenBg={theme.colors.bg.secondary}
-                        />
-                        <List 
-                            data={personDetails2}
-                            evenBg={theme.colors.bg.secondary}
-                        />
-                    </div>
-                </Container>
-
-                <Container 
-                    title="Birth Details"
-                >
-                    <div className="w-full p-4 flex gap-2">
-                        <List 
-                            data={birthDetails1}
-                            evenBg={theme.colors.bg.secondary}
-                        />
-                        <List 
-                            data={birthDetails2}
-                            evenBg={theme.colors.bg.secondary}
-                        />
-                    </div>
-                    <Divider />
-                    <div className="w-full p-4 flex flex-col gap-2">
-                        <Text
-                            textColor={theme.colors.text.primary}
-                        >
-                            Place of birth
-                        </Text>
-                        <List 
-                            data={placeOfBirth}
-                            evenBg={theme.colors.bg.secondary}
-                        />
-                    </div>
-                    <Divider />
-                    <div className="w-full p-4 flex flex-col gap-2">
-                        <Text
-                            textColor={theme.colors.text.primary}
-                        >
-                            Hometown
-                        </Text>
-                        <List 
-                            data={hometown}
-                            evenBg={theme.colors.bg.secondary}
-                        />
-                    </div>
-                </Container>
-
-                <Container 
-                    title="Occupation"
-                >
-                    <div className="w-full p-4 flex gap-2">
-                        <List 
-                            data={occupation}
-                            evenBg={theme.colors.bg.secondary}
-                        />
-                    </div>
-                </Container>
-
-                <Container 
-                    title="Residential Address"
-                >
-                    <div className="w-full p-4 flex gap-2">
-                        <List 
-                            data={residentialAddress1}
-                            evenBg={theme.colors.bg.secondary}
-                        />
-                        <List 
-                            data={residentialAddress2}
-                            evenBg={theme.colors.bg.secondary}
-                        />
-                    </div>
-                </Container>
-
-                <Container 
-                    title="Applicants Parentage"
-                >
-                    <div className="w-full p-4 flex flex-col gap-2">
-                        <Text
-                            textColor={theme.colors.text.primary}
-                        >
-                            {"Father's details"}
-                        </Text>
-                        <List 
-                            data={fatherDetails}
-                            evenBg={theme.colors.bg.secondary}
-                        />
-                    </div>
-                    <Divider />
-                    <div className="w-full p-4 flex flex-col gap-2">
-                        <Text
-                            textColor={theme.colors.text.primary}
-                        >
-                            {"Father's hometown"}
-                        </Text>
-                        <List 
-                            data={fathersHometown}
-                            evenBg={theme.colors.bg.secondary}
-                        />
-                    </div>
-                    <Divider />
-                    <div className="w-full p-4 flex flex-col gap-2">
-                        <Text
-                            textColor={theme.colors.text.primary}
-                        >
-                            {"Mother's details"}
-                        </Text>
-                        <List 
-                            data={motherDetails}
-                            evenBg={theme.colors.bg.secondary}
-                        />
-                    </div>
-                    <Divider />
-                    <div className="w-full p-4 flex flex-col gap-2">
-                        <Text
-                            textColor={theme.colors.text.primary}
-                        >
-                            {"Mother's hometown"}
-                        </Text>
-                        <List 
-                            data={mothersHometown}
-                            evenBg={theme.colors.bg.secondary}
-                        />
-                    </div>
-                </Container>
-
-                <Container 
-                    title="Next of kin"
-                >
-                    <div className="w-full p-4 flex gap-2">
-                        <List 
-                            data={NextOfKin}
-                            evenBg={theme.colors.bg.secondary}
-                        />
-                    </div>
-                </Container>
-
-                <Container 
-                    title="Verification document"
-                >
-                    <div className="w-full p-4 flex gap-2">
-                        <List 
-                            data={verificationDocument}
-                            evenBg={theme.colors.bg.secondary}
-                        />
-                    </div>
-                </Container>
-
-                <Container 
-                    title="Contact"
-                >
-                    <div className="w-full p-4 flex gap-2">
-                        <List 
-                            data={contact}
-                            evenBg={theme.colors.bg.secondary}
-                        />
-                    </div>
-                </Container>
-
-                <Container 
-                    title="Instituitional Ids"
-                >
-                    <div className="w-full p-4 flex gap-2">
-                        <List 
-                            data={institutionalIds}
-                            evenBg={theme.colors.bg.secondary}
-                        />
-                    </div>
-                </Container>
-            </div>
+            }
         </OverlayWindow>
     )
 }

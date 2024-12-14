@@ -4,16 +4,37 @@ import theme from "@styles/theme"
 const List = ({
     data,
     evenBg, 
-    oddBg
+    oddBg,
+    first,
+    last
 } : {
     data : string[][],
     evenBg? : string,
-    oddBg? : string
+    oddBg? : string,
+    first? : number,
+    last? : number
 }) => {
+    let filteredData : string[][] = []
+    if(first){
+        for(let i in data){
+            if(i < (first).toString()){
+                filteredData.push(data[i])
+            }
+        }
+    } else if (last){
+        for(let i in data){
+            if(i > (last-1).toString()){
+                filteredData.push(data[i])
+            }
+        }
+    } else {
+        filteredData = data
+    }
     return (
         <div className="flex-1 flex flex-col">
             {
-                data.map((item, index) => (
+                filteredData.map((item, index) => (
+                    item.length ?
                     <div 
                         key={index}
                         className={`w-full py-3 px-4 rounded-md flex gap-1`}
@@ -30,6 +51,8 @@ const List = ({
                             {item[1]}
                         </Text>
                     </div>
+                    :
+                    <></>
                 ))
             }
         </div>

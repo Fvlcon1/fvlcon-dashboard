@@ -25,4 +25,5 @@ export const groupSingleFaceByIndex = (
             content : [face]
         })
     }
+    console.log({facesGroupedByIndex})
 }

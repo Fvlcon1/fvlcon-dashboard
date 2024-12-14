@@ -41,6 +41,7 @@ const Matches = ({
 
     useEffect(()=>{
         sortMatches()
+        console.log({faces})
     },[faces])
     return (
         <>

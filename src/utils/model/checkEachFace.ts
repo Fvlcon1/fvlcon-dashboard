@@ -18,30 +18,12 @@ export const runRecognitionOnSingleFace = async (face : canvasTypes) : Promise<(
                 originalImage: face.dataUrl
             }
         if (checkedFace.matched) {
-            const details = await getSingleFace(checkedFace.matchedFaceId)
+            const details = checkedFace.details
             return {
                 originalImage: face.dataUrl,
                 matchedImage : details.imageUrl,
-                matchedPerson: checkedFace.details.PersonName,
                 similarity: checkedFace.similarity,
-                details : {
-                    Address : details.Address,
-                    Citizenship : details.Citizenship,
-                    CriminalRecord : details.CriminalRecord,
-                    DateOfBirth : details.DateOfBirth,
-                    DigitalAddress : details.DigitalAddress,
-                    ExternalImageId : details.ExternalImageId,
-                    FaceId : details.FaceId,
-                    FirstName : details.FirstName,
-                    HasCriminalRecord : details.HasCriminalRecord,
-                    LastName : details.LastName,
-                    MiddleName : details.MiddleName,
-                    PersonId : details.PersonId,
-                    PersonName : details.PersonName,
-                    PlaceOfBirth : details.PlaceOfBirth,
-                    S3Key : details.S3Key,
-                    imageUrl : details.imageUrl
-                }
+                details
             };
         } else {
             console.log("No matches found");
