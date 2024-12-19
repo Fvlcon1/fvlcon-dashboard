@@ -1,6 +1,6 @@
 'use client'
 
-import History from "@/app/components/history/history"
+import History from "@/app/dashboard/home/components/history/history"
 import ImageContainer from "@components/imageContainer/imageContainer"
 import { imageUploadContext } from "@/context/imageUpload"
 import Button from "@components/button/button"
