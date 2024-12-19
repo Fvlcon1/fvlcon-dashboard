@@ -56,7 +56,10 @@ const TableBody = ({
                                     <div className="flex gap-1">
                                         {
                                             item.media.map((mediaItem, index) => (
-                                                <div className="rounded-full w-[60px] h-[60px] p-2 border-[5px] border-solid border-bg-tetiary overflow-hidden relative">
+                                                <div 
+                                                    className="rounded-full w-[60px] h-[60px] p-2 border-[5px] border-solid border-bg-tetiary overflow-hidden relative"
+                                                    key={index}
+                                                >
                                                     <Image 
                                                         alt="img"
                                                         fill
