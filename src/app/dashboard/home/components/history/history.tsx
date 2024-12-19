@@ -1,7 +1,7 @@
 'use client'
 
 import Table from "./components/table"
-import useGroupsLogsByDate from "./utils/groupsLogsByDate"
+import useGroupsLogsByDate from "./utils/useGroupsLogsByDate"
 import { useState } from "react"
 import LoadingSkeleton from "@/app/activityLog/fvlconizationLogs/components/loadingSkeleton"
 
