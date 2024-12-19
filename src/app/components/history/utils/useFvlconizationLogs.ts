@@ -1,13 +1,14 @@
-import { useContext } from "react"
-import { fvlocnizationLogsContext } from "../context/fvlconizationLogsContext"
-import { FvlconizationLogsTypes } from "../components/fvlconizationLogs.types"
+'use client'
+
+import { useState } from "react"
+import { FvlconizationLogsTypes } from "../components/history.types"
 import { protectedAPI } from "@/utils/api/api"
-import { sortLogsByDate } from "../../utils/sortLogsByDate"
+import { sortLogsByDate } from "@/app/activityLog/utils/sortLogsByDate"
 
 const privateApi = new protectedAPI()
 
 const useFvlconizationLogs = () => {
-    const {fvlconizationLogs, setFvlconizationLogs} = useContext(fvlocnizationLogsContext)
+    const [fvlconizationLogs, setFvlconizationLogs] = useState<{status?: 'loading' | null, data?: FvlconizationLogsTypes[]}>({status : null, data : []})
     const getFvlconizationLogs = async (
         params? : {
             startDate? : Date,
@@ -47,8 +48,9 @@ const useFvlconizationLogs = () => {
         console.log({cleanedLogs})
         setFvlconizationLogs({data : cleanedLogs})
     }
+
     return {
-        getFvlconizationLogs
+        getFvlconizationLogs, fvlconizationLogs, setFvlconizationLogs
     }
 }
 

@@ -2,6 +2,7 @@ import { useContext } from "react"
 import { SegmentationLogsContext } from "../context/segmentationLogsContext"
 import { SegmentationLogsTypes } from "../components/segmentationLogs.types"
 import { protectedAPI } from "@/utils/api/api"
+import { sortLogsByDate } from "../../utils/sortLogsByDate"
 
 const privateApi = new protectedAPI()
 
@@ -23,17 +24,19 @@ const useSegmentationLogs = () => {
             type : params?.type
         })
         const data = logs?.data
-        if(data.length < 1){
+        const filteredLogs = sortLogsByDate(data)
+        if(filteredLogs.length < 1){
             setSegmentationLogs({data : []})
         }
-        const cleanedLogs : SegmentationLogsTypes[] = data.map((item : any) => {
+        const cleanedLogs : SegmentationLogsTypes[] = filteredLogs.map((item : any) => {
             return {
                 type : item.type,
                 date : item.date,
                 status : item.status,
                 timeElapsed : item.timeElapsed,
                 media : item.media,
-                uploadedImageUrl : item.uploadedImageUrl
+                uploadedImageUrl : item.uploadedImageUrl,
+                uploadedImageS3key : item.uploadImageS3key
             }
         })
         console.log({cleanedLogs})

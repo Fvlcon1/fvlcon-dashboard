@@ -1,20 +1,45 @@
-import Button from "@components/button/button"
-import AppTypography from "@styles/components/appTypography"
-import Flex from "@styles/components/flex"
-import { TypographyBold } from "@styles/style.types"
-import theme from "@styles/theme"
-import { MdOutlineHistory } from "react-icons/md"
-import Top from "./components/top"
-import Bottom from "./components/bottom"
+'use client'
+
+import Table from "./components/table"
+import groupLogsByDate from "./utils/groupsLogsByDate"
+import { useState } from "react"
+import LoadingSkeleton from "@/app/activityLog/fvlconizationLogs/components/loadingSkeleton"
 
 const History = () => {
+    const [expandToday, setExpandToday] = useState(true)
+    const [expandYesterday, setExpandYesterday] = useState(false)
+    const [expandEarlier, setExpandEarlier] = useState(false)
+
+    const {today, yesterday, earlier, fvlconizationLogs} = groupLogsByDate()
+
     return (
-        <Flex
-            direction="column"
-        >
-            <Top />
-            <Bottom />
-        </Flex>
+        <div className="flex flex-col gap-1">
+            {
+                fvlconizationLogs.status === 'loading' ?
+                <LoadingSkeleton />
+                :
+                <>
+                    <Table 
+                        title="Today"
+                        expand={expandToday}
+                        setExpand={setExpandToday}
+                        data={today}
+                    />
+                    <Table 
+                        title="Yesterday"
+                        expand={expandYesterday}
+                        setExpand={setExpandYesterday}
+                        data={yesterday}
+                    />
+                    <Table 
+                        title="Ealier"
+                        expand={expandEarlier}
+                        setExpand={setExpandEarlier}
+                        data={earlier}
+                    />
+                </>
+            }
+        </div>
     )
 }
 export default History

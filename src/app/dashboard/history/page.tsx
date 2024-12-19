@@ -1,20 +1,45 @@
-import Head from "@components/title/head"
-import Flex from "@styles/components/flex"
-import Main  from "./components/main"
+'use client'
+
+import Table from "./components/table"
+import groupLogsByDate from "./utils/groupsLogsByDate"
+import { useState } from "react"
+import LoadingSkeleton from "@/app/activityLog/fvlconizationLogs/components/loadingSkeleton"
 
 const History = () => {
+    const [expandToday, setExpandToday] = useState(true)
+    const [expandYesterday, setExpandYesterday] = useState(true)
+    const [expandEarlier, setExpandEarlier] = useState(true)
+
+    const {today, yesterday, earlier, fvlconizationLogs} = groupLogsByDate()
+
     return (
-        <Flex
-            direction="column"
-            gap={20}
-        >
-            <Head title="History"/>
-            <Flex
-                direction="column"
-            >
-                <Main />
-            </Flex>
-        </Flex>
+        <div className="flex flex-col gap-1">
+            {
+                fvlconizationLogs.status === 'loading' ?
+                <LoadingSkeleton />
+                :
+                <>
+                    <Table 
+                        title="Today"
+                        expand={expandToday}
+                        setExpand={setExpandToday}
+                        data={today}
+                    />
+                    <Table 
+                        title="Yesterday"
+                        expand={expandYesterday}
+                        setExpand={setExpandYesterday}
+                        data={yesterday}
+                    />
+                    <Table 
+                        title="Ealier"
+                        expand={expandEarlier}
+                        setExpand={setExpandEarlier}
+                        data={earlier}
+                    />
+                </>
+            }
+        </div>
     )
 }
 export default History
