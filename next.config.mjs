@@ -1,8 +1,5 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  images : {
-    unoptimized : true
-  },
     webpack: (config, { isServer }) => {
         if (!isServer) {
           config.resolve.fallback = {
@@ -13,6 +10,7 @@ const nextConfig = {
         return config;
     },
     images: {
+      unoptimized : true,
         remotePatterns: [
             {
               protocol: "https",
