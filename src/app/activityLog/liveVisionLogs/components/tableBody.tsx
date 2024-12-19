@@ -11,6 +11,8 @@ import { MdCloudDownload } from "react-icons/md"
 import MatchContainer from "./matchContainer"
 import { IPersonTrackingWithImageType } from "@/app/tracking/components/types"
 import { getRelativeTime, getTime } from "@/utils/getDate"
+import { TypographySize } from "@styles/style.types"
+import NoData from "@components/NoData/noData"
 
 const TableBody = ({
     liveVisionData
@@ -34,10 +36,13 @@ const TableBody = ({
             />
             <tbody>
                 {
+                    liveVisionData.length < 1?
+                    <tr><td colSpan={100}><NoData /></td></tr>
+                    :
                     liveVisionData.map((item, index) => (
                         <Fragment key={index}>
                             <tr>
-                                <td className="py-4">
+                                <td className="py-4 pl-4">
                                     <MatchContainer 
                                         originalImageUrl={item.originalImageUrl}
                                         capturedImageUrl={item.imageUrl}
@@ -71,12 +76,15 @@ const TableBody = ({
                                         <Progress
                                             type="circle" 
                                             percent={90}
-                                            size={50}
+                                            size={60}
                                             strokeColor={theme.colors.main.primary}
                                             trailColor={`${theme.colors.main.primary}${hexOpacity(20)}`}
                                             strokeWidth={8}
                                             format={(percent) => (
-                                                <Text textColor={theme.colors.text.primary}>
+                                                <Text 
+                                                    textColor={theme.colors.text.primary}
+                                                    size={TypographySize.xs}
+                                                >
                                                     {item.similarity}%
                                                 </Text>
                                             )}

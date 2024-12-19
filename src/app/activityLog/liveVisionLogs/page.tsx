@@ -46,14 +46,14 @@ const LiveVisionLogs = () => {
                         />
                         <Table 
                             title="Yesterday"
-                            expand={expandToday}
-                            setExpand={setExpandToday}
+                            expand={expandYesterday}
+                            setExpand={setExpandYesterday}
                             data={yesterday}
                         />
                         <Table 
                             title="Ealier"
-                            expand={expandToday}
-                            setExpand={setExpandToday}
+                            expand={expandEarlier}
+                            setExpand={setExpandEarlier}
                             data={earlier}
                         />
                     </>

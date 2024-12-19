@@ -100,7 +100,7 @@ const TableBody = ({
                                         <Progress
                                             type="circle" 
                                             percent={item.accuracy}
-                                            size={50}
+                                            size={60}
                                             strokeColor={theme.colors.main.primary}
                                             trailColor={`${theme.colors.main.primary}${hexOpacity(20)}`}
                                             strokeWidth={8}
