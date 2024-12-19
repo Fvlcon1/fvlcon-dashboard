@@ -1,7 +1,7 @@
 'use client'
 
 import Table from "./components/table"
-import groupLogsByDate from "./utils/groupsLogsByDate"
+import useGroupsLogsByDate from "./utils/useGroupsLogsByDate"
 import { useState } from "react"
 import LoadingSkeleton from "@/app/activityLog/fvlconizationLogs/components/loadingSkeleton"
 
@@ -10,7 +10,7 @@ const History = () => {
     const [expandYesterday, setExpandYesterday] = useState(true)
     const [expandEarlier, setExpandEarlier] = useState(true)
 
-    const {today, yesterday, earlier, fvlconizationLogs} = groupLogsByDate()
+    const {today, yesterday, earlier, fvlconizationLogs} = useGroupsLogsByDate()
 
     return (
         <div className="flex flex-col gap-1">

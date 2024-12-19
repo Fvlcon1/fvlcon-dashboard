@@ -7,7 +7,7 @@ import Table from "./components/table"
 import { useContext, useEffect, useState } from "react"
 import { protectedAPI } from "@/utils/api/api"
 import { SegmentationLogsTypes } from "./components/segmentationLogs.types"
-import groupLogsByDate from "./utils/groupsLogsByDate"
+import useGroupsLogsByDate from "./utils/useGroupsLogsByDate"
 import { SegmentationLogsContext } from "./context/segmentationLogsContext"
 import useSegmentationLogs from "./utils/useSegmentationLogs"
 import LoadingSkeleton from "../fvlconizationLogs/components/loadingSkeleton"
@@ -21,7 +21,7 @@ const SegmentationLogs = () => {
     const [expandEarlier, setExpandEarlier] = useState(false)
 
     const {segmentationLogs, setSegmentationLogs} = useContext(SegmentationLogsContext)
-    const {today, yesterday, earlier} = groupLogsByDate(segmentationLogs.data)
+    const {today, yesterday, earlier} = useGroupsLogsByDate(segmentationLogs.data)
     const {getSegmentationLogs} = useSegmentationLogs()
 
     useEffect(()=>{

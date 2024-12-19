@@ -8,7 +8,7 @@ import { useEffect, useState } from "react"
 import { SessionProvider } from "next-auth/react"
 import useLiveVisionData from "./utils/useLiveVisionData"
 import LoadingSkeleton from "../fvlconizationLogs/components/loadingSkeleton"
-import groupLogsByDate from "./utils/groupsLogsByDate"
+import useGroupsLogsByDate from "./utils/useGroupsLogsByDate"
 
 const LiveVisionLogs = () => {
     const [expandToday, setExpandToday] = useState(true)
@@ -16,7 +16,7 @@ const LiveVisionLogs = () => {
     const [expandEarlier, setExpandEarlier] = useState(false)
 
     const {getLiveVisionHistory, newPersonTrackingData} = useLiveVisionData()
-    const {today, yesterday, earlier} = groupLogsByDate(newPersonTrackingData.data)
+    const {today, yesterday, earlier} = useGroupsLogsByDate(newPersonTrackingData.data)
 
     useEffect(()=>{
         getLiveVisionHistory()

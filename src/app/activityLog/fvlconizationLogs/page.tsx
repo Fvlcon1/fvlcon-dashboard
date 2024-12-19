@@ -7,7 +7,7 @@ import Table from "./components/table"
 import { useContext, useEffect, useState } from "react"
 import { protectedAPI } from "@/utils/api/api"
 import { FvlconizationLogsTypes } from "./components/fvlconizationLogs.types"
-import groupLogsByDate from "./utils/groupsLogsByDate"
+import useGroupsLogsByDate from "./utils/useGroupsLogsByDate"
 import { fvlocnizationLogsContext } from "./context/fvlconizationLogsContext"
 import useFvlconizationLogs from "./utils/useFvlconizationLogs"
 import LoadingSkeleton from "./components/loadingSkeleton"
@@ -20,7 +20,7 @@ const FvlconizationLogs = () => {
     const [expandEarlier, setExpandEarlier] = useState(false)
 
     const {fvlconizationLogs, setFvlconizationLogs} = useContext(fvlocnizationLogsContext)
-    const {today, yesterday, earlier} = groupLogsByDate(fvlconizationLogs.data)
+    const {today, yesterday, earlier} = useGroupsLogsByDate(fvlconizationLogs.data)
     const {getFvlconizationLogs} = useFvlconizationLogs()
 
     useEffect(()=>{

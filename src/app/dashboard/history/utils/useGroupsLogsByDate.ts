@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { FvlconizationLogsTypes } from "../components/history.types";
 import useFvlconizationLogs from "./useFvlconizationLogs";
 
-const groupLogsByDate = () => {
+const useGroupsLogsByDate = () => {
   const {fvlconizationLogs, getFvlconizationLogs} = useFvlconizationLogs()
   const today = new Date();
   const yesterday = new Date(today);
@@ -47,4 +47,4 @@ const groupLogsByDate = () => {
   }
 }
 
-export default groupLogsByDate
+export default useGroupsLogsByDate

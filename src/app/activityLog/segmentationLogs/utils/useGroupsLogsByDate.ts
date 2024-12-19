@@ -1,6 +1,6 @@
 import { SegmentationLogsTypes } from "../components/segmentationLogs.types";
 
-const groupLogsByDate = (logs?: SegmentationLogsTypes[]) => {
+const useGroupsLogsByDate = (logs?: SegmentationLogsTypes[]) => {
     const today = new Date();
     const yesterday = new Date(today);
     yesterday.setDate(today.getDate() - 1);
@@ -32,4 +32,4 @@ const groupLogsByDate = (logs?: SegmentationLogsTypes[]) => {
     }
 }
 
-export default groupLogsByDate
+export default useGroupsLogsByDate
