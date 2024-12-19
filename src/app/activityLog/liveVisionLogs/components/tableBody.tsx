@@ -9,8 +9,15 @@ import { FaExternalLinkAlt } from "react-icons/fa"
 import { FaCircle, FaRegCircleDot } from "react-icons/fa6"
 import { MdCloudDownload } from "react-icons/md"
 import MatchContainer from "./matchContainer"
+import { IPersonTrackingWithImageType } from "@/app/tracking/components/types"
+import { getRelativeTime, getTime } from "@/utils/getDate"
 
-const TableBody = () => {
+const TableBody = ({
+    liveVisionData
+} : {
+    liveVisionData : IPersonTrackingWithImageType[]
+}) => {
+    // const {name, type, timeSeen, imageUrl, similarity, originalImageUrl} = liveVisionData
     const [zoom, setZoom] = useState(false)
     const [capturedImageZoom, setCapturedImageZoom] = useState(false)
     return (
@@ -27,13 +34,13 @@ const TableBody = () => {
             />
             <tbody>
                 {
-                    [1,2,3,4].map((item, index) => (
+                    liveVisionData.map((item, index) => (
                         <Fragment key={index}>
                             <tr>
                                 <td className="py-4">
                                     <MatchContainer 
-                                        originalImageUrl={require('@/assets/dev/image1.png')}
-                                        capturedImageUrl={require('@/assets/dev/image1.png')}
+                                        originalImageUrl={item.originalImageUrl}
+                                        capturedImageUrl={item.imageUrl}
                                         originalImageZoom={zoom}
                                         setOriginalImageZoom={setZoom}
                                         capturedImageZoom={capturedImageZoom}
@@ -44,7 +51,7 @@ const TableBody = () => {
                                     <Text
                                         textColor={theme.colors.text.primary}
                                     >
-                                        John Dramani Mahama
+                                        {item.name}
                                     </Text>
                                 </td>
                                 <td>
@@ -52,10 +59,10 @@ const TableBody = () => {
                                         <Text
                                             textColor={theme.colors.text.primary}
                                         >
-                                            28th July, 2024
+                                            {new Date(item.timeSeen).toDateString()}
                                         </Text>
                                         <Text>
-                                            2 Days ago | 12 PM
+                                            {getRelativeTime(new Date(item.timeSeen))} | {getTime(new Date(item.timeSeen))}
                                         </Text>
                                     </div>
                                 </td>
@@ -70,13 +77,20 @@ const TableBody = () => {
                                             strokeWidth={8}
                                             format={(percent) => (
                                                 <Text textColor={theme.colors.text.primary}>
-                                                    {percent}%
+                                                    {item.similarity}%
                                                 </Text>
                                             )}
                                         />
                                     </div>
                                 </td>
                                 <td>
+                                    <Text
+                                        textColor={theme.colors.text.primary}
+                                    >
+                                        {item.lastSeen}
+                                    </Text>
+                                </td>
+                                {/* <td>
                                     <div className="flex items-center gap-2">
                                         <FaRegCircleDot
                                             color="#0e9c33"
@@ -86,7 +100,7 @@ const TableBody = () => {
                                             Successful
                                         </Text>
                                     </div>
-                                </td>
+                                </td> */}
                                 <td>
                                     <div className="flex gap-4 items-center">
                                         <MdCloudDownload

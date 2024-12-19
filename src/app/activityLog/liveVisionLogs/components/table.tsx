@@ -2,19 +2,23 @@
 
 import Text from "@styles/components/text"
 import theme from "@styles/theme"
-import { Dispatch, SetStateAction, useState } from "react"
+import { Dispatch, SetStateAction, useEffect, useState } from "react"
 import { FaCaretDown } from "react-icons/fa6"
 import TableHead from "./tableHead"
 import TableBody from "./tableBody"
+import useLiveVisionData from "../utils/useLiveVisionData"
+import { IPersonTrackingWithImageType } from "@/app/tracking/components/types"
 
 const Table = ({
     title,
     expand,
-    setExpand
+    setExpand,
+    data
 } : {
     title : string
     expand: boolean
     setExpand: Dispatch<SetStateAction<boolean>>
+    data : IPersonTrackingWithImageType[]
 }) => {
     
     return (
@@ -33,11 +37,11 @@ const Table = ({
                 />
             </div>
             <div className={`w-full h-[1px] bg-bg-secondary duration-200 ${expand ? "opacity-0" : "opacity-100"}`}></div>
-            <div className={`min-w-full ${expand ? 'max-h-[700px] overflow-x-auto' : 'max-h-0 overflow-x-hidden'} flex gap-2 duration-200`}>
+            <div className={`min-w-full ${expand ? 'max-h-full overflow-x-auto' : 'max-h-0 overflow-x-hidden'} flex gap-2 duration-200`}>
                 <div className="w-full">
                     <table className="w-full min-w-[1000px]">
                         <TableHead />
-                        <TableBody />
+                        <TableBody liveVisionData={data} />
                     </table>
                 </div>
             </div>

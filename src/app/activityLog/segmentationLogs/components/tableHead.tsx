@@ -15,12 +15,12 @@ const TableHead = () => {
             icon : FaImages
         },
         {
-            name : "Samples",
+            name : "Uploaded Image",
             icon : IoMdImage
         },
         {
-            name : "Segments",
-            icon : PiLineSegmentsBold
+            name : "Segmented Images",
+            icon : IoMdImage
         },
         {
             name : "Date",

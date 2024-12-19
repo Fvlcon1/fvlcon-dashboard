@@ -28,6 +28,8 @@ export const HomeContext = createContext<{
   setLogs: Dispatch<SetStateAction<logsType[]>>
   setOccurance : Dispatch<SetStateAction<occurance | undefined>>
   occurance : occurance | undefined
+  timer : number
+  setTimer : Dispatch<SetStateAction<number>>
 }>({
   displayMatches: false,
   setDisplayMatches: ()=>{},
@@ -52,7 +54,9 @@ export const HomeContext = createContext<{
   logs : [],
   setLogs : ()=>{},
   setOccurance : ()=>{},
-  occurance : undefined
+  occurance : undefined,
+  timer : 0,
+  setTimer : ()=>{}
 });
 
 export const HomeContextProvider = ({ 
@@ -69,6 +73,7 @@ export const HomeContextProvider = ({
   const [videoTimestamp, setVideoTimestamp] = useState<number>(0)
   const [seekVideoTimestamp, setSeekVideoTimestamp] = useState<number>(0)
   const [occurance, setOccurance] = useState<occurance>()
+  const [timer, setTimer] = useState(0)
   const [distinctFaces, setDistinctFaces] = useState<FetchState<canvasTypes[]>>({
     isEmpty : false,
     isLoading : false,
@@ -83,6 +88,8 @@ export const HomeContextProvider = ({
     <HomeContext.Provider 
       value={{
         displayMatches,
+        timer,
+        setTimer,
         logs,
         occurance,
         setOccurance,

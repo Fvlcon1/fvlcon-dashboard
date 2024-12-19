@@ -29,9 +29,10 @@ export const getUserDetailsFromTrackingData = async (trackingData : any) : Promi
             };
             return plateDetails
         } else {
+            console.log({details})
             const userDetails: IPersonTrackingWithImageType = {
                 id : Id,
-                name: `${details?.FirstName ?? ''} ${details?.MiddleName ?? ''} ${details?.LastName ?? ''}`,
+                name: `${details?.personDetails.forenames ?? ''} ${details?.personDetails.surname ?? ''}`,
                 type: ITrackingDataTypes.person,
                 alias: "",
                 lastSeen: location?.name ?? 'Unknown',
@@ -45,6 +46,7 @@ export const getUserDetailsFromTrackingData = async (trackingData : any) : Promi
                 similarity : Similarity,
                 originalImageUrl : details?.imageUrl ?? ''
             };
+            console.log({userDetails})
             return userDetails
         }
     } catch (error : any) {

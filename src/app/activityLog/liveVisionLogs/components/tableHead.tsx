@@ -1,4 +1,4 @@
-import { FaImages } from "react-icons/fa6"
+import { FaImages, FaLocationDot } from "react-icons/fa6"
 import { IoIosStats, IoMdImage } from "react-icons/io"
 import { IoPersonCircle } from "react-icons/io5"
 import { MdDateRange } from "react-icons/md"
@@ -10,7 +10,7 @@ import theme from "@styles/theme"
 const TableHead = () => {
     const tableHeadData = [
         {
-            name : "Samples",
+            name : "Capture",
             icon : IoMdImage
         },
         {
@@ -21,15 +21,18 @@ const TableHead = () => {
             name : "Date",
             icon : MdDateRange
         },
-
         {
             name : "Perfomance",
             icon : IoIosStats
         },
         {
-            name : "Status",
-            icon : HiOutlineStatusOnline
+            name : "Location",
+            icon : FaLocationDot
         },
+        // {
+        //     name : "Status",
+        //     icon : HiOutlineStatusOnline
+        // },
         {
             name : "Actions",
             icon : AiOutlineBars

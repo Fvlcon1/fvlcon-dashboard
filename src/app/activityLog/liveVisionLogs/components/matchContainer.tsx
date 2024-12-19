@@ -18,14 +18,6 @@ const MatchContainer = ({
     capturedImageZoom: boolean
     setCapturedImageZoom: Dispatch<SetStateAction<boolean>>
 }) => {
-    console.log({
-        originalImageUrl,
-        capturedImageUrl,
-        originalImageZoom,
-        setOriginalImageZoom,
-        capturedImageZoom,
-        setCapturedImageZoom,
-    })
     return (
         <>
             <div className="flex flex-col gap-1">

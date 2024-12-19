@@ -30,7 +30,7 @@ const useFvlconizationLogs = () => {
             const accuracy = item.media[0].accuracy
             const identifiedPeople = item.media.map((itemMedia : any) => {
                 const details = itemMedia.matchedPersonDetails
-                return `${details?.FirstName ?? ''} ${details?.MiddleName ?? ''} ${details?.LastName ?? ''}`
+                return `${details?.personDetails.forenames ?? ''} ${details?.personDetails.surname ?? ''}`
             })
             return {
                 type : item.type,

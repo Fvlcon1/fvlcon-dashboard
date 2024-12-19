@@ -64,7 +64,7 @@ const TableBody = ({
                                         {
                                             item.identifiedPeople.map((person, index) => (
                                                 index < 3 && (
-                                                    person.length > 3 ?
+                                                    person.length > 1 ?
                                                     <Text
                                                         textColor={theme.colors.text.primary}
                                                         key={index}

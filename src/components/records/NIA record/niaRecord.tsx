@@ -206,7 +206,7 @@ const NiaRecord = ({
                     </Container>
 
                     <Container 
-                        title="Person Details"
+                        title="Personal Details"
                     >
                         <div className="w-full p-4 flex gap-2">
                             <List 

@@ -10,7 +10,7 @@ import theme from "@styles/theme"
 const TableHead = () => {
     const tableHeadData = [
         {
-            name : "Samples",
+            name : "Capture",
             icon : IoMdImage
         },
         {

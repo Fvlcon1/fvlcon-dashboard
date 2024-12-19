@@ -1,4 +1,4 @@
-import { RefObject, useContext, useEffect } from "react"
+import { RefObject, useContext, useEffect, useState } from "react"
 import { HomeContext } from "../context/homeContext"
 import { imageUploadContext } from "@/context/imageUpload"
 import { isImageFile, isVideoFile } from "@/utils/getFileType"
@@ -7,7 +7,6 @@ import generateVideoThumbnail from "@/utils/generateVideoThumbnail"
 import { message } from "antd"
 import { canvasTypes, checkedFaceType, FetchState, fvlconizedFaceType } from "@/utils/@types"
 import checkEachFace from "@/utils/model/checkEachFace"
-import { groupSingleFaceByIndex } from "./groupSingleFaceByIndex"
 import { getSingleFace } from "@/utils/model/getSingleFace"
 import { getImageURLFromBoundingBox } from "@/utils/getImageURLFromBoundingBox"
 import useActivityStorage from "./useActivityStorage"
@@ -15,6 +14,8 @@ import { protectedAPI, unprotectedAPI } from "@/utils/api/api"
 import axios from "axios"
 import { nanoid } from 'nanoid';
 import useTimer from "@/utils/useTimer"
+import { dataURLToBlob } from "./dataUrlToBlob"
+import { convertDataUrlToJpeg } from "./convertToJpeg"
 
 
 let statelessDistinctFaces : FetchState<canvasTypes[]> = {
@@ -44,7 +45,8 @@ export const useAnalysis = (imageRef: RefObject<HTMLImageElement>) => {
         setMatchedFaces,
         matchedFaces,
         setOccurance,
-        fvlconizing
+        fvlconizing,
+        timer
     } = useContext(HomeContext)
     
     const {
@@ -52,21 +54,70 @@ export const useAnalysis = (imageRef: RefObject<HTMLImageElement>) => {
         setSelectedImage,
     } = useContext(imageUploadContext)
 
-    const {storeFvlcoinzationResults} = useActivityStorage()
-    const { seconds, start : startTimer, stop : stopTimer} = useTimer();
+    const {storeFvlcoinzationResults, storeSegmentationResults} = useActivityStorage()
 
-    useEffect(()=>{
-        if(fvlconizing){
-            startTimer()
-        } else {
-            stopTimer()
+    const uploadSegmentedImages = async () : Promise<{segmentedImageS3key : string, status : string}[] | undefined> => {
+        const filteredData = statelessDistinctFaces.data?.filter((item) => item !== undefined )
+        if(!filteredData)
+            return undefined
+        return await Promise.all(
+            filteredData?.map(async (face, index) => {
+                try {
+                    const uniqueFileName = `${nanoid()}-${new Date().toISOString()}`;
+                    const uploadUrl = await privateApi.get("/segmentationLogs/getUploadPresignedUrl", {filename : uniqueFileName})
+                    if(uploadUrl?.data){
+                        console.log({url : uploadUrl.data})
+                        const imageJpeg = await convertDataUrlToJpeg(face.dataUrl)
+                        const fileToUpload = dataURLToBlob(imageJpeg)
+                        console.log({fileToUpload, imageJpeg})
+                        const uploadImage = await axios.put(uploadUrl.data, fileToUpload)
+                        console.log({uploadImage})
+                        return {
+                            segmentedImageS3key : uniqueFileName,
+                            status : "successful"
+                        }
+                    } else {
+                        console.error("Unable to get upload url")
+                        message.warning("Unable to add logs")
+                        return {
+                            segmentedImageS3key : "",
+                            status : "successful"
+                        }
+                    }
+                } catch (error) {
+                    console.log({error})
+                    message.error("Unable to add logs")
+                    return {
+                        segmentedImageS3key : "",
+                        status : "failed"
+                    }
+                }
+            })
+        )
+    }
+
+    const uploadSelectedImage = async (url : string) : Promise<string | undefined> => {
+        try {
+            const uploadImageFilename = `${nanoid()}-${new Date().toISOString()}`;
+            const uploadUrl = await privateApi.get(url, {filename : uploadImageFilename})
+            if(uploadUrl?.data){
+                console.log({url : uploadUrl.data})
+                const uploadImage = await axios.put(uploadUrl.data, selectedImage?.fullFile)
+                if(uploadImage.status !== 200){
+                    console.log("Unable to upload 'Upload image'")
+                    message.error("Error storing logs")
+                    return
+                }
+                return uploadImageFilename
+            }
+        } catch (error) {
+            console.log(error)
+            message.error("Error storing logs")
         }
-    },[fvlconizing])
+    }
 
     // Handles the segmentation of images and specific video timestamps
-    const handleAnalyze = async (onlyAnalyze? : boolean) => {
-        if(onlyAnalyze)
-            setFvlconizing(true)
+    const handleAnalyze = async (storeLogs : boolean = true) => {
         setDisplayFaces(true)
         setDistinctFaces(prev => ({
             ...prev,
@@ -76,6 +127,17 @@ export const useAnalysis = (imageRef: RefObject<HTMLImageElement>) => {
             if(isImageFile(fileExtension)){
                 const faces = await segmentFaces(selectedImage.url, setLogs)
                 faces && setFaces(faces)
+                if(storeLogs){
+                    const media = await uploadSegmentedImages()
+                    const uploadedImageUniqueName = await uploadSelectedImage("/segmentationLogs/getUploadPresignedUrl")
+                    storeSegmentationResults({
+                        uploadedImageS3key : uploadedImageUniqueName ?? '',
+                        media : media ?? [],
+                        timeElapsed : timer,
+                        status : "successful",
+                        type : "image"
+                    })
+                }
             } else if(isVideoFile(fileExtension)){
                 const thumbnail = await generateVideoThumbnail(selectedImage.url, videoTimestamp)
                 thumbnail ? setImageSrc(thumbnail) : console.log("unable to generate thumbnail")
@@ -85,8 +147,6 @@ export const useAnalysis = (imageRef: RefObject<HTMLImageElement>) => {
                 console.log("invalid file format")
                 setDistinctFaces({error : "Invalid file format"})
             }
-            if(onlyAnalyze)
-                setFvlconizing(false)
         } else {
             setFvlconizing(false)
             setDistinctFaces({error : "No image selected"})
@@ -135,7 +195,7 @@ export const useAnalysis = (imageRef: RefObject<HTMLImageElement>) => {
             status : "successful" | "failed"
         }
         setFvlconizing(true)
-        await handleAnalyze()
+        await handleAnalyze(false)
         setDisplayMatches(true);
         if(statelessDistinctFaces.data){
             setLogs(prev => [...prev, {log : {content : "Fvlconizing..."}, date : new Date()}])
@@ -195,7 +255,7 @@ export const useAnalysis = (imageRef: RefObject<HTMLImageElement>) => {
                                 storeFvlcoinzationResults({
                                     uploadedImageS3key : uploadImageFilename,
                                     media : faceDetails,
-                                    timeElapsed : seconds,
+                                    timeElapsed : timer,
                                     status : "successful",
                                     type : "image"
                                 })
@@ -216,10 +276,34 @@ export const useAnalysis = (imageRef: RefObject<HTMLImageElement>) => {
         }
     }
 
+    const groupSingleFaceByIndex = (
+        face : fvlconizedFaceType,
+    ) => {
+        let isIndexed = false
+        facesGroupedByIndex = facesGroupedByIndex.map((item) => {
+            if(item.index === face.Person.Index){
+                isIndexed = true
+                return {
+                    index : item.index,
+                    content : [...item.content, face]
+                }
+            } else {
+                return item
+            }
+        })
+        if(!isIndexed){
+            facesGroupedByIndex.push({
+                index : face.Person.Index,
+                content : [face]
+            })
+        }
+        console.log({facesGroupedByIndex})
+    }
+
     const groupFacesByIndex = (faces : fvlconizedFaceType[]) => {
         console.log({faces})
-        faces.map((item) => groupSingleFaceByIndex(item, facesGroupedByIndex))
-        console.log({facesGroupedByIndex})
+        faces.map((item) => groupSingleFaceByIndex(item))
+        
     }
 
     const getResultsContainingFaceMatches = (results : fvlconizedFaceType[]) => {

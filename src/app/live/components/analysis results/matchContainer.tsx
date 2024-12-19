@@ -112,7 +112,7 @@ const MatchContainer = ({
                 </div>
                 <div className="flex flex-col gap-[1px]">
                     {
-                        detections.name.length > 2 ?
+                        detections.name.length > 1 ?
                         <Text
                             textColor={theme.colors.text.primary}
                         >

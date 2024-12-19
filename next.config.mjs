@@ -43,6 +43,10 @@ const nextConfig = {
               protocol: "https",
               hostname: "sam-app-3-face-images.s3.amazonaws.com",
             },
+            {
+              protocol: "https",
+              hostname: "sam-app-3-face-images.s3.us-east-1.amazonaws.com",
+            },
           ]
       },
 };

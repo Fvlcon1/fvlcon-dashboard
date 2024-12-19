@@ -46,7 +46,8 @@ const Main = () => {
         setLogs,
         setOccurance,
         distinctFaces,
-        matchedFaces
+        matchedFaces,
+        setTimer
     } = useContext(HomeContext)
 
     const imageRef = useRef<HTMLImageElement>(null);
@@ -111,6 +112,10 @@ const Main = () => {
     },[fvlconizing])
 
     useEffect(()=>{
+        setTimer(seconds)
+    },[seconds])
+
+    useEffect(()=>{
         if(occurance?.content[0]){
             setVideoTimestamp(occurance?.content[0].Timestamp / 1000)
             setSeekVideoTimestamp(occurance?.content[0].Timestamp / 1000)
@@ -157,7 +162,7 @@ const Main = () => {
                         <Button 
                             text="Segment"
                             icon={<RiOrganizationChart className="mt-[-1px]"/>}
-                            onClick={handleAnalyze}
+                            onClick={()=>handleAnalyze(true)}
                         />
                         <Button 
                             text="Fvlconize ➜"

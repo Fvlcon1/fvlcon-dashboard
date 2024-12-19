@@ -5,6 +5,7 @@ import { authOptions } from "../api/auth/[...nextauth]/authOptions";
 import LeftSidebar from "./components/leftSidebar";
 import Wrapper from "./components/wrapper";
 import "./components/antdCustomStyle.css"
+import { SegmentationLogsContextProvider } from "./segmentationLogs/context/segmentationLogsContext";
 
 export const metadata: Metadata = {
   title: "Activity log",
@@ -22,10 +23,12 @@ export default async function RootLayout({
   }
   return (
     <div className="w-full">
-      <LeftSidebar />
-      <Wrapper>
-        {children}
-      </Wrapper>
+      <SegmentationLogsContextProvider>
+        <LeftSidebar />
+        <Wrapper>
+          {children}
+        </Wrapper>
+      </SegmentationLogsContextProvider>
     </div>
   );
 }
