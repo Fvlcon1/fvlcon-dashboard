@@ -19,21 +19,10 @@ const TableBody = ({
 } : {
     liveVisionData : IPersonTrackingWithImageType[]
 }) => {
-    // const {name, type, timeSeen, imageUrl, similarity, originalImageUrl} = liveVisionData
-    const [zoom, setZoom] = useState(false)
     const [capturedImageZoom, setCapturedImageZoom] = useState(false)
+    const [zoomImage, setZoomImage] = useState<string>('')
     return (
         <>
-            <ZoomImage
-                setShow={setZoom}
-                show={zoom}
-                imageURL={require('@/assets/dev/image1.png')} 
-            />
-            <ZoomImage
-                setShow={setCapturedImageZoom}
-                show={capturedImageZoom}
-                imageURL={require('@/assets/dev/image1.png')} 
-            />
             <tbody>
                 {
                     liveVisionData.length < 1?
@@ -46,10 +35,6 @@ const TableBody = ({
                                     <MatchContainer 
                                         originalImageUrl={item.originalImageUrl}
                                         capturedImageUrl={item.imageUrl}
-                                        originalImageZoom={zoom}
-                                        setOriginalImageZoom={setZoom}
-                                        capturedImageZoom={capturedImageZoom}
-                                        setCapturedImageZoom={setCapturedImageZoom}
                                     />
                                 </td>
                                 <td>

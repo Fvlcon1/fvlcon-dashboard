@@ -1,3 +1,4 @@
+import ZoomImage from "@components/zoomImage/zoomImage"
 import Text from "@styles/components/text"
 import theme from "@styles/theme"
 import Image from "next/image"
@@ -6,20 +7,19 @@ import { Dispatch, SetStateAction, useState } from "react"
 const MatchContainer = ({
     originalImageUrl,
     capturedImageUrl,
-    originalImageZoom,
-    setOriginalImageZoom,
-    capturedImageZoom,
-    setCapturedImageZoom,
 } : {
     originalImageUrl? : string
     capturedImageUrl? : string
-    originalImageZoom: boolean
-    setOriginalImageZoom: Dispatch<SetStateAction<boolean>>
-    capturedImageZoom: boolean
-    setCapturedImageZoom: Dispatch<SetStateAction<boolean>>
 }) => {
+    const [zoomImage, setZoomImage] = useState<string>('')
+    const [zoom, setZoom] = useState(false)
     return (
         <>
+            <ZoomImage
+                setShow={setZoom}
+                show={zoom}
+                imageURL={zoomImage} 
+            />
             <div className="flex flex-col gap-1">
                 <div className="flex gap-2 relative w-fit">
                     <div className="w-[50px] h-[50px] overflow-hidden bg-bg-secondary relative rounded-md">
@@ -31,7 +31,8 @@ const MatchContainer = ({
                                 fill
                                 style={{ objectFit: "cover" }}
                                 onClick={()=>{
-                                    setCapturedImageZoom(true)
+                                    setZoomImage(capturedImageUrl)
+                                    setZoom(prev => !prev)
                                 }}
                                 className="lg:hover:scale-[1.2] duration-200 cursor-pointer hover:lg:opacity-70"
                             /> 
@@ -51,7 +52,10 @@ const MatchContainer = ({
                                 alt="test-bg"
                                 fill
                                 style={{ objectFit: "cover" }}
-                                onClick={()=>setOriginalImageZoom(true)}
+                                onClick={()=>{
+                                    setZoomImage(originalImageUrl)
+                                    setZoom(prev => !prev)
+                                }}
                                 className="lg:hover:scale-[1.2] duration-200 cursor-pointer hover:lg:opacity-70"
                             /> 
                             :
