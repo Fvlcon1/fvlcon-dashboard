@@ -21,6 +21,7 @@ const NiaRecord = ({
     data? : any
 }) => {
     const [zoom, setZoom] = useState(false)
+    const [zoomImage, setZoomImage] = useState('')
     const {
         applicationDetails : appDetes,
         personDetails : personDetes, 
@@ -133,7 +134,7 @@ const NiaRecord = ({
             <ZoomImage
                 setShow={setZoom}
                 show={zoom}
-                imageURL={require('@/assets/dev/mahama.png')} 
+                imageURL={zoomImage} 
             />
             <div className="fixed top-0 left-0 w-full flex h-full justify-center items-center opacity-[0.02] pointer-events-none">
                 <div className="h-[600px] w-[700px] z-10 relative">
@@ -157,7 +158,10 @@ const NiaRecord = ({
                                     fill
                                     className="hoverscale-[1.3] duration-300 object-cover cursor-pointer"
                                     src={imageUrl ?? ''}
-                                    onClick={()=>setZoom(prev => !prev)}
+                                    onClick={()=>{
+                                        setZoomImage(imageUrl)
+                                        setZoom(prev => !prev)
+                                    }}
                                 />
                             </div>
                             <div className="flex flex-col gap-0">
