@@ -1,10 +1,9 @@
 import axios from "axios";
-import { CHECK_FACE_URL } from "../constants";
 
 const checkFace = async (file : string) => {
     const base64data = file.split(",")[1];
     try {
-      const response = await axios.post(CHECK_FACE_URL, {
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_AWS_BASE_URL}/faces/check`, {
         image: base64data,
       });
       console.log({response : response.data})

@@ -10,10 +10,8 @@ import PersonResultContainer from "./PersonResultContainer"
 import Divider from "@components/divider/divider"
 import { protectedAPI, unprotectedAPI } from "@/utils/api/api"
 import { IPersonTrackingType, IPlateOrPerson, IPlateTrackingType, ITrackingDataTypes } from "./types"
-import { API_URL } from "@/utils/constants"
 import axios from "axios"
 import { parseCoordinates } from "@/utils/parseCoordinate"
-import { LatLngExpression } from "leaflet"
 import getLocationNameFromCordinates from "@/utils/getLocationNameFromCoordinates"
 import Skeleton from "react-loading-skeleton"
 import { trackingContext } from "../context/trackingContext"
@@ -40,7 +38,7 @@ const Right = () => {
             const trackingData = response?.data
 
             if(trackingData.length > 0){
-                const { data: faceDetails } = await axios.get(`${API_URL}/${trackingData[0]?.FaceId}`)
+                const { data: faceDetails } = await axios.get(`${process.env.NEXT_PUBLIC_AWS_BASE_URL}/faces/${trackingData[0]?.FaceId}`)
                 const people: IPersonTrackingType[] = []
     
                 for (const data of trackingData) {

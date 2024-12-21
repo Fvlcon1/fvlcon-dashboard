@@ -4,7 +4,6 @@ import axios from "axios";
 import TableBody from "./tableBody";
 import TableHead from "./tableHead";
 import { IPersonTrackingType, IPersonTrackingWithImageType, ITrackingDataTypes } from "./types";
-import { API_URL } from "@/utils/constants";
 import { protectedAPI } from "@/utils/api/api";
 import { useContext, useEffect, useState } from "react";
 import { trackingContext } from "../context/trackingContext";

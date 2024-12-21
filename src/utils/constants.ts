@@ -6,6 +6,6 @@ export const minimumwidth = 1024
 export const standardMargin = 10
 export const noTempalteRoutes = ['*', '/', '/company-code', '/agreementpage', '/auth/login', '/auth/signup', '/auth/verification', '/auth/reset-password', '/auth/mfa', '/model/list-faces', '/model/video-analysis']
 export const API_URL =
-  "https://l33yu4v0ic.execute-api.us-east-1.amazonaws.com/Prod/faces";
+  "https://aytoeoiiq6.execute-api.us-east-1.amazonaws.com/Prod/faces";
 export const CHECK_FACE_URL =
-  "https://l33yu4v0ic.execute-api.us-east-1.amazonaws.com/Prod/faces/check";
+  "https://aytoeoiiq6.execute-api.us-east-1.amazonaws.com/Prod/faces/check";

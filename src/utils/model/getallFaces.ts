@@ -1,9 +1,8 @@
 import axios from "axios";
-import { API_URL } from "../constants";
 
 export const getAllFaces = async () => {
     try {
-      const response = await axios.get(API_URL);
+      const response = await axios.get(`${process.env.NEXT_PUBLIC_AWS_BASE_URL}`);
       console.log("Fetched faces:", response.data);
       return (response.data);
     } catch (err) {

@@ -120,7 +120,7 @@ const DistinctFaces = ({
                                                 key={index}
                                                 imageURL={item.dataUrl}
                                                 title={`Face ${index + 1}`}
-                                                rightButtonTitle="View angles"
+                                                rightButtonTitle=""
                                                 rightButtonClick={()=>setDisplayAngles(true)}
                                                 MiddleButtonTitle="Fvlconize ➜"
                                                 MiddleButtonClick={()=>handleFvlconize(item)}

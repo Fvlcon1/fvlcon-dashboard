@@ -1,10 +1,8 @@
 import { IPersonTrackingType, IPersonTrackingWithImageType, IPlateTrackingType, ITrackingDataTypes } from "@/app/tracking/components/types"
 import { protectedAPI } from "@/utils/api/api"
-import { API_URL } from "@/utils/constants"
 import getLocationNameFromCordinates from "@/utils/getLocationNameFromCoordinates"
 import { parseCoordinates } from "@/utils/parseCoordinate"
 import { message } from "antd"
-import axios from "axios"
 
 const privateAPI = new protectedAPI()
 

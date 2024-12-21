@@ -32,7 +32,7 @@ const ImageCard = ({
     const [hover, setHover] = useState(false)
     return (
         <div 
-            className="p-3 py-3 min-w-[200px] w-[200px] flex flex-col gap-1 rounded-2xl bg-gradient-container-black"
+            className="p-3 py-2 min-w-[200px] w-[200px] flex flex-col gap-1 rounded-lg bg-gradient-container-black"
         >
             <Flex
                 justify="space-between"
@@ -40,14 +40,12 @@ const ImageCard = ({
             >
                 {
                     title &&
-                    <div className="py-[2px] px-3 bg-bg-secondary rounded-lg">
-                        <div className="mt-[-1px]">
-                            <AppTypography
-                                textColor={theme.colors.text.primary}
-                            >
-                                {title && `• ${title}`}
-                            </AppTypography>
-                        </div>
+                    <div className="mt-[-1px]">
+                        <AppTypography
+                            textColor={theme.colors.text.primary}
+                        >
+                            {title && `• ${title}`}
+                        </AppTypography>
                     </div>
                 }
                 {
