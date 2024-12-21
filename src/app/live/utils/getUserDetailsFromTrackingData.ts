@@ -30,7 +30,7 @@ export const getUserDetailsFromTrackingData = async (trackingData : any) : Promi
             console.log({details})
             const userDetails: IPersonTrackingWithImageType = {
                 id : Id,
-                name: `${details?.personDetails.forenames ?? ''} ${details?.personDetails.surname ?? ''}`,
+                name: `${details?.personDetails?.forenames ?? ''} ${details?.personDetails?.surname ?? ''}`,
                 type: ITrackingDataTypes.person,
                 alias: "",
                 lastSeen: location?.name ?? 'Unknown',

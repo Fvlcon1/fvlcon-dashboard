@@ -168,10 +168,10 @@ const NiaRecord = ({
                                     {`${personDetes.surname} ${personDetes.forenames}`}
                                 </Text>
                                 <Text>
-                                    {`${RAdress?.zipPostalCode}`}
+                                    {`${RAdress?.zipPostalCode ?? ''}`}
                                 </Text>
                                 <Text>
-                                    {`${RAdress?.communityAreaName}, ${RAdress?.villageTown}`}
+                                    {`${RAdress?.communityAreaName ? `${RAdress?.communityAreaName},` : ''} ${RAdress?.villageTown ?? ''}`}
                                 </Text>
                             </div>
                         </div>
