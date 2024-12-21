@@ -129,7 +129,7 @@ const NiaRecord = ({
             title="NIA record, Ghana"
             display={visible}
             setDisplay={setVisible}
-            windowStyle="!h-[90%]"
+            windowStyle="!h-[90%] !w-[40%]"
         >
             <ZoomImage
                 setShow={setZoom}
