@@ -22,8 +22,8 @@ const getDate = (date: Date, options?: { shortmonth?: boolean }) => {
         shortmonth : false
     }
     if(shortmonth)
-        return `${getShortMonth(date)} ${date.getDay()}, ${date.getFullYear()}`
-    return `${months[date.getMonth()]} ${date.getDay()}, ${date.getFullYear()}`
+        return `${getShortMonth(date)} ${date.getDate()}, ${date.getFullYear()}`
+    return `${months[date.getMonth()]} ${date.getDate()}, ${date.getFullYear()}`
 }
 
 export default getDate
