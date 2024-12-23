@@ -14,7 +14,7 @@ const TableHead = () => {
             icon : FaImages
         },
         {
-            name : "Uploaded Imge",
+            name : "Uploaded Image",
             icon : IoMdImage
         },
         {
