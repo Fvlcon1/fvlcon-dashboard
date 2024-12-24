@@ -5,7 +5,7 @@ import { isImageFile, isVideoFile } from "@/utils/getFileType"
 import segmentFaces, { awsSegmentation } from "@/utils/segmentFaces"
 import generateVideoThumbnail from "@/utils/generateVideoThumbnail"
 import { message } from "antd"
-import { canvasTypes, checkedFaceType, FetchState, fvlconizedFaceType } from "@/utils/@types"
+import { canvasTypes, checkedFaceType, FetchState, fvlconizedFaceType, occurance } from "@/utils/@types"
 import checkEachFace from "@/utils/model/checkEachFace"
 import { getSingleFace } from "@/utils/model/getSingleFace"
 import { getImageURLFromBoundingBox } from "@/utils/getImageURLFromBoundingBox"
@@ -22,11 +22,6 @@ let statelessDistinctFaces : FetchState<canvasTypes[]> = {
     isEmpty : false,
     isLoading : false,
 }
-
-let facesGroupedByIndex : {
-    index : number,
-    content : fvlconizedFaceType[],
-}[] = []
 
 const privateApi = new protectedAPI()
 const publicApi = new unprotectedAPI()
@@ -66,12 +61,9 @@ export const useAnalysis = (imageRef: RefObject<HTMLImageElement>) => {
                     const uniqueFileName = `${nanoid()}-${new Date().toISOString()}`;
                     const uploadUrl = await privateApi.get("/segmentationLogs/getUploadPresignedUrl", {filename : uniqueFileName})
                     if(uploadUrl?.data){
-                        console.log({url : uploadUrl.data})
                         const imageJpeg = await convertDataUrlToJpeg(face.dataUrl)
                         const fileToUpload = dataURLToBlob(imageJpeg)
-                        console.log({fileToUpload, imageJpeg})
                         const uploadImage = await axios.put(uploadUrl.data, fileToUpload)
-                        console.log({uploadImage})
                         return {
                             segmentedImageS3key : uniqueFileName,
                             status : "successful"
@@ -101,7 +93,6 @@ export const useAnalysis = (imageRef: RefObject<HTMLImageElement>) => {
             const uploadImageFilename = `${nanoid()}-${new Date().toISOString()}`;
             const uploadUrl = await privateApi.get(url, {filename : uploadImageFilename})
             if(uploadUrl?.data){
-                console.log({url : uploadUrl.data})
                 const uploadImage = await axios.put(uploadUrl.data, selectedImage?.fullFile)
                 if(uploadImage.status !== 200){
                     console.log("Unable to upload 'Upload image'")
@@ -211,9 +202,7 @@ export const useAnalysis = (imageRef: RefObject<HTMLImageElement>) => {
                             const uniqueFileName = `${nanoid()}-${new Date().toISOString()}`;
                             const uploadUrl = await privateApi.get("/fvlconizationLogs/getUploadPresignedUrl", {filename : uniqueFileName})
                             if(uploadUrl?.data){
-                                console.log({url : uploadUrl.data})
                                 const uploadImage = await axios.put(uploadUrl.data, face?.originalImage)
-                                console.log({uploadImage})
                                 return {
                                     segmentedImageS3key : uniqueFileName,
                                     matchedFaceId : face?.details?.FaceId ?? '',
@@ -245,9 +234,7 @@ export const useAnalysis = (imageRef: RefObject<HTMLImageElement>) => {
                             const uploadImageFilename = `${nanoid()}-${new Date().toISOString()}`;
                             const uploadUrl = await privateApi.get("/fvlconizationLogs/getUploadPresignedUrl", {filename : uploadImageFilename})
                             if(uploadUrl?.data){
-                                console.log({url : uploadUrl.data})
                                 const uploadImage = await axios.put(uploadUrl.data, selectedImage?.fullFile)
-                                console.log({uploadImage})
                                 if(uploadImage.status !== 200){
                                     console.log("Unable to upload 'Upload image'")
                                     message.error("Error storing logs")
@@ -276,9 +263,10 @@ export const useAnalysis = (imageRef: RefObject<HTMLImageElement>) => {
         }
     }
 
+    let facesGroupedByIndex : occurance[] = []
     const groupSingleFaceByIndex = (
         face : fvlconizedFaceType,
-    ) => {
+    ) : occurance[] => {
         let isIndexed = false
         facesGroupedByIndex = facesGroupedByIndex.map((item) => {
             if(item.index === face.Person.Index){
@@ -297,13 +285,13 @@ export const useAnalysis = (imageRef: RefObject<HTMLImageElement>) => {
                 content : [face]
             })
         }
-        console.log({facesGroupedByIndex})
+        return facesGroupedByIndex
     }
 
-    const groupFacesByIndex = (faces : fvlconizedFaceType[]) => {
-        console.log({faces})
+    const groupFacesByIndex = (faces : fvlconizedFaceType[]) : occurance[] => {
+        facesGroupedByIndex = []
         faces.map((item) => groupSingleFaceByIndex(item))
-        
+        return facesGroupedByIndex
     }
 
     const getResultsContainingFaceMatches = (results : fvlconizedFaceType[]) => {
@@ -327,27 +315,9 @@ export const useAnalysis = (imageRef: RefObject<HTMLImageElement>) => {
                     setFvlconizing(false)
                     return setMatchedFaces({error : "Error fvlconizing video"})
                 }
-                groupFacesByIndex(matchedFaces.results)  //Categorized faces by index
+                const facesGroupedByIndex = groupFacesByIndex(matchedFaces.results)  //Categorized faces by index
                 if(facesGroupedByIndex){
-                    const checkedFaces = await Promise.all(facesGroupedByIndex.map(async (face) => {
-                        const resultsContainingFacesMatches = getResultsContainingFaceMatches(face.content) // gets a single item in the category which has a face match
-                        const faceMatch = resultsContainingFacesMatches?.FaceMatches[0]
-                        let details : any = undefined
-                        if(faceMatch)
-                            details = await getSingleFace(faceMatch.Face.FaceId);
-                        const boundingBox = (resultsContainingFacesMatches ?? face.content[0]).Person.Face.BoundingBox
-                        const match : checkedFaceType = {
-                            matchedPerson: faceMatch?.Face.ExternalImageId,
-                            similarity: faceMatch?.Similarity,
-                            originalImage: selectedImage ? await getImageURLFromBoundingBox(boundingBox, await generateVideoThumbnail(selectedImage.url, (resultsContainingFacesMatches ?? face.content[0]).Timestamp / 1000)) : '',
-                            matchedImage: details?.imageUrl,
-                            faceid: faceMatch?.Face.FaceId,
-                            occurances : face,
-                            details
-                        }
-                        return match
-                    }))
-                    console.log({checkedFaces})
+                    const checkedFaces = await getDetailsOfFacesFromVideoFvlconization(facesGroupedByIndex)
                     setMatchedFaces({ data : checkedFaces })
                     setOccurance(checkedFaces[0]?.occurances)
                 }
@@ -361,6 +331,28 @@ export const useAnalysis = (imageRef: RefObject<HTMLImageElement>) => {
             setFvlconizing(false)
         }
     };
+
+    const getDetailsOfFacesFromVideoFvlconization = async (facesGroupedByIndex : occurance[]) => {
+        const checkedFaces = await Promise.all(facesGroupedByIndex.map(async (face) => {
+            const resultsContainingFacesMatches = getResultsContainingFaceMatches(face.content)
+            const faceMatch = resultsContainingFacesMatches?.FaceMatches[0]// gets a single item in the category which has a face match
+            let details : any = undefined
+            if(faceMatch)
+                details = await getSingleFace(faceMatch.Face.FaceId);
+            const boundingBox = (resultsContainingFacesMatches ?? face.content[0]).Person.Face.BoundingBox
+            const match : checkedFaceType = {
+                matchedPerson: faceMatch?.Face.ExternalImageId,
+                similarity: faceMatch?.Similarity,
+                originalImage: selectedImage ? await getImageURLFromBoundingBox(boundingBox, await generateVideoThumbnail(selectedImage.url, (resultsContainingFacesMatches ?? face.content[0]).Timestamp / 1000)) : '',
+                matchedImage: details?.imageUrl,
+                faceid: faceMatch?.Face.FaceId,
+                occurances : face,
+                details
+            }
+            return match
+        }))
+        return checkedFaces
+    }
 
     return {handleAnalyze, handleFalconize}
 }
