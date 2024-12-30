@@ -30,7 +30,7 @@ const Controls = ({
                 <AppTypography
                     textColor={theme.colors.text.primary}
                 >
-                    Disticnt Faces
+                    Distinct Faces
                 </AppTypography>
                 <Flex
                     width="fit-content"

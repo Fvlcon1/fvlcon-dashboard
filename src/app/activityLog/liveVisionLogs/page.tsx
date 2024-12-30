@@ -51,7 +51,7 @@ const LiveVisionLogs = () => {
                             data={yesterday}
                         />
                         <Table 
-                            title="Ealier"
+                            title="Earlier"
                             expand={expandEarlier}
                             setExpand={setExpandEarlier}
                             data={earlier}

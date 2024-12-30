@@ -32,7 +32,7 @@ const TrackingLogs = () => {
                 setExpand={setExpandYesterday}
             />
             <Table 
-                title="Ealier"
+                title="Earlier"
                 expand={expandEarlier}
                 setExpand={setExpandEarlier}
             />

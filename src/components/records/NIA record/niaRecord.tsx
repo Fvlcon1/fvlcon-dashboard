@@ -10,6 +10,7 @@ import List from "../components/list"
 import Container from "../components/container"
 import Image from "next/image"
 import ZoomImage from "@components/zoomImage/zoomImage"
+import getDate from "@/utils/getDate"
 
 const NiaRecord = ({
     visible,
@@ -58,8 +59,8 @@ const NiaRecord = ({
     ]
     const birthDetails = [
         ["Birth Certificate number", birthDetes?.birthCertificateNumber],
-        ["Date issued", birthDetes?.dateIssued],
-        ["Date of birth", birthDetes?.dateOfBirth],
+        ["Date issued",  new Date(birthDetes?.dateIssued).toDateString()],
+        ["Date of birth", new Date(birthDetes?.dateOfBirth).toDateString()],
         ["Nationality at birth", birthDetes?.nationalityAtBirth],
         ["Current nationality", birthDetes?.currentNationality],
     ]
@@ -111,14 +112,14 @@ const NiaRecord = ({
     const verificationDocument = [
         ["type",  verificationDoc?.type],
         ["Document number / NID",  verificationDoc?.documentNumberNid],
-        ["Date issued",  verificationDoc?.dateIssued],
+        ["Date issued",   new Date(verificationDoc?.dateIssued).toDateString()],
     ]
     const contact = [
         ["Local phone number",  cont?.localPhoneNumber],
     ] 
     const institutionalIds = [
         ["Voter's Id number",  IIds?.votersIdNumber],
-        ["Date issued",  IIds?.dateIssued],
+        ["Date issued",  new Date(IIds?.dateIssued).toDateString()],
     ]
 
     useEffect(()=>{
