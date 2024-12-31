@@ -79,7 +79,7 @@ const NiaRecord = ({
     ]
     const residentialAddress = [
         ["Village/town", RAdress?.villageTown],
-        ["Region/Country", RAdress?.regionCountry],
+        ["Region/Country", RAdress?.regionCode],
         ["District/State", RAdress?.districtState],
         ["Community area name", RAdress?.communityAreaName],
         ["ZIP/Postal code", RAdress?.zipPostalCode],
