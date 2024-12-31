@@ -23,11 +23,6 @@ const SegmentationLogs = () => {
     const {segmentationLogs, setSegmentationLogs} = useContext(SegmentationLogsContext)
     const {today, yesterday, earlier} = useGroupsLogsByDate(segmentationLogs.data)
     const {getSegmentationLogs} = useSegmentationLogs()
-
-    useEffect(()=>{
-        console.log({segmentationLogs})
-    },[segmentationLogs])
-
     useEffect(()=>{
         try {
             getSegmentationLogs()

@@ -44,7 +44,7 @@ const NiaRecord = ({
     const applicationDetails = [
         ["Type of application", appDetes?.typeOfApplication],
         ["Type of Request", appDetes?.typeOfRequest],
-        ["Date of Application", (new Date(appDetes?.dateOfApplication)).toDateString()],
+        ["Date of Application", appDetes?.dateOfApplication],
         ["Interviewer NID number", appDetes?.interviewerNidNumber],
         ["Registration centre number", appDetes?.registrationCentreNumber]
     ]
@@ -59,8 +59,8 @@ const NiaRecord = ({
     ]
     const birthDetails = [
         ["Birth Certificate number", birthDetes?.birthCertificateNumber],
-        ["Date issued",  new Date(birthDetes?.dateIssued).toDateString()],
-        ["Date of birth", new Date(birthDetes?.dateOfBirth).toDateString()],
+        ["Date issued",  birthDetes?.dateIssued],
+        ["Date of birth", birthDetes?.dateOfBirth],
         ["Nationality at birth", birthDetes?.nationalityAtBirth],
         ["Current nationality", birthDetes?.currentNationality],
     ]
@@ -112,14 +112,14 @@ const NiaRecord = ({
     const verificationDocument = [
         ["type",  verificationDoc?.type],
         ["Document number / NID",  verificationDoc?.documentNumberNid],
-        ["Date issued",   new Date(verificationDoc?.dateIssued).toDateString()],
+        ["Date issued",   verificationDoc?.dateIssued],
     ]
     const contact = [
         ["Local phone number",  cont?.localPhoneNumber],
     ] 
     const institutionalIds = [
         ["Voter's Id number",  IIds?.votersIdNumber],
-        ["Date issued",  new Date(IIds?.dateIssued).toDateString()],
+        ["Date issued",  IIds?.dateIssued],
     ]
 
     useEffect(()=>{

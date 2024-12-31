@@ -33,12 +33,6 @@ const useGroupsLogsByDate = () => {
     }
   })
 
-  console.log({
-    today: todayLogs,
-    yesterday: yesterdayLogs,
-    earlier: earlierLogs,
-  })
-
   return {
       today: todayLogs,
       yesterday: yesterdayLogs,
