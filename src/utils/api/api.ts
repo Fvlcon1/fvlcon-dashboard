@@ -1,14 +1,19 @@
 import { message } from 'antd';
 import axios from 'axios';
-import { signOut } from 'next-auth/react';
+import { signOut, useSession } from 'next-auth/react';
 import Cookies from 'universal-cookie';
+import { JWT } from 'next-auth/jwt';
+import jwt from 'jsonwebtoken';
+import dotenv from 'dotenv';
+
+dotenv.config()
 
 const cookies = new Cookies();
 const baseURL = process.env.NEXT_PUBLIC_API_BASE_URL
 
-const getHeaders = () => {
+const getHeaders = async () => {
   return {
-    Authorization: `Bearer ${cookies.get('token')}`
+    Authorization: `Bearer ${await getToken()}`
   };
 };
 
@@ -16,22 +21,38 @@ type IApiOptions = {
   prevUrl?: string;
 };
 
+const getSession = async () => {
+  const { data } = await axios.get('/api/auth/session')
+  return data
+}
+
+const getToken = async () => {
+  const session = await getSession()
+  console.log({session})
+  const token =  jwt.sign(
+    { email: session?.user.email, userId: session?.user.userId },
+    process.env.NEXT_PUBLIC_JWT_SECRET || 'secretJWT',
+    { expiresIn: '3m' }
+  )
+  return token
+}
+
 export class protectedAPI {
   public get = async <T>(url: string, params?: T, options?: IApiOptions) => {
-    const headers = getHeaders();
+    const headers = await getHeaders();
     try {
       return await axios.get(`${baseURL}${url}`, { headers, params });
     } catch (error: any) {
       if (error.response?.status === 401) {
-        this.handleAuthError(options);
+        // this.handleAuthError(options);
       } else {
-        throw error; // Rethrow other errors
+        throw error;
       }
     }
   };
 
   public post = async <T>(url: string, body?: T, options?: IApiOptions) => {
-    const headers = getHeaders();
+    const headers = await getHeaders();
     try {
       return await axios.post(`${baseURL}${url}`, body, { headers });
     } catch (error: any) {

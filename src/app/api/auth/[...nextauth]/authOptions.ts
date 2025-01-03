@@ -9,6 +9,10 @@ import { Resend } from 'resend'; // Assuming you're using Resend for sending ema
 import dotenv from 'dotenv';
 import jwt from 'jsonwebtoken';
 import { cookies } from "next/headers";
+import Cookies from 'js-cookie';
+import axios from "axios";
+import { JWT } from "next-auth/jwt";
+
 dotenv.config();
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -64,12 +68,6 @@ export const authOptions: NextAuthOptions = {
   callbacks: {
     jwt: async ({ token, user }) => {
       if (user) {
-          const signedToken = jwt.sign(
-              { email: user.email, userId: user.id },
-              process.env.JWT_SECRET || 'secretJWT',
-              { expiresIn: '1h' }
-          );
-          await setTokenCookie(signedToken);
           token.email = user.email;
           token.userId = user.id;  // Add userId to the token
       }
@@ -79,6 +77,7 @@ export const authOptions: NextAuthOptions = {
       if (session.user) {
         session.user.email = token.email;
         session.user.userId = token.userId;
+        session.token = token
       }
       return session;
     },
