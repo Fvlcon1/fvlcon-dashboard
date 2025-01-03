@@ -114,44 +114,47 @@ export default function MFAValidation({
   };
 
   return (
-    <div style={styles.outerContainer}>
-      <div style={styles.container}>
-          <h2 style={styles.title}>Verify Your Email Address</h2>
-          <p style={styles.instruction}>
-              A verification code has been sent to <strong>{email}</strong>
-          </p>
-          <p style={styles.timer}>The code will expire in {formatTime(timer)}.</p>
+    <form onSubmit={handleSubmit}>
+        <div style={styles.outerContainer}>
+          <div style={styles.container}>
+              <h2 style={styles.title}>Verify Your Email Address</h2>
+              <p style={styles.instruction}>
+                  A verification code has been sent to <strong>{email}</strong>
+              </p>
+              <p style={styles.timer}>The code will expire in {formatTime(timer)}.</p>
 
-          <div style={styles.codeContainer}>
-              {code.map((digit, index) => (
-                  <input
-                      key={index}
-                      id={`code-${index}`}
-                      type="text"
-                      value={digit}
-                      onChange={(e) => handleChange(index, e.target.value)}
-                      maxLength={1}
-                      onKeyDown={(e) => e.key === "Enter" && e.preventDefault()}
-                      style={styles.input}
-                  />
-              ))}
+              <div style={styles.codeContainer}>
+                  {code.map((digit, index) => (
+                      <input
+                          key={index}
+                          id={`code-${index}`}
+                          type="text"
+                          value={digit}
+                          onChange={(e) => handleChange(index, e.target.value)}
+                          maxLength={1}
+                          onKeyDown={index !== code.length -1 ? (e) => e.key === "Enter" && e.preventDefault() : ()=>{}}
+                          style={styles.input}
+                      />
+                  ))}
+              </div>
+
+              <button style={styles.button} onClick={handleSubmit} disabled={isLoading}>
+                  {isLoading ? 'Verifying...' : 'Verify'}
+              </button>
+
+              <button
+                  style={styles.linkButton}
+                  onClick={handleResendCode}
+                  disabled={isResending}
+                  type='button'
+              >
+                  {isResending ? 'Resending...' : 'Resend code'}
+              </button>
+
+              {errMessage && <p style={styles.message}>{errMessage}</p>}
           </div>
-
-          <button style={styles.button} onClick={handleSubmit} disabled={isLoading}>
-              {isLoading ? 'Verifying...' : 'Verify'}
-          </button>
-
-          <button
-              style={styles.linkButton}
-              onClick={handleResendCode}
-              disabled={isResending}
-          >
-              {isResending ? 'Resending...' : 'Resend code'}
-          </button>
-
-          {errMessage && <p style={styles.message}>{errMessage}</p>}
       </div>
-  </div>
+    </form>
   );
 }
 
