@@ -4,7 +4,6 @@ import { getFaceCanvas } from './getFaceCanvas';
 import { canvasTypes, logsType } from './@types';
 import axios from 'axios';
 import { message } from 'antd';
-import { extractCodec } from '@/app/dashboard/home/utils/extractCodec';
 
 export const isModelsLoaded = () => {
   if(
@@ -138,8 +137,6 @@ export const handleVideoPlay = async (video: HTMLVideoElement | null, timestamp:
 
 export const awsSegmentation = async (file: File, setLogs: Dispatch<SetStateAction<logsType[]>>) => {
   try {
-    setLogs([{log : {content : "Verifying codec..."}, date : new Date()}])
-    return await checkCodec(file)
     setLogs([{log : {content : "Initializing..."}, date : new Date()}])
     setLogs(prev => ([
       ...prev, { date : new Date(), log : { content : "Generating presigned URL..." } }
@@ -241,11 +238,6 @@ const pollJobStatus = async (jobId: string, videoKey: string, jobType: string, s
     }, pollInterval);
   });
 };
-
-const checkCodec = async (file : File) => {
-  const codec = await extractCodec(file)
-  console.log({codec})
-}
 
 
 

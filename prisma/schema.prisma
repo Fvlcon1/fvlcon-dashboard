@@ -8,40 +8,46 @@ datasource db {
 }
 
 model User {
-  id             String         @id @default(cuid())
-  firstName      String         @db.VarChar(255)
-  lastName       String         @db.VarChar(255)
-  email          String         @unique
-  password       String
-  companyCode    String         @db.VarChar(50)
-  emailVerified  Boolean        @default(false)
-  createdAt      DateTime       @default(now())
-  updatedAt      DateTime       @updatedAt
-  Stream         Stream[]
-  verifications  Verification[] @relation("UserVerifications")
-  twoFactorCodes TwoFactor[]    @relation("UserTwoFactors")
+  id                String              @id @default(cuid())
+  firstName         String              @db.VarChar(255)
+  lastName          String              @db.VarChar(255)
+  email             String              @unique
+  password          String
+  companyCode       String              @db.VarChar(50)
+  emailVerified     Boolean             @default(false)
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @updatedAt
+  CameraFolder      CameraFolder[]
+  FvlconizationLogs FvlconizationLogs[]
+  PersonTracking    PersonTracking[]
+  PlateTracking     PlateTracking[]
+  SegmentationLogs  SegmentationLogs[]
+  Stream            Stream[]
+  twoFactorCodes    TwoFactor[]         @relation("UserTwoFactors")
+  verifications     Verification[]      @relation("UserVerifications")
 }
 
 model Verification {
   id               String   @id @default(cuid())
-  userId           String
   verificationCode String
   createdAt        DateTime @default(now())
   expiresAt        DateTime
+  userId           String
   user             User     @relation("UserVerifications", fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Stream {
-  id      String @id
-  name    String
-  rtspurl String
-  userId  String
-  User    User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id             String       @id
+  name           String
+  userId         String
+  rtspurl        String
+  cameraFolderId String
+  CameraFolder   CameraFolder @relation(fields: [cameraFolderId], references: [id])
+  User           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([id, name])
 }
 
-// New model to store 2FA codes for users
 model TwoFactor {
   id            String   @id @default(cuid())
   userId        String
@@ -49,4 +55,64 @@ model TwoFactor {
   createdAt     DateTime @default(now())
   expiresAt     DateTime
   user          User     @relation("UserTwoFactors", fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model CameraFolder {
+  id     String   @id
+  name   String
+  userId String
+  User   User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  Stream Stream[]
+}
+
+model FvlconizationLogs {
+  id                 String      @id
+  type               MediaTypes
+  date               DateTime
+  timeElapsed        Int
+  status             StatusTypes
+  userId             String
+  media              Json[]
+  uploadedImageS3key String
+  User               User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model PersonTracking {
+  id          String   @id @default(cuid())
+  faceId      String
+  date        DateTime
+  userId      String
+  locations   Json[]
+  User        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model PlateTracking {
+  id         String   @id @default(cuid())
+  plateLogId String
+  date       DateTime
+  userId     String
+  locations  String[]
+  User       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model SegmentationLogs {
+  id                 String      @id
+  type               MediaTypes
+  date               DateTime
+  timeElapsed        Int
+  status             StatusTypes
+  userId             String
+  media              Json[]
+  uploadedImageS3key String
+  User               User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+enum MediaTypes {
+  image
+  video
+}
+
+enum StatusTypes {
+  failed
+  successful
 }
