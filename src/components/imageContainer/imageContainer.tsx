@@ -60,7 +60,7 @@ const ImageContainer = ({
                                         textAlign="center"
                                         textColor={theme.colors.text.tetiary}
                                     >
-                                        Drag and drop an image or video / click an image or video to start
+                                        Drag and drop a media file / click an image or video to start
                                     </AppTypography>
                                 </Flex>
                             </Flex>
