@@ -51,7 +51,8 @@ const useLiveVisionData = () => {
                         coordinates,
                         timestamp : Timestamp,
                         type,
-                        userId : UserId
+                        userId : UserId,
+                        S3Key
                     };
                     plates.push(plateDetails);
                 } else {
