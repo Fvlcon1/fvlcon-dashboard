@@ -23,7 +23,8 @@ export const getUserDetailsFromTrackingData = async (trackingData : any) : Promi
                 coordinates,
                 timestamp : Timestamp,
                 type,
-                userId : UserId
+                userId : UserId,
+                S3Key
             };
             return plateDetails
         } else {

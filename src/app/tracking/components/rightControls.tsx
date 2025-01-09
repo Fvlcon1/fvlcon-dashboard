@@ -57,6 +57,7 @@ const RightControls = ({
                     locationName: plate.locationName.S,
                     imageUrl: plate.imageUrl,
                     userId: plate.UserId.S,
+                    S3Key : plate.S3Key.S,
                     type: ITrackingDataTypes.plate,
                 }
                 plateArray.push(plateObject)

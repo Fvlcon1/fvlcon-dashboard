@@ -23,6 +23,7 @@ const PlateContainer = ({
     imageUrl,
     userId,
     type,
+    S3Key
 } : IPlateTrackingType) => {
     const {setCaptureDetails, setCenter, setWayPoints} = useContext(trackingContext)
 
@@ -36,7 +37,8 @@ const PlateContainer = ({
             locationName,
             imageUrl,
             type,
-            userId
+            userId,
+            S3Key
         }
         setCaptureDetails({
             data : captureDetailsData,
