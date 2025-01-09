@@ -7,6 +7,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { message } from 'antd';
 import { formatTime } from '@/utils/formatTime';
 import theme from '@styles/theme';
+import InfinityLoader from '@components/loaders/infinityLoader';
 
 export default function MFAValidation({
   email,
@@ -41,7 +42,7 @@ export default function MFAValidation({
     return () => clearInterval(interval);
   }, [timer, canResend]);
 
-  const handleChange = (index: number, value: string) => {
+  const handleChange = async (index: number, value: string) => {
     if (/^\d?$/.test(value)) {
         const newCode = [...code];
         newCode[index] = value;
@@ -53,12 +54,14 @@ export default function MFAValidation({
         } else if (!value && index > 0) {
             const prevInput = document.getElementById(`code-${index - 1}`);
             if (prevInput) prevInput.focus();
+        } else if(value && index === 5){
+          await handleSubmit(undefined, newCode)
         }
     }
   };
 
-  const handleSubmit = async (e: any) => {
-    e.preventDefault();
+  const handleSubmit = async (e?: any, codeParam? : any[]) => {
+    e?.preventDefault();
     setError(null);
 
     if (!email) {
@@ -67,7 +70,7 @@ export default function MFAValidation({
       return;
     }
 
-    const fullCode = code.join('');
+    const fullCode = codeParam?.join('') ?? code.join('');
       if (fullCode.length !== 6) {
           setMessage("Please enter a 6-digit code.");
           message.warning("Please enter a 6-digit code.");
@@ -80,7 +83,7 @@ export default function MFAValidation({
       const response = await fetch('/api/auth/verify-2fa', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, code : code.join("") }),
+        body: JSON.stringify({ email, code : fullCode }),
       });
 
       const data = await response.json();
@@ -138,9 +141,16 @@ export default function MFAValidation({
                   ))}
               </div>
 
-              <button style={styles.button} onClick={handleSubmit} disabled={isLoading}>
+              <button className='hidden' style={styles.button} onClick={handleSubmit} disabled={isLoading}>
                   {isLoading ? 'Verifying...' : 'Verify'}
               </button>
+
+              {
+                isLoading &&
+                <div className='flex w-full justify-center items-center'>
+                  <InfinityLoader size={40} />
+                </div>
+              }
 
               <button
                   style={styles.linkButton}

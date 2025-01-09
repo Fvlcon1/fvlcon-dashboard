@@ -34,6 +34,7 @@ export type IPlateTrackingType = {
     timestamp : string
     coordinates : LatLngExpression & number[];
     locationName : string
+    S3Key : string,
     imageUrl : string
     type : string
     userId : string

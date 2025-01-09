@@ -21,14 +21,9 @@ const TableHead = () => {
             name : "Date",
             icon : MdDateRange
         },
-
         {
-            name : "Perfomance",
+            name : "Locations",
             icon : IoIosStats
-        },
-        {
-            name : "Status",
-            icon : HiOutlineStatusOnline
         },
         {
             name : "Actions",

@@ -30,7 +30,7 @@ const TableBody = () => {
                     [1,2,3,4].map((item, index) => (
                         <Fragment key={index}>
                             <tr>
-                                <td className="py-4">
+                                <td className="py-4 pl-4">
                                     <MatchContainer 
                                         originalImageUrl={require('@/assets/dev/image1.png')}
                                         capturedImageUrl={require('@/assets/dev/image1.png')}
@@ -60,32 +60,9 @@ const TableBody = () => {
                                     </div>
                                 </td>
                                 <td>
-                                    <div className="flex items-center gap-2">
-                                        <Progress
-                                            type="circle" 
-                                            percent={90}
-                                            size={50}
-                                            strokeColor={theme.colors.main.primary}
-                                            trailColor={`${theme.colors.main.primary}${hexOpacity(20)}`}
-                                            strokeWidth={8}
-                                            format={(percent) => (
-                                                <Text textColor={theme.colors.text.primary}>
-                                                    {percent}%
-                                                </Text>
-                                            )}
-                                        />
-                                    </div>
-                                </td>
-                                <td>
-                                    <div className="flex items-center gap-2">
-                                        <FaRegCircleDot
-                                            color="#0e9c33"
-                                            size={10}
-                                        />
-                                        <Text textColor={theme.colors.text.primary}>
-                                            Successful
-                                        </Text>
-                                    </div>
+                                    <Text>
+                                        Accra, tema
+                                    </Text>
                                 </td>
                                 <td>
                                     <div className="flex gap-4 items-center">

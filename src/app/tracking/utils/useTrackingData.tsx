@@ -53,7 +53,7 @@ const useTrackingData = () => {
                     name : point.lastSeen,
                     coordinates : point.coordinates
                 }))
-                storePersonTrackingLogs(faceId, locations)
+                storePersonTrackingLogs(faceId, locations, captureDetails.data.S3Key)
             } catch (error) {
                 console.log({error})
                 message.error("Unable to get tracking data")
@@ -99,11 +99,12 @@ const useTrackingData = () => {
         }
     }
 
-    const storePersonTrackingLogs = async (faceId : string, locations : {name : string, coordinates : number[]}[]) => {
+    const storePersonTrackingLogs = async (faceId : string, locations : {name : string, coordinates : number[]}[], S3Key : string) => {
         try {
             const result = await axios.post('/api/logs/trackingLogs', {
                 faceId,
-                locations
+                locations,
+                S3Key
             })
             console.log({result})
         } catch (error) {

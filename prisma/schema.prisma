@@ -8,23 +8,24 @@ datasource db {
 }
 
 model User {
-  id                String              @id @default(cuid())
-  firstName         String              @db.VarChar(255)
-  lastName          String              @db.VarChar(255)
-  email             String              @unique
-  password          String
-  companyCode       String              @db.VarChar(50)
-  emailVerified     Boolean             @default(false)
-  createdAt         DateTime            @default(now())
-  updatedAt         DateTime            @updatedAt
-  CameraFolder      CameraFolder[]
-  FvlconizationLogs FvlconizationLogs[]
-  PersonTracking    PersonTracking[]
-  PlateTracking     PlateTracking[]
-  SegmentationLogs  SegmentationLogs[]
-  Stream            Stream[]
-  twoFactorCodes    TwoFactor[]         @relation("UserTwoFactors")
-  verifications     Verification[]      @relation("UserVerifications")
+  id                          String              @id @default(cuid())
+  firstName                   String              @db.VarChar(255)
+  lastName                    String              @db.VarChar(255)
+  email                       String              @unique
+  password                    String
+  companyCode                 String              @db.VarChar(50)
+  emailVerified               Boolean             @default(false)
+  createdAt                   DateTime            @default(now())
+  updatedAt                   DateTime            @updatedAt
+  CameraFolder                CameraFolder[]
+  FvlconizationLogs           FvlconizationLogs[]
+  FvlconizationVideoLogs      FvlconizationVideoLogs[]
+  PersonTracking              PersonTracking[]
+  PlateTracking               PlateTracking[]
+  SegmentationLogs            SegmentationLogs[]
+  Stream                      Stream[]
+  twoFactorCodes              TwoFactor[]         @relation("UserTwoFactors")
+  verifications               Verification[]      @relation("UserVerifications")
 }
 
 model Verification {
@@ -77,11 +78,24 @@ model FvlconizationLogs {
   User               User        @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
+model FvlconizationVideoLogs {
+  id                 String      @id @default(cuid())
+  date               DateTime
+  timeElapsed        Int
+  status             StatusTypes
+  userId             String
+  occurance          Json[]
+  thumbnailS3Key     String
+  videoS3Key         String
+  User               User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
 model PersonTracking {
   id          String   @id @default(cuid())
   faceId      String
   date        DateTime
   userId      String
+  S3Key       String
   locations   Json[]
   User        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
@@ -91,6 +105,7 @@ model PlateTracking {
   plateLogId String
   date       DateTime
   userId     String
+  S3Key      String
   locations  String[]
   User       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }

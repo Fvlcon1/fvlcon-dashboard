@@ -18,14 +18,6 @@ const MatchContainer = ({
     capturedImageZoom: boolean
     setCapturedImageZoom: Dispatch<SetStateAction<boolean>>
 }) => {
-    console.log({
-        originalImageUrl,
-        capturedImageUrl,
-        originalImageZoom,
-        setOriginalImageZoom,
-        capturedImageZoom,
-        setCapturedImageZoom,
-    })
     return (
         <>
             <div className="flex flex-col gap-1">
@@ -41,25 +33,6 @@ const MatchContainer = ({
                                 onClick={()=>{
                                     setCapturedImageZoom(true)
                                 }}
-                                className="lg:hover:scale-[1.2] duration-200 cursor-pointer hover:lg:opacity-70"
-                            /> 
-                            :
-                            <div className="w-full h-full flex justify-center items-center">
-                                <Text>
-                                    🚫
-                                </Text>
-                            </div>
-                        }
-                    </div>
-                    <div className="w-[50px] h-[50px] overflow-hidden bg-bg-secondary relative rounded-md">
-                        {
-                            originalImageUrl ?
-                            <Image
-                                src={originalImageUrl} 
-                                alt="test-bg"
-                                fill
-                                style={{ objectFit: "cover" }}
-                                onClick={()=>setOriginalImageZoom(true)}
                                 className="lg:hover:scale-[1.2] duration-200 cursor-pointer hover:lg:opacity-70"
                             /> 
                             :

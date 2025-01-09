@@ -1,6 +1,9 @@
 import { protectedAPI } from "@/utils/api/api"
 import { HomeContext } from "../context/homeContext"
 import { useContext, useEffect, useRef } from "react"
+import { occurance } from "@/utils/@types"
+import axios from "axios"
+import { message } from "antd"
 
 const privateApi = new protectedAPI()
 
@@ -24,18 +27,46 @@ const useActivityStorage = () => {
         status: string
         type: string
     }) => {
-        const { media, status, type, uploadedImageS3key } = data
-        console.log({ restime: timerRef.current })
+        try {
+            const { media, status, type, uploadedImageS3key } = data
+            console.log({ restime: timerRef.current })
+    
+            const response = await privateApi.post("/fvlconizationLogs/addFvlconizationLogs", {
+                uploadedImageS3key,
+                media,
+                date: new Date(),
+                timeElapsed: timerRef.current, // Use the latest timer value from the ref
+                status,
+                type,
+            })
+        } catch (error) {
+            message.error("Unable to store logs")
+            console.log({error})
+        }
+    }
 
-        const response = await privateApi.post("/fvlconizationLogs/addFvlconizationLogs", {
-            uploadedImageS3key,
-            media,
-            date: new Date(),
-            timeElapsed: timerRef.current, // Use the latest timer value from the ref
-            status,
-            type,
-        })
-        console.log({ storedFvlconization: response })
+    const storeVideoFvlconizationResults = async (data: {
+        timeElapsed : number,
+        status : string,
+        thumbnailS3Key : string,
+        videoS3Key : string,
+        occurance : occurance[]
+    }) => {
+        try {
+            const { timeElapsed, status, thumbnailS3Key, videoS3Key, occurance } = data
+            console.log({ restime: timerRef.current })
+    
+            const response = await axios.post("/api/logs/fvlconizationVideoLogs", {
+                timeElapsed, 
+                status, 
+                thumbnailS3Key, 
+                videoS3Key, 
+                occurance
+            })
+        } catch (error) {
+            message.error("Unable to store logs")
+            console.log({error})
+        }
     }
 
     const storeSegmentationResults = async (data: {
@@ -48,20 +79,24 @@ const useActivityStorage = () => {
         status: string
         type: string
     }) => {
-        const { media, status, type, uploadedImageS3key } = data
-
-        const response = await privateApi.post("/segmentationLogs/addSegmentationLogs", {
-            uploadedImageS3key,
-            media,
-            date: new Date(),
-            timeElapsed: timerRef.current, // Use the latest timer value from the ref
-            status,
-            type,
-        })
-        console.log({ storedSegmentation: response })
+        try {
+            const { media, status, type, uploadedImageS3key } = data
+    
+            const response = await privateApi.post("/segmentationLogs/addSegmentationLogs", {
+                uploadedImageS3key,
+                media,
+                date: new Date(),
+                timeElapsed: timerRef.current, // Use the latest timer value from the ref
+                status,
+                type,
+            })
+        } catch (error) {
+            message.error("Unable to store logs")
+            console.log({error})
+        }
     }
 
-    return { storeFvlcoinzationResults, storeSegmentationResults }
+    return { storeFvlcoinzationResults, storeSegmentationResults, storeVideoFvlconizationResults }
 }
 
 export default useActivityStorage

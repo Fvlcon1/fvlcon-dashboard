@@ -239,6 +239,7 @@ export const useAnalysis = (imageRef: RefObject<HTMLImageElement>) => {
                                     console.log("Unable to upload 'Upload image'")
                                     message.error("Error storing logs")
                                 }
+                                setFvlconizing(false)
                                 storeFvlcoinzationResults({
                                     uploadedImageS3key : uploadImageFilename,
                                     media : faceDetails,
@@ -250,13 +251,14 @@ export const useAnalysis = (imageRef: RefObject<HTMLImageElement>) => {
                         } catch (error) {
                             console.log(error)
                             message.error("Error storing logs")
+                            setFvlconizing(false)
                         }
                     }
             } else {
                 message.error("No match found!")
                 !matchedFaces.data && setMatchedFaces({isEmpty : true})
+                setFvlconizing(false)
             }
-            setFvlconizing(false)
         } else {
             setMatchedFaces({error : 'No Image Segmented'})
             setFvlconizing(false)
