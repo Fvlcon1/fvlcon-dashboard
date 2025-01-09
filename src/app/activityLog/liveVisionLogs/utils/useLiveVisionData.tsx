@@ -18,14 +18,18 @@ const useLiveVisionData = () => {
         return sevenDaysAgo;
     });
 
-    const getLiveVisionHistory = async () => {
+    const getLiveVisionHistory = async (
+        params? : {
+            startDate? : Date,
+            endDate? : Date,
+            status? : string,
+            type? : string
+        }
+    ) => {
         const userId = sessionData?.user.userId;
-        console.log({status})
-        console.log({userId})
         if (!userId) return;
         setPersonTrackingData({ data: [], status: 'loading' });
-        
-        console.log("call this")
+
         try {
             const response = await privateApi.get("/tracking/getTrackingDataByUserIdAndTimeRange", {
                 userId,
@@ -56,7 +60,6 @@ const useLiveVisionData = () => {
                     };
                     plates.push(plateDetails);
                 } else {
-                    console.log({details})
                     const userDetails: IPersonTrackingWithImageType = {
                         id : Id,
                         name: `${details?.personDetails?.forenames ?? ''} ${details?.personDetails?.surname ?? ''}`,
@@ -73,11 +76,9 @@ const useLiveVisionData = () => {
                         similarity : Similarity,
                         originalImageUrl : details?.imageUrl ?? ''
                     };
-                    console.log({userDetails})
                     people.push(userDetails);
                 }
             }
-            console.log({people})
             setPersonTrackingData({ data: people, status: null });
         } catch (error) {
             console.error({error});

@@ -6,15 +6,18 @@ import { Dispatch, SetStateAction, useState } from "react"
 import { FaCaretDown } from "react-icons/fa6"
 import TableHead from "./tableHead"
 import TableBody from "./tableBody"
+import { trackingLogsType } from "./trackingLogs.types"
 
 const Table = ({
     title,
     expand,
-    setExpand
+    setExpand,
+    data
 } : {
     title : string
     expand: boolean
     setExpand: Dispatch<SetStateAction<boolean>>
+    data : trackingLogsType[]
 }) => {
     
     return (
@@ -37,7 +40,7 @@ const Table = ({
                 <div className="w-full">
                     <table className="w-full min-w-[1000px]">
                         <TableHead />
-                        <TableBody />
+                        <TableBody data={data}/>
                     </table>
                 </div>
             </div>

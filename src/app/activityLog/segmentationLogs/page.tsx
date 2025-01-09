@@ -16,13 +16,14 @@ import { message } from "antd"
 const privateApi = new protectedAPI()
 
 const SegmentationLogs = () => {
-    const [expandToday, setExpandToday] = useState(true)
-    const [expandYesterday, setExpandYesterday] = useState(false)
-    const [expandEarlier, setExpandEarlier] = useState(false)
-
     const {segmentationLogs, setSegmentationLogs} = useContext(SegmentationLogsContext)
     const {today, yesterday, earlier} = useGroupsLogsByDate(segmentationLogs.data)
     const {getSegmentationLogs} = useSegmentationLogs()
+
+    const [expandToday, setExpandToday] = useState(today.length > 0 ? true : yesterday.length === 0 && earlier.length === 0 ? true : false )
+    const [expandYesterday, setExpandYesterday] = useState(!expandToday && yesterday.length ? true : false)
+    const [expandEarlier, setExpandEarlier] = useState(!expandToday && !expandYesterday ? true : false)
+
     useEffect(()=>{
         try {
             getSegmentationLogs()

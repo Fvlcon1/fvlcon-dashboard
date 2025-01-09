@@ -2,8 +2,6 @@ import Text from "@styles/components/text"
 import theme from "@styles/theme"
 import Controls from "./components/controls"
 import Tables from "./components/tables"
-import { Suspense } from "react"
-import LoadingSkeleton from "../components/loadingSkeleton"
 
 const TrackingLogs = () => {
     return (
@@ -16,9 +14,7 @@ const TrackingLogs = () => {
                 </Text>
                 <Controls />
             </div>
-            <Suspense fallback={<LoadingSkeleton />}>
-                <Tables />
-            </Suspense>
+            <Tables />
         </div>
     )
 }

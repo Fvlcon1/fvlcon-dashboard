@@ -9,60 +9,65 @@ import { FaExternalLinkAlt } from "react-icons/fa"
 import { FaCircle, FaRegCircleDot } from "react-icons/fa6"
 import { MdCloudDownload } from "react-icons/md"
 import MatchContainer from "./matchContainer"
+import { trackingLogsType } from "./trackingLogs.types"
+import getDate, { getRelativeTime, getTime } from "@/utils/getDate"
+import NoData from "@components/NoData/noData"
 
-const TableBody = () => {
-    const [zoom, setZoom] = useState(false)
-    const [capturedImageZoom, setCapturedImageZoom] = useState(false)
+const TableBody = ({
+    data
+} : {
+    data : trackingLogsType[]
+}) => {
     return (
-        <>
-            <ZoomImage
-                setShow={setZoom}
-                show={zoom}
-                imageURL={require('@/assets/dev/image1.png')} 
-            />
-            <ZoomImage
-                setShow={setCapturedImageZoom}
-                show={capturedImageZoom}
-                imageURL={require('@/assets/dev/image1.png')} 
-            />
+        <>     
             <tbody>
                 {
-                    [1,2,3,4].map((item, index) => (
+                    data.length < 1?
+                    <tr><td colSpan={100}><NoData /></td></tr>
+                    :
+                    data.map((item, index) => (
                         <Fragment key={index}>
                             <tr>
                                 <td className="py-4 pl-4">
                                     <MatchContainer 
-                                        originalImageUrl={require('@/assets/dev/image1.png')}
-                                        capturedImageUrl={require('@/assets/dev/image1.png')}
-                                        originalImageZoom={zoom}
-                                        setOriginalImageZoom={setZoom}
-                                        capturedImageZoom={capturedImageZoom}
-                                        setCapturedImageZoom={setCapturedImageZoom}
+                                        capturedImageUrl={item.imageUrl}
                                     />
                                 </td>
                                 <td>
-                                    <Text
-                                        textColor={theme.colors.text.primary}
-                                    >
-                                        John Dramani Mahama
-                                    </Text>
+                                    {
+                                        item.identifiedPerson?.length > 1 ?
+                                        <Text
+                                            textColor={theme.colors.text.primary}
+                                            key={index}
+                                        >
+                                            {item.identifiedPerson}
+                                        </Text>
+                                        :
+                                        <Text key={index}>
+                                            Unknown
+                                        </Text>
+                                    }
                                 </td>
                                 <td>
                                     <div className="flex flex-col gap-0">
                                         <Text
                                             textColor={theme.colors.text.primary}
                                         >
-                                            28th July, 2024
+                                            {getDate(item.date)}
                                         </Text>
                                         <Text>
-                                            2 Days ago | 12 PM
+                                            {getRelativeTime(item.date)} | {getTime(item.date)}
                                         </Text>
                                     </div>
                                 </td>
                                 <td>
-                                    <Text>
-                                        Accra, tema
-                                    </Text>
+                                    {
+                                        item.locations.map((location, index) => (
+                                            <Text>
+                                                {`${location.name}${index !== item.locations.length - 1 ? ' → ' : ''}`}
+                                            </Text>
+                                        ))
+                                    }
                                 </td>
                                 <td>
                                     <div className="flex gap-4 items-center">

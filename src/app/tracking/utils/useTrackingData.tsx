@@ -18,13 +18,15 @@ const useTrackingData = () => {
      * @param endTime Date
      */
     const getTrackingData = async (startTime : Date, endTime : Date) => {
+        console.log("start")
         if(captureDetails?.data?.type === ITrackingDataTypes.person){
+            console.log("hi")
             const PersonCaptureDetails = captureDetails.data as IPersonTrackingType
             const faceId = PersonCaptureDetails?.faceId
-            if(!faceId)
-                return message.warning("Please select an object to track from the right panel")
-            if(startTime > endTime)
-                return message.warning("Start date must be less than end date")
+            if(startTime > endTime){
+                message.warning("Start date must be less than end date")
+                return
+            }
             try {
                 message.loading("Loading...", 100)
                 const response = await privateAPI.get("/tracking/getTrackingDataByTimeRange", {faceId, startTime, endTime })
@@ -96,6 +98,10 @@ const useTrackingData = () => {
                 console.log({error})
                 message.error("Unable to get tracking data")
             }
+        }
+
+        else {
+            return message.warning("Please select person or vehicle to track")
         }
     }
 

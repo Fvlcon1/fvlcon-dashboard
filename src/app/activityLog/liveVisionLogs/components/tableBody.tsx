@@ -70,7 +70,7 @@ const TableBody = ({
                                                     textColor={theme.colors.text.primary}
                                                     size={TypographySize.xs}
                                                 >
-                                                    {item.similarity}%
+                                                    {Number(item.similarity).toFixed(1)}%
                                                 </Text>
                                             )}
                                         />

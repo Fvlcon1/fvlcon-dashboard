@@ -15,13 +15,13 @@ import LoadingSkeleton from "./components/loadingSkeleton"
 const privateApi = new protectedAPI()
 
 const FvlconizationLogs = () => {
-    const [expandToday, setExpandToday] = useState(true)
-    const [expandYesterday, setExpandYesterday] = useState(false)
-    const [expandEarlier, setExpandEarlier] = useState(false)
-
     const {fvlconizationLogs, setFvlconizationLogs} = useContext(fvlocnizationLogsContext)
     const {today, yesterday, earlier} = useGroupsLogsByDate(fvlconizationLogs.data)
     const {getFvlconizationLogs} = useFvlconizationLogs()
+
+    const [expandToday, setExpandToday] = useState(today.length ? true : !yesterday.length && !earlier.length ? true : false )
+    const [expandYesterday, setExpandYesterday] = useState(!expandToday && yesterday.length ? true : false)
+    const [expandEarlier, setExpandEarlier] = useState(!expandToday && !expandYesterday ? true : false)
 
     useEffect(()=>{
         getFvlconizationLogs()

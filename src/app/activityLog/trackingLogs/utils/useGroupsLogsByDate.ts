@@ -1,16 +1,17 @@
-import { IPersonTrackingWithImageType } from "@/app/tracking/components/types";
+import { trackingLogsType } from "../components/trackingLogs.types";
 
-const useGroupLogsByDate = (logs?: IPersonTrackingWithImageType[]) => {
+const useGroupLogsByDate = (logs?: trackingLogsType[]) => {
     const today = new Date();
     const yesterday = new Date(today);
     yesterday.setDate(today.getDate() - 1);
+    console.log({groupLogs : logs})
   
-    const todayLogs: IPersonTrackingWithImageType[] = [];
-    const yesterdayLogs: IPersonTrackingWithImageType[] = [];
-    const earlierLogs: IPersonTrackingWithImageType[] = [];
+    const todayLogs: trackingLogsType[] = [];
+    const yesterdayLogs: trackingLogsType[] = [];
+    const earlierLogs: trackingLogsType[] = [];
   
     logs?.forEach((log) => {
-      const logDate = new Date(log.timeSeen);
+      const logDate = new Date(log.date);
   
       // Remove time component from date for comparison
       const isSameDate = (date1: Date, date2: Date) =>
@@ -25,6 +26,11 @@ const useGroupLogsByDate = (logs?: IPersonTrackingWithImageType[]) => {
       }
     })
 
+    console.log({
+      today: todayLogs,
+        yesterday: yesterdayLogs,
+        earlier: earlierLogs,
+    })
     return {
         today: todayLogs,
         yesterday: yesterdayLogs,
