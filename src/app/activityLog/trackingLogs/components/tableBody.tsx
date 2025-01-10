@@ -63,7 +63,7 @@ const TableBody = ({
                                 <td>
                                     {
                                         item.locations.map((location, index) => (
-                                            <Text>
+                                            <Text key={index}>
                                                 {`${location.name}${index !== item.locations.length - 1 ? ' → ' : ''}`}
                                             </Text>
                                         ))
