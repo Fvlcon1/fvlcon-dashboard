@@ -6,7 +6,7 @@ import { TypographyBold } from "@styles/style.types"
 import { AnimatePresence } from "framer-motion"
 import { Dispatch, SetStateAction } from "react"
 import ImageCard from "./imageCard"
-import { canvasTypes, ImageCardType } from "@/utils/@types"
+import { FaceCanvasType } from "@/utils/getFaceCanvas"
 
 const AllFaces = ({
     display, 
@@ -15,7 +15,7 @@ const AllFaces = ({
 } : {
     display : boolean,
     setDisplay : Dispatch<SetStateAction<boolean>>
-    faces : canvasTypes[]
+    faces : FaceCanvasType[]
 
 }) => {
     return (
@@ -52,7 +52,8 @@ const AllFaces = ({
                                     faces.map((item, index) => (
                                         <ImageCard
                                             key={index}
-                                            imageURL={item.dataUrl}
+                                            croppedImage={item.croppedImage}
+                                            boundedImage={item.boundedImage}
                                             title={`Face ${index + 1}`}
                                             MiddleButtonTitle="Fvlconize ➜"
                                         />

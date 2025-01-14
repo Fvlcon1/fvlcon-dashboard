@@ -13,10 +13,6 @@ const useGroupsLogsByDate = () => {
   const yesterdayLogs: FvlconizationLogsTypes[] = [];
   const earlierLogs: FvlconizationLogsTypes[] = [];
 
-  useEffect(()=>{
-    getFvlconizationLogs()
-  },[])
-
   logs?.forEach((log) => {
     const logDate = new Date(log.date);
 

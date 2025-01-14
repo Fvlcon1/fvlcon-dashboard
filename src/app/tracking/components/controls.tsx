@@ -38,9 +38,12 @@ const Controls = () => {
             theme={{
                 components : {
                     DatePicker : {
-                        activeBg : theme.colors.bg.tetiary,
+                        activeBg : 'transparent',
+                        colorBgContainer : 'transparent',
+                        fontSize : 12,
+                        controlHeight : 36,
                         activeBorderColor : `${theme.colors.main.primary}${hexOpacity(40)}`,
-                        hoverBg : theme.colors.bg.tetiary,
+                        hoverBg : 'transparent',
                         cellActiveWithRangeBg : theme.colors.bg.tetiary,
                         hoverBorderColor : `${theme.colors.main.primary}${hexOpacity(40)}`,
                         cellHoverBg : theme.colors.bg.quantinary

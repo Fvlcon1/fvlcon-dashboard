@@ -3,29 +3,18 @@
 import Text from "@styles/components/text"
 import theme from "@styles/theme"
 import Controls from "./components/controls"
-import Table from "./components/table"
+import Table from "./components/imageTable/table"
 import { useContext, useEffect, useState } from "react"
 import { protectedAPI } from "@/utils/api/api"
-import { FvlconizationLogsTypes } from "./components/fvlconizationLogs.types"
-import useGroupsLogsByDate from "./utils/useGroupsLogsByDate"
 import { fvlocnizationLogsContext } from "./context/fvlconizationLogsContext"
-import useFvlconizationLogs from "./utils/useFvlconizationLogs"
-import LoadingSkeleton from "./components/loadingSkeleton"
+import ImageTables from "./components/imageTable/imageTables"
+import VideoTables from "./components/videoTable/videoTables"
+import LoadingSkeleton from "../components/loadingSkeleton"
 
 const privateApi = new protectedAPI()
 
 const FvlconizationLogs = () => {
-    const {fvlconizationLogs, setFvlconizationLogs} = useContext(fvlocnizationLogsContext)
-    const {today, yesterday, earlier} = useGroupsLogsByDate(fvlconizationLogs.data)
-    const {getFvlconizationLogs} = useFvlconizationLogs()
-
-    const [expandToday, setExpandToday] = useState(today.length ? true : !yesterday.length && !earlier.length ? true : false )
-    const [expandYesterday, setExpandYesterday] = useState(!expandToday && yesterday.length ? true : false)
-    const [expandEarlier, setExpandEarlier] = useState(!expandToday && !expandYesterday ? true : false)
-
-    useEffect(()=>{
-        getFvlconizationLogs()
-    },[])
+    const {fvlconizationLogs, typeValue, fvlconizationVideoLogs} = useContext(fvlocnizationLogsContext)
 
     return (
         <div className="flex flex-col gap-4">
@@ -38,29 +27,13 @@ const FvlconizationLogs = () => {
                 <Controls />
             </div>
             {
-                fvlconizationLogs.status === 'loading' ?
+                fvlconizationLogs.status === 'loading' ||  fvlconizationVideoLogs.status === 'loading' ?
                 <LoadingSkeleton />
                 :
-                <>
-                    <Table 
-                        title="Today"
-                        expand={expandToday}
-                        setExpand={setExpandToday}
-                        data={today}
-                    />
-                    <Table 
-                        title="Yesterday"
-                        expand={expandYesterday}
-                        setExpand={setExpandYesterday}
-                        data={yesterday}
-                    />
-                    <Table 
-                        title="Earlier"
-                        expand={expandEarlier}
-                        setExpand={setExpandEarlier}
-                        data={earlier}
-                    />
-                </>
+                typeValue === 'image'?
+                <ImageTables />
+                :
+                <VideoTables />
             }
         </div>
     )

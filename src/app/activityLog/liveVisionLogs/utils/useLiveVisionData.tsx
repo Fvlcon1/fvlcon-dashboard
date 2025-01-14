@@ -24,6 +24,8 @@ const useLiveVisionData = () => {
             endDate? : Date,
             status? : string,
             type? : string
+            page? : number,
+            pageSize? : number
         }
     ) => {
         const userId = sessionData?.user.userId;
@@ -32,9 +34,12 @@ const useLiveVisionData = () => {
 
         try {
             const response = await privateApi.get("/tracking/getTrackingDataByUserIdAndTimeRange", {
-                userId,
-                startTime: startDate,
-                endTime: endDate
+                startDate : params?.startDate,
+                endDate : params?.endDate,
+                status : params?.status,
+                type : params?.type,
+                page : params?.page,
+                pageSize : params?.pageSize
             });
             const trackingData = response?.data;
             

@@ -22,7 +22,8 @@ const ExpandMatchComponent = ({
             <div className="flex gap-2 h-full w-full p-4 justify-between">
                 <div className="flex">
                     <MatchCard
-                        originalImage={match.originalImage}
+                        croppedImage={match.croppedImage}
+                        boundedImage={match.boundedImage}
                         matchedImage={match.matchedImage}
                         similarity={match.similarity}
                         description={match.matchedPerson}

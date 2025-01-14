@@ -15,10 +15,12 @@ import ExpandMatch from './expandMatch';
 import { TbListDetails } from "react-icons/tb"
 import { fvlconizedFaceType, occurance } from '../../../../../utils/@types';
 import NiaRecord from "@components/records/NIA record/niaRecord"
+import ZoomImage from "@components/zoomImage/zoomImage"
+import { RiFullscreenFill } from "react-icons/ri"
+import { LuSwitchCamera } from "react-icons/lu"
 
 const MatchCard = ({
     title,
-    originalImage,
     matchedImage,
     similarity,
     rightButtonClick,
@@ -26,14 +28,15 @@ const MatchCard = ({
     MiddleButtonClick,
     showExpand,
     description,
-    imageURL,
+    croppedImage,
+    boundedImage,
     details,
     occurances,
     currentOccurance,
     setOccurance
 } : {
-    imageURL? : string
-    originalImage : string
+    croppedImage : string
+    boundedImage : string
     matchedImage? : string
     similarity? : number
     title? : string,
@@ -49,6 +52,10 @@ const MatchCard = ({
 }) => {
     const [hover, setHover] = useState(false)
     const [expand, setExpand] = useState(false)
+    const [showBoundedImage, setShowBoundedImage] = useState(false)
+    const [showZoomImage, setShowZoomImage] = useState(false)
+    const [componentHover, setComponentHover] = useState(false)
+
     const getSelectedOccurenceClass = () => {
         if(occurances && currentOccurance)
             if(occurances.index === currentOccurance.index)
@@ -75,14 +82,21 @@ const MatchCard = ({
                 currentOccurance={currentOccurance}
                 setOccurance={setOccurance}
             /> */}
+            <ZoomImage
+                show={showZoomImage}
+                setShow={setShowZoomImage}
+                imageURL={showBoundedImage ? boundedImage : croppedImage}
+            />
             <NiaRecord 
                 visible={expand}
                 setVisible={setExpand}
                 data={details}
             />
             <div 
-                className={`p-3 py-2 min-w-[400px] cursor-pointer w-[400px] h-fit flex flex-col gap-1 rounded-lg bg-gradient-container-black ${getSelectedOccurenceClass() ?? ''}`}
+                className={`p-2 py-1 min-w-[400px] cursor-pointer w-[400px] h-fit flex flex-col gap-1 rounded-lg bg-gradient-container-black ${getSelectedOccurenceClass() ?? ''}`}
                 onClick={()=>setOccurance(occurances)}
+                onMouseOver={()=>setComponentHover(true)}
+                onMouseLeave={()=>setComponentHover(false)}
             >
                 <Flex
                     justify="space-between"
@@ -91,27 +105,47 @@ const MatchCard = ({
                     {
                         title &&
                         <AppTypography
-                            textColor={theme.colors.text.primary}
+                            textColor={theme.colors.text.secondary}
                         >
                             {title && `• ${title}`}
                         </AppTypography>
                     }
-                    {
-                        showExpand !== false &&
-                        <div
-                            onClick={(e)=>{
-                                e.stopPropagation()
-                                setExpand(true)
-                            }}
-                        >
-                            <AppTypography
-                                textColor='royalblue'
-                                className="hover:!underline hover:!scale-80 cursor-pointer hover:!opacity-60 !opacity-80"
+                    <div className="flex items-center gap-1">
+                        <div className={`${componentHover ? 'opacity-100' : 'opacity-0'} flex items-center duration-300`}>
+                            <ClickableTab
+                                onClick={()=>setShowZoomImage(true)}
                             >
-                                More details..
-                            </AppTypography>
+                                <RiFullscreenFill
+                                    color={theme.colors.text.secondary}
+                                    size={14}
+                                />
+                            </ClickableTab>
+                            <ClickableTab
+                                onClick={()=>setShowBoundedImage(prev => !prev)}
+                            >
+                                <LuSwitchCamera
+                                    color={theme.colors.text.secondary}
+                                    size={15}
+                                />
+                            </ClickableTab>
                         </div>
-                    }
+                        {
+                            showExpand !== false &&
+                            <div
+                                onClick={(e)=>{
+                                    e.stopPropagation()
+                                    setExpand(true)
+                                }}
+                            >
+                                <AppTypography
+                                    textColor='royalblue'
+                                    className="hover:!underline hover:!scale-80 cursor-pointer hover:!opacity-60 !opacity-80"
+                                >
+                                    More details..
+                                </AppTypography>
+                            </div>
+                        }
+                    </div>
                 </Flex>
                 <div
                     onMouseOver={()=>setHover(true)}
@@ -122,7 +156,7 @@ const MatchCard = ({
                         justify="space-between"
                     >
                         <ImageContainer 
-                            imageURL={originalImage}
+                            imageURL={showBoundedImage ? boundedImage : croppedImage}
                             onClick={e=>e.stopPropagation()}
                         />
                         {

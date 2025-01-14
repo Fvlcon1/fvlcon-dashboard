@@ -6,7 +6,7 @@ import { Dispatch, SetStateAction, useState } from "react"
 import { FaCaretDown } from "react-icons/fa6"
 import TableHead from "./tableHead"
 import TableBody from "./tableBody"
-import { FvlconizationLogsTypes } from "./fvlconizationLogs.types"
+import { FvlconizationVideoLogsType } from "../fvlconizationLogs.types"
 
 const Table = ({
     title,
@@ -17,7 +17,7 @@ const Table = ({
     title : string
     expand: boolean
     setExpand: Dispatch<SetStateAction<boolean>>
-    data : FvlconizationLogsTypes[]
+    data : FvlconizationVideoLogsType[]
 }) => {
     
     return (

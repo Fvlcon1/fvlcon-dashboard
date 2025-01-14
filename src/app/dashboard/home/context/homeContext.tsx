@@ -1,6 +1,7 @@
 'use client'
 
-import { canvasTypes, checkedFaceType, FetchState, logsType, occurance } from "@/utils/@types";
+import { checkedFaceType, FetchState, logsType, occurance } from "@/utils/@types";
+import { FaceCanvasType } from "@/utils/getFaceCanvas";
 import { createContext, Dispatch, ReactNode, SetStateAction, useContext, useEffect, useState } from "react";
 
 export const HomeContext = createContext<{
@@ -20,8 +21,8 @@ export const HomeContext = createContext<{
   setVideoTimestamp: Dispatch<SetStateAction<number>>
   seekVideoTimestamp: number
   setSeekVideoTimestamp: Dispatch<SetStateAction<number>>
-  distinctFaces: FetchState<canvasTypes[]>
-  setDistinctFaces: Dispatch<SetStateAction<FetchState<canvasTypes[]>>>
+  distinctFaces: FetchState<FaceCanvasType[]>
+  setDistinctFaces: Dispatch<SetStateAction<FetchState<FaceCanvasType[]>>>
   matchedFaces: FetchState<checkedFaceType[]>
   setMatchedFaces: Dispatch<SetStateAction<FetchState<checkedFaceType[]>>>
   logs: logsType[]
@@ -74,7 +75,7 @@ export const HomeContextProvider = ({
   const [seekVideoTimestamp, setSeekVideoTimestamp] = useState<number>(0)
   const [occurance, setOccurance] = useState<occurance>()
   const [timer, setTimer] = useState(0)
-  const [distinctFaces, setDistinctFaces] = useState<FetchState<canvasTypes[]>>({
+  const [distinctFaces, setDistinctFaces] = useState<FetchState<FaceCanvasType[]>>({
     isEmpty : false,
     isLoading : false,
   })

@@ -9,6 +9,7 @@ import { FaCaretDown } from "react-icons/fa6"
 import { clearIcon } from "../../components/antdCustomClearIcon"
 import { FaCalendarAlt } from "react-icons/fa"
 import useSegmentationLogs from "../utils/useSegmentationLogs"
+import Pagination from "../../components/pagination"
 
 const Controls = () => {
     const [searchValue, setSearchValue] = useState('')
@@ -16,6 +17,8 @@ const Controls = () => {
     const [typeValue, setTypeValue] = useState<"images" | "videos">('images')
     const [startDate, setStartDate] = useState<string | string[]>()
     const [endDate, setEndDate] = useState<string | string[]>()
+    const [pageSize, setPageSize] = useState< number>(7)
+    const [pageNumber, setPageNumber] = useState<number>(1)
 
     const {getSegmentationLogs} = useSegmentationLogs()
 
@@ -45,14 +48,28 @@ const Controls = () => {
         },
       ];
 
-    useEffect(()=>{
+    const runGetSegmentation = () => {
         getSegmentationLogs({
             startDate : startDate ? new Date(startDate as string) : undefined, 
             endDate : endDate ? new Date(endDate as string) : undefined,
-            status : statusValue,
-            type : typeValue
+            page : pageNumber,
+            pageSize : pageSize
         })
-    },[startDate, endDate, statusValue, typeValue])
+    }
+
+    useEffect(()=>{
+        runGetSegmentation()
+    },[startDate, endDate])
+
+    useEffect(() => {
+        if(pageSize && pageNumber){
+            const timer = setTimeout(() => {
+                runGetSegmentation();
+            }, 1000);
+    
+            return () => clearTimeout(timer);
+        }
+    }, [pageNumber, pageSize]);
 
     return (
         <div className="gap-2 flex">
@@ -60,6 +77,12 @@ const Controls = () => {
                 searchValue={searchValue}
                 setSearchValue={setSearchValue}
             /> */}
+            <Pagination
+                pageSize={pageSize}
+                setPageSize={setPageSize}
+                pageNumber={pageNumber}
+                setPageNumber={setPageNumber}
+            />
             <div className="flex items-center gap-2">
             <div className="flex items-center gap-2">
                 <DatePicker
@@ -84,7 +107,7 @@ const Controls = () => {
                     items : statusItems,
                 }} 
             >
-                <div className="rounded-md border-[1px] hover:border-bg-alt1 border-bg-secondary px-2 py-1 flex gap-2 items-center cursor-pointer">
+                <div className="rounded-md border-[1px] hover:border-bg-alt1 border-bg-quantinary px-2 py-1 flex gap-2 items-center cursor-pointer">
                     <Text>
                         {statusValue}
                     </Text>
@@ -99,7 +122,7 @@ const Controls = () => {
                     items : typeItems,
                 }} 
             >
-                <div className="rounded-md border-[1px] hover:border-bg-alt1 border-bg-secondary px-2 py-1 flex gap-2 items-center cursor-pointer">
+                <div className="rounded-md border-[1px] hover:border-bg-alt1 border-bg-quantinary px-2 py-1 flex gap-2 items-center cursor-pointer">
                     <Text>
                         {typeValue}
                     </Text>

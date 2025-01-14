@@ -13,16 +13,16 @@ const useTrackingLogs = () => {
         params? : {
             startDate? : Date,
             endDate? : Date,
-            status? : string,
-            type? : string
+            page? : number,
+            pageSize? : number
         }
     ) => {
         setTrackingLogs({status : 'loading'})
         const logs = await axios.get("/api/logs/trackingLogs", { params : {
             startDate : params?.startDate,
             endDate : params?.endDate,
-            status : params?.status,
-            type : params?.type
+            page : params?.page,
+            pageSize : params?.pageSize
         }})
         const data = logs?.data.data
         const filteredLogs = sortLogsByDate(data)
@@ -40,7 +40,6 @@ const useTrackingLogs = () => {
                 date : new Date(date)
             }
         })
-        console.log({cleanedLogs})
         setTrackingLogs({data : cleanedLogs})
     }
     return {

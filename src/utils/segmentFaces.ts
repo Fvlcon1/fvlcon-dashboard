@@ -1,7 +1,7 @@
 import * as faceapi from 'face-api.js';
 import { DetailedHTMLProps, Dispatch, ImgHTMLAttributes, MutableRefObject, RefObject, SetStateAction, useRef } from 'react';
-import { getFaceCanvas } from './getFaceCanvas';
-import { canvasTypes, logsType } from './@types';
+import { FaceCanvasType, getFaceCanvas } from './getFaceCanvas';
+import { logsType } from './@types';
 import axios from 'axios';
 import { message } from 'antd';
 
@@ -61,7 +61,7 @@ const segmentFaces = async (url : string, setLogs: Dispatch<SetStateAction<logsT
 }
 
 
-export const videoSegmentation = async (video: HTMLVideoElement | null, timestamp: number, distinctFaces? : canvasTypes[]) => {
+export const videoSegmentation = async (video: HTMLVideoElement | null, timestamp: number, distinctFaces? : FaceCanvasType[]) => {
   if (video) {
     try {
       if (!isModelsLoaded()) {
@@ -224,7 +224,7 @@ const pollJobStatus = async (jobId: string, videoKey: string, jobType: string, s
           ]))
           message.success("Fvlconizing Successful");
           clearInterval(intervalId);
-          resolve(jobStatusData);
+          resolve({data : jobStatusData, videoKey});
         } else if (jobStatusData.status === 'FAILED') {
           message.error(jobStatusData.statusMessage);
           clearInterval(intervalId);

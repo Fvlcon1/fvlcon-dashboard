@@ -13,7 +13,9 @@ const useSegmentationLogs = () => {
             startDate? : Date,
             endDate? : Date,
             status? : string,
-            type? : string
+            type? : string,
+            page? : number,
+            pageSize? : number
         }
     ) => {
         setSegmentationLogs({status : 'loading'})
@@ -21,7 +23,9 @@ const useSegmentationLogs = () => {
             startDate : params?.startDate,
             endDate : params?.endDate,
             status : params?.status,
-            type : params?.type
+            type : params?.type,
+            page : params?.page,
+            pageSize : params?.pageSize
         })
         const data = logs?.data
         const filteredLogs = sortLogsByDate(data)

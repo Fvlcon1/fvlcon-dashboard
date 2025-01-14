@@ -1,14 +1,14 @@
 import { hexOpacity } from "@/utils/hexOpacity"
 import ZoomImage from "@components/zoomImage/zoomImage"
 import Text from "@styles/components/text"
-import theme from "@styles/theme"
+import { theme } from "@styles/theme"
 import { Progress } from "antd"
 import Image from "next/image"
 import { Fragment, useState } from "react"
 import { FaExternalLinkAlt } from "react-icons/fa"
-import { FaCircle, FaRegCircleDot } from "react-icons/fa6"
+import { FaCircle, FaRegCircleDot, FaVideo } from "react-icons/fa6"
 import { MdCloudDownload } from "react-icons/md"
-import { FvlconizationLogsTypes } from "./fvlconizationLogs.types"
+import { FvlconizationVideoLogsType } from "../fvlconizationLogs.types"
 import { getRelativeTime, getTime } from "@/utils/getDate"
 import { TypographySize } from "@styles/style.types"
 import NoData from "@components/NoData/noData"
@@ -16,7 +16,7 @@ import NoData from "@components/NoData/noData"
 const TableBody = ({
     data
 } : {
-    data : FvlconizationLogsTypes[]
+    data : FvlconizationVideoLogsType[]
 }) => {
     const [zoom, setZoom] = useState(false)
     const [zoomImage, setZoomImage] = useState('')
@@ -51,31 +51,41 @@ const TableBody = ({
                                             alt="img"
                                             fill
                                             className="hover:scale-[1.3] duration-300 object-cover cursor-pointer"
-                                            src={item.uploadedImageUrl}
+                                            src={item.thumbnailUrl}
+                                        />
+                                        <div 
+                                            className="w-[60px] h-[60px] top-[-4px] left-[-4px] absolute bg-[#0000004e] flex justify-center cursor-pointer items-center rounded-full"
                                             onClick={()=>{
-                                                setZoomImage(item.uploadedImageUrl)
+                                                setZoomImage(item.thumbnailUrl)
                                                 setZoom(prev => !prev)
                                             }}
-                                        />
+                                        >
+                                            <FaVideo 
+                                                color={theme.colors.text.primary}
+                                                size={15}
+                                            />
+                                        </div>
                                     </div>
                                 </td>
                                 <td>
                                     <div className="flex flex-col">
                                         {
-                                            item.identifiedPeople.map((person, index) => (
-                                                index < 3 && (
-                                                    person.length > 1 ?
+                                            !item.identifiedPeople?.length ?
+                                            <Text>
+                                                None
+                                            </Text>
+                                            :
+                                            item.identifiedPeople?.map((person, index) => (
+                                                index < 3 ? (
                                                     <Text
                                                         textColor={theme.colors.text.primary}
                                                         key={index}
                                                     >
                                                         {person}
                                                     </Text>
-                                                    :
-                                                    <Text key={index}>
-                                                        Unknown
-                                                    </Text>
                                                 )
+                                                :
+                                                index < 4 && '...'
                                             ))
                                         }
                                     </div>
@@ -96,23 +106,7 @@ const TableBody = ({
                                     <div className="flex items-center gap-2">
                                         <Text>
                                             {item.timeElapsed}s
-                                        </Text>
-                                        <Progress
-                                            type="circle" 
-                                            percent={item.accuracy}
-                                            size={60}
-                                            strokeColor={theme.colors.main.primary}
-                                            trailColor={`${theme.colors.main.primary}${hexOpacity(20)}`}
-                                            strokeWidth={8}
-                                            format={(percent) => (
-                                                <Text 
-                                                    textColor={theme.colors.text.primary}
-                                                    size={TypographySize.xs}
-                                                >
-                                                    {Number(item.accuracy).toFixed(1)}%
-                                                </Text>
-                                            )}
-                                        />
+                                        </Text>x
                                     </div>
                                 </td>
                                 <td>

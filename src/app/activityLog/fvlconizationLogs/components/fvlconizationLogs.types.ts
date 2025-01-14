@@ -7,3 +7,13 @@ export interface FvlconizationLogsTypes {
     accuracy : number,
     status : string,
 }
+
+export interface FvlconizationVideoLogsType {
+    type : string,
+    status : string,
+    date : Date,
+    timeElapsed : number,
+    thumbnailUrl : string
+    occurance : any[],
+    identifiedPeople? : string[]
+}

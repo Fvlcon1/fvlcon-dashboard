@@ -54,8 +54,9 @@ const AllMatches = ({
                                     {
                                         faces.map((item, index : number) => (
                                             <MatchCard
-                                                originalImage={item.originalImage}
+                                                boundedImage={item.boundedImage}
                                                 matchedImage={item.matchedImage}
+                                                croppedImage={item.croppedImage}
                                                 similarity={item.similarity}
                                                 key={index}
                                                 title={`Match ${index + 1}`}

@@ -45,12 +45,12 @@ const Angles = ({
                                     justify="space-around"
                                 >
                                     {
-                                        [1,2,3,4,5].map((item, index) => (
-                                            <ImageCard
-                                                key={index}
-                                                title="Front"
-                                            />
-                                        ))
+                                        // [1,2,3,4,5].map((item, index) => (
+                                        //     <ImageCard
+                                        //         key={index}
+                                        //         title="Front"
+                                        //     />
+                                        // ))
                                     }
                                 </Flex>
                             </Flex>

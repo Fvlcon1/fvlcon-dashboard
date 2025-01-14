@@ -10,7 +10,7 @@ import { SegmentationLogsTypes } from "./components/segmentationLogs.types"
 import useGroupsLogsByDate from "./utils/useGroupsLogsByDate"
 import { SegmentationLogsContext } from "./context/segmentationLogsContext"
 import useSegmentationLogs from "./utils/useSegmentationLogs"
-import LoadingSkeleton from "../fvlconizationLogs/components/loadingSkeleton"
+import LoadingSkeleton from "../components/loadingSkeleton"
 import { message } from "antd"
 
 const privateApi = new protectedAPI()

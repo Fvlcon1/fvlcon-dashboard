@@ -99,7 +99,8 @@ const Matches = ({
                                     {
                                         sortedFaces.map((item, index : number) => (
                                             <MatchCard
-                                                originalImage={item.originalImage}
+                                                croppedImage={item.croppedImage}
+                                                boundedImage={item.boundedImage}
                                                 matchedImage={item.matchedImage}
                                                 similarity={item.similarity}
                                                 key={index}

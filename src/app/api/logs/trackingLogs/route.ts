@@ -9,13 +9,14 @@ import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { GetObjectCommand } from "@aws-sdk/client-s3";
 import s3 from "@/lib/s3Client";
 import { authorizeUser } from "../../utils/authorizeUser";
+import { validateInput } from "../../utils/validation";
 
 /**
  * Generates the image url from s3 key
  * @param s3Key string
  * @returns string
  */
-const generatePresignedUrl = async (s3Key: string, bucketName? : string) => {
+export const generatePresignedUrl = async (s3Key: string, bucketName? : string) => {
   try {
       const command = new GetObjectCommand({
         Bucket: bucketName ?? process.env.DETECTED_FACES_BUCKET,
@@ -57,6 +58,9 @@ export const GET = async (req: Request) => {
       where: {
         userId,
         ...(Object.keys(dateFilter).length && { date: dateFilter }),
+      },
+      orderBy: {
+        date: 'desc',
       },
     });
 
@@ -121,16 +125,8 @@ export const POST = async (req: Request) => {
     });
 
     // Validate the request body
-    const validation = addTrackingLogsSchema.safeParse(body);
-    if (validation.error?.issues) {
-      return NextResponse.json(
-        {
-          error: "Validation error",
-          details: validation.error.issues.map((issue) => issue.message),
-        },
-        { status: 400 }
-      );
-    }
+    const {error} = validateInput(addTrackingLogsSchema, body)
+    if(error) return error
 
     // Add a new record to the database
     const { faceId, locations, S3Key } = body;

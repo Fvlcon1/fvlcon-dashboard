@@ -1,9 +1,8 @@
-import { canvasTypes, checkedFaceType, FetchState } from "../@types";
+import { checkedFaceType, FetchState } from "../@types";
+import { FaceCanvasType } from "../getFaceCanvas";
 import checkFace from "./checkface";
-import { getAllFaces } from "./getallFaces";
-import { getSingleFace } from "./getSingleFace";
 
-const checkEachFace = async (distinctFaces : FetchState<canvasTypes[]>): Promise<((checkedFaceType | undefined)[] | undefined)> => {
+const checkEachFace = async (distinctFaces : FetchState<FaceCanvasType[]>): Promise<((checkedFaceType | undefined)[] | undefined)> => {
     if(distinctFaces?.data){
         const results = await Promise.all(
             distinctFaces.data.map(async (item) => await runRecognitionOnSingleFace(item))
@@ -12,15 +11,17 @@ const checkEachFace = async (distinctFaces : FetchState<canvasTypes[]>): Promise
     }
 }
 
-export const runRecognitionOnSingleFace = async (face : canvasTypes) : Promise<(checkedFaceType | undefined)> => {
-    const {result : checkedFace, error} = await checkFace(face.dataUrl);
+export const runRecognitionOnSingleFace = async (face : FaceCanvasType) : Promise<(checkedFaceType | undefined)> => {
+    const {result : checkedFace, error} = await checkFace(face.croppedImage);
         if(error) return {
-                originalImage: face.dataUrl
+                croppedImage: face.croppedImage,
+                boundedImage : face.boundedImage
             }
         if (checkedFace.matched) {
             const details = checkedFace.details
             return {
-                originalImage: face.dataUrl,
+                croppedImage: face.croppedImage,
+                boundedImage : face.boundedImage,
                 matchedImage : details.imageUrl,
                 similarity: checkedFace.similarity,
                 details
@@ -28,7 +29,8 @@ export const runRecognitionOnSingleFace = async (face : canvasTypes) : Promise<(
         } else {
             console.log("No matches found");
             return {
-                originalImage: face.dataUrl
+                croppedImage: face.croppedImage,
+                boundedImage : face.boundedImage
             }
         }
 }

@@ -14,12 +14,13 @@ import { AnimatePresence, motion } from 'framer-motion';
 import Angles from "./angles"
 import Controls from "./controls"
 import AllFaces from "./allFaces"
-import { canvasTypes, checkedFaceType, FetchState, occurance } from '../../../../../utils/@types';
+import { checkedFaceType, FetchState, occurance } from '../../../../../utils/@types';
 import { Spin } from "antd"
 import Loading from "../loading"
 import TryAgain from "../tryAgain"
 import checkEachFace, { runRecognitionOnSingleFace } from "@/utils/model/checkEachFace"
 import SingleRecognition from "./singleRecognition"
+import { FaceCanvasType } from "@/utils/getFaceCanvas"
 
 const DistinctFaces = ({
     faces,
@@ -29,7 +30,7 @@ const DistinctFaces = ({
     setOccurance,
     currentOccurance
 } : { 
-    faces : FetchState<canvasTypes[]>
+    faces : FetchState<FaceCanvasType[]>
     onTryAgain : () => void
     onClear? : ()=>void
     onClose? : ()=>void
@@ -39,13 +40,13 @@ const DistinctFaces = ({
     const [displayFaces, setDisplayFaces] = useState(false)
     const [displayAngles, setDisplayAngles] = useState(false)
     const [displaySingularAnalysis, setDisplaySingularAnalysis] = useState(false)
-    const [selectedFace, setSelectedFace] = useState<canvasTypes>()
+    const [selectedFace, setSelectedFace] = useState<FaceCanvasType>()
     const [matchedFace, setMatchedFace] = useState<FetchState<checkedFaceType>>({
         isEmpty : false,
         isLoading : false
     })
 
-    const handleFvlconize = async (face : canvasTypes) => {
+    const handleFvlconize = async (face : FaceCanvasType) => {
         setSelectedFace(face)
         setDisplaySingularAnalysis(true)
         setMatchedFace(prev => ({
@@ -118,7 +119,8 @@ const DistinctFaces = ({
                                         [...faces.data].map((item, index : number) => (
                                             <ImageCard 
                                                 key={index}
-                                                imageURL={item.dataUrl}
+                                                boundedImage={item.boundedImage}
+                                                croppedImage={item.croppedImage}
                                                 title={`Face ${index + 1}`}
                                                 rightButtonTitle=""
                                                 rightButtonClick={()=>setDisplayAngles(true)}

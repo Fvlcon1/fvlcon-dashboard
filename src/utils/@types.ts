@@ -63,12 +63,6 @@ export interface baseProps {
   onClick? : ()=>void
 }
 
-export type canvasTypes = {
-  dataUrl : string
-  label : string
-  descriptor? : Float32Array
-}
-
 export type checkFaceDetails = {
   Address : string,
   Citizenship : string,
@@ -91,7 +85,8 @@ export type checkFaceDetails = {
 export type checkedFaceType = { 
   matchedPerson? : string
   similarity? : number
-  originalImage : string
+  croppedImage : string
+  boundedImage : string
   matchedImage? : string
   faceid? : string,
   occurances? : {

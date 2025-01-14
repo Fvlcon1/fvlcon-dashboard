@@ -3,7 +3,7 @@
 import Table from "./components/table"
 import useGroupsLogsByDate from "./utils/useGroupsLogsByDate"
 import { useState } from "react"
-import LoadingSkeleton from "@/app/activityLog/fvlconizationLogs/components/loadingSkeleton"
+import LoadingSkeleton from "@/app/activityLog/components/loadingSkeleton"
 
 const History = () => {
     const [expandToday, setExpandToday] = useState(true)

@@ -5,7 +5,7 @@ import { isImageFile, isVideoFile } from "@/utils/getFileType"
 import segmentFaces, { awsSegmentation } from "@/utils/segmentFaces"
 import generateVideoThumbnail from "@/utils/generateVideoThumbnail"
 import { message } from "antd"
-import { canvasTypes, checkedFaceType, FetchState, fvlconizedFaceType, occurance } from "@/utils/@types"
+import { checkedFaceType, FetchState, fvlconizedFaceType, occurance } from "@/utils/@types"
 import checkEachFace from "@/utils/model/checkEachFace"
 import { getSingleFace } from "@/utils/model/getSingleFace"
 import { getImageURLFromBoundingBox } from "@/utils/getImageURLFromBoundingBox"
@@ -16,9 +16,11 @@ import { nanoid } from 'nanoid';
 import useTimer from "@/utils/useTimer"
 import { dataURLToBlob } from "./dataUrlToBlob"
 import { convertDataUrlToJpeg } from "./convertToJpeg"
+import { StatusTypes } from "@prisma/client"
+import { FaceCanvasType } from "@/utils/getFaceCanvas"
 
 
-let statelessDistinctFaces : FetchState<canvasTypes[]> = {
+let statelessDistinctFaces : FetchState<FaceCanvasType[]> = {
     isEmpty : false,
     isLoading : false,
 }
@@ -49,7 +51,7 @@ export const useAnalysis = (imageRef: RefObject<HTMLImageElement>) => {
         setSelectedImage,
     } = useContext(imageUploadContext)
 
-    const {storeFvlcoinzationResults, storeSegmentationResults} = useActivityStorage()
+    const {storeFvlcoinzationResults, storeSegmentationResults, storeVideoFvlconizationResults} = useActivityStorage()
 
     const uploadSegmentedImages = async () : Promise<{segmentedImageS3key : string, status : string}[] | undefined> => {
         const filteredData = statelessDistinctFaces.data?.filter((item) => item !== undefined )
@@ -61,7 +63,7 @@ export const useAnalysis = (imageRef: RefObject<HTMLImageElement>) => {
                     const uniqueFileName = `${nanoid()}-${new Date().toISOString()}`;
                     const uploadUrl = await privateApi.get("/segmentationLogs/getUploadPresignedUrl", {filename : uniqueFileName})
                     if(uploadUrl?.data){
-                        const imageJpeg = await convertDataUrlToJpeg(face.dataUrl)
+                        const imageJpeg = await convertDataUrlToJpeg(face.croppedImage)
                         const fileToUpload = dataURLToBlob(imageJpeg)
                         const uploadImage = await axios.put(uploadUrl.data, fileToUpload)
                         return {
@@ -88,6 +90,11 @@ export const useAnalysis = (imageRef: RefObject<HTMLImageElement>) => {
         )
     }
 
+    /**
+     * Uploades selected image to S3
+     * @param url 
+     * @returns 
+     */
     const uploadSelectedImage = async (url : string) : Promise<string | undefined> => {
         try {
             const uploadImageFilename = `${nanoid()}-${new Date().toISOString()}`;
@@ -146,7 +153,7 @@ export const useAnalysis = (imageRef: RefObject<HTMLImageElement>) => {
     }
 
     // Sets the segmented faces to be displayed
-    const setFaces = (faces : { dataUrl: string, label: string }[] | undefined, type? : 'video' | 'image') => {
+    const setFaces = (faces : FaceCanvasType[] | undefined, type? : 'video' | 'image') => {
         if(faces){
             if(faces.length === 0){
                 if(!distinctFaces.data){
@@ -178,6 +185,9 @@ export const useAnalysis = (imageRef: RefObject<HTMLImageElement>) => {
         }
     }
 
+    /**
+     * Hanldes images fvlconization
+     */
     const ImageFvlconization = async () => {
         interface faceDetailsType {
             uploadImageS3key?: string;
@@ -202,7 +212,7 @@ export const useAnalysis = (imageRef: RefObject<HTMLImageElement>) => {
                             const uniqueFileName = `${nanoid()}-${new Date().toISOString()}`;
                             const uploadUrl = await privateApi.get("/fvlconizationLogs/getUploadPresignedUrl", {filename : uniqueFileName})
                             if(uploadUrl?.data){
-                                const uploadImage = await axios.put(uploadUrl.data, face?.originalImage)
+                                const uploadImage = await axios.put(uploadUrl.data, face?.croppedImage)
                                 return {
                                     segmentedImageS3key : uniqueFileName,
                                     matchedFaceId : face?.details?.FaceId ?? '',
@@ -303,6 +313,10 @@ export const useAnalysis = (imageRef: RefObject<HTMLImageElement>) => {
         }
     }
 
+    /**
+     * Handles image and video fvlconization
+     * @returns 
+     */
     const handleFalconize = async () => {
         setMatchedFaces(prev => ({
             ...prev,
@@ -317,13 +331,21 @@ export const useAnalysis = (imageRef: RefObject<HTMLImageElement>) => {
                     setFvlconizing(false)
                     return setMatchedFaces({error : "Error fvlconizing video"})
                 }
-                const facesGroupedByIndex = groupFacesByIndex(matchedFaces.results)  //Categorized faces by index
+                const facesGroupedByIndex = groupFacesByIndex(matchedFaces.data.results)  //Categorized faces by index
                 if(facesGroupedByIndex){
                     const checkedFaces = await getDetailsOfFacesFromVideoFvlconization(facesGroupedByIndex)
                     setMatchedFaces({ data : checkedFaces })
                     setOccurance(checkedFaces[0]?.occurances)
                 }
                 setFvlconizing(false)
+                storeVideoFvlconizationResults({
+                    timeElapsed : timer,
+                    status : StatusTypes.successful,
+                    videoFile : selectedImage!.fullFile,
+                    videoUrl : selectedImage!.url,
+                    videoS3Key : matchedFaces.videoKey,
+                    occurance : facesGroupedByIndex
+                })
             } else {
                 ImageFvlconization()
             }
@@ -334,6 +356,12 @@ export const useAnalysis = (imageRef: RefObject<HTMLImageElement>) => {
         }
     };
 
+    /**
+     * Gets the Nia details of each index in the occurance. 
+     * occurances refers to a grouping of all the times each face appeared in a video
+     * @param facesGroupedByIndex - A list of occurances
+     * @returns 
+     */
     const getDetailsOfFacesFromVideoFvlconization = async (facesGroupedByIndex : occurance[]) => {
         const checkedFaces = await Promise.all(facesGroupedByIndex.map(async (face) => {
             const resultsContainingFacesMatches = getResultsContainingFaceMatches(face.content)
@@ -345,7 +373,8 @@ export const useAnalysis = (imageRef: RefObject<HTMLImageElement>) => {
             const match : checkedFaceType = {
                 matchedPerson: faceMatch?.Face.ExternalImageId,
                 similarity: faceMatch?.Similarity,
-                originalImage: selectedImage ? await getImageURLFromBoundingBox(boundingBox, await generateVideoThumbnail(selectedImage.url, (resultsContainingFacesMatches ?? face.content[0]).Timestamp / 1000)) : '',
+                boundedImage : "",
+                croppedImage: selectedImage ? await getImageURLFromBoundingBox(boundingBox, await generateVideoThumbnail(selectedImage.url, (resultsContainingFacesMatches ?? face.content[0]).Timestamp / 1000)) : '',
                 matchedImage: details?.imageUrl,
                 faceid: faceMatch?.Face.FaceId,
                 occurances : face,

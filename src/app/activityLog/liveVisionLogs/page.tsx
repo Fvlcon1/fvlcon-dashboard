@@ -7,7 +7,7 @@ import Table from "./components/table"
 import { useEffect, useState } from "react"
 import { SessionProvider } from "next-auth/react"
 import useLiveVisionData from "./utils/useLiveVisionData"
-import LoadingSkeleton from "../fvlconizationLogs/components/loadingSkeleton"
+import LoadingSkeleton from "../components/loadingSkeleton"
 import useGroupsLogsByDate from "./utils/useGroupsLogsByDate"
 import useGetExpansions from "./utils/useGetExpansions"
 
