@@ -16,7 +16,7 @@ import { validateInput } from "../../utils/validation";
  * @param s3Key string
  * @returns string
  */
-export const generatePresignedUrl = async (s3Key: string, bucketName? : string) => {
+const generatePresignedUrl = async (s3Key: string, bucketName? : string) => {
   try {
       const command = new GetObjectCommand({
         Bucket: bucketName ?? process.env.DETECTED_FACES_BUCKET,
