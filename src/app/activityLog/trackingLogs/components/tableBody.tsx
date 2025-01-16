@@ -63,8 +63,13 @@ const TableBody = ({
                                 <td>
                                     {
                                         item.locations.map((location, index) => (
+                                            index < 4 ?
                                             <Text key={index}>
-                                                {`${location.name}${index !== item.locations.length - 1 ? ' → ' : ''}`}
+                                                {`${location.name}${index !==  3 ? ' → ' : ''}`}
+                                            </Text>
+                                            : index < 5 &&
+                                            <Text>
+                                                ...
                                             </Text>
                                         ))
                                     }

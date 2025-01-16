@@ -111,15 +111,14 @@ export const GET = async (req : Request) => {
         });
 
     const transformdata = async () => {
-      const detailedData = []
-      for(let item of data){
-        const thumbnailUrl = item.thumbnailS3Key ? await generateDownloadPresignedUrl(item.thumbnailS3Key) : undefined
+        const detailedData = []
+        for(let item of data){
+            const thumbnailUrl = item.thumbnailS3Key ? await generateDownloadPresignedUrl(item.thumbnailS3Key) : undefined
 
-        // Extract identified people in occurances
-        const identifiedPeopleInOccurance: any[] = [];
-        for (const dataItem of data as any[]) {
-            let shouldBreak = false;
-            for (const singleOccurance of dataItem.occurance as any[]) {
+            // Extract identified people in occurances
+            const identifiedPeopleInOccurance: any[] = [];
+            for (const singleOccurance of item.occurance as any[]) {
+                let shouldBreak = false;
                 for (const item of (singleOccurance.content || []) as any[]) {
                     if (item?.FaceMatches.length) {
                         identifiedPeopleInOccurance.push(singleOccurance);
@@ -129,40 +128,39 @@ export const GET = async (req : Request) => {
                 }
                 if (shouldBreak) break;
             }
-            if (shouldBreak) break;
-        }
 
-        //Get the NIA details of the identified people
-        const identifiedPeople = []
-        for (const singleOccurance of identifiedPeopleInOccurance as any[]) {
-            for (const item of (singleOccurance.content || []) as any[]) {
-                if(!item?.FaceMatches.length)
-                    continue
-                const faceId = item?.FaceMatches[0].Face.FaceId
-                const params = new QueryCommand({
-                    TableName: process.env.NIA_TABLE,
-                    IndexName: 'FaceIdIndex',  // Specify the GSI index name
-                    KeyConditionExpression: "#FaceId = :faceId",
-                    ExpressionAttributeNames: {
-                        "#FaceId": "FaceId",
-                    },
-                    ExpressionAttributeValues: {
-                        ":faceId": faceId,
-                    }
-                });
-                const getUserDetails = await dynamoDb.send(params)
-                const userDetails = getUserDetails.Items ? getUserDetails.Items[0] : undefined
-                identifiedPeople.push(userDetails)
-                break
+            //Get the NIA details of the identified people
+            const identifiedPeople = []
+            for (const singleOccurance of identifiedPeopleInOccurance as any[]) {
+                for (const item of (singleOccurance.content || []) as any[]) {
+                    if(!item?.FaceMatches.length)
+                        continue
+                    const faceId = item?.FaceMatches[0].Face.FaceId
+                    const params = new QueryCommand({
+                        TableName: process.env.NIA_TABLE,
+                        IndexName: 'FaceIdIndex',  // Specify the GSI index name
+                        KeyConditionExpression: "#FaceId = :faceId",
+                        ExpressionAttributeNames: {
+                            "#FaceId": "FaceId",
+                        },
+                        ExpressionAttributeValues: {
+                            ":faceId": faceId,
+                        }
+                    });
+                    const getUserDetails = await dynamoDb.send(params)
+                    const userDetails = getUserDetails.Items ? getUserDetails.Items[0] : undefined
+                    identifiedPeople.push(userDetails)
+                    break
+                }
             }
-        }
+            console.log({identifiedPeopleInOccurance})
 
-        detailedData.push({
-            ...item, 
-            thumbnailUrl,
-            identifiedPeople
-        })
-      }
+            detailedData.push({
+                ...item, 
+                thumbnailUrl,
+                identifiedPeople
+            })
+        }
       return detailedData
     }
     const detailedData = await transformdata()
