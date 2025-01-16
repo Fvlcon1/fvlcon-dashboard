@@ -51,7 +51,7 @@ const Table = () => {
                 startTime: startDate,
                 endTime: endDate
             });
-            const trackingData = response?.data;
+            const trackingData = response?.data?.data;
             
             const people: IPersonTrackingWithImageType[] = [];
             for (const data of trackingData) {
