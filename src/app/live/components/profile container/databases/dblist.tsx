@@ -8,13 +8,7 @@ import { MdLocalPolice } from "react-icons/md"
 import Skeleton from "react-loading-skeleton"
 
 const DBlist = () => {
-    const [databases, setDatabases] = useState(false)
-
-    useEffect(()=>{
-        setTimeout(() => {
-            setDatabases(true)
-        }, 5000);
-    })
+    const [databases, setDatabases] = useState(true)
 
     const db = [
         "National Security",
