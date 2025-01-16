@@ -41,7 +41,8 @@ const useLiveVisionData = () => {
                 page : params?.page,
                 pageSize : params?.pageSize
             });
-            const trackingData = response?.data;
+            const trackingData = response?.data?.data;
+            console.log({trackingData})
             
             const people: IPersonTrackingWithImageType[] = [];
             const plates: IPlateTrackingType[] = [];

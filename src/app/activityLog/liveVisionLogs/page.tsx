@@ -14,7 +14,11 @@ import useGetExpansions from "./utils/useGetExpansions"
 const LiveVisionLogs = () => {
     const {getLiveVisionHistory, newPersonTrackingData} = useLiveVisionData()
     const {today, yesterday, earlier} = useGroupsLogsByDate(newPersonTrackingData.data)
-    const { expandToday, setExpandToday, expandYesterday, setExpandYesterday, expandEarlier, setExpandEarlier } = useGetExpansions()
+    // const { expandToday, setExpandToday, expandYesterday, setExpandYesterday, expandEarlier, setExpandEarlier } = useGetExpansions()
+
+    const [expandToday, setExpandToday] = useState(today.length ? true : !yesterday.length && !earlier.length ? true : false )
+    const [expandYesterday, setExpandYesterday] = useState(!expandToday && yesterday.length ? true : false)
+    const [expandEarlier, setExpandEarlier] = useState(!expandToday && !expandYesterday ? true : false)
 
     useEffect(()=>{
         getLiveVisionHistory()

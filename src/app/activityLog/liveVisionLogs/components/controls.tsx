@@ -111,21 +111,6 @@ const Controls = () => {
                     />
                 </div>
             </Dropdown>
-            <Dropdown 
-                menu={{
-                    items : typeItems,
-                }} 
-            >
-                <div className="rounded-md border-[1px] hover:border-bg-alt1 border-bg-quantinary px-2 py-1 flex gap-2 items-center cursor-pointer">
-                    <Text>
-                        {typeValue}
-                    </Text>
-                    <FaCaretDown 
-                        color={theme.colors.text.secondary}
-                        className="mt-[-2px]"
-                    />
-                </div>
-            </Dropdown>
         </div>
     )
 }

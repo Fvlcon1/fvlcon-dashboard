@@ -38,11 +38,19 @@ const TableBody = ({
                                     />
                                 </td>
                                 <td>
-                                    <Text
-                                        textColor={theme.colors.text.primary}
-                                    >
-                                        {item.name}
-                                    </Text>
+                                    {
+                                        item.name.length > 1 ?
+                                        <Text
+                                            textColor={theme.colors.text.primary}
+                                            key={index}
+                                        >
+                                            {item.name}
+                                        </Text>
+                                        :
+                                        <Text key={index}>
+                                            Unknown
+                                        </Text>
+                                    }
                                 </td>
                                 <td>
                                     <div className="flex flex-col gap-0">
