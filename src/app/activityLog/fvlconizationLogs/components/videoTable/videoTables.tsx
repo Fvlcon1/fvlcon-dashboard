@@ -5,7 +5,7 @@ import useFvlconizationLogs from "../../utils/useFvlconizationLogs"
 import useGroupVideoLogsByDate from "../../utils/useGroupVideoLogsByDate"
 
 const VideoTables = () => {
-    const {fvlconizationVideoLogs, setFvlconizationLogs, typeValue} = useContext(fvlocnizationLogsContext)
+    const {fvlconizationVideoLogs} = useContext(fvlocnizationLogsContext)
     const {today, yesterday, earlier} = useGroupVideoLogsByDate(fvlconizationVideoLogs.data)
 
     const [expandToday, setExpandToday] = useState(today.length ? true : !yesterday.length && !earlier.length ? true : false )

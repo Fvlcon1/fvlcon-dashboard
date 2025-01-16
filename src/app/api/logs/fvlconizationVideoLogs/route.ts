@@ -118,8 +118,8 @@ export const GET = async (req : Request) => {
         // Extract identified people in occurances
         const identifiedPeopleInOccurance: any[] = [];
         for (const dataItem of data as any[]) {
+            let shouldBreak = false;
             for (const singleOccurance of dataItem.occurance as any[]) {
-                let shouldBreak = false;
                 for (const item of (singleOccurance.content || []) as any[]) {
                     if (item?.FaceMatches.length) {
                         identifiedPeopleInOccurance.push(singleOccurance);
@@ -129,6 +129,7 @@ export const GET = async (req : Request) => {
                 }
                 if (shouldBreak) break;
             }
+            if (shouldBreak) break;
         }
 
         //Get the NIA details of the identified people

@@ -79,6 +79,7 @@ const useFvlconizationLogs = () => {
         }
         const cleanedLogs : FvlconizationVideoLogsType[] = filteredLogs.map((item : any) => {
             const {date, status, timeElapsed, thumbnailUrl, occurance, identifiedPeople} = item
+            console.log({identifiedPeople})
             const transformedIdentifiedPeople = identifiedPeople.map((people : any) => {
                 return `${people?.personDetails.forenames ?? ''} ${people?.personDetails.surname ?? ''}`
             })

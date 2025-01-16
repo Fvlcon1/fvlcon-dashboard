@@ -12,6 +12,7 @@ import { FvlconizationVideoLogsType } from "../fvlconizationLogs.types"
 import { getRelativeTime, getTime } from "@/utils/getDate"
 import { TypographySize } from "@styles/style.types"
 import NoData from "@components/NoData/noData"
+import { formatTime } from "@/utils/formatTime"
 
 const TableBody = ({
     data
@@ -23,6 +24,7 @@ const TableBody = ({
     const getValidPeople = () => {
         
     }
+    console.log({data})
     return (
         <>
             <ZoomImage
@@ -105,8 +107,8 @@ const TableBody = ({
                                 <td>
                                     <div className="flex items-center gap-2">
                                         <Text>
-                                            {item.timeElapsed}s
-                                        </Text>x
+                                            {formatTime(item.timeElapsed)}
+                                        </Text>
                                     </div>
                                 </td>
                                 <td>
