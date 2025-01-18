@@ -5,6 +5,7 @@ import AppTypography from "@styles/components/appTypography";
 import { useState } from "react";
 import Flex from "@styles/components/flex";
 import { TypographyBold } from "@styles/style.types";
+import InfinityLoader from "@components/loaders/infinityLoader";
 
 const Button = ({
   className,
@@ -25,7 +26,7 @@ const Button = ({
   textBold,
   padding,
   shadow,
-  Loader,
+  loading,
   opacity,
   disabled,
   showLoader,
@@ -44,15 +45,15 @@ const Button = ({
       style={{
         background : (onHover && !disabled)
                       ? hover?.background 
-                      ? hover?.background 
-                      : background ?? theme.colors.bg.quantinary
+                      ?? background 
+                      ?? theme.colors.bg.quantinary
                       : theme.colors.bg.tetiary,
         padding : padding ?? '7px 15px',
         border : border,
         borderRadius : radius ? `${radius}px` : '7px',
         maxWidth,
         width : size?.width ?? 'fit-content',
-        height : size?.height,
+        height : size?.height ?? '45px',
         opacity : (onHover && !disabled)
                   ? hover?.opacity 
                   ?? 0.9 
@@ -66,31 +67,36 @@ const Button = ({
       onMouseDown={()=>setOnPress(true)}
       onMouseUp={()=>setOnPress(false)}
       className={`${className} duration-200 ${disabled && 'cursor-not-allowed'}`}
-      disabled={disabled}
+      disabled={disabled ?? loading}
     >
-      <div className="w-full justify-center items-center flex gap-[8px] ">
-        <AppTypography
-          size={textSize}
-          bold={textBold ?? TypographyBold.sm2}
-          textColor={
-            onHover ? hover?.color
-              ? hover.color
-              : color ?? theme.colors.text.primary
-              : theme.colors.text.primary
-          }
-          maxLines={1}
-          ellipsis
-          whiteSpace="nowrap"
-        >
-          <Flex 
-              width="fit-content"
-              align="center"
-              gap={8}
+      <div className="w-full justify-center items-center flex gap-[8px]">
+        {
+          loading ?
+          <InfinityLoader size={30}/>
+          :
+          <AppTypography
+            size={textSize}
+            bold={textBold ?? TypographyBold.sm2}
+            textColor={
+              onHover ? hover?.color
+                ? hover.color
+                : color ?? theme.colors.text.primary
+                : theme.colors.text.primary
+            }
+            maxLines={1}
+            ellipsis
+            whiteSpace="nowrap"
           >
-              {icon}
-              {text ?? 'Button'}
-          </Flex>
-        </AppTypography>
+            <Flex 
+                width="fit-content"
+                align="center"
+                gap={8}
+            >
+                {icon}
+                {text ?? 'Button'}
+            </Flex>
+          </AppTypography>
+        }
       </div>
     </button>
   )

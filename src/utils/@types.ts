@@ -32,7 +32,7 @@ export type ButtonStyleProps = {
   }
   
 export interface ButtonProps extends ButtonStyleProps {
-    Loader? : (props : any)=>JSX.Element
+    loading? : boolean
     type?: ButtonTypes
     text? : string
     icon? : ReactNode

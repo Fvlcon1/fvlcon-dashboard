@@ -15,7 +15,7 @@ export const colors = {
         alt2 : '#474747'
     },
     main : {
-        primary : '#2f9f8d'
+        primary : '#339D8F'
     }
 }
 

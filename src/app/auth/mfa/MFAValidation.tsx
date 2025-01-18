@@ -64,12 +64,6 @@ export default function MFAValidation({
     e?.preventDefault();
     setError(null);
 
-    if (!email) {
-      setMessage('Email is missing. Please retry.');
-      message.warning('Email is missing. Please retry.');
-      return;
-    }
-
     const fullCode = codeParam?.join('') ?? code.join('');
       if (fullCode.length !== 6) {
           setMessage("Please enter a 6-digit code.");
@@ -117,54 +111,60 @@ export default function MFAValidation({
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-        <div style={styles.outerContainer}>
-          <div style={styles.container}>
-              <h2 style={styles.title}>Verify Your Email Address</h2>
-              <p style={styles.instruction}>
-                  A verification code has been sent to <strong>{email}</strong>
-              </p>
-              <p style={styles.timer}>The code will expire in {formatTime(timer)}.</p>
+    <motion.div
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="w-full"
+    >
+      <form onSubmit={handleSubmit}>
+          <div style={styles.outerContainer}>
+            <div style={styles.container}>
+                <h2 style={styles.title}>Verify Your Email Address</h2>
+                <p style={styles.instruction}>
+                    A verification code has been sent to <strong>{email}</strong>
+                </p>
+                <p style={styles.timer}>The code will expire in {formatTime(timer)}.</p>
 
-              <div style={styles.codeContainer}>
-                  {code.map((digit, index) => (
-                      <input
-                          key={index}
-                          id={`code-${index}`}
-                          type="text"
-                          value={digit}
-                          onChange={(e) => handleChange(index, e.target.value)}
-                          maxLength={1}
-                          onKeyDown={index !== code.length -1 ? (e) => e.key === "Enter" && e.preventDefault() : ()=>{}}
-                          style={styles.input}
-                      />
-                  ))}
-              </div>
-
-              <button className='hidden' style={styles.button} onClick={handleSubmit} disabled={isLoading}>
-                  {isLoading ? 'Verifying...' : 'Verify'}
-              </button>
-
-              {
-                isLoading &&
-                <div className='flex w-full justify-center items-center'>
-                  <InfinityLoader size={40} />
+                <div style={styles.codeContainer}>
+                    {code.map((digit, index) => (
+                        <input
+                            key={index}
+                            id={`code-${index}`}
+                            type="text"
+                            value={digit}
+                            onChange={(e) => handleChange(index, e.target.value)}
+                            maxLength={1}
+                            style={styles.input}
+                        />
+                    ))}
                 </div>
-              }
 
-              <button
-                  style={styles.linkButton}
-                  onClick={handleResendCode}
-                  disabled={isResending}
-                  type='button'
-              >
-                  {isResending ? 'Resending...' : 'Resend code'}
-              </button>
+                <button className='hidden' style={styles.button} onClick={handleSubmit} disabled={isLoading}>
+                    {isLoading ? 'Verifying...' : 'Verify'}
+                </button>
 
-              {errMessage && <p style={styles.message}>{errMessage}</p>}
-          </div>
-      </div>
-    </form>
+                {
+                  isLoading &&
+                  <div className='flex w-full justify-center items-center'>
+                    <InfinityLoader size={40} />
+                  </div>
+                }
+
+                <button
+                    style={styles.linkButton}
+                    onClick={handleResendCode}
+                    disabled={isResending}
+                    type='button'
+                >
+                    {isResending ? 'Resending...' : 'Resend code'}
+                </button>
+
+                {errMessage && <p style={styles.message}>{errMessage}</p>}
+            </div>
+        </div>
+      </form>
+    </motion.div>
   );
 }
 
