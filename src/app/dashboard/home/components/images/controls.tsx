@@ -12,7 +12,11 @@ import { imageUploadContext } from "@/context/imageUpload"
 export type imagesType = {
     url : string,
     name : string,
-    fullFile : File
+    fullFile : File,
+    sizes : {
+        width : number,
+        height : number
+    }
 }
 
 const Controls = () => {
@@ -25,13 +29,27 @@ const Controls = () => {
 
     const onFileSelected = (e: FileList | null) => {
         if (e) {
-            for (let file of e) {
+            Array.from(e).forEach((file) => {
                 const imageUrl = URL.createObjectURL(file);
-                setImages(prev => [...prev, { url: imageUrl, name: file.name, fullFile: file }]);
-                console.log(imageUrl);
-            }
+                const img = new window.Image();
+    
+                img.onload = () => {
+                    setImages((prev) => [
+                        ...prev,
+                        {
+                            url: imageUrl,
+                            name: file.name,
+                            fullFile: file,
+                            sizes: { width: img.naturalWidth, height: img.naturalHeight },
+                        },
+                    ]);
+                };
+    
+                img.src = imageUrl;
+            });
         }
-    }
+    };
+    
     
 
     useEffect(()=>{

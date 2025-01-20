@@ -26,21 +26,31 @@ const ImageContainer = ({
     const handleDrop = (event: React.DragEvent<HTMLDivElement>) => {
         event.preventDefault();
         setIsDragOver(false);
-        console.log('drop')
-
+        console.log("drop");
+    
         const file = event.dataTransfer.files[0];
         if (file) {
             const reader = new FileReader();
+    
             reader.onload = () => {
-                setSelectedImage({ 
-                    url: reader.result as string,
-                    name : file.name,
-                    fullFile : file
-                 });
+                const imageUrl = reader.result as string;
+                const img = new window.Image();
+    
+                img.onload = () => {
+                    setSelectedImage({
+                        url: imageUrl,
+                        name: file.name,
+                        fullFile: file,
+                        sizes: { width: img.naturalWidth, height: img.naturalHeight },
+                    });
+                };
+    
+                img.src = imageUrl; // Set the source to load the image
             };
+    
             reader.readAsDataURL(file);
         }
-    };
+    };    
 
     return (
         <Slidein className="!w-full">
@@ -84,18 +94,16 @@ const ImageContainer = ({
                             </motion.div>
                             :
                             image ?
-                            <motion.div className="flex w-fit h-full flex-col items-center">
+                            <motion.div className="flex w-fit h-full flex-col items-center justify-center">
                                 <Image 
                                     src={image.url}
                                     alt="Selected Image"
-                                    width={0}
-                                    height={0}
-                                    style={{
-                                        width : 'fit-content',
-                                        height : '100%',
-                                    }}
-                                    className="hover:scale-[1.05] duration-300"
+                                    layout="intrinsic"
+                                    width={300}
+                                    height={image.sizes.height}
+                                    className="hover:scale-[1.05] duration-300 object-contain h-full"
                                 />
+
                             </motion.div>
                             :
                             <div className="flex w-fit flex-col items-center">
