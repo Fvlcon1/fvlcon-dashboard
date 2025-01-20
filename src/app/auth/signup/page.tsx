@@ -261,6 +261,9 @@ export default function SignUp() {
                         type='submit'
                         className='!w-full !bg-bg-secondary hover:!bg-bg-tetiary'
                         loading={loading}
+                        size={{
+                            height : '45px'
+                        }}
                     />
                 </form>
             </motion.div>

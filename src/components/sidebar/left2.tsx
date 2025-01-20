@@ -38,7 +38,7 @@ const Left2 = () => {
 
     return (
         <div
-            className="fixed z-10 top-0 left-[70px] flex flex-col w-[120px] h-[100vh] bg-bg-tetiary p-2 py-6 gap-3 items-center"
+            className="fixed z-10 top-0 left-[70px] flex flex-col w-[120px] border-solid border-r-[1px] border-r-bg-quantinary h-[100vh] bg-bg-tetiary p-2 py-6 gap-3 items-center"
         >
             {
                 pages.map((item, index : number) => (

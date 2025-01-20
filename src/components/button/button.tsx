@@ -53,7 +53,7 @@ const Button = ({
         borderRadius : radius ? `${radius}px` : '7px',
         maxWidth,
         width : size?.width ?? 'fit-content',
-        height : size?.height ?? '45px',
+        height : size?.height ?? '35px',
         opacity : (onHover && !disabled)
                   ? hover?.opacity 
                   ?? 0.9 

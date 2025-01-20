@@ -117,9 +117,15 @@ export default function MFAValidation({
         transition={{ duration: 0.5 }}
         className="w-full"
     >
-      <form onSubmit={handleSubmit}>
+      <form 
+        onSubmit={handleSubmit}
+        className='bg-bg-secondary'
+      >
           <div style={styles.outerContainer}>
-            <div style={styles.container}>
+            <div 
+              style={styles.container}
+              className='shadow-xl rounded-[14px] p-6 border-solid border-[1px] border-bg-alt1'
+            >
                 <h2 style={styles.title}>Verify Your Email Address</h2>
                 <p style={styles.instruction}>
                     A verification code has been sent to <strong>{email}</strong>
@@ -134,8 +140,10 @@ export default function MFAValidation({
                             type="text"
                             value={digit}
                             onChange={(e) => handleChange(index, e.target.value)}
+                            className='outline-bg-tetiary'
                             maxLength={1}
                             style={styles.input}
+                            autoFocus={index === 0}
                         />
                     ))}
                 </div>
@@ -174,7 +182,6 @@ const styles = {
       alignItems: 'center',
       justifyContent: 'center',
       height: '100vh',
-      backgroundColor: '#121212',
       color: '#ffffff',
   },
   container: {
@@ -184,12 +191,9 @@ const styles = {
       justifyContent: 'center',
       padding: '20px',
       maxWidth: '400px',
+      backgroundColor : theme.colors.bg.quantinary,
       width: '100%',
       fontFamily: 'Arial, sans-serif',
-      backgroundColor: '#1e1e1e',
-      border: '1px solid #333',
-      borderRadius: '8px',
-      boxShadow: '0 4px 12px rgba(0, 0, 0, 0.5)',
   },
   title: {
       fontSize: '18px',
@@ -219,9 +223,9 @@ const styles = {
       height: '40px',
       textAlign: 'center' as 'center',
       fontSize: '18px',
-      border: '1px solid #555',
+      border: `1px solid ${theme.colors.bg.alt1}`,
       borderRadius: '5px',
-      backgroundColor: '#333',
+      backgroundColor: theme.colors.bg.secondary,
       color: '#ffffff',
   },
   button: {

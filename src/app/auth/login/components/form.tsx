@@ -148,6 +148,9 @@ const Form = ({
                         type='submit'
                         className='!w-full !bg-bg-secondary hover:!bg-bg-tetiary'
                         loading={loading}
+                        size={{
+                            height : '45px'
+                        }}
                     />
                     <div className='flex w-full justify-end mt-1'>
                         <Link href={'/forgot-password'}>
