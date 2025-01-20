@@ -53,7 +53,7 @@ const Form = ({
                     <div className="mb-2 flex flex-col gap-[2px]">
                         <label className="pl-1" htmlFor="companyCode">
                             <Text textColor={theme.colors.text.primary}>
-                                Comopany Code
+                                Company Code
                             </Text>
                         </label>
                         <Input
