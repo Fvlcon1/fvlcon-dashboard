@@ -48,7 +48,7 @@ const Right = () => {
     
                         const personResultsParams: IPersonTrackingType = {
                             id : Id,
-                            name: personName?.length <= 1 ? 'Unknown' : personName,
+                            name: personName,
                             type: ITrackingDataTypes.person,
                             alias: "",
                             lastSeen: location?.name ?? 'Unknown',

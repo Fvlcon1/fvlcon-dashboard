@@ -85,12 +85,21 @@ const PersonResultContainer = ({
                 <div className="flex gap-2">
                     <div className="flex flex-col gap-1">
                         <div className="flex gap-2 items-center">
-                            <Text
-                                size={TypographySize.HM}
-                                textColor={theme.colors.text.primary}
-                            >
-                                {capitalizeString(name)}
-                            </Text>
+                            {
+                                name.length <= 1 ?
+                                <Text
+                                    size={TypographySize.HM}
+                                >
+                                    Unknown
+                                </Text>
+                                :
+                                <Text
+                                    size={TypographySize.HM}
+                                    textColor={theme.colors.text.primary}
+                                >
+                                    {capitalizeString(name)}
+                                </Text>
+                            }
                             <Text>
                                 {alias && '•'} {alias}
                             </Text>
