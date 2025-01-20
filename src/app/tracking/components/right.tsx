@@ -32,24 +32,23 @@ const Right = () => {
         setPersonTrackingData({ status: 'loading', data: [] })
         try {
             const response = await privateAPI.post("/tracking/searchFaceByImage", {
-                collectionId: "rek-collection1",
                 base64Image: imageUrl
             })
             const trackingData = response?.data
 
             if(trackingData.length > 0){
-                const { data: faceDetails } = await axios.get(`${process.env.NEXT_PUBLIC_AWS_BASE_URL}/faces/${trackingData[0]?.FaceId}`)
                 const people: IPersonTrackingType[] = []
     
                 for (const data of trackingData) {
                     try {
-                        const { FaceId, Timestamp, coordinates, stream_name, S3Key, userId, Id } = data
+                        const { FaceId, Timestamp, coordinates, stream_name, S3Key, UserId, Id } = data
                         const arrayCoordinates = parseCoordinates(coordinates)
                         const location = await getLocationNameFromCordinates(arrayCoordinates)
+                        const personName = `${data.details?.personDetails.forenames ?? ''} ${data.details?.personDetails.surname ?? ''}`
     
                         const personResultsParams: IPersonTrackingType = {
                             id : Id,
-                            name: `${faceDetails.FirstName} ${faceDetails.LastName}`,
+                            name: personName?.length <= 1 ? 'Unknown' : personName,
                             type: ITrackingDataTypes.person,
                             alias: "",
                             lastSeen: location?.name ?? 'Unknown',
@@ -58,7 +57,7 @@ const Right = () => {
                             faceId : FaceId,
                             streamName : stream_name,
                             S3Key,
-                            userId
+                            userId : UserId
                         }
                         people.push(personResultsParams)
                     } catch (error: any) {
