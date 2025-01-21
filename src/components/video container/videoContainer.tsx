@@ -4,7 +4,7 @@ import Flex from "@styles/components/flex"
 import Image from "next/image"
 import AppTypography from '@styles/components/appTypography';
 import theme from "@styles/theme";
-import { imagesType } from "@/app/dashboard/home/components/images/controls";
+import { mediaType } from "@/app/dashboard/home/components/images/controls";
 import Player from 'next-video/player';
 import Slidein from "@styles/components/slidein";
 import { Dispatch, SetStateAction, useContext, useEffect, useRef, useState } from "react";
@@ -16,7 +16,7 @@ const VideoContainer = ({
     onPlay,
     onPause,
 } : {
-    video?: imagesType
+    video?: mediaType
     onPlay?: () => void
     onPause?: () => void
 }) => {

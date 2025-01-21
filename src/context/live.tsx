@@ -1,6 +1,6 @@
 'use client'
 
-import { imagesType } from '@/app/dashboard/home/components/images/controls';
+import { mediaType } from '@/app/dashboard/home/components/images/controls';
 import { camExplorerData } from '@/app/live/components/profile container/camera links/camExplorerData';
 import { activeCameraType, FolderOrCamera } from '@/utils/@types';
 import { protectedAPI } from '@/utils/api/api';

@@ -6,7 +6,7 @@ import theme from "@styles/theme"
 import Image from "next/image"
 import { Dispatch, SetStateAction, useContext, useEffect, useState } from "react"
 import { MdDelete } from "react-icons/md"
-import { imagesType } from "./controls"
+import { mediaType } from "./controls"
 import { imageUploadContext } from "@/context/imageUpload"
 import Video from 'next-video'
 import generateVideoThumbnail from "@/utils/generateVideoThumbnail"
@@ -19,8 +19,8 @@ const UploadedFile = ({
     image,
     setImages
 } : {
-    image : imagesType,
-    setImages: Dispatch<SetStateAction<imagesType[]>>
+    image : mediaType,
+    setImages: Dispatch<SetStateAction<mediaType[]>>
 }) => {
     const {
         selectedImage,

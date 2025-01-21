@@ -1,13 +1,13 @@
 'use client'
 
-import { imagesType } from '@/app/dashboard/home/components/images/controls';
+import { mediaType } from '@/app/dashboard/home/components/images/controls';
 import React, { createContext, useState, ReactNode } from 'react';
 
 export const imageUploadContext = createContext<{
-    images : imagesType[],
-    setImages: React.Dispatch<React.SetStateAction<imagesType[]>>,
-    selectedImage : imagesType | undefined,
-    setSelectedImage : React.Dispatch<React.SetStateAction<imagesType | undefined>>
+    images : mediaType[],
+    setImages: React.Dispatch<React.SetStateAction<mediaType[]>>,
+    selectedImage : mediaType | undefined,
+    setSelectedImage : React.Dispatch<React.SetStateAction<mediaType | undefined>>
 }>({
     images : [],
     selectedImage : undefined,
@@ -16,8 +16,8 @@ export const imageUploadContext = createContext<{
 });
 
 export const ImageUploadProvider = ({ children }: { children: ReactNode }) => {
-    const [images, setImages] = useState<imagesType[]>([])
-    const [selectedImage, setSelectedImage] = useState<imagesType | undefined>(undefined)
+    const [images, setImages] = useState<mediaType[]>([])
+    const [selectedImage, setSelectedImage] = useState<mediaType | undefined>(undefined)
     return (
         <imageUploadContext.Provider value={{ 
             images, 

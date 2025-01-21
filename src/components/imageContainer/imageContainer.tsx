@@ -4,18 +4,19 @@ import Flex from "@styles/components/flex"
 import Image from "next/image"
 import AppTypography from '@styles/components/appTypography';
 import theme from "@styles/theme";
-import { imagesType } from "@/app/dashboard/home/components/images/controls";
+import { mediaType } from "@/app/dashboard/home/components/images/controls";
 import Slidein from "@styles/components/slidein";
 import { useContext, useState } from "react";
 import { hexOpacity } from "@/utils/hexOpacity";
 import { FaImage } from "react-icons/fa6";
 import { motion } from 'framer-motion';
 import { imageUploadContext } from "@/context/imageUpload";
+import { message } from "antd";
 
 const ImageContainer = ({
     image
 } : {
-    image ? : imagesType
+    image ? : mediaType
 }) => {
     const [isDragOver, setIsDragOver] = useState<boolean>(false)
     const {
@@ -30,27 +31,47 @@ const ImageContainer = ({
     
         const file = event.dataTransfer.files[0];
         if (file) {
-            const reader = new FileReader();
+            const mediaUrl = URL.createObjectURL(file);
+            const isImage = file.type.startsWith("image/");
+            const isVideo = file.type.startsWith("video/");
     
-            reader.onload = () => {
-                const imageUrl = reader.result as string;
+            if (isImage) {
+                // Handle image file
                 const img = new window.Image();
     
                 img.onload = () => {
                     setSelectedImage({
-                        url: imageUrl,
+                        url: mediaUrl,
                         name: file.name,
                         fullFile: file,
                         sizes: { width: img.naturalWidth, height: img.naturalHeight },
+                        type: "image",
                     });
                 };
     
-                img.src = imageUrl; // Set the source to load the image
-            };
+                img.src = mediaUrl; // Set the source to load the image
+            } else if (isVideo) {
+                // Handle video file
+                const video = document.createElement("video");
     
-            reader.readAsDataURL(file);
+                video.onloadedmetadata = () => {
+                    setSelectedImage({
+                        url: mediaUrl,
+                        name: file.name,
+                        fullFile: file,
+                        sizes: { width: video.videoWidth, height: video.videoHeight },
+                        type: "video",
+                    });
+                };
+    
+                video.src = mediaUrl; // Set the source to load the video
+            } else {
+                message.error("Unsupported file type!")
+                console.error("Unsupported file type!");
+            }
         }
-    };    
+    };
+      
 
     return (
         <Slidein className="!w-full">
