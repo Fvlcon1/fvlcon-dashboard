@@ -5,8 +5,7 @@ import theme from "@styles/theme"
 import { Progress } from "antd"
 import Image from "next/image"
 import { Fragment, useState } from "react"
-import { FaExternalLinkAlt } from "react-icons/fa"
-import { FaCircle, FaRegCircleDot } from "react-icons/fa6"
+import { FaPrint } from "react-icons/fa6"
 import { MdCloudDownload } from "react-icons/md"
 import MatchContainer from "./matchContainer"
 import { IPersonTrackingWithImageType } from "@/app/tracking/components/types"
@@ -108,7 +107,7 @@ const TableBody = ({
                                             color={theme.colors.text.secondary}
                                             className="cursor-pointer hover:scale-125 duration-200"
                                         />
-                                        <FaExternalLinkAlt
+                                        <FaPrint
                                             color={theme.colors.text.secondary}
                                             size={11}
                                             className="cursor-pointer hover:scale-125 duration-200"

@@ -1,7 +1,6 @@
 import Flex from "@styles/components/flex"
 import UploadedFile from "./uploadedFile"
-import { Dispatch, SetStateAction, useContext, useEffect } from "react"
-import { imagesType } from "./controls"
+import { useContext } from "react"
 import { imageUploadContext } from "@/context/imageUpload"
 
 const Images = () => {

@@ -18,7 +18,7 @@ const TableHead = () => {
             icon : IoMdImage
         },
         {
-            name : "Identified Person",
+            name : "Identified People",
             icon : IoPersonCircle
         },
         {

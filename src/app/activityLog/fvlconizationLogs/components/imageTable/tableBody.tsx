@@ -5,13 +5,13 @@ import theme from "@styles/theme"
 import { Progress } from "antd"
 import Image from "next/image"
 import { Fragment, useState } from "react"
-import { FaExternalLinkAlt } from "react-icons/fa"
-import { FaCircle, FaRegCircleDot } from "react-icons/fa6"
+import { FaCircle, FaPrint, FaRegCircleDot } from "react-icons/fa6"
 import { MdCloudDownload } from "react-icons/md"
 import { FvlconizationLogsTypes } from "../fvlconizationLogs.types"
 import { getRelativeTime, getTime } from "@/utils/getDate"
 import { TypographySize } from "@styles/style.types"
 import NoData from "@components/NoData/noData"
+import ClickableTab from "@components/clickable/clickabletab"
 
 const TableBody = ({
     data
@@ -128,15 +128,19 @@ const TableBody = ({
                                 </td>
                                 <td>
                                     <div className="flex gap-4 items-center">
-                                        <MdCloudDownload
-                                            color={theme.colors.text.secondary}
-                                            className="cursor-pointer hover:scale-125 duration-200"
-                                        />
-                                        <FaExternalLinkAlt
-                                            color={theme.colors.text.secondary}
-                                            size={11}
-                                            className="cursor-pointer hover:scale-125 duration-200"
-                                        />
+                                        <ClickableTab className="p-0">
+                                            <MdCloudDownload
+                                                color={theme.colors.text.primary}
+                                                className="hover:scale-125 duration-200 opacity-50 hover:opacity-100"
+                                            />
+                                        </ClickableTab>
+                                        <ClickableTab className="p-0">
+                                            <FaPrint
+                                                color={theme.colors.text.primary}
+                                                size={12}
+                                                className="hover:scale-125 duration-200 opacity-50 hover:opacity-100"
+                                            />
+                                        </ClickableTab>
                                     </div>
                                 </td>
                             </tr>

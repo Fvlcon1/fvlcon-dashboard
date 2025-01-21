@@ -5,8 +5,7 @@ import { theme } from "@styles/theme"
 import { Progress } from "antd"
 import Image from "next/image"
 import { Fragment, useState } from "react"
-import { FaExternalLinkAlt } from "react-icons/fa"
-import { FaCircle, FaRegCircleDot, FaVideo } from "react-icons/fa6"
+import { FaCircle, FaPrint, FaRegCircleDot, FaVideo } from "react-icons/fa6"
 import { MdCloudDownload } from "react-icons/md"
 import { FvlconizationVideoLogsType } from "../fvlconizationLogs.types"
 import { getRelativeTime, getTime } from "@/utils/getDate"
@@ -128,7 +127,7 @@ const TableBody = ({
                                             color={theme.colors.text.secondary}
                                             className="cursor-pointer hover:scale-125 duration-200"
                                         />
-                                        <FaExternalLinkAlt
+                                        <FaPrint
                                             color={theme.colors.text.secondary}
                                             size={11}
                                             className="cursor-pointer hover:scale-125 duration-200"
