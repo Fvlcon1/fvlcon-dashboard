@@ -11,6 +11,7 @@ import { RiMenu2Fill } from "react-icons/ri"
 import Map from "./map"
 import { RefObject, useState } from "react"
 import snapshotComponent from "@components/snapshotComponent/snapshotComponent"
+import { IoVideocam } from "react-icons/io5"
 
 const Controls = ({
     id
@@ -50,13 +51,23 @@ const Controls = ({
                             gap={4}
                         >
                                 <AppTypography>
-                                    <CgLivePhoto color={'red'}/>
+                                    <CgLivePhoto color={'green'}/>
                                 </AppTypography>
                             <AppTypography>
                                 Live
                             </AppTypography>
                         </Flex>
                     </div>
+                    <Tooltip title="Record">
+                        <ClickableTab
+                            className="!p-[6px]"
+                        >
+                            <IoVideocam 
+                                color={theme.colors.text.secondary}
+                                size={16}
+                            />
+                        </ClickableTab>
+                    </Tooltip>
                     <AppTypography
                         textColor={theme.colors.text.tetiary}
                     >
@@ -92,7 +103,7 @@ const Controls = ({
                         >
                             <MdDelete 
                                 color={theme.colors.text.secondary}
-                                size={13}
+                                size={15}
                             />
                         </ClickableTab>
                     </div>

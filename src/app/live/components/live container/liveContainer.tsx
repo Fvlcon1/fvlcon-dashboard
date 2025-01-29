@@ -72,6 +72,25 @@ const LiveContainer = ({
           }
     }
 
+    const getVideoElementFromMuxPlayer = () => {
+        const customPlayer = document.getElementById(id)
+        ?.querySelector('mux-player')
+        ?.shadowRoot
+        ?.querySelector('media-theme')
+        ?.querySelector('mux-video')
+        ?.shadowRoot
+        if (customPlayer) {
+            const videoElement = customPlayer.querySelector('video') as HTMLVideoElement;
+            if (videoElement) {
+                return videoElement
+            } else {
+              console.log('Video element not found inside the shadow DOM');
+            }
+        } else {
+            console.log('customPlayer DOM not found');
+          }
+    }
+
     useEffect(()=>{
         resizeLiveHeight()
     },[gridClass])
@@ -107,7 +126,7 @@ const LiveContainer = ({
                     height : `${liveHeight}px`
                 }}
             >
-                <iframe 
+                {/* <iframe 
                     src={url}
                     title="stream"
                     width={'100%'}
@@ -115,7 +134,21 @@ const LiveContainer = ({
                     id={id}
                     allowFullScreen
                     allow="accelerometer; autoplay; clipboard-write"
-                />
+                /> */}
+                <div id={id} className="w-full h-full relative">
+                    <div id={`CanvasContainer${id}`} className="canvasContainer w-full h-full absolute pointer-events-none z-10 top-0 left-0">
+
+                    </div>
+                    <Player
+                        src={url}
+                        controls
+                        style={{ height: '100%' }}
+                        accentColor={theme.colors.bg.secondary}
+                        playbackRates={[0.2, 0.5, 0.7, 1, 1.2, 1.5, 1.7, 2]}
+                        placeholder="Stream"
+                        autoPlay={true}
+                    />
+                </div>
                 {/* <div id={id} className="w-full h-full relative">
                     <div id={`CanvasContainer${id}`} className="canvasContainer w-full h-full absolute pointer-events-none z-10 top-0 left-0">
 

@@ -37,11 +37,11 @@ const SingleRecognition = ({
     },[face])
     return (
         <>
-            <NiaRecord
+            {/* <NiaRecord
                 visible={expand}
                 setVisible={setExpand}
                 data={face.data?.details}
-            />
+            /> */}
             {
                 !face.data?.details &&
                 <OverlayWindow
