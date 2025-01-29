@@ -14,6 +14,14 @@
   --bg-alt1 : #2C2C2C;
   --bg-alt2 : #737373;
 
+  --bg-light-primary : #F4F4F4;
+  --bg-light-secondary : #EBEBEB;
+  --bg-light-tetiary : #D0D0D0;
+
+  --text-light-primary : #0A2540;
+  --text-light-secondary : #425466;
+  --text-light-tetiary : #8E98A3;
+
   --main-primary : #339D8F;
 }
 

@@ -46,6 +46,7 @@ const useFvlconizationLogs = () => {
                 accuracy,
                 timeElapsed : item.timeElapsed,
                 identifiedPeople,
+                identifiedPeopleDetails : item.media,
                 uploadedImageUrl : item.uploadedImageUrl
             }
         })

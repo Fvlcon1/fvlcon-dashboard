@@ -14,6 +14,16 @@ export const colors = {
         alt1 : '#2C2C2C',
         alt2 : '#474747'
     },
+    bgLight : {
+        primary : '#F4F4F4',
+        secondary : '#EBEBEB',
+        tetiary : '#D0D0D0',
+    },
+    textLight : {
+        primary : '#0A2540',
+        secondary : '#425466',
+        tetiary : '#8E98A3',
+    },
     main : {
         primary : '#339D8F'
     }
@@ -31,6 +41,16 @@ export const cssColors = {
         tetiary : 'var(--bg-tetiary)',
         quantinary : 'var(--bg-quantinary)',
         alt1 : 'var(--bg-alt1)',
+    },
+    textLight : {
+        primary : 'var(--text-light-primary)',
+        secondary : 'var(--text-light-secondary)',
+        tetiary : 'var(--text-light-tetiary)',
+    },
+    bgLight : {
+        primary : 'var(--bg-light-primary)',
+        secondary : 'var(--bg-light-secondary)',
+        tetiary : 'var(--bg-light-tetiary)',
     },
     main : {
         primary : 'var(--main-primary)'

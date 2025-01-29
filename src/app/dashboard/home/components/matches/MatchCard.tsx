@@ -91,6 +91,8 @@ const MatchCard = ({
                 visible={expand}
                 setVisible={setExpand}
                 data={details}
+                croppedImage={croppedImage}
+                boundedImage={boundedImage}
             />
             <div 
                 className={`p-2 py-1 min-w-[400px] cursor-pointer w-[400px] h-fit flex flex-col gap-1 rounded-lg bg-gradient-container-black ${getSelectedOccurenceClass() ?? ''}`}

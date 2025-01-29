@@ -46,7 +46,6 @@ const Text = ({
                 display: display ? display : ellipsis ? '-webkit-box' : undefined,
                 textOverflow : ellipsis ? 'ellipsis' : 'none',
                 maxHeight : ellipsis ? 13.33 * 1.5 * (maxLines ?? 1) : 'none',
-                overflow : 'hidden',
                 lineHeight,
                 whiteSpace : whiteSpace
             }}

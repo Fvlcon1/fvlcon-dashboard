@@ -2,6 +2,7 @@ export interface FvlconizationLogsTypes {
     type : string
     uploadedImageUrl : string
     identifiedPeople : string[]
+    identifiedPeopleDetails? : any[],
     date : Date
     timeElapsed : number,
     accuracy : number,

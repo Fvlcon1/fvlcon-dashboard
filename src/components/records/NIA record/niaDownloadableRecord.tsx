@@ -5,33 +5,23 @@ import OverlayWindow from "@components/window/overlayWindow"
 import Text from "@styles/components/text"
 import { TypographySize } from "@styles/style.types"
 import theme from "@styles/theme"
-import { useEffect, useRef, useState } from "react"
-import List from "../components/list"
-import Container from "../components/container"
+import { forwardRef, useEffect, useState } from "react"
 import Image from "next/image"
 import ZoomImage from "@components/zoomImage/zoomImage"
 import getDate from "@/utils/getDate"
-import { FaDownload, FaPrint } from "react-icons/fa6"
-import ClickableTab from "@components/clickable/clickabletab"
-import { message, Tooltip } from "antd"
-import { componentToPdfDownload } from "@/utils/componentToPdfDownload"
-import { FvlconizationLogsTypes } from "@/app/activityLog/fvlconizationLogs/components/fvlconizationLogs.types"
-import { useReactToPrint } from "react-to-print"
-import NiaDownloadableRecord from "./niaDownloadableRecord"
+import DownloadableList from "../components/downloadableList"
+import DownloadbleContainer from "../components/downloadableContainer"
 
-const NiaRecord = ({
-    visible,
-    setVisible,
-    data,
-    croppedImage,
-    boundedImage
-} : {
-    visible : boolean,
-    setVisible : React.Dispatch<React.SetStateAction<boolean>>
-    data? : any
-    croppedImage : string
-    boundedImage : string
-}) => {
+const NiaDownloadableRecord = forwardRef(
+    (
+      { data, croppedImage, boundedImage }: 
+      { 
+        data?: any
+        croppedImage : string
+        boundedImage : string
+      }, 
+      ref: React.Ref<HTMLDivElement>
+    ) => {
     const [zoom, setZoom] = useState(false)
     const [zoomImage, setZoomImage] = useState('')
     const {
@@ -133,112 +123,12 @@ const NiaRecord = ({
         ["Date issued",  IIds?.dateIssued],
     ]
 
-    const [showDownloadableComponent, setShowDownloadableComponent] = useState(false);
-    const [showDownloadableComponentToPrint, setShowDownloadableComponentToPrint] = useState(false);
-    const refobj = useRef<HTMLDivElement>(null);
-
-    const reactToPrintFn = useReactToPrint({
-        contentRef : refobj,
-        documentTitle: "Fvlconization-log",
-        onAfterPrint: () => {
-            setShowDownloadableComponentToPrint(false);
-        },
-        onPrintError: (error : any) => {
-            setShowDownloadableComponentToPrint(false);
-            message.error(error.message);
-        },
-        onBeforePrint : async ()=> setShowDownloadableComponentToPrint(false)
-    });
-
-    const handlePdfDownload = () => {
-        setShowDownloadableComponent(true);
-    };
-
-    const handlePrint = () => {
-        setShowDownloadableComponentToPrint(true);
-    };
-
-    const downloadPdf = async () => {
-    try {
-        setTimeout(async () => {
-        await componentToPdfDownload(refobj, 1);
-        setShowDownloadableComponent(false);
-        }, 2000);
-    } catch (error) {
-        console.log({ error });
-        setShowDownloadableComponent(false);
-    }
-    };
-
-    useEffect(() => {
-        if (showDownloadableComponent) {
-            downloadPdf();
-        }
-    }, [showDownloadableComponent]);
-
-    useEffect(() => {
-        if (showDownloadableComponentToPrint) {
-            setTimeout(() => {
-                try {
-                    reactToPrintFn();
-                } catch (error: any) {
-                    console.log({ error });
-                    message.error(error.message);
-                }
-            }, 2000);
-        }
-    }, [showDownloadableComponentToPrint]);
-
     useEffect(()=>{
         console.log({data})
     },[])
     return (
-        <OverlayWindow
-            title="NIA record, Ghana"
-            display={visible}
-            setDisplay={setVisible}
-            windowStyle="!h-[90%] !w-[40%] !min-w-[700px]"
-            icons={[
-                <Tooltip title="Download">
-                    <ClickableTab
-                        className=""
-                        onClick={handlePdfDownload}
-                    >
-                        <FaDownload
-                            color={theme.colors.text.primary}
-                            size={12}
-                            className="hover:scale-125 duration-200 opacity-50 hover:opacity-100"
-                        />
-                    </ClickableTab>
-                </Tooltip>,
-                <Tooltip title="Print">
-                    <ClickableTab
-                        className=""
-                        onClick={handlePrint}
-                    >
-                        <FaPrint
-                            color={theme.colors.text.primary}
-                            size={12}
-                            className="hover:scale-125 duration-200 opacity-50 hover:opacity-100"
-                        />
-                    </ClickableTab>
-                </Tooltip>
-            ]}
-        >
-            {(showDownloadableComponent || showDownloadableComponentToPrint) &&
-                <NiaDownloadableRecord 
-                    ref={refobj} 
-                    data={data}
-                    croppedImage={croppedImage}
-                    boundedImage={boundedImage}
-                />
-            }
-            <ZoomImage
-                setShow={setZoom}
-                show={zoom}
-                imageURL={zoomImage} 
-            />
-            <div className="fixed top-0 left-0 w-full flex h-full justify-center items-center opacity-[0.02] pointer-events-none">
+        <div className="relative z-[-1]" ref={ref}>
+            <div className="fixed top-0 left-0 w-full flex h-full justify-center items-center opacity-[0.05] pointer-events-none">
                 <div className="h-[600px] w-[700px] z-10 relative">
                     <Image
                         alt="img"
@@ -251,34 +141,32 @@ const NiaRecord = ({
             </div>
             {
                 data &&
-                <div className="w-full p-8 flex flex-col gap-6">
+                <div className="w-full p-8 flex flex-col gap-6 bg-white">
                     <div className="w-full flex justify-between gap-2 items-center">
                         <div className="flex gap-3 items-center">
-                            <div className="h-[100px] w-[100px] rounded-full bg-bg-quantinary relative overflow-hidden">
+                            <div className="h-[100px] w-[100px] rounded-lg bg-bg-quantinary relative overflow-hidden">
+                                <Image
+                                    alt="img"
+                                    fill
+                                    className="hoverscale-[1.3] duration-300 object-cover cursor-pointer"
+                                    src={boundedImage ?? ''}
+                                />
+                            </div>
+                            <div className="h-[100px] w-[100px] rounded-lg bg-bg-quantinary relative overflow-hidden">
+                                <Image
+                                    alt="img"
+                                    fill
+                                    className="hoverscale-[1.3] duration-300 object-cover cursor-pointer"
+                                    src={croppedImage ?? ''}
+                                />
+                            </div>
+                            <div className="h-[100px] w-[100px] rounded-lg bg-bg-quantinary relative overflow-hidden">
                                 <Image
                                     alt="img"
                                     fill
                                     className="hoverscale-[1.3] duration-300 object-cover cursor-pointer"
                                     src={imageUrl ?? ''}
-                                    onClick={()=>{
-                                        setZoomImage(imageUrl)
-                                        setZoom(prev => !prev)
-                                    }}
                                 />
-                            </div>
-                            <div className="flex flex-col gap-0">
-                                <Text
-                                    size={TypographySize.HM}
-                                    textColor={theme.colors.text.primary}
-                                >
-                                    {`${personDetes.surname} ${personDetes.forenames}`}
-                                </Text>
-                                <Text>
-                                    {`${RAdress?.zipPostalCode ?? ''}`}
-                                </Text>
-                                <Text>
-                                    {`${RAdress?.communityAreaName ? `${RAdress?.communityAreaName},` : ''} ${RAdress?.villageTown ?? ''}`}
-                                </Text>
                             </div>
                         </div>
                         <div className="flex gap-4 items-center">
@@ -300,50 +188,45 @@ const NiaRecord = ({
                             </div>
                         </div>
                     </div>
-                    <Container 
+                    <DownloadbleContainer
                         title="Application Details"
                     >
                         <div className="w-full p-4 flex gap-2">
-                            <List 
+                            <DownloadableList 
                                 data={applicationDetails}
-                                evenBg={theme.colors.bg.secondary}
                             />
                         </div>
-                    </Container>
+                    </DownloadbleContainer>
 
-                    <Container 
+                    <DownloadbleContainer 
                         title="Personal Details"
                     >
                         <div className="w-full p-4 flex gap-2">
-                            <List 
+                            <DownloadableList 
                                 data={personDetails}
-                                evenBg={theme.colors.bg.secondary}
                                 first={4}
                             />
-                            <List 
+                            <DownloadableList 
                                 data={personDetails}
-                                evenBg={theme.colors.bg.secondary}
                                 last={4}
                             />
                         </div>
-                    </Container>
+                    </DownloadbleContainer>
 
-                    <Container 
+                    <DownloadbleContainer 
                         title="Birth Details"
                     >
                         <div className="w-full p-4 flex gap-2">
-                            <List 
+                            <DownloadableList 
                                 data={birthDetails}
-                                evenBg={theme.colors.bg.secondary}
                                 first={3}
                             />
-                            <List 
+                            <DownloadableList 
                                 data={birthDetails}
-                                evenBg={theme.colors.bg.secondary}
                                 last={3}
                             />
                         </div>
-                        <Divider />
+                        <Divider className="!bg-bgLight-primary" />
                         <div className="w-full p-4 flex flex-col gap-2">
                             <Text
                                 textColor={theme.colors.text.primary}
@@ -351,19 +234,17 @@ const NiaRecord = ({
                                 Place of birth
                             </Text>
                             <div className="w-full flex gap-2">
-                                <List 
+                                <DownloadableList 
                                     data={placeOfBirth}
-                                    evenBg={theme.colors.bg.secondary}
                                     first={2}
                                 />
-                                <List 
+                                <DownloadableList 
                                     data={placeOfBirth}
-                                    evenBg={theme.colors.bg.secondary}
                                     last={2}
                                 />
                             </div>
                         </div>
-                        <Divider />
+                        <Divider className="!bg-bgLight-primary" />
                         <div className="w-full p-4 flex flex-col gap-2">
                             <Text
                                 textColor={theme.colors.text.primary}
@@ -371,49 +252,44 @@ const NiaRecord = ({
                                 Hometown
                             </Text>
                             <div className="w-full flex gap-2">
-                                <List 
+                                <DownloadableList 
                                     data={hometown}
-                                    evenBg={theme.colors.bg.secondary}
                                     first={2}
                                 />
-                                <List 
+                                <DownloadableList 
                                     data={hometown}
-                                    evenBg={theme.colors.bg.secondary}
                                     last={2}
                                 />
                             </div>
                         </div>
-                    </Container>
+                    </DownloadbleContainer>
 
-                    <Container 
+                    <DownloadbleContainer 
                         title="Occupation"
                     >
                         <div className="w-full p-4 flex gap-2">
-                            <List 
+                            <DownloadableList 
                                 data={occupation}
-                                evenBg={theme.colors.bg.secondary}
                             />
                         </div>
-                    </Container>
+                    </DownloadbleContainer>
 
-                    <Container 
+                    <DownloadbleContainer 
                         title="Residential Address"
                     >
                         <div className="w-full p-4 flex gap-2">
-                            <List 
+                            <DownloadableList 
                                 data={residentialAddress}
-                                evenBg={theme.colors.bg.secondary}
                                 first={3}
                             />
-                            <List 
+                            <DownloadableList 
                                 data={residentialAddress}
-                                evenBg={theme.colors.bg.secondary}
                                 last={3}
                             />
                         </div>
-                    </Container>
+                    </DownloadbleContainer>
 
-                    <Container 
+                    <DownloadbleContainer 
                         title="Applicants Parentage"
                     >
                         <div className="w-full p-4 flex flex-col gap-2">
@@ -423,19 +299,17 @@ const NiaRecord = ({
                                 {"Father's details"}
                             </Text>
                             <div className="w-full flex gap-2">
-                                <List 
+                                <DownloadableList 
                                     data={fatherDetails}
-                                    evenBg={theme.colors.bg.secondary}
                                     first={2}
                                 />
-                                <List 
+                                <DownloadableList 
                                     data={fatherDetails}
-                                    evenBg={theme.colors.bg.secondary}
                                     last={2}
                                 />
                             </div>
                         </div>
-                        <Divider />
+                        <Divider className="!bg-bgLight-primary" />
                         <div className="w-full p-4 flex flex-col gap-2">
                             <Text
                                 textColor={theme.colors.text.primary}
@@ -443,19 +317,17 @@ const NiaRecord = ({
                                 {"Father's hometown"}
                             </Text>
                             <div className="w-full flex gap-2">
-                                <List 
+                                <DownloadableList 
                                     data={fathersHometown}
-                                    evenBg={theme.colors.bg.secondary}
                                     first={2}
                                 />
-                                <List 
+                                <DownloadableList 
                                     data={fathersHometown}
-                                    evenBg={theme.colors.bg.secondary}
                                     last={2}
                                 />
                             </div>
                         </div>
-                        <Divider />
+                        <Divider className="!bg-bgLight-primary" />
                         <div className="w-full p-4 flex flex-col gap-2">
                             <Text
                                 textColor={theme.colors.text.primary}
@@ -463,19 +335,17 @@ const NiaRecord = ({
                                 {"Mother's details"}
                             </Text>
                             <div className="w-full flex gap-2">
-                                <List 
+                                <DownloadableList 
                                     data={motherDetails}
-                                    evenBg={theme.colors.bg.secondary}
                                     first={2}
                                 />
-                                <List 
+                                <DownloadableList 
                                     data={motherDetails}
-                                    evenBg={theme.colors.bg.secondary}
                                     last={2}
                                 />
                             </div>
                         </div>
-                        <Divider />
+                        <Divider className="!bg-bgLight-primary" />
                         <div className="w-full p-4 flex flex-col gap-2">
                             <Text
                                 textColor={theme.colors.text.primary}
@@ -483,72 +353,65 @@ const NiaRecord = ({
                                 {"Mother's hometown"}
                             </Text>
                             <div className="w-full flex gap-2">
-                                <List 
+                                <DownloadableList 
                                     data={mothersHometown}
-                                    evenBg={theme.colors.bg.secondary}
                                     first={2}
                                 />
-                                <List 
+                                <DownloadableList 
                                     data={mothersHometown}
-                                    evenBg={theme.colors.bg.secondary}
                                     last={2}
                                 />
                             </div>
                         </div>
-                    </Container>
+                    </DownloadbleContainer>
 
-                    <Container 
+                    <DownloadbleContainer 
                         title="Next of kin"
                     >
                         <div className="w-full p-4 flex gap-2">
-                            <List 
+                            <DownloadableList 
                                 data={NextOfKin}
-                                evenBg={theme.colors.bg.secondary}
                             />
                         </div>
-                    </Container>
+                    </DownloadbleContainer>
 
-                    <Container 
+                    <DownloadbleContainer 
                         title="Verification document"
                     >
                         <div className="w-full p-4 flex gap-2">
-                            <List 
+                            <DownloadableList 
                                 data={verificationDocument}
-                                evenBg={theme.colors.bg.secondary}
                                 first={2}
                             />
-                            <List 
+                            <DownloadableList 
                                 data={verificationDocument}
-                                evenBg={theme.colors.bg.secondary}
                                 last={2}
                             />
                         </div>
-                    </Container>
+                    </DownloadbleContainer>
 
-                    <Container 
+                    <DownloadbleContainer 
                         title="Contact"
                     >
                         <div className="w-full p-4 flex gap-2">
-                            <List 
+                            <DownloadableList 
                                 data={contact}
-                                evenBg={theme.colors.bg.secondary}
                             />
                         </div>
-                    </Container>
+                    </DownloadbleContainer>
 
-                    <Container 
+                    <DownloadbleContainer 
                         title="Instituitional Ids"
                     >
                         <div className="w-full p-4 flex gap-2">
-                            <List 
+                            <DownloadableList 
                                 data={institutionalIds}
-                                evenBg={theme.colors.bg.secondary}
                             />
                         </div>
-                    </Container>
+                    </DownloadbleContainer>
                 </div>
             }
-        </OverlayWindow>
+        </div>
     )
-}
-export default NiaRecord
+})
+export default NiaDownloadableRecord

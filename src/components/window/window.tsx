@@ -15,7 +15,8 @@ const Window = ({
     title,
     className,
     direction,
-    windowStyle
+    windowStyle,
+    icons
 } : {
     open : boolean
     setOpen : Dispatch<SetStateAction<boolean>>
@@ -24,6 +25,7 @@ const Window = ({
     className? : string
     direction? : IPosition
     windowStyle? : string
+    icons?: ReactNode[]
 }) => {
     return (
         <motion.div
@@ -54,6 +56,7 @@ const Window = ({
                 open={open}
                 setOpen={setOpen}
                 title={title}
+                icons={icons}
             />
             {children}
         </motion.div>
