@@ -199,7 +199,10 @@ const NiaRecord = ({
             setDisplay={setVisible}
             windowStyle="!h-[90%] !w-[40%] !min-w-[700px]"
             icons={[
-                <Tooltip title="Download">
+                <Tooltip 
+                    key='Download'
+                    title="Download"
+                >
                     <ClickableTab
                         className=""
                         onClick={handlePdfDownload}
@@ -211,7 +214,10 @@ const NiaRecord = ({
                         />
                     </ClickableTab>
                 </Tooltip>,
-                <Tooltip title="Print">
+                <Tooltip 
+                    key='Print' 
+                    title="Print"
+                >
                     <ClickableTab
                         className=""
                         onClick={handlePrint}
