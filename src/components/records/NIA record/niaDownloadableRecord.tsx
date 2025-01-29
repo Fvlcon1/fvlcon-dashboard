@@ -414,4 +414,5 @@ const NiaDownloadableRecord = forwardRef(
         </div>
     )
 })
+NiaDownloadableRecord.displayName = 'NiaDownloadableRecord'
 export default NiaDownloadableRecord

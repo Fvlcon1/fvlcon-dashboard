@@ -101,4 +101,5 @@ const DownloadableComponent = forwardRef<HTMLDivElement, { data: FvlconizationLo
     );
 });
 
+DownloadableComponent.displayName = 'DownloadableComponent'
 export default DownloadableComponent;
