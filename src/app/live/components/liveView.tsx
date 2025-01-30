@@ -9,6 +9,7 @@ import ClickableTab from "@components/clickable/clickabletab";
 import { FaCaretLeft, FaCaretRight } from "react-icons/fa6";
 import { activeCameraType } from "@/utils/@types";
 import { getHLSStreamURL } from "../utils/getHlsUrl";
+import CapturedScreenshotImage from "./live container/capturedScreenshotImage";
 
 const LiveView = () => {
     const {
@@ -74,77 +75,80 @@ const LiveView = () => {
     }, []);
 
     return (
-        <div className="flex flex-col justify-between h-[90vh] gap-2 w-full">
-            <div 
-                className="w-full relative overflow-hidden h-fit"
-                // style={{ height: `${screenHeight - 125}px` }}
-            >
-                <div
-                    className="flex transition-transform duration-500 h-full"
-                    style={{ transform: `translateX(-${currentIndex * 100}%)` }}
+        <>
+            <CapturedScreenshotImage />
+            <div className="flex flex-col justify-between h-[90vh] gap-2 w-full">
+                <div 
+                    className="w-full relative overflow-hidden h-fit"
+                    // style={{ height: `${screenHeight - 125}px` }}
                 >
-                    {
-                        cameras.map((item, index) => (
-                            <div
-                                className={`grid min-w-full gap-2 ${gridClass ?? 'grid-cols-2 gap-2'}`}
-                                // style={{ height: `${screenHeight - 125}px` }}
-                                key={index}
-                            >
-                                {
-                                    item.map((cam, index: number) => (
-                                        <LiveContainer 
-                                            key={index}
-                                            index={index}
-                                            url={cam.url}
-                                            id={`liveContainer${index}`}
-                                            gridClass={gridClass}
-                                            streamName={cam.streamName}
-                                        />
-                                    ))
-                                }
-                            </div>
-                        ))
-                    }
-                </div>
-            </div>
-            <div className="flex w-full justify-center items-center gap-1">
-                <ClickableTab
-                    className="hover:!bg-bg-quantinary !rounded-full"
-                    onClick={handleBack}
-                >
-                    <FaCaretLeft
-                        color={theme.colors.text.secondary}
-                    />
-                </ClickableTab>
-                <div className="px-3 h-[30px] rounded-full bg-bg-tetiary gap-2 flex justify-center items-center">
-                    {
-                        cameras.map((item, index) => (
-                            <div 
-                                className={`w-2 h-2 rounded-full ${index === currentIndex ? 'bg-slate-50' : 'bg-bg-alt1'} duration-500`}
-                                key={index}
-                            >
-                                
-                            </div>
-                        ))
-                    }
-                </div>
-                <div className="flex rounded-full px-3 h-[30px] justify-center items-center bg-bg-tetiary">
-                    <AppTypography
-                        textColor={theme.colors.text.primary}
+                    <div
+                        className="flex transition-transform duration-500 h-full"
+                        style={{ transform: `translateX(-${currentIndex * 100}%)` }}
                     >
-                        + {cameras.length - 1}
-                    </AppTypography>
+                        {
+                            cameras.map((item, index) => (
+                                <div
+                                    className={`grid min-w-full gap-2 ${gridClass ?? 'grid-cols-2 gap-2'}`}
+                                    // style={{ height: `${screenHeight - 125}px` }}
+                                    key={index}
+                                >
+                                    {
+                                        item.map((cam, index: number) => (
+                                            <LiveContainer 
+                                                key={index}
+                                                index={index}
+                                                url={cam.url}
+                                                id={`liveContainer${index}`}
+                                                gridClass={gridClass}
+                                                streamName={cam.streamName}
+                                            />
+                                        ))
+                                    }
+                                </div>
+                            ))
+                        }
+                    </div>
                 </div>
-                <ClickableTab
-                    className="hover:!bg-bg-quantinary !rounded-full"
-                    onClick={handleFoward}
-                >
-                    <FaCaretRight 
-                        color={theme.colors.text.secondary}
-                    />
-                </ClickableTab>
+                <div className="flex w-full justify-center items-center gap-1">
+                    <ClickableTab
+                        className="hover:!bg-bg-quantinary !rounded-full"
+                        onClick={handleBack}
+                    >
+                        <FaCaretLeft
+                            color={theme.colors.text.secondary}
+                        />
+                    </ClickableTab>
+                    <div className="px-3 h-[30px] rounded-full bg-bg-tetiary gap-2 flex justify-center items-center">
+                        {
+                            cameras.map((item, index) => (
+                                <div 
+                                    className={`w-2 h-2 rounded-full ${index === currentIndex ? 'bg-slate-50' : 'bg-bg-alt1'} duration-500`}
+                                    key={index}
+                                >
+                                    
+                                </div>
+                            ))
+                        }
+                    </div>
+                    <div className="flex rounded-full px-3 h-[30px] justify-center items-center bg-bg-tetiary">
+                        <AppTypography
+                            textColor={theme.colors.text.primary}
+                        >
+                            + {cameras.length - 1}
+                        </AppTypography>
+                    </div>
+                    <ClickableTab
+                        className="hover:!bg-bg-quantinary !rounded-full"
+                        onClick={handleFoward}
+                    >
+                        <FaCaretRight 
+                            color={theme.colors.text.secondary}
+                        />
+                    </ClickableTab>
+                </div>
             </div>
-        </div>
+        </>
     );
 };
 export default LiveView;

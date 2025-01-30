@@ -6,6 +6,10 @@ import theme from "@styles/theme";
 import { getHLSStreamURL } from "../../utils/getHlsUrl";
 import  FaceTracking from "@/utils/faceTracking";
 import { message } from "antd";
+import { getVideoElementFromMuxPlayer } from "./utils/getVideoElementFromMuxPlayer";
+import { captureScreenshot } from "./utils/captureScreenshot";
+import CapturedScreenshotImage from "./capturedScreenshotImage";
+import { liveComponentsContext } from "../context";
 
 const LiveContainer = ({
     url,
@@ -25,6 +29,7 @@ const LiveContainer = ({
     const [streamURL, setStreamURL] = useState<string>()
     const { activeCameras, numberOfCamerasPerPage } = useContext(liveContext)
     const [videoElement, setVideoElement] = useState<HTMLVideoElement>()
+    const {setScreenShotUrl} = useContext(liveComponentsContext)
     const [canvasSize, setCanvasSize] = useState({
         width : 0,
         height : 0
@@ -53,58 +58,20 @@ const LiveContainer = ({
     }
 
     const startTracking = () => {
-        const videoElement = getVideoElementFromMuxPlayer()
+        const videoElement = getVideoElementFromMuxPlayer(id)
         if(videoElement){
             setVideoElement(videoElement)
             // faceTracking(videoElement, `CanvasContainer${id}`)
         }
     }
 
-    const getVideoElementFromMuxPlayer = () => {
-        const customPlayer = document.getElementById(id)
-        ?.querySelector('mux-player')
-        ?.shadowRoot
-        ?.querySelector('media-theme')
-        ?.querySelector('mux-video')
-        ?.shadowRoot
-        if (customPlayer) {
-            const videoElement = customPlayer.querySelector('video') as HTMLVideoElement;
-            if (videoElement) {
-                return videoElement
-            } else {
-              console.log('Video element not found inside the shadow DOM');
-            }
-        } else {
-            console.log('customPlayer DOM not found');
-          }
+    const handleScreenshot = () => {
+        const imageUrl = captureScreenshot(id)
+        console.log({imageUrl})
+        if(!imageUrl) 
+            return
+        setScreenShotUrl(imageUrl.dataUrl)
     }
-
-    const captureScreenshot = () => {
-        const videoElement = getVideoElementFromMuxPlayer()
-        if (!videoElement) {
-            message.error("Video element not found!");
-            return;
-        }
-
-        // Create a canvas and match video dimensions
-        const canvas = document.createElement("canvas");
-        canvas.width = videoElement.videoWidth;
-        canvas.height = videoElement.videoHeight;
-        const ctx = canvas.getContext("2d");
-    
-        if (ctx) {
-            ctx.drawImage(videoElement, 0, 0, canvas.width, canvas.height);
-    
-            // Convert to image and download
-            const dataUrl = canvas.toDataURL("image/png");
-            const link = document.createElement("a");
-            link.href = dataUrl;
-            link.download = `screenshot-${id}.png`;
-            link.click();
-            message.success("Screenshot taken")
-        }
-    };
-    
 
     useEffect(()=>{
         resizeLiveHeight()
@@ -125,64 +92,66 @@ const LiveContainer = ({
         }
     }, []);
     return (
-        <div
-            ref={liveRef}
-            className={`bg-bg-secondary flex flex-col relative rounded-lg max-h-full h-fit`}
-        >
-            <FaceTracking 
-                canvasSize={canvasSize}
-                canvasContainerID={`CanvasContainer${id}`}
-                videoElement={videoElement}
-            />
-            <Controls 
-                id={id} 
-                captureScreenshot={captureScreenshot}
-            />
-            <div 
-                className="w-full flex flex-grow justify-center items-center"
-                style={{
-                    height : `${liveHeight}px`
-                }}
+        <>
+            <div
+                ref={liveRef}
+                className={`bg-bg-secondary flex flex-col relative rounded-lg max-h-full h-fit`}
             >
-                {/* <iframe 
-                    src={url}
-                    title="stream"
-                    width={'100%'}
-                    height={'100%'}
-                    id={id}
-                    allowFullScreen
-                    allow="accelerometer; autoplay; clipboard-write"
-                /> */}
-                <div id={id} className="w-full h-full relative">
-                    <div id={`CanvasContainer${id}`} className="canvasContainer w-full h-full absolute pointer-events-none z-10 top-0 left-0">
-
-                    </div>
-                    <Player
+                <FaceTracking 
+                    canvasSize={canvasSize}
+                    canvasContainerID={`CanvasContainer${id}`}
+                    videoElement={videoElement}
+                />
+                <Controls 
+                    id={id} 
+                    captureScreenshot={handleScreenshot}
+                />
+                <div 
+                    className="w-full flex flex-grow justify-center items-center"
+                    style={{
+                        height : `${liveHeight}px`
+                    }}
+                >
+                    {/* <iframe 
                         src={url}
-                        controls
-                        style={{ height: '100%' }}
-                        accentColor={theme.colors.bg.secondary}
-                        playbackRates={[0.2, 0.5, 0.7, 1, 1.2, 1.5, 1.7, 2]}
-                        placeholder="Stream"
-                        autoPlay={true}
-                    />
-                </div>
-                {/* <div id={id} className="w-full h-full relative">
-                    <div id={`CanvasContainer${id}`} className="canvasContainer w-full h-full absolute pointer-events-none z-10 top-0 left-0">
+                        title="stream"
+                        width={'100%'}
+                        height={'100%'}
+                        id={id}
+                        allowFullScreen
+                        allow="accelerometer; autoplay; clipboard-write"
+                    /> */}
+                    <div id={id} className="w-full h-full relative">
+                        <div id={`CanvasContainer${id}`} className="canvasContainer w-full h-full absolute pointer-events-none z-10 top-0 left-0">
 
+                        </div>
+                        <Player
+                            src={url}
+                            controls
+                            style={{ height: '100%' }}
+                            accentColor={theme.colors.bg.secondary}
+                            playbackRates={[0.2, 0.5, 0.7, 1, 1.2, 1.5, 1.7, 2]}
+                            placeholder="Stream"
+                            autoPlay={true}
+                        />
                     </div>
-                    <Player
-                        src={streamURL}
-                        controls
-                        style={{ height: '100%' }}
-                        accentColor={theme.colors.bg.secondary}
-                        playbackRates={[0.2, 0.5, 0.7, 1, 1.2, 1.5, 1.7, 2]}
-                        placeholder="Stream"
-                        autoPlay={true}
-                    />
-                </div> */}
+                    {/* <div id={id} className="w-full h-full relative">
+                        <div id={`CanvasContainer${id}`} className="canvasContainer w-full h-full absolute pointer-events-none z-10 top-0 left-0">
+
+                        </div>
+                        <Player
+                            src={streamURL}
+                            controls
+                            style={{ height: '100%' }}
+                            accentColor={theme.colors.bg.secondary}
+                            playbackRates={[0.2, 0.5, 0.7, 1, 1.2, 1.5, 1.7, 2]}
+                            placeholder="Stream"
+                            autoPlay={true}
+                        />
+                    </div> */}
+                </div>
             </div>
-        </div>
+        </>
     )
 }
 export default LiveContainer

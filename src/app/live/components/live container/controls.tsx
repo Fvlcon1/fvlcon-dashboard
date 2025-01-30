@@ -60,16 +60,16 @@ const Controls = ({
                             </AppTypography>
                         </Flex>
                     </div>
-                    <Tooltip title="Record">
-                        <ClickableTab
-                            className="!p-[6px]"
-                        >
+                    <ClickableTab
+                        className="!p-[6px]"
+                    >
+                        <Tooltip title="Record">
                             <IoVideocam 
                                 color={theme.colors.text.secondary}
                                 size={16}
                             />
-                        </ClickableTab>
-                    </Tooltip>
+                        </Tooltip>
+                    </ClickableTab>
                     <AppTypography
                         textColor={theme.colors.text.tetiary}
                     >
