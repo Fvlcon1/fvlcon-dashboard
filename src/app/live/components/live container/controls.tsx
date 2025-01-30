@@ -14,9 +14,11 @@ import snapshotComponent from "@components/snapshotComponent/snapshotComponent"
 import { IoVideocam } from "react-icons/io5"
 
 const Controls = ({
-    id
+    id,
+    captureScreenshot
 } : {
     id : string
+    captureScreenshot : ()=>void
 }) => {
     const [showMap, setShowMap] = useState(false)
     return (
@@ -91,7 +93,7 @@ const Controls = ({
                         </div>
                         <ClickableTab
                             className="!p-[6px]"
-                            onClick={()=>snapshotComponent(id)}
+                            onClick={captureScreenshot}
                         >
                             <FaCamera 
                                 color={theme.colors.text.secondary}

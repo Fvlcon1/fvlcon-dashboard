@@ -5,6 +5,7 @@ import Player from 'next-video/player';
 import theme from "@styles/theme";
 import { getHLSStreamURL } from "../../utils/getHlsUrl";
 import  FaceTracking from "@/utils/faceTracking";
+import { message } from "antd";
 
 const LiveContainer = ({
     url,
@@ -52,24 +53,11 @@ const LiveContainer = ({
     }
 
     const startTracking = () => {
-        const customPlayer = document.getElementById(id)
-        ?.querySelector('mux-player')
-        ?.shadowRoot
-        ?.querySelector('media-theme')
-        ?.querySelector('mux-video')
-        ?.shadowRoot
-        if (customPlayer) {
-            const videoElement = customPlayer.querySelector('video') as HTMLVideoElement;
-            if(videoElement)
-                setVideoElement(videoElement)
-            if (videoElement) {
-            //   faceTracking(videoElement, `CanvasContainer${id}`)
-            } else {
-              console.log('Video element not found inside the shadow DOM');
-            }
-        } else {
-            console.log('customPlayer DOM not found');
-          }
+        const videoElement = getVideoElementFromMuxPlayer()
+        if(videoElement){
+            setVideoElement(videoElement)
+            // faceTracking(videoElement, `CanvasContainer${id}`)
+        }
     }
 
     const getVideoElementFromMuxPlayer = () => {
@@ -90,6 +78,33 @@ const LiveContainer = ({
             console.log('customPlayer DOM not found');
           }
     }
+
+    const captureScreenshot = () => {
+        const videoElement = getVideoElementFromMuxPlayer()
+        if (!videoElement) {
+            message.error("Video element not found!");
+            return;
+        }
+
+        // Create a canvas and match video dimensions
+        const canvas = document.createElement("canvas");
+        canvas.width = videoElement.videoWidth;
+        canvas.height = videoElement.videoHeight;
+        const ctx = canvas.getContext("2d");
+    
+        if (ctx) {
+            ctx.drawImage(videoElement, 0, 0, canvas.width, canvas.height);
+    
+            // Convert to image and download
+            const dataUrl = canvas.toDataURL("image/png");
+            const link = document.createElement("a");
+            link.href = dataUrl;
+            link.download = `screenshot-${id}.png`;
+            link.click();
+            message.success("Screenshot taken")
+        }
+    };
+    
 
     useEffect(()=>{
         resizeLiveHeight()
@@ -119,7 +134,10 @@ const LiveContainer = ({
                 canvasContainerID={`CanvasContainer${id}`}
                 videoElement={videoElement}
             />
-            <Controls id={id} />
+            <Controls 
+                id={id} 
+                captureScreenshot={captureScreenshot}
+            />
             <div 
                 className="w-full flex flex-grow justify-center items-center"
                 style={{
