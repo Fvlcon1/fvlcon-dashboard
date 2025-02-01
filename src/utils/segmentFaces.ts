@@ -23,7 +23,6 @@ export const loadModels = async () => {
     await faceapi.nets.faceLandmark68Net.loadFromUri(modelPath);
     await faceapi.nets.faceRecognitionNet.loadFromUri(modelPath);
     await faceapi.nets.ageGenderNet.loadFromUri(modelPath);
-    console.log('Models loaded');
     return true
   } catch (error) {
     console.error('Error loading models:', error);
@@ -38,6 +37,7 @@ const segmentFaces = async (url : string, setLogs: Dispatch<SetStateAction<logsT
     }
     if (!isModelsLoaded()) {
       setLogs([{log : {content : "Models not loaded properly"}, date : new Date()}])
+      message.error("Models not loaded properly")
       return console.log("Models not loaded properly");
     }
   
@@ -47,15 +47,14 @@ const segmentFaces = async (url : string, setLogs: Dispatch<SetStateAction<logsT
       .withFaceLandmarks()
       .withFaceDescriptors()
       .withAgeAndGender();
-    console.log({detections})
     setLogs(prev => [...prev, {log : {content : "Segmentation successful"}, date : new Date()}])
     setLogs(prev => [...prev, {log : {content : "Cropping segments..."}, date : new Date()}])
   
     const faces = getFaceCanvas(detections, img)
     setLogs(prev => [...prev, {log : {content : "Segments successlly cropped"}, date : new Date()}])
-    console.log({faces})
     return faces
   } catch(error) {
+    message.error("error segmenting faces")
     console.log("error segmenting faces:", error)
   }
 }
@@ -68,6 +67,7 @@ export const videoSegmentation = async (video: HTMLVideoElement | null, timestam
         await loadModels();
       }
       if (!isModelsLoaded()) {
+        message.error("Models not loaded properly")
         return console.log("Models not loaded properly");
       }
 
@@ -111,15 +111,16 @@ export const videoSegmentation = async (video: HTMLVideoElement | null, timestam
           }
         } else {
           console.log("there are no distinct faces yet")
+          message.error("there are no distinct faces yet")
           filteredDetections.push(detection)
         }
       })
 
       const faces = getFaceCanvas(filteredDetections, video)
-      console.log({filteredDetections})
       return faces
     } catch (error) {
       console.log("Failed to start detection:", error);
+      message.error("Failed to start detection")
     }
   }
 };
@@ -142,7 +143,6 @@ export const awsSegmentation = async (file: File, setLogs: Dispatch<SetStateActi
       ...prev, { date : new Date(), log : { content : "Generating presigned URL..." } }
     ]))
     const { data: { presignedUrl, videoKey } } = await axios.get(`${process.env.NEXT_PUBLIC_AWS_BASE_URL}/upload-video`);
-    console.log({ presignedUrl, videoKey });
     setLogs(prev => ([
       ...prev, { date : new Date(), log : { content : `Successfully generated presigned url: ${presignedUrl}`, maxLines : 2 } }
     ]))
@@ -182,7 +182,6 @@ const uploadToS3 = async (presignedUrl: string, file: File) => {
     const response = await axios.put(presignedUrl, file, {
       headers: { 'Content-Type': file.type },
     });
-    console.log("Upload response:", response);
 
     if (response.status !== 200) {
       throw new Error("Unable to upload video to S3");
@@ -195,7 +194,6 @@ const uploadToS3 = async (presignedUrl: string, file: File) => {
 const startVideoAnalysis = async (videoKey: string) => {
   try {
     const response = await axios.post(`${process.env.NEXT_PUBLIC_AWS_BASE_URL}/upload-video`, { videoKey });
-    console.log("Analysis started:", response);
 
     if (response.status !== 200) {
       throw new Error("Unable to start video analysis");
@@ -215,9 +213,7 @@ const pollJobStatus = async (jobId: string, videoKey: string, jobType: string, s
         const { data: jobStatusData } = await axios.get(`${process.env.NEXT_PUBLIC_AWS_BASE_URL}/check-job-status`, {
           params: { jobId, jobType, videoKey }
         });
-
-        console.log("Job status:", jobStatusData);
-
+        
         if (jobStatusData.status === 'SUCCEEDED') {
           setLogs(prev => ([
             ...prev, { date : new Date(), log : { content : "Video analysis successful" } }

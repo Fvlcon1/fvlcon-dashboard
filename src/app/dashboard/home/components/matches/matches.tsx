@@ -27,21 +27,20 @@ const Matches = ({
 }) => {
     const [displayFaces, setDisplayFaces] = useState(false)
     const [sortedFaces, setSortedFaces] = useState<checkedFaceType[]>([])
+    
     const sortMatches = () => {
         const matches : checkedFaceType[] = []
         const unmatched : checkedFaceType[] = []
         faces.data?.map((face, index) => {
-            if(face.matchedPerson)
+            if(face.details)
                 return matches.push(face)
             unmatched.push(face)
         })
         setSortedFaces([...matches, ...unmatched])
-        console.log([...matches, ...unmatched])
     }
 
     useEffect(()=>{
         sortMatches()
-        console.log({faces})
     },[faces])
     return (
         <>

@@ -61,12 +61,6 @@ const MatchCard = ({
             if(occurances.index === currentOccurance.index)
                 return 'border-[#3780ff60] shadow-lg border-dotted border-[3px]  duration-200'
     }
-    useEffect(()=>{
-        console.log({occ1 : currentOccurance, occ2 : occurances})
-    },[currentOccurance])
-    useEffect(()=>{
-        console.log({details})
-    },[])
     return (
         <>
             {/* <ExpandMatch 

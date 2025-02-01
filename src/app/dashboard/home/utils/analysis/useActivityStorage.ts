@@ -1,5 +1,5 @@
 import { protectedAPI } from "@/utils/api/api"
-import { HomeContext } from "../context/homeContext"
+import { HomeContext } from "../../context/homeContext"
 import { useContext, useEffect, useRef } from "react"
 import { occurance } from "@/utils/@types"
 import axios from "axios"
@@ -33,7 +33,6 @@ const useActivityStorage = () => {
     }) => {
         try {
             const { media, status, type, uploadedImageS3key } = data
-            console.log({ restime: timerRef.current })
     
             const response = await privateApi.post("/fvlconizationLogs/addFvlconizationLogs", {
                 uploadedImageS3key,
@@ -59,7 +58,6 @@ const useActivityStorage = () => {
     }) => {
         try {
             const { timeElapsed, status, videoFile, videoS3Key, occurance, videoUrl } = data
-            console.log({ restime: timerRef.current })
 
             //get presigned url
             const thumbnailS3Key = `${videoFile.name}${uuidv4()}`

@@ -27,7 +27,6 @@ export const runRecognitionOnSingleFace = async (face : FaceCanvasType) : Promis
                 details
             };
         } else {
-            console.log("No matches found");
             return {
                 croppedImage: face.croppedImage,
                 boundedImage : face.boundedImage

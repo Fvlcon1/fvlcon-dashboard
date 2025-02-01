@@ -28,7 +28,6 @@ const getSession = async () => {
 
 const getToken = async () => {
   const session = await getSession()
-  console.log({session})
   const token =  jwt.sign(
     { email: session?.user.email, userId: session?.user.userId },
     process.env.NEXT_PUBLIC_JWT_SECRET || 'secretJWT',

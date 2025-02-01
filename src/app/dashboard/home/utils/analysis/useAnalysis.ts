@@ -1,5 +1,5 @@
 import { RefObject, useContext, useEffect, useState } from "react"
-import { HomeContext } from "../context/homeContext"
+import { HomeContext } from "../../context/homeContext"
 import { imageUploadContext } from "@/context/imageUpload"
 import { isImageFile, isVideoFile } from "@/utils/getFileType"
 import segmentFaces, { awsSegmentation } from "@/utils/segmentFaces"
@@ -14,8 +14,8 @@ import { protectedAPI, unprotectedAPI } from "@/utils/api/api"
 import axios from "axios"
 import { nanoid } from 'nanoid';
 import useTimer from "@/utils/useTimer"
-import { dataURLToBlob } from "./dataUrlToBlob"
-import { convertDataUrlToJpeg } from "./convertToJpeg"
+import { dataURLToBlob } from "../dataUrlToBlob"
+import { convertDataUrlToJpeg } from "../convertToJpeg"
 import { StatusTypes } from "@prisma/client"
 import { FaceCanvasType } from "@/utils/getFaceCanvas"
 

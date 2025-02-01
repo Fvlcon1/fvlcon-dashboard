@@ -15,7 +15,7 @@ import { isImageFile, isVideoFile } from "@/utils/getFileType"
 import VideoContainer from "@components/video container/videoContainer"
 import useTimer from "@/utils/useTimer"
 import { HomeContext } from "../context/homeContext"
-import { useAnalysis } from "../utils/useAnalysis"
+import { useAnalysis } from "../utils/analysis/useAnalysis"
 
 let fileEx : any = undefined
 

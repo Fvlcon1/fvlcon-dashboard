@@ -188,10 +188,7 @@ const NiaRecord = ({
             }, 2000);
         }
     }, [showDownloadableComponentToPrint]);
-
-    useEffect(()=>{
-        console.log({data})
-    },[])
+    
     return (
         <OverlayWindow
             title="NIA record, Ghana"

@@ -6,7 +6,6 @@ const checkFace = async (file : string) => {
       const response = await axios.post(`${process.env.NEXT_PUBLIC_AWS_BASE_URL}/faces/check`, {
         image: base64data,
       });
-      console.log({response : response.data})
       return({result : response.data});
     } catch (error : any) {
         console.error("Error checking face:", error);
