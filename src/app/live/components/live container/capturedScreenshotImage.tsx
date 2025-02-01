@@ -17,8 +17,10 @@ const CapturedScreenshotImage = () => {
         if(screenShotUrl){
             setShowScreenhot(true)
             setTimeout(() => {
-                !screenShotHover && setShowScreenhot(false)
-                !showZoom && !screenShotHover && setScreenShotUrl(undefined)
+                if(!screenShotHover)
+                    setShowScreenhot(false)
+                if(!showZoom && !screenShotHover)
+                    setScreenShotUrl(undefined)
             }, 5000);
         }
     },[screenShotUrl])
@@ -29,6 +31,7 @@ const CapturedScreenshotImage = () => {
     },[showZoom])
 
     useEffect(()=>{
+        console.log({screenShotHover})
         if(!screenShotHover){
             setShowScreenhot(false)
             !showZoom && setScreenShotUrl(undefined)
