@@ -3,7 +3,6 @@ import { getVideoElementFromMuxPlayer } from "./getVideoElementFromMuxPlayer";
 
 export const captureScreenshot = (id:string) => {
     const videoElement = getVideoElementFromMuxPlayer(id)
-    console.log("heu")
     if (!videoElement) {
         message.error("Video element not found!");
         return;

@@ -10,6 +10,8 @@ import { getVideoElementFromMuxPlayer } from "./utils/getVideoElementFromMuxPlay
 import { captureScreenshot } from "./utils/captureScreenshot";
 import CapturedScreenshotImage from "./capturedScreenshotImage";
 import { liveComponentsContext } from "../context";
+import { recordStream } from "./utils/recordStream";
+import useTimer from "@/utils/useTimer";
 
 const LiveContainer = ({
     url,
@@ -30,10 +32,14 @@ const LiveContainer = ({
     const { activeCameras, numberOfCamerasPerPage } = useContext(liveContext)
     const [videoElement, setVideoElement] = useState<HTMLVideoElement>()
     const {setScreenShotUrl} = useContext(liveComponentsContext)
+    const [isRecording, setIsRecording] = useState(false);
+    const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+    const {start, stop, seconds} = useTimer()
     const [canvasSize, setCanvasSize] = useState({
         width : 0,
         height : 0
     })
+
     const resizeLiveHeight = () => {
         const cameraWidth = liveRef.current?.offsetWidth
         if(cameraWidth){
@@ -67,11 +73,15 @@ const LiveContainer = ({
 
     const handleScreenshot = () => {
         const imageUrl = captureScreenshot(id)
-        console.log({imageUrl})
         if(!imageUrl) 
             return
         setScreenShotUrl(imageUrl.dataUrl)
     }
+
+    const handleRecord = () => {
+        start()
+        recordStream(id, isRecording, setIsRecording, stop);
+    };
 
     useEffect(()=>{
         resizeLiveHeight()
@@ -105,6 +115,9 @@ const LiveContainer = ({
                 <Controls 
                     id={id} 
                     captureScreenshot={handleScreenshot}
+                    handleRecord={handleRecord}
+                    isRecording={isRecording}
+                    timer={seconds}
                 />
                 <div 
                     className="w-full flex flex-grow justify-center items-center"

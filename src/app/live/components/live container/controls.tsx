@@ -5,20 +5,28 @@ import { TypographySize } from "@styles/style.types"
 import theme from "@styles/theme"
 import { Tooltip } from "antd"
 import { CgLivePhoto } from "react-icons/cg"
-import { FaCamera, FaMap } from "react-icons/fa6"
+import { FaCamera, FaMap, FaRegCircleStop } from "react-icons/fa6"
 import { MdDelete, MdFullscreen } from "react-icons/md"
 import { RiMenu2Fill } from "react-icons/ri"
 import Map from "./map"
 import { RefObject, useState } from "react"
 import snapshotComponent from "@components/snapshotComponent/snapshotComponent"
 import { IoVideocam } from "react-icons/io5"
+import Text from "@styles/components/text"
+import { formatTime } from "@/utils/formatTime"
 
 const Controls = ({
     id,
-    captureScreenshot
+    captureScreenshot,
+    handleRecord,
+    isRecording,
+    timer
 } : {
     id : string
     captureScreenshot : ()=>void
+    handleRecord : ()=>void
+    isRecording : boolean
+    timer? : number
 }) => {
     const [showMap, setShowMap] = useState(false)
     return (
@@ -46,7 +54,7 @@ const Controls = ({
                     width="fit-content"
                     align="center"
                 >
-                    <div className="animate-pulse">
+                    <div className="">
                         <Flex
                             width="fit-content"
                             align="center"
@@ -60,21 +68,42 @@ const Controls = ({
                             </AppTypography>
                         </Flex>
                     </div>
-                    <ClickableTab
-                        className="!p-[6px]"
-                    >
-                        <Tooltip title="Record">
-                            <IoVideocam 
-                                color={theme.colors.text.secondary}
-                                size={16}
-                            />
-                        </Tooltip>
-                    </ClickableTab>
-                    <AppTypography
+                    {
+                        isRecording ?
+                        <div className="flex gap-1 items-center">
+                            <ClickableTab
+                                className="!p-[6px] animate-pulse"
+                                onClick={handleRecord}
+                            >
+                                <Tooltip title="Stop">
+                                    <FaRegCircleStop 
+                                        color={'#bf3434'}
+                                        size={14}
+                                    />
+                                </Tooltip>
+                            </ClickableTab>
+                            <Text>
+                                {formatTime(timer ?? 0)}
+                            </Text>
+                        </div>
+                        :
+                        <ClickableTab
+                            className="!p-[6px]"
+                            onClick={handleRecord}
+                        >
+                            <Tooltip title="Record">
+                                <IoVideocam 
+                                    color={theme.colors.text.secondary}
+                                    size={16}
+                                />
+                            </Tooltip>
+                        </ClickableTab>
+                    }
+                    <Text
                         textColor={theme.colors.text.tetiary}
                     >
                         |
-                    </AppTypography>
+                    </Text>
                     <div className="flex items-center">
                         <div className="relative">
                             <Map 
