@@ -45,6 +45,10 @@ export const recordStream = (id: string, isRecording: boolean, setIsRecording: (
             a.click();
             document.body.removeChild(a);
 
+            //Stop media recorder when video ends while streaming
+            mediaRecorder?.stop();
+            setIsRecording(false);
+
             //Call callback
             callback && callback()
 
