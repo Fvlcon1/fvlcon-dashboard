@@ -40,13 +40,13 @@ export const LiveProvider = ({ children }: { children: ReactNode }) => {
             streamName : "stream2",
             coordinates : [6.669450646774655, -1.5176043915812956]
         },
-        {
-            id : '3',
-            url : "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
-            location : 'East legon, Accra',
-            streamName : "stream2",
-            coordinates : [5.65, -0.163]
-        },
+        // {
+        //     id : '3',
+        //     url : "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
+        //     location : 'East legon, Accra',
+        //     streamName : "stream2",
+        //     coordinates : [5.65, -0.163]
+        // },
     ])
     const [numberOfCamerasPerPage, setNumberOfCamerasPerPage] = useState<number>(4)
     const [folders, setFolders] = useState<FolderOrCamera[]>([]);
