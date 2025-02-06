@@ -5,6 +5,7 @@ export const getVideoElementFromMuxPlayer = (id:string) => {
         ?.querySelector('media-theme')
         ?.querySelector('mux-video')
         ?.shadowRoot
+        ?.querySelector('slot')
         if (customPlayer) {
             const videoElement = customPlayer.querySelector('video') as HTMLVideoElement;
             if (videoElement) {

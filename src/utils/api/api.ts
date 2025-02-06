@@ -22,7 +22,7 @@ type IApiOptions = {
 };
 
 const getSession = async () => {
-  const { data } = await axios.get('/api/auth/session')
+  const { data } = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/api/auth/session`)
   return data
 }
 

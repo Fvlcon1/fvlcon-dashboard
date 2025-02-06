@@ -1,8 +1,10 @@
 import { message } from "antd";
 import { getVideoElementFromMuxPlayer } from "./getVideoElementFromMuxPlayer";
+import { getVideoElementFromIframe } from "./getVideoElementFromIframe";
 
 export const captureScreenshot = (id:string) => {
     const videoElement = getVideoElementFromMuxPlayer(id)
+    // const videoElement = getVideoElementFromIframe(id)
     if (!videoElement) {
         message.error("Video element not found!");
         return;

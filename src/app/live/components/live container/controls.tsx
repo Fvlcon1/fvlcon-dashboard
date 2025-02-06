@@ -54,7 +54,7 @@ const Controls = ({
                     width="fit-content"
                     align="center"
                 >
-                    <div className="">
+                    {/* <div className="">
                         <Flex
                             width="fit-content"
                             align="center"
@@ -67,7 +67,7 @@ const Controls = ({
                                 Live
                             </AppTypography>
                         </Flex>
-                    </div>
+                    </div> */}
                     {
                         isRecording ?
                         <div className="flex gap-1 items-center">
