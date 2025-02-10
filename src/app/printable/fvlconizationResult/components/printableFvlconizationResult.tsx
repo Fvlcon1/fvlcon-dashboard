@@ -3,29 +3,38 @@
 import Divider from "@components/divider/divider"
 import OverlayWindow from "@components/window/overlayWindow"
 import Text from "@styles/components/text"
-import { TypographySize } from "@styles/style.types"
+import { TypographyBold, TypographySize } from "@styles/style.types"
 import theme from "@styles/theme"
-import { forwardRef, useEffect, useState } from "react"
+import { forwardRef, Fragment, useEffect, useRef, useState } from "react"
 import Image from "next/image"
 import ZoomImage from "@components/zoomImage/zoomImage"
 import getDate from "@/utils/getDate"
-import DownloadableList from "../components/downloadableList"
-import DownloadbleContainer from "../components/downloadableContainer"
+import DownloadableList from "./downloadableList"
+import DownloadbleContainer from "./downloadableContainer"
+import { componentToPdfDownload } from "@/utils/componentToPdfDownload"
 
-const NiaDownloadableRecord = (
+const PrintableFvlconizationResult = (
     { 
         data, 
-        croppedImage, 
-        boundedImage
+        croppedImageUrl, 
+        uploadedImageUrl,
+        action,
+        filename
+        // boundedImage
      }: 
     { 
         data?: any
-        croppedImage : string
-        boundedImage : string
+        croppedImageUrl : string
+        uploadedImageUrl : string
+        action?: string
+        filename? : string
+        // boundedImage : string
     }, 
 ) => {
     const [zoom, setZoom] = useState(false)
     const [zoomImage, setZoomImage] = useState('')
+    const [imagesLoaded, setImagesLoaded] = useState(false);
+    const refobj = useRef<HTMLDivElement>(null);
     const {
         applicationDetails : appDetes,
         personDetails : personDetes, 
@@ -42,7 +51,8 @@ const NiaDownloadableRecord = (
         verificationDocument : verificationDoc,
         contact : cont,
         institutionalIds : IIds,
-        imageUrl
+        imageUrl,
+        criminalRecord : Crec
     } = data ?? {}
     const applicationDetails = [
         ["Type of application", appDetes?.typeOfApplication],
@@ -124,12 +134,67 @@ const NiaDownloadableRecord = (
         ["Voter's Id number",  IIds?.votersIdNumber],
         ["Date issued",  IIds?.dateIssued],
     ]
+    const criminalRecord : any[] = Crec?.map((record : any)=>{
+        return [
+            ["Arrest Date",  (new Date(record?.arrestDate)).toDateString()],
+            ["Arresting Officer",  record?.arrestingOfficer],
+            ["Criminal Record Id",  record?.criminalRecordId],
+            ["Offence Type",  record?.offenceTypee],
+            ["Person Id",  record?.personId],
+            ["Sentence Length (months)",  record?.sentenceLengthMonths],
+        ]
+    })
+    console.log({criminalRecord, Crec})
+    criminalRecord.length = 1
+
+    const waitForAllImagesToLoad = () => {
+        const images = document.querySelectorAll("img");
+        let loadedCount = 0;
+    
+        if (images.length === 0) {
+          setImagesLoaded(true); // No images, so we're ready
+          return;
+        }
+    
+        images.forEach((img) => {
+          if (img.complete) {
+            loadedCount++;
+          } else {
+            img.onload = () => {
+              loadedCount++;
+              if (loadedCount === images.length) {
+                setImagesLoaded(true);
+              }
+            };
+          }
+        });
+    }
+
+    const downloadPdf = async () => {
+        try {
+            setTimeout(async () => {
+            await componentToPdfDownload(refobj, 1, filename);
+            }, 2000);
+        } catch (error) {
+            console.log({ error });
+        }
+    };
 
     useEffect(()=>{
-        console.log({data})
+        waitForAllImagesToLoad()
     },[])
+
+    useEffect(() => {
+        if (imagesLoaded){
+            if(action==='download'){
+                downloadPdf()
+            } else {
+                window.print()
+            }
+        }
+    }, [imagesLoaded]);
     return (
-        <div className="relative z-[-1]">
+        <div ref={refobj} className="rounded-lg overflow-hidden">
             <div className="fixed top-0 left-0 w-full flex h-full justify-center items-center opacity-[0.05] pointer-events-none">
                 <div className="h-[600px] w-[700px] z-10 relative">
                     <Image
@@ -151,7 +216,8 @@ const NiaDownloadableRecord = (
                                     alt="img"
                                     fill
                                     className="hoverscale-[1.3] duration-300 object-cover cursor-pointer"
-                                    src={boundedImage ?? ''}
+                                    src={uploadedImageUrl ?? ''}
+                                    crossOrigin="anonymous"
                                 />
                             </div>
                             <div className="h-[100px] w-[100px] rounded-lg bg-bg-quantinary relative overflow-hidden">
@@ -159,7 +225,8 @@ const NiaDownloadableRecord = (
                                     alt="img"
                                     fill
                                     className="hoverscale-[1.3] duration-300 object-cover cursor-pointer"
-                                    src={croppedImage ?? ''}
+                                    src={croppedImageUrl ?? ''}
+                                    crossOrigin="anonymous"
                                 />
                             </div>
                             <div className="h-[100px] w-[100px] rounded-lg bg-bg-quantinary relative overflow-hidden">
@@ -168,10 +235,11 @@ const NiaDownloadableRecord = (
                                     fill
                                     className="hoverscale-[1.3] duration-300 object-cover cursor-pointer"
                                     src={imageUrl ?? ''}
+                                    crossOrigin="anonymous"
                                 />
                             </div>
                         </div>
-                        <div className="flex gap-4 items-center">
+                        <div className="flex gapx-4 items-center">
                             <div className="h-[70px] w-[80px] relative">
                                 <Image
                                     alt="img"
@@ -193,7 +261,7 @@ const NiaDownloadableRecord = (
                     <DownloadbleContainer
                         title="Application Details"
                     >
-                        <div className="w-full p-4 flex gap-2">
+                        <div className="w-full px-4 flex gap-2">
                             <DownloadableList 
                                 data={applicationDetails}
                             />
@@ -203,7 +271,7 @@ const NiaDownloadableRecord = (
                     <DownloadbleContainer 
                         title="Personal Details"
                     >
-                        <div className="w-full p-4 flex gap-2">
+                        <div className="w-full px-4 flex gap-2">
                             <DownloadableList 
                                 data={personDetails}
                                 first={4}
@@ -218,7 +286,7 @@ const NiaDownloadableRecord = (
                     <DownloadbleContainer 
                         title="Birth Details"
                     >
-                        <div className="w-full p-4 flex gap-2">
+                        <div className="w-full px-4 flex gap-2 pb-1">
                             <DownloadableList 
                                 data={birthDetails}
                                 first={3}
@@ -228,10 +296,11 @@ const NiaDownloadableRecord = (
                                 last={3}
                             />
                         </div>
-                        <Divider className="!bg-bgLight-primary" />
-                        <div className="w-full p-4 flex flex-col gap-2">
+                        <Divider className="!border-b-bgLight-tetiary border-b-[1px] border-b-solid" />
+                        <div className="w-full px-4 flex flex-col py-2">
                             <Text
-                                textColor={theme.colors.text.primary}
+                                textColor={theme.colors.textLight.tetiary}
+                                size={TypographySize.xs}
                             >
                                 Place of birth
                             </Text>
@@ -246,10 +315,11 @@ const NiaDownloadableRecord = (
                                 />
                             </div>
                         </div>
-                        <Divider className="!bg-bgLight-primary" />
-                        <div className="w-full p-4 flex flex-col gap-2">
+                        <Divider className="!border-b-bgLight-tetiary border-b-[1px] border-b-solid" />
+                        <div className="w-full px-4 flex flex-col py-2">
                             <Text
-                                textColor={theme.colors.text.primary}
+                                textColor={theme.colors.textLight.tetiary}
+                                size={TypographySize.xs}
                             >
                                 Hometown
                             </Text>
@@ -269,34 +339,37 @@ const NiaDownloadableRecord = (
                     <DownloadbleContainer 
                         title="Occupation"
                     >
-                        <div className="w-full p-4 flex gap-2">
+                        <div className="w-full px-4 flex gap-2">
                             <DownloadableList 
                                 data={occupation}
                             />
                         </div>
                     </DownloadbleContainer>
 
-                    <DownloadbleContainer 
-                        title="Residential Address"
-                    >
-                        <div className="w-full p-4 flex gap-2">
-                            <DownloadableList 
-                                data={residentialAddress}
-                                first={3}
-                            />
-                            <DownloadableList 
-                                data={residentialAddress}
-                                last={3}
-                            />
-                        </div>
-                    </DownloadbleContainer>
+                    <div className="page-break">
+                        <DownloadbleContainer 
+                            title="Residential Address"
+                        >
+                            <div className="w-full px-4 flex gap-2">
+                                <DownloadableList 
+                                    data={residentialAddress}
+                                    first={3}
+                                />
+                                <DownloadableList 
+                                    data={residentialAddress}
+                                    last={3}
+                                />
+                            </div>
+                        </DownloadbleContainer>
+                    </div>
 
                     <DownloadbleContainer 
                         title="Applicants Parentage"
                     >
-                        <div className="w-full p-4 flex flex-col gap-2">
+                        <div className="w-full px-4 flex flex-col">
                             <Text
-                                textColor={theme.colors.text.primary}
+                                textColor={theme.colors.textLight.tetiary}
+                                size={TypographySize.xs}
                             >
                                 {"Father's details"}
                             </Text>
@@ -311,10 +384,11 @@ const NiaDownloadableRecord = (
                                 />
                             </div>
                         </div>
-                        <Divider className="!bg-bgLight-primary" />
-                        <div className="w-full p-4 flex flex-col gap-2">
+                        <Divider className="!border-b-bgLight-tetiary border-b-[1px] border-b-solid" />
+                        <div className="w-full px-4 flex flex-col py-2">
                             <Text
-                                textColor={theme.colors.text.primary}
+                                textColor={theme.colors.textLight.tetiary}
+                                size={TypographySize.xs}
                             >
                                 {"Father's hometown"}
                             </Text>
@@ -329,10 +403,11 @@ const NiaDownloadableRecord = (
                                 />
                             </div>
                         </div>
-                        <Divider className="!bg-bgLight-primary" />
-                        <div className="w-full p-4 flex flex-col gap-2">
+                        <Divider className="!border-b-bgLight-tetiary border-b-[1px] border-b-solid" />
+                        <div className="w-full px-4 flex flex-col py-2">
                             <Text
-                                textColor={theme.colors.text.primary}
+                                textColor={theme.colors.textLight.tetiary}
+                                size={TypographySize.xs}
                             >
                                 {"Mother's details"}
                             </Text>
@@ -347,10 +422,11 @@ const NiaDownloadableRecord = (
                                 />
                             </div>
                         </div>
-                        <Divider className="!bg-bgLight-primary" />
-                        <div className="w-full p-4 flex flex-col gap-2">
+                        <Divider className="!border-b-bgLight-tetiary border-b-[1px] border-b-solid" />
+                        <div className="w-full px-4 flex flex-col py-2">
                             <Text
-                                textColor={theme.colors.text.primary}
+                                textColor={theme.colors.textLight.tetiary}
+                                size={TypographySize.xs}
                             >
                                 {"Mother's hometown"}
                             </Text>
@@ -370,7 +446,7 @@ const NiaDownloadableRecord = (
                     <DownloadbleContainer 
                         title="Next of kin"
                     >
-                        <div className="w-full p-4 flex gap-2">
+                        <div className="w-full px-4 flex gap-2">
                             <DownloadableList 
                                 data={NextOfKin}
                             />
@@ -380,7 +456,7 @@ const NiaDownloadableRecord = (
                     <DownloadbleContainer 
                         title="Verification document"
                     >
-                        <div className="w-full p-4 flex gap-2">
+                        <div className="w-full px-4 flex gap-2">
                             <DownloadableList 
                                 data={verificationDocument}
                                 first={2}
@@ -395,7 +471,7 @@ const NiaDownloadableRecord = (
                     <DownloadbleContainer 
                         title="Contact"
                     >
-                        <div className="w-full p-4 flex gap-2">
+                        <div className="w-full px-4 flex gap-2">
                             <DownloadableList 
                                 data={contact}
                             />
@@ -405,15 +481,54 @@ const NiaDownloadableRecord = (
                     <DownloadbleContainer 
                         title="Instituitional Ids"
                     >
-                        <div className="w-full p-4 flex gap-2">
+                        <div className="w-full px-4 flex gap-2">
                             <DownloadableList 
                                 data={institutionalIds}
                             />
                         </div>
                     </DownloadbleContainer>
+
+                    {
+                        criminalRecord.length &&
+                        <div className="page-break">
+                            <DownloadbleContainer 
+                                title="Criminal Records"
+                            >
+                                {
+                                    criminalRecord.map((record : any, index : number) => (
+                                        <Fragment key={index}>
+                                            <div className="w-full p-4 flex flex-col gap-2">
+                                                <Text
+                                                    textColor={theme.colors.text.tetiary}
+                                                >
+                                                    {`#${index}`}
+                                                </Text>
+                                                <div className="w-full flex gap-2">
+                                                    <DownloadableList 
+                                                        data={record}
+                                                        evenBg={theme.colors.bg.secondary}
+                                                        first={3}
+                                                    />
+                                                    <DownloadableList 
+                                                        data={record}
+                                                        evenBg={theme.colors.bg.secondary}
+                                                        last={3}
+                                                    />
+                                                </div>
+                                            </div>
+                                            {
+                                                index !== criminalRecord.length -1 &&
+                                                <Divider className="!border-b-bgLight-tetiary border-b-[1px] border-b-solid" />
+                                            }
+                                        </Fragment>
+                                    ))
+                                }
+                            </DownloadbleContainer>
+                        </div>
+                    }
                 </div>
             }
         </div>
     )
 }
-export default NiaDownloadableRecord
+export default PrintableFvlconizationResult

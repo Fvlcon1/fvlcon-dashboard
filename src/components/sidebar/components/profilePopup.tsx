@@ -22,8 +22,7 @@ const ProfilePopup = ({
         {
           name: `Logout`,
           onClick: () => {
-            signOut({redirect : false})
-            router.push('/')
+            signOut()
           },
           icon: <BiLogOut color={theme.colors.text.secondary}/>,
           closeOnClick : true,

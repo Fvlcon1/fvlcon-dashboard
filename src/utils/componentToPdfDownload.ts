@@ -3,46 +3,56 @@ import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
 import { message } from "antd";
 
-export const componentToPdfDownload = async (componentRef: RefObject<HTMLDivElement>, scaleFactor : number = 2) => {
+export const componentToPdfDownload = async (componentRef: RefObject<HTMLDivElement>, scaleFactor: number = 2, filename? : string) => {
     const key = "downloading";
 
     try {
-        message.loading({ content: "downloading...", key, duration: 0 });
+        message.loading({ content: "Downloading...", key, duration: 0 });
 
         if (componentRef.current) {
             const element = componentRef.current;
 
-            // Capture the component as a canvas using html2canvas
-            const canvas = await html2canvas(element, { useCORS: true });
+            // Ensure all Next.js images are fully loaded before capturing
+            const images = element.querySelectorAll("img");
+            await Promise.all(
+                Array.from(images).map((img) => {
+                    return new Promise((resolve, reject) => {
+                        if (img.complete) resolve(true);
+                        img.onload = () => resolve(true);
+                        img.onerror = () => reject(new Error(`Image failed to load: ${img.src}`));
+                    });
+                })
+            );
+
+            // Capture component as a canvas
+            const canvas = await html2canvas(element, { useCORS: true, allowTaint: true });
 
             // Manually scale the canvas for higher resolution
             const scaledCanvas = document.createElement("canvas");
-            scaledCanvas.width = canvas.width * scaleFactor; // Apply scale factor
-            scaledCanvas.height = canvas.height * scaleFactor; // Apply scale factor
+            scaledCanvas.width = canvas.width * scaleFactor;
+            scaledCanvas.height = canvas.height * scaleFactor;
 
             const ctx = scaledCanvas.getContext("2d");
             if (ctx) {
-                ctx.scale(scaleFactor, scaleFactor); // Scale the context by the factor
-                ctx.drawImage(canvas, 0, 0); // Draw the original canvas onto the scaled canvas
+                ctx.scale(scaleFactor, scaleFactor);
+                ctx.drawImage(canvas, 0, 0);
             }
 
             // Create a PDF document
             const pdf = new jsPDF({
                 orientation: "portrait",
                 unit: "px",
-                format: "a4", // A4 format for the pages
+                format: "a4",
             });
 
             const pageWidth = pdf.internal.pageSize.getWidth();
             const pageHeight = pdf.internal.pageSize.getHeight();
 
-            // Calculate the height of the scaled content to maintain aspect ratio
             const contentWidth = scaledCanvas.width;
             const contentHeight = scaledCanvas.height;
-
             const scaledHeight = (contentHeight * pageWidth) / contentWidth;
 
-            let yOffset = 0; // Tracks the current vertical position in the content
+            let yOffset = 0;
 
             while (yOffset < scaledCanvas.height) {
                 const pageCanvas = document.createElement("canvas");
@@ -54,7 +64,7 @@ export const componentToPdfDownload = async (componentRef: RefObject<HTMLDivElem
                     pageCtx.drawImage(
                         scaledCanvas,
                         0,
-                        yOffset, // Start at the current offset
+                        yOffset,
                         scaledCanvas.width,
                         pageCanvas.height,
                         0,
@@ -64,10 +74,8 @@ export const componentToPdfDownload = async (componentRef: RefObject<HTMLDivElem
                     );
                 }
 
-                // Convert the cropped canvas into an image
                 const pageImage = pageCanvas.toDataURL("image/png");
 
-                // Add the image to the PDF
                 if (yOffset === 0) {
                     pdf.addImage(pageImage, "PNG", 0, 0, pageWidth, (pageWidth * pageCanvas.height) / pageCanvas.width);
                 } else {
@@ -75,14 +83,13 @@ export const componentToPdfDownload = async (componentRef: RefObject<HTMLDivElem
                     pdf.addImage(pageImage, "PNG", 0, 0, pageWidth, (pageWidth * pageCanvas.height) / pageCanvas.width);
                 }
 
-                yOffset += pageCanvas.height; // Move to the next section of the content
+                yOffset += pageCanvas.height;
             }
 
-            // Trigger download
-            pdf.save("document.pdf");
-            message.success({ content: "download completed", key });
+            pdf.save(filename ? `${filename}.pdf` : "document.pdf");
+            message.success({ content: "Download completed", key });
         } else {
-            message.warning({ content: "Current value of ref is empty", key });
+            message.warning({ content: "Component not found", key });
         }
     } catch (error) {
         message.error({ content: "Failed to generate PDF", key });

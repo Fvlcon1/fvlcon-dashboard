@@ -15,7 +15,6 @@ const TableBody = ({
 } : {
     data : SegmentationLogsTypes[]
 }) => {
-    console.log({data})
     const [zoom, setZoom] = useState(false)
     const [zoomImage, setZoomImage] = useState('')
     return (

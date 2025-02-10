@@ -1,17 +1,48 @@
 import { notFound } from "next/navigation";
 import '../components/style.css'
-import { getFvlconizationLogs } from "../utils/getFvlconizationLogs";
+import { getFvlconizationLog } from "../utils/getFvlconizationLogs";
+import PrintableFvlconizationResult from '../components/printableFvlconizationResult';
+import { FvlconizationLogs } from "@prisma/client";
 
-const Printable = async ({ params }: { params: { id: string } }) => {
+const Printable = async (
+  { 
+    params, 
+    searchParams
+   }: { 
+    params: { id: string }; 
+    searchParams: { 
+      faceId: string, 
+      action: string
+      filename? : string
+    }
+    }
+) => {
   const recordId = params.id;
-  const logs = await getFvlconizationLogs()
-  console.log({logs})
+  const faceId = searchParams.faceId
+  const action = searchParams.action
+  const filename = searchParams.filename
+  const log : FvlconizationLogs = await getFvlconizationLog(recordId)
+  console.log({log})
 
+  
+  //gets Nia details of person with the provided faceId from the log
+  const findMediaWidthFaceId = log.media?.find((item)=>(item as any)?.matchedFaceId===faceId)
+  const niaDetail = (findMediaWidthFaceId as any)?.matchedPersonDetails
+  
+  const croppedImageUrl = (findMediaWidthFaceId as any)?.segmentedImageUrl
+  const uploadedImageUrl = (log as any).uploadedImageUrl
+  
   return (
     <div
       className="w-full max-w-[800px] bg-white rounded-t-lg mt-[20px]"
     >
-
+      <PrintableFvlconizationResult 
+        croppedImageUrl={croppedImageUrl}
+        uploadedImageUrl={uploadedImageUrl}
+        action={action}
+        filename={filename}
+        data={niaDetail}
+      />
     </div>
   )
 }

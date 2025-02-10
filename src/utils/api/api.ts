@@ -68,10 +68,11 @@ export class protectedAPI {
     message.warning("Unauthorized")
     // Sign out the user
     await signOut({ redirect: false });
+
     // Client-side redirect if `window` is available
-    if (typeof window !== 'undefined') {
-      window.location.href = `/auth/login`;
-    }
+    // if (typeof window !== 'undefined') {
+    //   window.location.href = `/auth/login`;
+    // }
   };
 }
 

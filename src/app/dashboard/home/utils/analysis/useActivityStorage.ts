@@ -12,7 +12,7 @@ import { base64ToBlob } from "@/utils/base63ToBlob"
 const privateApi = new protectedAPI()
 
 const useActivityStorage = () => {
-    const { timer } = useContext(HomeContext)
+    const { timer, setFvlconizationLogId } = useContext(HomeContext)
     const timerRef = useRef(timer)
 
     // Keep the ref updated with the latest timer value
@@ -34,7 +34,7 @@ const useActivityStorage = () => {
         try {
             const { media, status, type, uploadedImageS3key } = data
     
-            const response = await privateApi.post("/fvlconizationLogs/addFvlconizationLogs", {
+            const response:any = await privateApi.post("/fvlconizationLogs/addFvlconizationLogs", {
                 uploadedImageS3key,
                 media,
                 date: new Date(),
@@ -42,6 +42,9 @@ const useActivityStorage = () => {
                 status,
                 type,
             })
+
+            setFvlconizationLogId(response?.data.id)
+            console.log({id:response?.data.id})
         } catch (error) {
             message.error("Unable to store logs")
             console.log({error})
@@ -78,6 +81,8 @@ const useActivityStorage = () => {
                 videoS3Key, 
                 occurance
             })
+
+            return response.data
         } catch (error) {
             message.error("Unable to store logs")
             console.log({error})

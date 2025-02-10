@@ -41,6 +41,7 @@ const Matches = ({
 
     useEffect(()=>{
         sortMatches()
+        console.log({faces : faces.data})
     },[faces])
     return (
         <>
@@ -104,6 +105,7 @@ const Matches = ({
                                                 similarity={item.similarity}
                                                 key={index}
                                                 title={`Match ${index + 1}`}
+                                                faceId={item.details.FaceId}
                                                 description={`${item.details?.personDetails.surname ?? ''} ${item.details?.personDetails.forenames ?? ''}`}
                                                 details={item.details}
                                                 occurances={item.occurances}

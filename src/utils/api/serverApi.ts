@@ -35,6 +35,9 @@ const getHeaders = async () => {
   };
 };
 
+/**
+ * The same as the normal api class, but this helps fetch session in server components instead of client components
+ */
 export class protectedAPI {
   public get = async <T>(url: string, params?: T) => {
     const headers = await getHeaders();

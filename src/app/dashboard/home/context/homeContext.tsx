@@ -31,6 +31,8 @@ export const HomeContext = createContext<{
   occurance : occurance | undefined
   timer : number
   setTimer : Dispatch<SetStateAction<number>>
+  setFvlconizationLogId: Dispatch<SetStateAction<string | undefined>>
+  FvlconizationlogId: string | undefined
 }>({
   displayMatches: false,
   setDisplayMatches: ()=>{},
@@ -57,7 +59,9 @@ export const HomeContext = createContext<{
   setOccurance : ()=>{},
   occurance : undefined,
   timer : 0,
-  setTimer : ()=>{}
+  setTimer : ()=>{},
+  setFvlconizationLogId: ()=>{},
+  FvlconizationlogId: undefined
 });
 
 export const HomeContextProvider = ({ 
@@ -75,6 +79,7 @@ export const HomeContextProvider = ({
   const [seekVideoTimestamp, setSeekVideoTimestamp] = useState<number>(0)
   const [occurance, setOccurance] = useState<occurance>()
   const [timer, setTimer] = useState(0)
+  const [FvlconizationlogId, setFvlconizationLogId] = useState<string>()
   const [distinctFaces, setDistinctFaces] = useState<FetchState<FaceCanvasType[]>>({
     isEmpty : false,
     isLoading : false,
@@ -88,6 +93,8 @@ export const HomeContextProvider = ({
   return (
     <HomeContext.Provider 
       value={{
+        setFvlconizationLogId,
+        FvlconizationlogId,
         displayMatches,
         timer,
         setTimer,

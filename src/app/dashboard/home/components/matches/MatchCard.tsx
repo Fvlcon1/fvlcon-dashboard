@@ -1,6 +1,6 @@
 'use client'
 
-import React, { Dispatch, SetStateAction, useEffect } from "react"
+import React, { Dispatch, SetStateAction, useContext, useEffect } from "react"
 import AppTypography from "@styles/components/appTypography"
 import Flex from "@styles/components/flex"
 import theme from "@styles/theme"
@@ -33,12 +33,13 @@ const MatchCard = ({
     details,
     occurances,
     currentOccurance,
+    faceId,
     setOccurance
 } : {
     croppedImage : string
     boundedImage : string
     matchedImage? : string
-    similarity? : number
+    similarity? : number,
     title? : string,
     rightButtonClick? : ()=> void,
     MiddleButtonTitle? : string,
@@ -46,6 +47,7 @@ const MatchCard = ({
     description? : string,
     showExpand? : boolean,
     details? : any
+    faceId? :string
     occurances?: occurance
     currentOccurance?: occurance
     setOccurance: Dispatch<SetStateAction<occurance | undefined>>
@@ -87,6 +89,7 @@ const MatchCard = ({
                 data={details}
                 croppedImage={croppedImage}
                 boundedImage={boundedImage}
+                faceId={faceId}
             />
             <div 
                 className={`p-2 py-1 min-w-[400px] cursor-pointer w-[400px] h-fit flex flex-col gap-1 rounded-lg bg-gradient-container-black ${getSelectedOccurenceClass() ?? ''}`}

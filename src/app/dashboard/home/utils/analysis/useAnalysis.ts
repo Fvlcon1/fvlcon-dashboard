@@ -212,7 +212,9 @@ export const useAnalysis = (imageRef: RefObject<HTMLImageElement>) => {
                             const uniqueFileName = `${nanoid()}-${new Date().toISOString()}`;
                             const uploadUrl = await privateApi.get("/fvlconizationLogs/getUploadPresignedUrl", {filename : uniqueFileName})
                             if(uploadUrl?.data){
-                                const uploadImage = await axios.put(uploadUrl.data, face?.croppedImage)
+                                const imageJpeg = await convertDataUrlToJpeg(face.croppedImage)
+                                const fileToUpload = dataURLToBlob(imageJpeg)
+                                const uploadImage = await axios.put(uploadUrl.data, fileToUpload)
                                 return {
                                     segmentedImageS3key : uniqueFileName,
                                     matchedFaceId : face?.details?.FaceId ?? '',
@@ -250,7 +252,7 @@ export const useAnalysis = (imageRef: RefObject<HTMLImageElement>) => {
                                     message.error("Error storing logs")
                                 }
                                 setFvlconizing(false)
-                                storeFvlcoinzationResults({
+                                return await storeFvlcoinzationResults({
                                     uploadedImageS3key : uploadImageFilename,
                                     media : faceDetails,
                                     timeElapsed : timer,
@@ -347,7 +349,7 @@ export const useAnalysis = (imageRef: RefObject<HTMLImageElement>) => {
                     occurance : facesGroupedByIndex
                 })
             } else {
-                ImageFvlconization()
+                return ImageFvlconization()
             }
         } catch (error : any) {
             console.log({error})

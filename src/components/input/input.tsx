@@ -2,7 +2,7 @@
 
 import { hexOpacity } from "@/utils/hexOpacity"
 import theme from "@styles/theme"
-import { ChangeEventHandler, Dispatch, FocusEventHandler, ReactNode, SetStateAction, useState } from "react"
+import { ChangeEventHandler, Dispatch, FocusEventHandler, ReactNode, SetStateAction, useEffect, useRef, useState } from "react"
 
 type InputProps = {
     className?: string;
@@ -17,7 +17,8 @@ type InputProps = {
     autofocus? : boolean
     onChange? : ChangeEventHandler<HTMLInputElement>
     onBlur? : FocusEventHandler<HTMLInputElement>
-    name? : string
+    name? : string,
+    autoSelect? : boolean
   } & (
     | { content: string; setContent?: Dispatch<SetStateAction<string>> }
     | { content: number; setContent?: Dispatch<SetStateAction<number>> }
@@ -38,10 +39,17 @@ type InputProps = {
     onChange,
     onBlur,
     required,
-    borderColor
+    borderColor,
+    autoSelect
   }: InputProps) => {
     const [inputFocus, setInputFocus] = useState<boolean>(false);
     const [hover, setHover] = useState<boolean>(false);
+    const inputRef = useRef<HTMLInputElement>(null);
+
+    useEffect(()=>{
+      if (autoSelect && inputRef.current)
+        inputRef.current.select();
+    },[autoSelect])
   
     return (
       <div
@@ -53,6 +61,7 @@ type InputProps = {
       >
         {PreIcon && PreIcon}
         <input
+          ref={inputRef}
           placeholder={placeholder ?? "Input text"}
           type={type ?? "text"}
           required={required}

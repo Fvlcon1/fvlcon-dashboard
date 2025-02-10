@@ -5,7 +5,7 @@ import OverlayWindow from "@components/window/overlayWindow"
 import Text from "@styles/components/text"
 import { TypographySize } from "@styles/style.types"
 import theme from "@styles/theme"
-import { useEffect, useRef, useState } from "react"
+import { Fragment, useContext, useEffect, useRef, useState } from "react"
 import List from "../components/list"
 import Container from "../components/container"
 import Image from "next/image"
@@ -18,17 +18,23 @@ import { componentToPdfDownload } from "@/utils/componentToPdfDownload"
 import { FvlconizationLogsTypes } from "@/app/activityLog/fvlconizationLogs/components/fvlconizationLogs.types"
 import { useReactToPrint } from "react-to-print"
 import NiaDownloadableRecord from "./niaDownloadableRecord"
+import Link from "next/link"
+import { HomeContext } from "@/app/dashboard/home/context/homeContext"
+import Modal from "@components/modal/modal"
+import Input from "@components/input/input"
 
 const NiaRecord = ({
     visible,
     setVisible,
     data,
+    faceId,
     croppedImage,
     boundedImage
 } : {
     visible : boolean,
     setVisible : React.Dispatch<React.SetStateAction<boolean>>
-    data? : any
+    data? : any,
+    faceId? : string
     croppedImage : string
     boundedImage : string
 }) => {
@@ -50,7 +56,8 @@ const NiaRecord = ({
         verificationDocument : verificationDoc,
         contact : cont,
         institutionalIds : IIds,
-        imageUrl
+        imageUrl,
+        criminalRecord : Crec
     } = data ?? {}
     const applicationDetails = [
         ["Type of application", appDetes?.typeOfApplication],
@@ -132,10 +139,25 @@ const NiaRecord = ({
         ["Voter's Id number",  IIds?.votersIdNumber],
         ["Date issued",  IIds?.dateIssued],
     ]
+    const criminalRecord : any[] = Crec?.map((record : any)=>{
+        return [
+            ["Arrest Date",  (new Date(record?.arrestDate)).toDateString()],
+            ["Arresting Officer",  record?.arrestingOfficer],
+            ["Criminal Record Id",  record?.criminalRecordId],
+            ["Offence Type",  record?.offenceTypee],
+            ["Person Id",  record?.personId],
+            ["Sentence Length (months)",  record?.sentenceLengthMonths],
+        ]
+    })
 
+    const statelessFilename = `${personDetails[1][1]}${personDetails[0][1]}${(new Date()).toISOString()}`
+    
     const [showDownloadableComponent, setShowDownloadableComponent] = useState(false);
     const [showDownloadableComponentToPrint, setShowDownloadableComponentToPrint] = useState(false);
+    const { FvlconizationlogId } = useContext(HomeContext)
     const refobj = useRef<HTMLDivElement>(null);
+    const [showFilenameContainer, setShowFilenameContainer] = useState(false)
+    const [filename, setFilename] = useState(statelessFilename)
 
     const reactToPrintFn = useReactToPrint({
         contentRef : refobj,
@@ -151,7 +173,8 @@ const NiaRecord = ({
     });
 
     const handlePdfDownload = () => {
-        setShowDownloadableComponent(true);
+        setFilename(statelessFilename)
+        window.open(`/printable/fvlconizationResult/${FvlconizationlogId}?faceId=${faceId}&action=download&filename=${filename}`, "_blank")
     };
 
     const handlePrint = () => {
@@ -159,15 +182,15 @@ const NiaRecord = ({
     };
 
     const downloadPdf = async () => {
-    try {
-        setTimeout(async () => {
-        await componentToPdfDownload(refobj, 1);
-        setShowDownloadableComponent(false);
-        }, 2000);
-    } catch (error) {
-        console.log({ error });
-        setShowDownloadableComponent(false);
-    }
+        try {
+            setTimeout(async () => {
+            await componentToPdfDownload(refobj, 1);
+            setShowDownloadableComponent(false);
+            }, 2000);
+        } catch (error) {
+            console.log({ error });
+            setShowDownloadableComponent(false);
+        }
     };
 
     useEffect(() => {
@@ -200,14 +223,12 @@ const NiaRecord = ({
                     key='Download'
                     title="Download"
                 >
-                    <ClickableTab
-                        className=""
-                        onClick={handlePdfDownload}
-                    >
+                    <ClickableTab>
                         <FaDownload
                             color={theme.colors.text.primary}
                             size={12}
                             className="hover:scale-125 duration-200 opacity-50 hover:opacity-100"
+                            onClick={()=>setShowFilenameContainer(true)}
                         />
                     </ClickableTab>
                 </Tooltip>,
@@ -215,19 +236,41 @@ const NiaRecord = ({
                     key='Print' 
                     title="Print"
                 >
-                    <ClickableTab
-                        className=""
-                        onClick={handlePrint}
+                    <Link
+                        href={`/printable/fvlconizationResult/${FvlconizationlogId}?faceId=${faceId}`}
+                        target="_blank"
                     >
-                        <FaPrint
-                            color={theme.colors.text.primary}
-                            size={12}
-                            className="hover:scale-125 duration-200 opacity-50 hover:opacity-100"
-                        />
-                    </ClickableTab>
+                        <ClickableTab>
+                            <FaPrint
+                                color={theme.colors.text.primary}
+                                size={12}
+                                className="hover:scale-125 duration-200 opacity-50 hover:opacity-100"
+                            />
+                        </ClickableTab>
+                    </Link>
                 </Tooltip>
             ]}
         >
+            {
+                <Modal 
+                    display={showFilenameContainer}
+                    setDisplay={setShowFilenameContainer}
+                    onOkayClick={handlePdfDownload}
+                    onCancel={()=>setFilename(statelessFilename)}
+                    okayButtonText="Download"
+                    title="Enter filename"
+                >
+                    <Input 
+                        content={filename}
+                        setContent={setFilename}
+                        className="!rounded-md"
+                        placeholder={`${personDetails[1][1]}${personDetails[0][1]}${(new Date()).toISOString()}`}
+                        autofocus
+                        required
+                        autoSelect
+                    />
+                </Modal>
+            }
             {(showDownloadableComponent || showDownloadableComponentToPrint) &&
                 <NiaDownloadableRecord 
                     ref={refobj} 
@@ -549,6 +592,40 @@ const NiaRecord = ({
                             />
                         </div>
                     </Container>
+
+                    {
+                        criminalRecord.length &&
+                        <Container 
+                            title="Criminal Records"
+                        >
+                            {
+                                criminalRecord.map((record : any, index : number) => (
+                                    <Fragment key={index}>
+                                        <div className="w-full p-4 flex flex-col gap-2">
+                                            <Text
+                                                textColor={theme.colors.text.tetiary}
+                                            >
+                                                {`#${index}`}
+                                            </Text>
+                                            <div className="w-full flex gap-2">
+                                                <List 
+                                                    data={record}
+                                                    evenBg={theme.colors.bg.secondary}
+                                                    first={3}
+                                                />
+                                                <List 
+                                                    data={record}
+                                                    evenBg={theme.colors.bg.secondary}
+                                                    last={3}
+                                                />
+                                            </div>
+                                        </div>
+                                        <Divider />
+                                    </Fragment>
+                                ))
+                            }
+                        </Container>
+                    }
                 </div>
             }
         </OverlayWindow>
