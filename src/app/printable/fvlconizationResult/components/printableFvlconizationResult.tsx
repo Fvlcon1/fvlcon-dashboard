@@ -35,6 +35,7 @@ const PrintableFvlconizationResult = (
             timeElapsed : number
             status : string
             type : string
+            accuracy : number
         }
         // boundedImage : string
     }, 
@@ -43,7 +44,7 @@ const PrintableFvlconizationResult = (
     const [zoomImage, setZoomImage] = useState('')
     const [imagesLoaded, setImagesLoaded] = useState(false);
     const refobj = useRef<HTMLDivElement>(null);
-    const {date, timeElapsed, status, type } = fvlconizationResultsDetails
+    const {date, timeElapsed, status, type, accuracy } = fvlconizationResultsDetails
     
     const {
         applicationDetails : appDetes,
@@ -158,7 +159,8 @@ const PrintableFvlconizationResult = (
         ["Date", date],
         ["Time Elapsed", `${formatTime(timeElapsed)}`],
         ["Status", status],
-        ["Type", type]
+        ["Type", type],
+        ["Accuracy", `${accuracy.toFixed(4)}%`]
     ]
 
     if(criminalRecord){

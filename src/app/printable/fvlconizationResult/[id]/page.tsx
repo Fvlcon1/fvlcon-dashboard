@@ -34,7 +34,8 @@ const Printable = async (
   const date = (log as any)?.date
   const timeElapsed = (log as any)?.timeElapsed
   const status = (log as any)?.status
-  
+  const accuracy = (findMediaWidthFaceId as any)?.accuracy
+
   return (
     <div
       className="w-full max-w-[800px] bg-white rounded-t-lg mt-[20px]"
@@ -46,7 +47,7 @@ const Printable = async (
         filename={filename}
         data={niaDetail}
         fvlconizationResultsDetails={{
-          type, date, timeElapsed, status
+          type, date, timeElapsed, status, accuracy
         }}
       />
     </div>
