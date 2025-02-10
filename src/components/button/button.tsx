@@ -68,6 +68,7 @@ const Button = ({
       onMouseUp={()=>setOnPress(false)}
       className={`${className} duration-200 ${disabled && 'cursor-not-allowed'}`}
       disabled={disabled ?? loading}
+      type={type ?? 'submit'}
     >
       <div className="w-full justify-center items-center flex gap-[8px]">
         {

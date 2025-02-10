@@ -12,6 +12,7 @@ import getDate from "@/utils/getDate"
 import DownloadableList from "./downloadableList"
 import DownloadbleContainer from "./downloadableContainer"
 import { componentToPdfDownload } from "@/utils/componentToPdfDownload"
+import { formatTime } from "@/utils/formatTime"
 
 const PrintableFvlconizationResult = (
     { 
@@ -19,7 +20,8 @@ const PrintableFvlconizationResult = (
         croppedImageUrl, 
         uploadedImageUrl,
         action,
-        filename
+        filename,
+        fvlconizationResultsDetails
         // boundedImage
      }: 
     { 
@@ -28,6 +30,12 @@ const PrintableFvlconizationResult = (
         uploadedImageUrl : string
         action?: string
         filename? : string
+        fvlconizationResultsDetails : {
+            date : string
+            timeElapsed : number
+            status : string
+            type : string
+        }
         // boundedImage : string
     }, 
 ) => {
@@ -35,6 +43,8 @@ const PrintableFvlconizationResult = (
     const [zoomImage, setZoomImage] = useState('')
     const [imagesLoaded, setImagesLoaded] = useState(false);
     const refobj = useRef<HTMLDivElement>(null);
+    const {date, timeElapsed, status, type } = fvlconizationResultsDetails
+    
     const {
         applicationDetails : appDetes,
         personDetails : personDetes, 
@@ -144,8 +154,16 @@ const PrintableFvlconizationResult = (
             ["Sentence Length (months)",  record?.sentenceLengthMonths],
         ]
     })
-    console.log({criminalRecord, Crec})
-    criminalRecord.length = 1
+    const fvlcoinzationResultsDetes = [
+        ["Date", date],
+        ["Time Elapsed", `${formatTime(timeElapsed)}`],
+        ["Status", status],
+        ["Type", type]
+    ]
+
+    if(criminalRecord){
+        criminalRecord.length = 1
+    }
 
     const waitForAllImagesToLoad = () => {
         const images = document.querySelectorAll("img");
@@ -258,6 +276,16 @@ const PrintableFvlconizationResult = (
                             </div>
                         </div>
                     </div>
+                    <DownloadbleContainer
+                        title="Fvlconization Details"
+                    >
+                        <div className="w-full px-4 flex gap-2">
+                            <DownloadableList 
+                                data={fvlcoinzationResultsDetes}
+                            />
+                        </div>
+                    </DownloadbleContainer>
+
                     <DownloadbleContainer
                         title="Application Details"
                     >

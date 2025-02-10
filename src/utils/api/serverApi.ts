@@ -1,4 +1,3 @@
-import { message } from 'antd';
 import axios from 'axios';
 import { signOut } from 'next-auth/react';
 import { getServerSession } from 'next-auth';
@@ -66,13 +65,6 @@ export class protectedAPI {
   };
 
   private handleAuthError = async () => {
-    message.warning("Unauthorized");
-
-    // Clear session cookies manually in a server context
-    cookies().delete('next-auth.session-token');
-
-    // No direct redirect since we're in a server component
-    await signOut({ redirect: false });
   };
 }
 

@@ -76,6 +76,7 @@ export const Modal = ({
                                 <div className="w-full flex gap-2">
                                     <Button
                                         text='Cancel'
+                                        type="button"
                                         className='!w-full !bg-transparent hover:!bg-bg-quantinary border-solid border-[1px] border-bg-quantinary'
                                         size={{
                                             height : '45px'
