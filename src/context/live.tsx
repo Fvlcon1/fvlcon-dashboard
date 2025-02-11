@@ -40,23 +40,30 @@ export const LiveProvider = ({ children }: { children: ReactNode }) => {
         //     streamName : "stream2",
         //     coordinates : [6.669450646774655, -1.5176043915812956]
         // },
+        // {
+        //     id : '3',
+        //     url : "https://ljexe63ri7c60g-4000.proxy.runpod.net/output6.m3u8",
+        //     location : 'Kumasi',
+        //     streamName : "stream2",
+        //     coordinates : [6.669450646774655, -1.5176043915812956]
+        // },
+        // {
+        //     id : '4',
+        //     url : "https://ljexe63ri7c60g-3000.proxy.runpod.net/output1.m3u8",
+        //     location : 'Kumasi',
+        //     streamName : "stream2",
+        //     coordinates : [6.669450646774655, -1.5176043915812956]
+        // },
         {
-            id : '3',
-            url : "https://ljexe63ri7c60g-4000.proxy.runpod.net/output6.m3u8",
+            id : '5',
+            url : "/assets/dev/outputShort.mp4",
             location : 'Kumasi',
             streamName : "stream2",
             coordinates : [6.669450646774655, -1.5176043915812956]
         },
         {
-            id : '3',
-            url : "https://ljexe63ri7c60g-3000.proxy.runpod.net/output1.m3u8",
-            location : 'Kumasi',
-            streamName : "stream2",
-            coordinates : [6.669450646774655, -1.5176043915812956]
-        },
-        {
-            id : '3',
-            url : "https://ljexe63ri7c60g-5000.proxy.runpod.net/output1.m3u8",
+            id : '5',
+            url : "/assets/dev/outputLong.mp4",
             location : 'Kumasi',
             streamName : "stream2",
             coordinates : [6.669450646774655, -1.5176043915812956]

@@ -146,6 +146,7 @@ const LiveContainer = ({
                             playbackRates={[0.2, 0.5, 0.7, 1, 1.2, 1.5, 1.7, 2]}
                             placeholder="Stream"
                             autoPlay={true}
+                            loop
                         />
                     </div>
                     {/* <div id={id} className="w-full h-full relative">
