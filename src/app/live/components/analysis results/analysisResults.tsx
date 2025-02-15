@@ -20,7 +20,6 @@ const AnalysisResults = ({
     const [originalImageZoom, setOriginalImageZoom] = useState(false)
     const [capturedImageZoom, setCapturedImageZoom] = useState(false)
     const [plateImageZoom, setPlateImateZoom] = useState(false)
-    console.log({detections})
     return (
         <>
             {

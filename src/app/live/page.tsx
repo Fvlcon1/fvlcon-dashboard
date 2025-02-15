@@ -17,7 +17,6 @@ const Live = () => {
 
     return (
         <div className="relative h-full w-full flex flex-col pr-[190px] gap-4">
-            {/* <DvlaRecord /> */}
             <Flex
                 justify="space-between"
                 align="center"

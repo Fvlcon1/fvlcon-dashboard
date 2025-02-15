@@ -16,7 +16,6 @@ export const getUserDetailsFromTrackingData = async (trackingData : any) : Promi
         
         if(type === "plate"){
             const dvlaDetails = await fetchDvlaRecord(plateNumber)
-            console.log({dvlaDetails})
             const plateDetails: IPlateTrackingType = {
                 id : Id,
                 plateNumber,
@@ -29,10 +28,10 @@ export const getUserDetailsFromTrackingData = async (trackingData : any) : Promi
                 S3Key,
                 dvlaDetails
             }
-
+            
+            console.log({plateDetails})
             return plateDetails
         } else {
-            console.log({details})
             const userDetails: IPersonTrackingWithImageType = {
                 id : Id,
                 name: `${details?.personDetails?.forenames ?? ''} ${details?.personDetails?.surname ?? ''}`,
@@ -49,7 +48,6 @@ export const getUserDetailsFromTrackingData = async (trackingData : any) : Promi
                 similarity : Similarity,
                 originalImageUrl : details?.imageUrl ?? ''
             };
-            console.log({userDetails})
             return userDetails
         }
     } catch (error : any) {
@@ -66,5 +64,6 @@ const fetchDvlaRecord = async (plateNumber:string) => {
     if(plateNumber){
         const getRecord = await privateApi.get("/dvlarecords/getDvlaRecord", {plateNumber})
         const record = getRecord?.data
+        return record
     }
 }

@@ -36,6 +36,7 @@ const DvlaRecord = ({
         agentImageUrl,
         driverImageUrl
     } = data ?? {}
+    console.log({data})
     const personDetails = [
         ["Telephone number", personDetes?.phone],
         ["Email", personDetes?.email],
@@ -118,7 +119,7 @@ const DvlaRecord = ({
             <ZoomImage
                 setShow={setZoom}
                 show={zoom}
-                imageURL={require('@/assets/dev/mahama.png')} 
+                imageURL={driverImageUrl} 
             />
             {
                 data && Object.keys(data).length &&
@@ -188,7 +189,7 @@ const DvlaRecord = ({
                         title="Particulars of authorized agent"
                     >
                         <div className="w-full p-4 flex gap-2">
-                            <div className="h-[190px] w-[190px] rounded-lg bg-bg-quantinary relative overflow-hidden">
+                            {/* <div className="h-[190px] w-[190px] rounded-lg bg-bg-quantinary relative overflow-hidden">
                                 <Image
                                     alt="img"
                                     fill
@@ -196,7 +197,7 @@ const DvlaRecord = ({
                                     src={agentImageUrl}
                                     onClick={()=>setZoom(prev => !prev)}
                                 />
-                            </div>
+                            </div> */}
                             <List 
                                 data={agentDetails}
                                 evenBg={theme.colors.bg.secondary}

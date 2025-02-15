@@ -13,6 +13,7 @@ import { Dispatch, SetStateAction, useContext, useState } from "react"
 import { FaLocationDot } from "react-icons/fa6"
 import { liveComponentsContext } from "../context"
 import Pressable from "@components/button/pressable"
+import DvlaRecord from "@components/records/dvlaRecord/dvlaRecord"
 
 const PlateContainer = ({
     detections,
@@ -23,10 +24,15 @@ const PlateContainer = ({
     setImageZoom: Dispatch<SetStateAction<boolean>>
     detections: IPlateTrackingType
 }) => {
-    const {showDvlaRecord,setShowDvlaRecord} = useContext(liveComponentsContext)
+    const [showDvlaRecord,setShowDvlaRecord] = useState(false)
 
     return (
         <>
+            <DvlaRecord
+                display={showDvlaRecord}
+                setDisplay={setShowDvlaRecord}
+                data={detections.dvlaDetails}
+            />
             <div className="flex flex-col gap-1 w-full">
                 <div className="flex justify-between gap-2 items-center">
                     <Text
@@ -69,7 +75,9 @@ const PlateContainer = ({
                             Plate No:
                         </Text>
                         <Pressable
-                            onClick={()=>setShowDvlaRecord(true)}
+                            onClick={()=>{
+                                setShowDvlaRecord(true)
+                            }}
                             className="mt-[-2px]"
                         >
                             <Text

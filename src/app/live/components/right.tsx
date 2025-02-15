@@ -17,32 +17,38 @@ import Divider from "@components/divider/divider"
 import NoData from "@components/NoData/noData"
 import DvlaRecord from "@components/records/dvlaRecord/dvlaRecord"
 import { liveComponentsContext } from "./context"
+import { simulatedPlates } from "./simulatedPlates"
 
 const Right = () => {
     const [analysisResults, setAnalysisResults] = useState(true)
     const { messages } = useWebSocket(process.env.NEXT_PUBLIC_WEBSOCKET_URL!, message => onMessageUpdate(message));
     const [isMessageUpdated, setIsMessageUpdated] = useState(false)
     const [detections, setDetections] = useState<(IPersonTrackingWithImageType | IPlateTrackingType)[]>([])
-    const [dvlaRecord, setDvlaRecord] = useState<any>()
-    const {showDvlaRecord,setShowDvlaRecord} = useContext(liveComponentsContext)
 
     const onMessageUpdate = async (message : any) => {
         setIsMessageUpdated(true)
         const getDetails = await getUserDetailsFromTrackingData(message)
+        console.log({getDetails})
         if(getDetails){
             setDetections(prev => [...prev, getDetails])
         }
         setIsMessageUpdated(false)
     }
 
+    const runSimulation = () => {
+        simulatedPlates.forEach((plate, index) => {
+            setTimeout(() => {
+                onMessageUpdate(plate);
+            }, index * 5000);
+        });
+    };    
+
+    useEffect(()=>{
+        runSimulation()
+    },[])
+
     return (
         <>
-            <DvlaRecord
-                display={showDvlaRecord}
-                setDisplay={setShowDvlaRecord}
-                loading={isMessageUpdated}
-                data={dvlaRecord}
-            />
             <div className="fixed top-0 right-[60px] w-[210px] h-[100vh] py-4 px-6 gap-3">
                 <Flex
                     direction="column"
