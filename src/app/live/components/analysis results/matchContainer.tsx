@@ -69,7 +69,7 @@ const MatchContainer = ({
                             {detections.similarity?.toFixed(1)}
                         </Text>
                     </div>
-                    <div className="w-[65px] h-[65px] overflow-hidden bg-bg-secondary relative rounded-md">
+                    <div className="w-[65px] h-[65px] overflow-hidden bg-bg-tetiary relative rounded-md">
                     {
                             capturedImageUrl ?
                             <Image

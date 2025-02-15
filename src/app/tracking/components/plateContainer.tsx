@@ -6,11 +6,13 @@ import { IPersonTrackingType, IPlateTrackingType } from "./types"
 import { getRelativeTime } from "@/utils/getDate"
 import Pressable from "@components/button/pressable"
 import { capitalizeString } from "@/utils/capitalizeString"
-import { useContext } from "react"
+import { useContext, useState } from "react"
 import { trackingContext } from "../context/trackingContext"
 import { protectedAPI } from "@/utils/api/api"
 import { message } from "antd"
 import { parseCoordinates } from "@/utils/parseCoordinate"
+import ClickableTab from "@components/clickable/clickabletab"
+import Link from "next/link"
 
 const privateApi = new protectedAPI()
 
@@ -26,6 +28,7 @@ const PlateContainer = ({
     S3Key
 } : IPlateTrackingType) => {
     const {setCaptureDetails, setCenter, setWayPoints} = useContext(trackingContext)
+    const [hover, setHover] = useState(false)
 
     const handleSetCaptureDetails = async () => {
         setCaptureDetails({status : 'loading'})
@@ -54,8 +57,15 @@ const PlateContainer = ({
     }
 
     return (
-        <Pressable onClick={handleSetCaptureDetails}>
-            <div className="w-full px-3 hover:scale-[0.95] duration-200 flex flex-col gap-1 rounded-md">
+        <Pressable 
+            onClick={handleSetCaptureDetails}
+            scaleFactor={0.98}
+        >
+            <div 
+                className="w-full px-3 hover:scale-[0.99] duration-200 flex flex-col gap-1 rounded-md"
+                onMouseOver={()=>setHover(true)}
+                onMouseLeave={()=>setHover(false)}
+            >
                 <div className="flex gap-2 items-center ml-[-1px]">
                     <div className="rounded-md px-2 py-[2px] bg-bg-tetiary border-[1px] border-solid border-[#222222]">
                         <div className="mt-[-2px]">
@@ -75,8 +85,8 @@ const PlateContainer = ({
                                 Plate Number:
                             </Text>
                             <Text
-                                size={TypographySize.HM}
                                 textColor={theme.colors.text.primary}
+                                size={TypographySize.HM}
                             >
                                 {plateNumber}
                             </Text>
@@ -88,13 +98,13 @@ const PlateContainer = ({
                                     size={13}
                                 />
                                 <Text>
-                                    Location
+                                    Location:
                                 </Text>
                             </div>
                             <Text
                                 textColor={theme.colors.text.primary}
                             >
-                                • &nbsp;{locationName}
+                                {locationName}
                             </Text>
                         </div>
                         <div className="flex gap-1 items-center">
@@ -112,6 +122,19 @@ const PlateContainer = ({
                         </div>
                     </div>
                 </div>
+                {/* <div
+                    onClick={(e)=>{
+                        e.stopPropagation()
+                    }}
+                    className="w-fit"
+                >
+                    <Text
+                        textColor={theme.colors.main.primary}
+                        className="hover:!underline hover:!opacity-[.5] duration-200"
+                    >
+                        See Dvla Details...
+                    </Text>
+                </div> */}
             </div>
         </Pressable>
     )

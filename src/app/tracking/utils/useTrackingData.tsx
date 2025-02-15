@@ -23,6 +23,7 @@ const useTrackingData = () => {
             console.log("hi")
             const PersonCaptureDetails = captureDetails.data as IPersonTrackingType
             const faceId = PersonCaptureDetails?.faceId
+            const personLogId = PersonCaptureDetails?.id
             if(startTime > endTime){
                 message.warning("Start date must be less than end date")
                 return
@@ -55,7 +56,7 @@ const useTrackingData = () => {
                     name : point.lastSeen,
                     coordinates : point.coordinates
                 }))
-                storePersonTrackingLogs(faceId, locations, captureDetails.data.S3Key)
+                storePersonTrackingLogs(faceId, locations, captureDetails.data.S3Key, personLogId)
             } catch (error) {
                 console.log({error})
                 message.error("Unable to get tracking data")
@@ -105,12 +106,13 @@ const useTrackingData = () => {
         }
     }
 
-    const storePersonTrackingLogs = async (faceId : string, locations : {name : string, coordinates : number[]}[], S3Key : string) => {
+    const storePersonTrackingLogs = async (faceId : string, locations : {name : string, coordinates : number[]}[], S3Key : string, personLogId : string) => {
         try {
             const result = await axios.post('/api/logs/trackingLogs', {
                 faceId,
                 locations,
-                S3Key
+                S3Key,
+                personLogId
             })
             console.log({result})
         } catch (error) {

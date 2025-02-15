@@ -594,7 +594,7 @@ const NiaRecord = ({
                     </Container>
 
                     {
-                        criminalRecord.length &&
+                        criminalRecord?.length &&
                         <Container 
                             title="Criminal Records"
                         >

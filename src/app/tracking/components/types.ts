@@ -38,6 +38,7 @@ export type IPlateTrackingType = {
     imageUrl : string
     type : string
     userId : string
+    dvlaDetails? : any
 }
 
 export interface ITrackingWaypointsType extends IPersonTrackingType {

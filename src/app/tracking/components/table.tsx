@@ -33,12 +33,8 @@ const Table = () => {
 
     const { captureDetails } = useContext(trackingContext);
     const [newPersonTrackingData, setPersonTrackingData] = useState<{ status: 'loading' | null, data: IPersonTrackingWithImageType[] }>({ status: null, data: [] });
-    const [endDate, setEndDate] = useState<Date>(new Date());
-    const [startDate, setStartDate] = useState<Date>(() => {
-        const sevenDaysAgo = new Date(endDate);
-        sevenDaysAgo.setDate(endDate.getDate() - 7);
-        return sevenDaysAgo;
-    });
+    const [endDate, setEndDate] = useState<Date>();
+    const [startDate, setStartDate] = useState<Date>();
 
     const getTrackingHistory = async () => {
         const userId = sessionData?.user.userId;
@@ -46,11 +42,7 @@ const Table = () => {
         setPersonTrackingData({ data: [], status: 'loading' });
 
         try {
-            const response = await privateAPI.get("/tracking/getTrackingDataByUserIdAndTimeRange", {
-                userId,
-                startTime: startDate,
-                endTime: endDate
-            });
+            const response = await privateAPI.get("/tracking/getTrackingDataByUserId", { userId });
             const trackingData = response?.data?.data;
             
             const people: IPersonTrackingWithImageType[] = [];
@@ -97,8 +89,8 @@ const Table = () => {
     }
 
     return (
-        <div className="min-w-[200px] max-w-full h-full overflow-auto">
-            <table className="w-full min-w-[1000px]">
+        <div className="min-w-[200px] max-w-full h-full overflow-auto ">
+            <table className="w-full min-w-[700px]">
                 <TableHead />
                 {
                     newPersonTrackingData.data.length !== 0 &&

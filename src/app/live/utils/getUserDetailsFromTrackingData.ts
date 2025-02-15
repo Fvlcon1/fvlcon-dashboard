@@ -4,7 +4,7 @@ import getLocationNameFromCordinates from "@/utils/getLocationNameFromCoordinate
 import { parseCoordinates } from "@/utils/parseCoordinate"
 import { message } from "antd"
 
-const privateAPI = new protectedAPI()
+const privateApi = new protectedAPI()
 
 export const getUserDetailsFromTrackingData = async (trackingData : any) : Promise<IPersonTrackingWithImageType | IPlateTrackingType | undefined>  => {
     try {
@@ -15,6 +15,8 @@ export const getUserDetailsFromTrackingData = async (trackingData : any) : Promi
         const location = await getLocationNameFromCordinates(arrayCoordinates);
         
         if(type === "plate"){
+            const dvlaDetails = await fetchDvlaRecord(plateNumber)
+            console.log({dvlaDetails})
             const plateDetails: IPlateTrackingType = {
                 id : Id,
                 plateNumber,
@@ -24,8 +26,10 @@ export const getUserDetailsFromTrackingData = async (trackingData : any) : Promi
                 timestamp : Timestamp,
                 type,
                 userId : UserId,
-                S3Key
-            };
+                S3Key,
+                dvlaDetails
+            }
+
             return plateDetails
         } else {
             console.log({details})
@@ -51,5 +55,16 @@ export const getUserDetailsFromTrackingData = async (trackingData : any) : Promi
     } catch (error : any) {
         console.log({error})
         message.error("Error fetching data")
+    }
+}
+
+/**
+ * Get dvla details of the plate
+ * @param plateNumber Number plate of the vehicle
+ */
+const fetchDvlaRecord = async (plateNumber:string) => {
+    if(plateNumber){
+        const getRecord = await privateApi.get("/dvlarecords/getDvlaRecord", {plateNumber})
+        const record = getRecord?.data
     }
 }

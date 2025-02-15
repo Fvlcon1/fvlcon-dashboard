@@ -12,8 +12,44 @@ const CamDetailsPerson = ({
     personData? : ICamDetilasPersonDataType
 }) => {
     return (
-        <div className="flex flex-col gap-2 overflow-y-hidden">
-            <div className="w-full py-2 px-3 gap-2 rounded-md bg-gradient-container flex flex-col">
+        <div className="flex flex-col gap-0 rounded-lg overflow-auto border-solid border-[1px] border-bg-secondary py-2 px-3 bg-gradient-container-md">
+            <table className="w-full">
+                <tbody>
+                    <tr className="border-b-solid border-b-[1px] border-b-bg-quantinary">
+                        <td className="py-1"><Text>Stream Name:</Text></td>
+                        <td>
+                            <Text textColor={theme.colors.text.primary}>
+                                {personData?.streamName}
+                            </Text>
+                        </td>
+                    </tr>
+                    <tr className="border-b-solid border-b-[1px] border-b-bg-quantinary">
+                        <td className="py-1"><Text>Last seen:</Text></td>
+                        <td>
+                            <Text textColor={theme.colors.text.primary}>
+                                &nbsp;{personData?.time && getRelativeTime(personData?.time).charAt(0).toUpperCase() + getRelativeTime(personData.time).slice(1)}
+                            </Text>
+                        </td>
+                    </tr>
+                    <tr className="border-b-solid border-b-[1px] border-b-bg-quantinary">
+                        <td className="py-1"><Text>Location:</Text></td>
+                        <td>
+                            <Text textColor={theme.colors.text.primary}>
+                                {personData?.lastSeen}
+                            </Text>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td className="py-1"><Text>Coordinates:</Text></td>
+                        <td>
+                            <Text textColor={theme.colors.text.primary}>
+                                &nbsp;{personData?.coordinates && `${personData.coordinates[0]}, ${personData.coordinates[1]}`}
+                            </Text>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            {/* <div className="w-full py-2 px-3 gap-2 rounded-md bg-gradient-container flex flex-col">
                 <div className="flex gap-1 items-center">
                     <FaVideo size={11} color={theme.colors.text.secondary}/>
                     <Text>
@@ -50,7 +86,7 @@ const CamDetailsPerson = ({
                         </Text>
                     </Text>
                 </div>
-            </div>
+            </div> */}
         </div>
     )
 }

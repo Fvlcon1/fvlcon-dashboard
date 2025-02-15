@@ -20,7 +20,9 @@ const RightControls = ({
     newPersonTrackingData,
     setFilteredSearchResults,
     setSearchResults,
-    searchResults
+    searchResults,
+    searchValue,
+    setSearchValue
 }: {
     newPersonTrackingData: {
         status: "loading" | null;
@@ -32,11 +34,12 @@ const RightControls = ({
     }>>
     setSearchResults: Dispatch<SetStateAction<{status: 'loading' | null, data: IPlateOrPerson[]}>>
     searchResults: {status: 'loading' | null, data: IPlateOrPerson[]}
+    setSearchValue: Dispatch<SetStateAction<string>>
+    searchValue: string
 }) => {
     const inputRef = useRef<HTMLInputElement | null>(null);
     const { imageUrl, setImageUrl } = useContext(trackingContext);
     const [dataType, setDataType] = useState<'all' | 'plate' | 'person'>('all');
-    const [searchValue, setSearchValue] = useState<string>('')
 
     const inputClicked = () => {
         inputRef.current?.click();
@@ -93,7 +96,7 @@ const RightControls = ({
             setFilteredSearchResults(prev => ({
                 ...prev,
                 data: [
-                    ...prev.data,
+                    ...searchResults.data,
                     ...(dataType === 'all' ? [item] : (dataType === item.type ? [item] : []))
                 ]
             }));

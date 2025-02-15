@@ -1,14 +1,16 @@
 'use client'
-import { ReactNode, useState } from "react";
+import { MouseEvent, ReactNode, useState } from "react";
 
 const Pressable = ({
   children,
   onClick,
-  className
+  className,
+  scaleFactor
 } : {
   children : ReactNode
-  onClick? : ()=>void
-  className? : string
+  onClick? : (e:MouseEvent<HTMLDivElement, globalThis.MouseEvent>)=>void
+  className? : string,
+  scaleFactor? : number
 }) => {
 
   const [onHover, setOnHover] = useState<boolean>(false)
@@ -16,14 +18,14 @@ const Pressable = ({
 
   return (
     <div
-      onClick={onClick}
+      onClick={onClick ? (e)=>onClick(e) : ()=>{}}
       onMouseOver={()=>setOnHover(true)}
       onMouseLeave={()=>setOnHover(false)}
       onMouseDown={()=>setOnPress(true)}
       onMouseUp={()=>setOnPress(false)}
       className={`${className} duration-200`}
       style={{
-        transform : `scale(${onPress ? 0.97 : 1})`,
+        transform : `scale(${onPress ? scaleFactor ?? 0.97 : 1})`,
       }}
     >
       {children}

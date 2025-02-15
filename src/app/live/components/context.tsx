@@ -5,9 +5,13 @@ import { createContext, Dispatch, ReactNode, SetStateAction, useContext, useEffe
 export const liveComponentsContext = createContext<{
   screenShotUrl: string | undefined
   setScreenShotUrl: Dispatch<SetStateAction<string | undefined>>
+  setShowDvlaRecord: Dispatch<SetStateAction<boolean>>
+  showDvlaRecord: boolean
 }>({
   screenShotUrl: undefined,
-  setScreenShotUrl : ()=>{}
+  setScreenShotUrl : ()=>{},
+  showDvlaRecord : false,
+  setShowDvlaRecord : ()=>{}
 });
 
 export const LiveComponentsContextProvider = ({ 
@@ -16,11 +20,14 @@ export const LiveComponentsContextProvider = ({
     children : ReactNode
  }) => {
   const [screenShotUrl, setScreenShotUrl] = useState<string>()
+  const [showDvlaRecord, setShowDvlaRecord] = useState(false)
   return (
     <liveComponentsContext.Provider 
       value={{
         screenShotUrl,
-        setScreenShotUrl
+        setScreenShotUrl,
+        showDvlaRecord,
+        setShowDvlaRecord
       }}
     >
       {children}

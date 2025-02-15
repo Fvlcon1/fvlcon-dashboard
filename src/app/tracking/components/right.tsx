@@ -26,6 +26,8 @@ const Right = () => {
     const [newPersonTrackingData, setPersonTrackingData] = useState<{ status: 'loading' | null, data: IPersonTrackingType[] }>({ status: null, data: [] })
     const [searchResults, setSearchResults] = useState<{status: 'loading' | null, data: IPlateOrPerson[]}>({status : null, data : []})
     const [filteredSearchResults, setFilteredSearchResults] = useState(searchResults)
+    const [searchValue, setSearchValue] = useState<string>('')
+    
     const { imageUrl, setImageUrl } = useContext(trackingContext)
 
     const getTrackingData = async (imageUrl: string) => {
@@ -120,6 +122,8 @@ const Right = () => {
                 setSearchResults={setSearchResults}
                 newPersonTrackingData={newPersonTrackingData}
                 setFilteredSearchResults={setFilteredSearchResults}
+                searchValue={searchValue}
+                setSearchValue={setSearchValue}
             />
             {
                 filteredSearchResults.data.length > 0 ? 
@@ -167,6 +171,8 @@ const Right = () => {
                     </div>
                 ))
                 :filteredSearchResults.data.length === 0 && searchResults.data.length !== 0 ?
+                <NoData />
+                :filteredSearchResults.data.length === 0 && searchValue.length ?
                 <NoData />
                 : filteredSearchResults.data.length === 0 &&
                 <DndImage />

@@ -9,8 +9,10 @@ import theme from "@styles/theme"
 import { Tooltip } from "antd"
 import Image from "next/image"
 import Link from "next/link"
-import { Dispatch, SetStateAction, useState } from "react"
+import { Dispatch, SetStateAction, useContext, useState } from "react"
 import { FaLocationDot } from "react-icons/fa6"
+import { liveComponentsContext } from "../context"
+import Pressable from "@components/button/pressable"
 
 const PlateContainer = ({
     detections,
@@ -21,6 +23,8 @@ const PlateContainer = ({
     setImageZoom: Dispatch<SetStateAction<boolean>>
     detections: IPlateTrackingType
 }) => {
+    const {showDvlaRecord,setShowDvlaRecord} = useContext(liveComponentsContext)
+
     return (
         <>
             <div className="flex flex-col gap-1 w-full">
@@ -60,15 +64,21 @@ const PlateContainer = ({
                     }
                 </div>
                 <div className="flex flex-col gap-[1px]">
-                    <div className="flex gap-1">
+                    <div className="flex gap-1 items-center">
                         <Text>
                             Plate No:
                         </Text>
-                        <Text
-                            textColor={theme.colors.text.primary}
+                        <Pressable
+                            onClick={()=>setShowDvlaRecord(true)}
+                            className="mt-[-2px]"
                         >
-                            {capitalizeString(detections.plateNumber)}
-                        </Text>
+                            <Text
+                                textColor={theme.colors.text.primary}
+                                className="hover:!underline !opacity-[1] hover:!opacity-[.5] duration-200 cursor-pointer"
+                            >
+                                {detections.plateNumber}
+                            </Text>
+                        </Pressable>
                     </div>
                     <div className="flex flex-col gap-1">
                         <Text>

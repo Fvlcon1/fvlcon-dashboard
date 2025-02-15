@@ -61,7 +61,7 @@ const TableBody = ({
                     trackingData.map((item, index) => (
                         <tr
                             key={index}
-                            className={`${index % 2 === 1 ? 'bg-gradient-container-md' : ''} hover:scale-[0.98] cursor-pointer duration-200`}
+                            className={`border-b-solid border-b-[1px] border-b-bg-tetiary hover:scale-[0.98] cursor-pointer duration-200`}
                             onMouseOver={()=>setOnHover(true)}
                             onMouseLeave={()=>setOnHover(false)}
                             onMouseDown={()=>setOnPress(true)}

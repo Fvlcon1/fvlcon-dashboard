@@ -62,9 +62,9 @@ const CamDetails = () => {
                 captureDetails?.status === 'loading' ?
                 <CamDetailsLoader />
                 : captureDetails?.data &&
-                <div className="bg-gradient-container w-[35%] p-3 rounded-lg flex flex-col gap-2">
+                <div className="bg-gradient-container-md  w-[35%] p-3 rounded-xl flex flex-col gap-2">
                     <div 
-                        className="relative rounded-sm overflow-hidden h-[200px] w-full"
+                        className="relative rounded-lg overflow-hidden h-[200px] w-full"
                     >
                         {
                             captureDetails.data.imageUrl ?

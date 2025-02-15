@@ -129,11 +129,12 @@ export const POST = async (req: Request) => {
     if(error) return error
 
     // Add a new record to the database
-    const { faceId, locations, S3Key } = body;
+    const { faceId, locations, S3Key, personLogId } = body;
     const newTracking = await prisma.personTracking.create({
       data: {
         faceId,
         locations,
+        personLogId,
         S3Key,
         date: new Date(),
         userId: session?.user.userId as string,

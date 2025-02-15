@@ -8,7 +8,7 @@ import MapComponent from "./mapContainer"
 const Map = () => {
 
     return (
-        <div className="w-full flex-col gap-2 flex bg-gradient-container h-[60%] rounded-xl p-[10px]">
+        <div className="w-full flex-col gap-2 flex bg-gradient-container h-[60%] rounded-xl p-[10px] border-solid border-[1px] border-bg-secondary">
             <Controls />
             <div className="h-full relative z-10 w-full bg-bg-secondary rounded-lg">
                 <MapComponent />
