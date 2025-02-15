@@ -24,15 +24,10 @@ const PlateContainer = ({
     setImageZoom: Dispatch<SetStateAction<boolean>>
     detections: IPlateTrackingType
 }) => {
-    const [showDvlaRecord,setShowDvlaRecord] = useState(false)
+    const {showDvlaRecord, setShowDvlaRecord, setDvlaData, dvlaData} = useContext(liveComponentsContext)
 
     return (
         <>
-            <DvlaRecord
-                display={showDvlaRecord}
-                setDisplay={setShowDvlaRecord}
-                data={detections.dvlaDetails}
-            />
             <div className="flex flex-col gap-1 w-full">
                 <div className="flex justify-between gap-2 items-center">
                     <Text
@@ -76,6 +71,7 @@ const PlateContainer = ({
                         </Text>
                         <Pressable
                             onClick={()=>{
+                                setDvlaData(detections.dvlaDetails)
                                 setShowDvlaRecord(true)
                             }}
                             className="mt-[-2px]"

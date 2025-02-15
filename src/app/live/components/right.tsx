@@ -24,6 +24,7 @@ const Right = () => {
     const { messages } = useWebSocket(process.env.NEXT_PUBLIC_WEBSOCKET_URL!, message => onMessageUpdate(message));
     const [isMessageUpdated, setIsMessageUpdated] = useState(false)
     const [detections, setDetections] = useState<(IPersonTrackingWithImageType | IPlateTrackingType)[]>([])
+    const {showDvlaRecord, setShowDvlaRecord, setDvlaData, dvlaData} = useContext(liveComponentsContext)
 
     const onMessageUpdate = async (message : any) => {
         setIsMessageUpdated(true)
@@ -49,6 +50,11 @@ const Right = () => {
 
     return (
         <>
+            <DvlaRecord
+                display={showDvlaRecord}
+                setDisplay={setShowDvlaRecord}
+                data={dvlaData}
+            />
             <div className="fixed top-0 right-[60px] w-[210px] h-[100vh] py-4 px-6 gap-3">
                 <Flex
                     direction="column"
