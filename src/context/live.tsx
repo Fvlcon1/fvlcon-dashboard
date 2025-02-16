@@ -82,6 +82,13 @@ export const LiveProvider = ({ children }: { children: ReactNode }) => {
             streamName : "stream2",
             coordinates : [6.669450646774655, -1.5176043915812956]
         },
+        {
+                id : '10',
+                url : "https://ljexe63ri7c60g-3000.proxy.runpod.net/output1.m3u8",
+                location : 'Kumasi',
+                streamName : "stream2",
+                coordinates : [6.669450646774655, -1.5176043915812956]
+            },
     ])
     const [numberOfCamerasPerPage, setNumberOfCamerasPerPage] = useState<number>(4)
     const [folders, setFolders] = useState<FolderOrCamera[]>([]);
