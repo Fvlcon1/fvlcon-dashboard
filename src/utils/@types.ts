@@ -166,6 +166,7 @@ export type activeCameraType = {
   location? : string
   coordinates? : number[]
   streamName? : string
+  type? : string
 }
 
 export type fvlconizedFaceType = {
