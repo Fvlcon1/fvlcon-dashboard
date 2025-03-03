@@ -43,15 +43,12 @@ const SingleRecognition = ({
                 data={face.data?.details}
             /> */}
             {
-                !face.data?.details &&
                 <OverlayWindow
                     display={displaySingularAnalysis}
                     setDisplay={setDisplaySingularAnalysis}
                     title="Fvlconize"
                 >
-                    <Flex
-                        gap={20}
-                    >
+                    <div className="flex gap-[20px] p-4">
                         {
                             face.isLoading ?
                             <Loading
@@ -71,9 +68,23 @@ const SingleRecognition = ({
                                 onTryAgain={onTryAgain}
                             />
                             :
-                            <></>
+                            face.data && 
+                                <MatchCard
+                                    croppedImage={face.data.croppedImage}
+                                    boundedImage={face.data.boundedImage}
+                                    matchedImage={face.data.matchedImage}
+                                    similarity={face.data.similarity}
+                                    title={`Match 1`}
+                                    faceId={face.data.details?.FaceId}
+                                    description={`${face.data.details?.personDetails.surname ?? ''} ${face.data.details?.personDetails.forenames ?? ''}`}
+                                    details={face.data.details}
+                                    occurances={face.data.occurances}
+                                    currentOccurance={currentOccurance}
+                                    setOccurance={setOccurance}
+                                    showExpand
+                                />
                         }
-                    </Flex>
+                    </div>
                 </OverlayWindow>
             }
         </>

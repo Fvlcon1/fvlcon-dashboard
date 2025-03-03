@@ -143,10 +143,6 @@ const DistinctFaces = ({
                     faces={faces.data}
                 />
             }
-            <Angles
-                display={displayAngles}
-                setDisplay={setDisplayAngles}
-            />
         </>
     )
 }

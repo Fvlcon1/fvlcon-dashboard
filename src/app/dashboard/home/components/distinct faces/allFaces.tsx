@@ -34,19 +34,16 @@ const AllFaces = ({
                             direction="column"
                             padding="15px"
                         >
-                            <Flex
-                                margin="0 0 0 25px"
-                            >
+                            <Flex>
                                 <AppTypography
                                     bold={TypographyBold.md}
                                 >
-                                    Results: 30
+                                    Results: {faces.length}
                                 </AppTypography>
                             </Flex>
                             <Flex
                                 flexWrap
                                 gap={30}
-                                justify="space-around"
                             >
                                 {
                                     faces.map((item, index) => (

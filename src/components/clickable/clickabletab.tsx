@@ -14,8 +14,8 @@ const ClickableTab = ({
 
     return (
         <div 
-            className={`flex p-[4px] h-fit rounded-md hover:opacity-[0.9] duration-200 hover:bg-bg-tetiary ${onPress ? 'scale-[0.9]' : 'scale-1'} cursor-pointer ${className}`}
-            onClick={onClick}
+            className={`flex p-[4px] h-fit rounded-md hover:opacity-[0.9] duration-200 hover:bg-bg-tetiary ${onPress ? 'scale-[0.9]' : 'scale-[1]'} cursor-pointer ${className}`}
+            onClick={onClick ? (e)=>onClick(e) : ()=>{}}
             onMouseOver={()=>setOnHover(true)}
             onMouseLeave={()=>setOnHover(false)}
             onMouseDown={()=>setOnPress(true)}

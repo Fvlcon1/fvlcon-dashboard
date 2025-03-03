@@ -1,5 +1,5 @@
 import { TypographyBold, TypographySize } from "@styles/style.types"
-import { ElementType, ReactNode } from "react"
+import { ElementType, MouseEventHandler, ReactNode } from "react"
 
 export type ButtonTypes = 'submit' | 'button'
 
@@ -60,7 +60,7 @@ export interface safeareaProps {
 export interface baseProps {
   children : ReactNode,
   className? : string,
-  onClick? : ()=>void
+  onClick?: (e: React.MouseEvent<HTMLDivElement>) => void;
 }
 
 export type checkFaceDetails = {
