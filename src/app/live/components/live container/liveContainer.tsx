@@ -134,7 +134,7 @@ const LiveContainer = ({
                         allowFullScreen
                         allow="accelerometer; autoplay; clipboard-write"
                     /> */}
-                    {/* <div id={id} className="w-full h-full relative">
+                    <div id={id} className="w-full h-full relative">
                         <div id={`CanvasContainer${id}`} className="canvasContainer w-full h-full absolute pointer-events-none z-10 top-0 left-0">
 
                         </div>
@@ -148,8 +148,8 @@ const LiveContainer = ({
                             autoPlay={true}
                             loop
                         />
-                    </div> */}
-                    <div id={id} className="w-full h-full relative">
+                    </div>
+                    {/* <div id={id} className="w-full h-full relative">
                         <div id={`CanvasContainer${id}`} className="canvasContainer w-full h-full absolute pointer-events-none z-10 top-0 left-0">
 
                         </div>
@@ -160,7 +160,7 @@ const LiveContainer = ({
                             autoPlay={true}
                             loop
                         />
-                    </div>
+                    </div> */}
                     {/* <div id={id} className="w-full h-full relative">
                         <div id={`CanvasContainer${id}`} className="canvasContainer w-full h-full absolute pointer-events-none z-10 top-0 left-0">
 
