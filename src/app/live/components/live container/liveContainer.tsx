@@ -134,7 +134,7 @@ const LiveContainer = ({
                         allowFullScreen
                         allow="accelerometer; autoplay; clipboard-write"
                     /> */}
-                    <div id={id} className="w-full h-full relative">
+                    {/* <div id={id} className="w-full h-full relative">
                         <div id={`CanvasContainer${id}`} className="canvasContainer w-full h-full absolute pointer-events-none z-10 top-0 left-0">
 
                         </div>
@@ -145,6 +145,18 @@ const LiveContainer = ({
                             accentColor={theme.colors.bg.secondary}
                             playbackRates={[0.2, 0.5, 0.7, 1, 1.2, 1.5, 1.7, 2]}
                             placeholder="Stream"
+                            autoPlay={true}
+                            loop
+                        />
+                    </div> */}
+                    <div id={id} className="w-full h-full relative">
+                        <div id={`CanvasContainer${id}`} className="canvasContainer w-full h-full absolute pointer-events-none z-10 top-0 left-0">
+
+                        </div>
+                        <video
+                            src={url}
+                            controls
+                            style={{ height: '100%' }}
                             autoPlay={true}
                             loop
                         />
