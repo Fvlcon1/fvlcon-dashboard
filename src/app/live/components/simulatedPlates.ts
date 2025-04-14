@@ -12,6 +12,19 @@ export const simulatedPlates = [
         imageUrl : '/assets/simulatedCars/GC 167-21.jpg'
     },
     {
+        id : "Id",
+        // name: `${details?.personDetails?.forenames ?? ''} ${details?.personDetails?.surname ?? ''}`,
+        coordinates: "0,0",
+        timeSeen: new Date(),
+        faceId: "FaceId",
+        streamName: "stream_name",
+        S3Key : "S3Key",
+        userId : "009",
+        imageUrl : '/assets/simulatedCars/GC 167-21.jpg',
+        similarity : 90,
+        originalImageUrl : '/assets/simulatedCars/GC 167-21.jpg'
+    },
+    {
         Id: 2,
         plateNumber : 'GC 412-20',
         Timestamp : new Date() ?? '2025-02-15T17:46:00.971317',

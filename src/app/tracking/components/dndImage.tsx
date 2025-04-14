@@ -108,7 +108,7 @@ const DndImage = () => {
                         textColor={theme.colors.text.tetiary}
                         size={TypographySize.xs}
                     >
-                        Drop Image / click to upload image of person or numbe plate
+                        Drop Image / click to upload image of a person
                     </Text>
                 }
             </div>

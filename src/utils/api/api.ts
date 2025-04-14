@@ -45,7 +45,7 @@ export class protectedAPI {
       if (error.response?.status === 401) {
         // this.handleAuthError(options);
       } else {
-        message.error("An error occured")
+        throw new Error(error)
       }
     }
   };
@@ -58,7 +58,7 @@ export class protectedAPI {
       if (error.response?.status === 401) {
         this.handleAuthError(options);
       } else {
-        message.error("An error occured")
+        throw new Error(error)
       }
     }
   };

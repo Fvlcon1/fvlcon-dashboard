@@ -76,6 +76,13 @@ export const LiveProvider = ({ children }: { children: ReactNode }) => {
             coordinates : [6.669450646774655, -1.5176043915812956]
         },
         {
+            id : '10',
+            url : "/assets/dev/person-output1.mp4",
+            location : 'Kumasi',
+            streamName : "stream2",
+            coordinates : [6.669450646774655, -1.5176043915812956]
+        },
+        {
             id : '9',
             url : "/assets/dev/output4.mp4",
             location : 'Kumasi',

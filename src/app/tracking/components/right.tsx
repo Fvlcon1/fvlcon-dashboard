@@ -38,7 +38,7 @@ const Right = () => {
             })
             const trackingData = response?.data
 
-            if(trackingData.length > 0){
+            if(trackingData?.length > 0){
                 const people: IPersonTrackingType[] = []
     
                 for (const data of trackingData) {
@@ -101,7 +101,7 @@ const Right = () => {
                 status: null,
                 data: []
             })
-            message.error("Error fetching data")
+            message.error(error.response.data)
         }
     }
 
