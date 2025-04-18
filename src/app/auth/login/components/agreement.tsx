@@ -1,4 +1,5 @@
 import Button from '@components/button/button';
+import Logo from '@components/logo/logo';
 import Text from '@styles/components/text';
 import { TypographySize } from '@styles/style.types';
 import theme from '@styles/theme';
@@ -20,10 +21,7 @@ const Agreement = () => {
                 className="w-full max-w-[500px] flex flex-col gap-2 items-center"
             >
                 <div className='w-full flex justify-center items-center mb-2 flex-col gap-1'>
-                    <BsFileEarmarkLock2Fill 
-                        color={theme.colors.text.secondary}
-                        size={40}
-                    />
+                    <Logo />
                     <Text
                         size={TypographySize.HM}
                         textColor={theme.colors.text.secondary}
