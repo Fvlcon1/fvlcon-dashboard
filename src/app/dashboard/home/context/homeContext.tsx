@@ -33,6 +33,8 @@ export const HomeContext = createContext<{
   setTimer : Dispatch<SetStateAction<number>>
   setFvlconizationLogId: Dispatch<SetStateAction<string | undefined>>
   FvlconizationlogId: string | undefined
+  setFvlconizedContentType: Dispatch<SetStateAction<"image" | "video" | undefined>>
+  fvlconizedContentType? : 'image' | 'video'
 }>({
   displayMatches: false,
   setDisplayMatches: ()=>{},
@@ -61,7 +63,9 @@ export const HomeContext = createContext<{
   timer : 0,
   setTimer : ()=>{},
   setFvlconizationLogId: ()=>{},
-  FvlconizationlogId: undefined
+  FvlconizationlogId: undefined,
+  fvlconizedContentType : 'image',
+  setFvlconizedContentType : ()=>{}
 });
 
 export const HomeContextProvider = ({ 
@@ -80,6 +84,7 @@ export const HomeContextProvider = ({
   const [occurance, setOccurance] = useState<occurance>()
   const [timer, setTimer] = useState(0)
   const [FvlconizationlogId, setFvlconizationLogId] = useState<string>()
+  const [fvlconizedContentType, setFvlconizedContentType] = useState<'image' | "video">()
   const [distinctFaces, setDistinctFaces] = useState<FetchState<FaceCanvasType[]>>({
     isEmpty : false,
     isLoading : false,
@@ -120,7 +125,9 @@ export const HomeContextProvider = ({
         distinctFaces,
         setDistinctFaces,
         matchedFaces,
-        setMatchedFaces
+        setMatchedFaces,
+        fvlconizedContentType,
+        setFvlconizedContentType
       }}
     >
       {children}

@@ -12,8 +12,12 @@ import { base64ToBlob } from "@/utils/base63ToBlob"
 const privateApi = new protectedAPI()
 
 const useActivityStorage = () => {
-    const { timer, setFvlconizationLogId } = useContext(HomeContext)
+    const { timer, setFvlconizationLogId, fvlconizedContentType, setFvlconizedContentType } = useContext(HomeContext)
     const timerRef = useRef(timer)
+
+    useEffect(()=>{
+        console.log({fvlconizedContentType})
+    },[fvlconizedContentType])
 
     // Keep the ref updated with the latest timer value
     useEffect(() => {
@@ -43,8 +47,8 @@ const useActivityStorage = () => {
                 type,
             })
 
+            setFvlconizedContentType("image")
             setFvlconizationLogId(response?.data.id)
-            console.log({id:response?.data.id})
         } catch (error) {
             message.error("Unable to store logs")
             console.log({error})
@@ -82,7 +86,10 @@ const useActivityStorage = () => {
                 occurance
             })
 
-            return response.data
+            console.log("storing content type")
+            setFvlconizedContentType("video")
+            setFvlconizationLogId(response?.data.data.id)
+            return response.data.data
         } catch (error) {
             message.error("Unable to store logs")
             console.log({error})

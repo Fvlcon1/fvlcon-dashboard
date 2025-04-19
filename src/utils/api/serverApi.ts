@@ -43,6 +43,7 @@ export class protectedAPI {
     try {
       return await axios.get(`${baseURL}${url}`, { headers, params });
     } catch (error: any) {
+      console.log({error : error.response.data})
       if (error.response?.status === 401) {
         await this.handleAuthError();
       } else {
@@ -56,6 +57,7 @@ export class protectedAPI {
     try {
       return await axios.post(`${baseURL}${url}`, body, { headers });
     } catch (error: any) {
+      console.log({error : error.response.data})
       if (error.response?.status === 401) {
         await this.handleAuthError();
       } else {

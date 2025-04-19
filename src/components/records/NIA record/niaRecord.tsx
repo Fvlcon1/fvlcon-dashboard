@@ -40,6 +40,7 @@ const NiaRecord = ({
 }) => {
     const [zoom, setZoom] = useState(false)
     const [zoomImage, setZoomImage] = useState('')
+
     const {
         applicationDetails : appDetes,
         personDetails : personDetes, 
@@ -154,7 +155,7 @@ const NiaRecord = ({
     
     const [showDownloadableComponent, setShowDownloadableComponent] = useState(false);
     const [showDownloadableComponentToPrint, setShowDownloadableComponentToPrint] = useState(false);
-    const { FvlconizationlogId } = useContext(HomeContext)
+    const { FvlconizationlogId, fvlconizedContentType } = useContext(HomeContext)
     const refobj = useRef<HTMLDivElement>(null);
     const [showFilenameContainer, setShowFilenameContainer] = useState(false)
     const [filename, setFilename] = useState(statelessFilename)
@@ -174,8 +175,20 @@ const NiaRecord = ({
 
     const handlePdfDownload = () => {
         setFilename(statelessFilename)
-        window.open(`/printable/fvlconizationResult/${FvlconizationlogId}?faceId=${faceId}&action=download&filename=${filename}`, "_blank")
+        if(fvlconizedContentType === "image")
+            window.open(`/printable/fvlconizationResult/${FvlconizationlogId}?faceId=${faceId}&action=download&filename=${filename}`, "_blank")
+        if(fvlconizedContentType === "video")
+            window.open(`/printable/video-fvlconization-result/${FvlconizationlogId}?faceId=${faceId}&action=download&filename=${filename}`, "_blank")
     };
+
+    // Constructs the appropraite link for printing, depending on whether it's from a video or image fvlconization
+    const getPrintableLink = () : string => {
+        if(fvlconizedContentType === "image")
+           return `/printable/fvlconizationResult/${FvlconizationlogId}?faceId=${faceId}`
+        if(fvlconizedContentType === "video")
+            return `/printable/video-fvlconization-result/${FvlconizationlogId}?faceId=${faceId}`
+        return '/'
+    }
 
     const handlePrint = () => {
         setShowDownloadableComponentToPrint(true);
@@ -223,12 +236,11 @@ const NiaRecord = ({
                     key='Download'
                     title="Download"
                 >
-                    <ClickableTab>
+                    <ClickableTab onClick={()=>setShowFilenameContainer(true)}>
                         <FaDownload
                             color={theme.colors.text.primary}
                             size={12}
                             className="hover:scale-125 duration-200 opacity-50 hover:opacity-100"
-                            onClick={()=>setShowFilenameContainer(true)}
                         />
                     </ClickableTab>
                 </Tooltip>,
@@ -237,7 +249,7 @@ const NiaRecord = ({
                     title="Print"
                 >
                     <Link
-                        href={`/printable/fvlconizationResult/${FvlconizationlogId}?faceId=${faceId}`}
+                        href={getPrintableLink()}
                         target="_blank"
                     >
                         <ClickableTab>

@@ -20,7 +20,7 @@ const Agreement = () => {
                 transition={{ duration: 0.5 }}
                 className="w-full max-w-[500px] flex flex-col gap-2 items-center"
             >
-                <div className='w-full flex justify-center items-center mb-2 flex-col gap-1'>
+                <div className='w-full flex justify-center items-center mb-2 flex-col gap-2'>
                     <Logo />
                     <Text
                         size={TypographySize.HM}
