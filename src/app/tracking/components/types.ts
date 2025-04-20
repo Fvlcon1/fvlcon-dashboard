@@ -6,12 +6,12 @@ export enum ITrackingDataTypes {
     all = 'all'
 }
 
-export type ITrackingDataType = 'all' | 'plate' | 'people'
+export type ITrackingDataType = 'all' | 'plate' | 'person'
 
 export type IPersonTrackingType = {
     id : string,
     name : string,
-    type : ITrackingDataTypes,
+    type : ITrackingDataType,
     streamName : string,
     alias : string,
     lastSeen : string,
@@ -36,7 +36,7 @@ export type IPlateTrackingType = {
     locationName : string
     S3Key : string,
     imageUrl : string
-    type : string
+    type : ITrackingDataType
     userId : string
     dvlaDetails? : any
 }

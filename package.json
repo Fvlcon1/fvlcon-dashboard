@@ -61,6 +61,7 @@
     "react-loading-skeleton": "^3.5.0",
     "react-to-print": "^3.0.4",
     "react-toastify": "^10.0.5",
+    "react-use": "^17.6.0",
     "resend": "^4.0.0",
     "speakeasy": "^2.0.0",
     "universal-cookie": "^7.2.1",

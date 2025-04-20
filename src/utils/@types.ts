@@ -190,3 +190,13 @@ export interface UseWebSocketReturn {
   messages: WebSocketMessage[];
   sendMessage: (message: WebSocketMessage) => void;
 }
+
+export interface DropdownItem {
+  key: string;
+  label?: ReactNode | string;
+  disabled?: boolean;
+  type?: "divider" | "title" | "link" | "loading"
+  href? : string
+  icon?: ReactNode;
+  onClick? : ()=>void
+}

@@ -9,17 +9,28 @@ import { useState } from "react"
 import { MdDelete } from "react-icons/md"
 import MatchContainer from "./matchContainer"
 import PlateContainer from "./plateContainer"
+import { FilterType } from "../right"
 
 const AnalysisResults = ({
     detections,
-    plateDetections
+    plateDetections,
+    type
 } : {
     detections?: IPersonTrackingWithImageType
     plateDetections? : IPlateTrackingType
+    type : FilterType
 }) => {
     const [originalImageZoom, setOriginalImageZoom] = useState(false)
     const [capturedImageZoom, setCapturedImageZoom] = useState(false)
     const [plateImageZoom, setPlateImateZoom] = useState(false)
+
+    const displayMatchContainer = () => {
+        return detections && (type === "All" || type === "Person")
+    }
+    const displayPlateContainer = () => {
+        return plateDetections && (type === "All" || type === "Plate")
+    }
+
     return (
         <>
             {
@@ -46,28 +57,28 @@ const AnalysisResults = ({
                     imageURL={plateDetections.imageUrl} 
                 />
             }
-            <div 
-                className="py-2 flex flex-col gap-1 rounded-lg w-full"
-            >
-                {
-                    detections ?
+            {
+                displayMatchContainer() ?
+                <div className="py-2 flex flex-col gap-1 rounded-lg w-full">
                     <MatchContainer 
                         originalImageUrl={detections?.originalImageUrl}
                         capturedImageUrl={detections?.imageUrl}
-                        detections={detections}
+                        detections={detections!}
                         originalImageZoom={originalImageZoom}
                         setOriginalImageZoom={setOriginalImageZoom}
                         capturedImageZoom={capturedImageZoom}
                         setCapturedImageZoom={setCapturedImageZoom}
                     />
-                    : plateDetections &&
+                </div>
+                : displayPlateContainer() &&
+                <div className="py-2 flex flex-col gap-1 rounded-lg w-full">
                     <PlateContainer
-                        detections={plateDetections}
+                        detections={plateDetections!}
                         imageZoom={plateImageZoom}
                         setImageZoom={setPlateImateZoom}
                     />
-                }
-            </div>
+                </div>
+            }
         </>
     )
 }

@@ -37,11 +37,11 @@ const Topbar = () => {
                         title="Fvlcon Media Lab"
                     />
                 </div>
-                <Searchbar 
+                {/* <Searchbar 
                     className="!w-[350px]"
                     setSearchValue={setSearchValue}
                     searchValue={searchValue}
-                />
+                /> */}
             </div>
             <Flex
                 width="fit-content"

@@ -61,14 +61,18 @@ const MatchContainer = ({
                     </Tooltip>
                 </div>
                 <div className="flex gap-2 relative w-fit">
-                    <div className="absolute z-10 flex justify-center items-center top-[20%] left-[36%] rounded-full w-[30px] h-[30px] p-[3px] border-[3px] border-solid border-bg-secondary bg-[#0000008f] backdrop-filter backdrop-blur-lg">
-                        <Text
-                            size={TypographySize.xs2}
-                            textColor={theme.colors.text.primary}
-                        >
-                            {detections.similarity?.toFixed(1)}
-                        </Text>
-                    </div>
+                    {
+                        detections.similarity ?
+                        <div className="absolute z-10 flex justify-center items-center top-[20%] left-[36%] rounded-full w-[30px] h-[30px] p-[3px] border-[3px] border-solid border-bg-secondary bg-[#0000008f] backdrop-filter backdrop-blur-lg">
+                            <Text
+                                size={TypographySize.xs2}
+                                textColor={theme.colors.text.primary}
+                            >
+                                {detections.similarity?.toFixed(1)}
+                            </Text>
+                        </div>
+                        : <></>
+                    }
                     <div className="w-[65px] h-[65px] overflow-hidden bg-bg-tetiary relative rounded-md">
                     {
                             capturedImageUrl ?
@@ -119,8 +123,8 @@ const MatchContainer = ({
                             {capitalizeString(detections.name)}
                         </Text>
                         :
-                        <Text>
-                            unknown
+                        <Text textColor={theme.colors.text.tetiary}>
+                            Unknown
                         </Text>
                     }
                     <div className="flex flex-col gap-1">

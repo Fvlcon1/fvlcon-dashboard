@@ -17,11 +17,11 @@ const Header = () => {
                 />
                 <Head title="Activity log"/>
             </div>
-            <Searchbar
+            {/* <Searchbar
                 className="!w-[350px]"
                 setSearchValue={setSearchValue}
                 searchValue={searchValue}
-            />
+            /> */}
         </div>
     )
 }

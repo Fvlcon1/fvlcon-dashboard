@@ -36,11 +36,11 @@ const Live = () => {
                             title="Fvlcon Live Vision"
                         />
                     </div>
-                    <Searchbar 
+                    {/* <Searchbar 
                         className="!w-[350px]"
                         setSearchValue={setSearchValue}
                         searchValue={searchValue}
-                    />
+                    /> */}
                 </div>
                 <Controls />
             </Flex>
