@@ -30,7 +30,7 @@ export type FilterType = "Person" | "Plate" | "All"
 
 const Right = () => {
     const [analysisResults, setAnalysisResults] = useState(true)
-    const [type, setType] = useState<FilterType>("Plate")
+    const [type, setType] = useState<FilterType>("All")
     const typeRef = useRef(type);
     const [isMessageUpdated, setIsMessageUpdated] = useState(false)
     const [detections, setDetections] = useState<(IPersonTrackingWithImageType | IPlateTrackingType)[]>([])

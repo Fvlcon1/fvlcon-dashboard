@@ -20,7 +20,7 @@ export const simulatedPlates = [
         streamName: "stream_name",
         S3Key : "S3Key",
         userId : "009",
-        imageUrl : '/assets/simulatedCars/GC 167-21.jpg',
+        imageUrl : '/assets/simulated-people/1.jpg',
         similarity : 90,
         originalImageUrl : '/assets/simulatedCars/GC 167-21.jpg'
     },
