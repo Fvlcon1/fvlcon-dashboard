@@ -116,7 +116,7 @@ const Right = () => {
                 <Flex
                     direction="column"
                     height="100%"
-                    gap={10}
+                    gap={15}
                 >
                     <div className="flex items-center gap-2">
                         <Selectable 
