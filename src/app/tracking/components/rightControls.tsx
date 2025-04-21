@@ -45,30 +45,47 @@ const RightControls = ({
         inputRef.current?.click();
     };
 
+    const abortControllerRef = useRef<AbortController | null>(null);
+
     const handleSearchValueChange = async () => {
-        setSearchResults({status : 'loading', data : []})
-        const getSearchResults = await privateApi.get("/tracking/searchNumberPlatePartial", {numberPlate : searchValue})
-        const numberPlates = getSearchResults?.data
-        const plateArray : IPlateOrPerson[] = []
-        if(numberPlates?.length > 0){
-            for(let plate of numberPlates){
-                const plateObject : IPlateTrackingType = {
-                    id: plate?.Id.S,
-                    plateNumber: plate.plateNumber.S,
-                    timestamp: plate.Timestamp.S,
-                    coordinates: parseCoordinates(plate.coordinates.S),
-                    locationName: plate.locationName.S,
-                    imageUrl: plate.imageUrl,
-                    userId: plate.UserId.S,
-                    S3Key : plate.S3Key.S,
-                    type: ITrackingDataTypes.plate,
+        if (abortControllerRef.current) 
+            abortControllerRef.current.abort()
+
+        // Create a new AbortController for this request
+        const controller = new AbortController();
+        abortControllerRef.current = controller;
+
+        try {
+            setSearchResults({status : 'loading', data : []})
+            const getSearchResults = await privateApi.get("/tracking/searchNumberPlatePartial", {numberPlate : searchValue}, controller.signal)
+            const numberPlates = getSearchResults?.data
+
+            const plateArray : IPlateOrPerson[] = []
+    
+            if(numberPlates?.length > 0){
+                for(let plate of numberPlates){
+                    const plateObject : IPlateTrackingType = {
+                        id: plate?.Id.S,
+                        plateNumber: plate.plateNumber.S,
+                        timestamp: plate.Timestamp.S,
+                        coordinates: parseCoordinates(plate.coordinates.S),
+                        locationName: plate.locationName.S,
+                        imageUrl: plate.imageUrl,
+                        userId: plate.UserId.S,
+                        S3Key : plate.S3Key.S,
+                        type: ITrackingDataTypes.plate,
+                    }
+                    plateArray.push(plateObject)
                 }
-                plateArray.push(plateObject)
+                setSearchResults({status : null, data : plateArray.reverse()})
+            } else {
+                setSearchResults({status : null, data : newPersonTrackingData.data ?? []})
             }
-            setSearchResults({status : null, data : plateArray})
-            console.log({plateArray})
-        } else {
-            setSearchResults({status : null, data : newPersonTrackingData.data ?? []})
+
+        } catch (error : any) {
+            if(error.message === "CanceledError: canceled")
+                return
+            console.log({error})
         }
     }
 

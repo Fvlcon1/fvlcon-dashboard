@@ -1,5 +1,5 @@
 import { message } from 'antd';
-import axios from 'axios';
+import axios, { GenericAbortSignal } from 'axios';
 import { signOut, useSession } from 'next-auth/react';
 import Cookies from 'universal-cookie';
 import { JWT } from 'next-auth/jwt';
@@ -37,10 +37,10 @@ const getToken = async () => {
 }
 
 export class protectedAPI {
-  public get = async <T>(url: string, params?: T, options?: IApiOptions) => {
+  public get = async <T>(url: string, params?: T, signal? : GenericAbortSignal, options?: IApiOptions) => {
     const headers = await getHeaders();
     try {
-      return await axios.get(`${baseURL}${url}`, { headers, params });
+      return await axios.get(`${baseURL}${url}`, { headers, params, signal });
     } catch (error: any) {
       if (error.response?.status === 401) {
         // this.handleAuthError(options);

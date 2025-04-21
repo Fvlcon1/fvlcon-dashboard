@@ -82,12 +82,12 @@ const Controls = () => {
                             Show all Cameras
                         </Text>
                     </div>
-                    <Searchbar
+                    {/* <Searchbar
                         className="bg-bg-secondary rounded-lg"
                         inputStyle="bg-bg-secondary rounded-lg"
                         setSearchValue={setSearchValue}
                         searchValue={searchValue}
-                    />
+                    /> */}
                 </div>
                 <div className="flex gap-2">
                     <div className="flex items-center gap-2">
