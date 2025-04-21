@@ -86,7 +86,6 @@ const useActivityStorage = () => {
                 occurance
             })
 
-            console.log("storing content type")
             setFvlconizedContentType("video")
             setFvlconizationLogId(response?.data.data.id)
             return response.data.data

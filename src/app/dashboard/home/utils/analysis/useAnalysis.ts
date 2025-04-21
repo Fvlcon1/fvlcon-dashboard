@@ -1,4 +1,4 @@
-import { RefObject, useContext, useEffect, useState } from "react"
+import { RefObject, useContext, useEffect, useRef, useState } from "react"
 import { HomeContext } from "../../context/homeContext"
 import { imageUploadContext } from "@/context/imageUpload"
 import { isImageFile, isVideoFile } from "@/utils/getFileType"
@@ -45,6 +45,11 @@ export const useAnalysis = (imageRef: RefObject<HTMLImageElement>) => {
         fvlconizing,
         timer
     } = useContext(HomeContext)
+    const timerRef = useRef(timer)
+
+    useEffect(()=>{
+        timerRef.current = timer
+    },[timer])
     
     const {
         selectedImage,
@@ -341,7 +346,7 @@ export const useAnalysis = (imageRef: RefObject<HTMLImageElement>) => {
                 }
                 setFvlconizing(false)
                 storeVideoFvlconizationResults({
-                    timeElapsed : timer,
+                    timeElapsed : timerRef.current,
                     status : StatusTypes.successful,
                     videoFile : selectedImage!.fullFile,
                     videoUrl : selectedImage!.url,

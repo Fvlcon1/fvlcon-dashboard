@@ -26,4 +26,10 @@ const getDate = (date: Date, options?: { shortmonth?: boolean }) => {
     return `${months[date.getMonth()]} ${date.getDate()}, ${date.getFullYear()}`
 }
 
+export const getDateTime = (date : Date | string) => {
+  if(typeof date === "string")
+      return `${(new Date(date)).toDateString()} | ${getTime(new Date(date))} | ${getRelativeTime(new Date(date))}`
+  return `${(new Date(date)).toDateString()} | ${getTime(date)} | ${getRelativeTime(date)}`
+}
+
 export default getDate

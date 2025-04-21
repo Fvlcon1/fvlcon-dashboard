@@ -13,6 +13,7 @@ import DownloadableList from "./downloadableList"
 import DownloadbleContainer from "./downloadableContainer"
 import { componentToPdfDownload } from "@/utils/componentToPdfDownload"
 import { formatTime } from "@/utils/formatTime"
+import { capitalizeString } from "@/utils/capitalizeString"
 
 const PrintableFvlconizationResult = (
     { 
@@ -66,102 +67,119 @@ const PrintableFvlconizationResult = (
         criminalRecord : Crec
     } = data ?? {}
     const applicationDetails = [
-        ["Type of application", appDetes?.typeOfApplication],
-        ["Type of Request", appDetes?.typeOfRequest],
-        ["Date of Application", appDetes?.dateOfApplication],
-        ["Interviewer NID number", appDetes?.interviewerNidNumber],
-        ["Registration centre number", appDetes?.registrationCentreNumber]
-    ]
-    const personDetails = [
-        ["Surname", personDetes?.surname],
-        ["Forenames", personDetes?.forenames],
-        ["Height", personDetes?.height],
-        ["Colour of eyes", personDetes?.colourOfEyes],
-        ["Colour of hair", personDetes?.colourOfHair],
-        ["Disability code", personDetes?.disabilityCode],
-        ["Level of education", personDetes?.levelOfEducation],
-    ]
-    const birthDetails = [
-        ["Birth Certificate number", birthDetes?.birthCertificateNumber],
-        ["Date issued",  birthDetes?.dateIssued],
-        ["Date of birth", birthDetes?.dateOfBirth],
-        ["Nationality at birth", birthDetes?.nationalityAtBirth],
-        ["Current nationality", birthDetes?.currentNationality],
-    ]
-    const placeOfBirth = [
-        ["Village/town", POB?.villageTown],
-        ["Region code", POB?.regionCode],
-        ["District/State", POB?.districtState]
-    ]
-    const hometown = [
-        ["Village/town", htown?.villageTown],
-        ["Region/code", htown?.regionCode],
-        ["District/State", htown?.districtState]
-    ]
-    const occupation = [
-        ["Occupation", occup?.occupation]
-    ]
-    const residentialAddress = [
-        ["Village/town", RAdress?.villageTown],
-        ["Region/Country", RAdress?.regionCode],
-        ["District/State", RAdress?.districtState],
-        ["Community area name", RAdress?.communityAreaName],
-        ["ZIP/Postal code", RAdress?.zipPostalCode],
-        ["Digital Address", RAdress?.digitalAddress]
-    ]
-    const fatherDetails = [
-        ["Full name of father", fatherDetes?.fullNameOfFather],
-        ["Nationality", fatherDetes?.nationality],
-        ["Is father alive", fatherDetes?.isFatherAlive]
-    ]
-    const fathersHometown = [
-        ["Village/town", fatherHtown?.villageTown],
-        ["Region/code", fatherHtown?.regionCode],
-        ["District/State", fatherHtown?.districtState],
-    ]
-    const motherDetails = [
-        ["Full name of Mother", motherDetes?.fullNameOfMother],
-        ["Nationality", motherDetes?.nationality],
-        ["Is Mother alive", motherDetes?.isMotherAlive]
-    ]
-    const mothersHometown = [
-        ["Village/town", motherHtown?.villageTown],
-        ["Region/code", motherHtown?.regionCode],
-        ["District/State", motherHtown?.districtState],
-    ]
-    const NextOfKin = [
-        ["Next of kin", NOK?.nextOfKin],
-        ["Address", NOK?.address]
-    ]
-    const verificationDocument = [
-        ["type",  verificationDoc?.type],
-        ["Document number / NID",  verificationDoc?.documentNumberNid],
-        ["Date issued",   verificationDoc?.dateIssued],
-    ]
-    const contact = [
-        ["Local phone number",  cont?.localPhoneNumber],
-    ] 
-    const institutionalIds = [
-        ["Voter's Id number",  IIds?.votersIdNumber],
-        ["Date issued",  IIds?.dateIssued],
-    ]
-    const criminalRecord : any[] = Crec?.map((record : any)=>{
+        ["Type Of Application", capitalizeString(appDetes?.typeOfApplication)],
+        ["Type Of Request", capitalizeString(appDetes?.typeOfRequest)],
+        ["Date Of Application", capitalizeString(appDetes?.dateOfApplication)],
+        ["Interviewer NID Number", capitalizeString(appDetes?.interviewerNidNumber)],
+        ["Registration Centre Number", capitalizeString(appDetes?.registrationCentreNumber)]
+      ];
+      
+      const personDetails = [
+        ["Surname", capitalizeString(personDetes?.surname)],
+        ["Forenames", capitalizeString(personDetes?.forenames)],
+        ["Height", capitalizeString(personDetes?.height)],
+        ["Colour Of Eyes", capitalizeString(personDetes?.colourOfEyes)],
+        ["Colour Of Hair", capitalizeString(personDetes?.colourOfHair)],
+        ["Disability Code", capitalizeString(personDetes?.disabilityCode)],
+        ["Level Of Education", capitalizeString(personDetes?.levelOfEducation)]
+      ];
+      
+      const birthDetails = [
+        ["Birth Certificate Number", capitalizeString(birthDetes?.birthCertificateNumber)],
+        ["Date Issued", capitalizeString(birthDetes?.dateIssued)],
+        ["Date Of Birth", capitalizeString(birthDetes?.dateOfBirth)],
+        ["Nationality At Birth", capitalizeString(birthDetes?.nationalityAtBirth)],
+        ["Current Nationality", capitalizeString(birthDetes?.currentNationality)]
+      ];
+      
+      const placeOfBirth = [
+        ["Village/Town", capitalizeString(POB?.villageTown)],
+        ["Region Code", capitalizeString(POB?.regionCode)],
+        ["District/State", capitalizeString(POB?.districtState)]
+      ];
+      
+      const hometown = [
+        ["Village/Town", capitalizeString(htown?.villageTown)],
+        ["Region/Code", capitalizeString(htown?.regionCode)],
+        ["District/State", capitalizeString(htown?.districtState)]
+      ];
+      
+      const occupation = [
+        ["Occupation", capitalizeString(occup?.occupation)]
+      ];
+      
+      const residentialAddress = [
+        ["Village/Town", capitalizeString(RAdress?.villageTown)],
+        ["Region/Country", capitalizeString(RAdress?.regionCode)],
+        ["District/State", capitalizeString(RAdress?.districtState)],
+        ["Community Area Name", capitalizeString(RAdress?.communityAreaName)],
+        ["ZIP/Postal Code", capitalizeString(RAdress?.zipPostalCode)],
+        ["Digital Address", capitalizeString(RAdress?.digitalAddress)]
+      ];
+      
+      const fatherDetails = [
+        ["Full Name Of Father", capitalizeString(fatherDetes?.fullNameOfFather)],
+        ["Nationality", capitalizeString(fatherDetes?.nationality)],
+        ["Is Father Alive", capitalizeString(fatherDetes?.isFatherAlive)]
+      ];
+      
+      const fathersHometown = [
+        ["Village/Town", capitalizeString(fatherHtown?.villageTown)],
+        ["Region/Code", capitalizeString(fatherHtown?.regionCode)],
+        ["District/State", capitalizeString(fatherHtown?.districtState)]
+      ];
+      
+      const motherDetails = [
+        ["Full Name Of Mother", capitalizeString(motherDetes?.fullNameOfMother)],
+        ["Nationality", capitalizeString(motherDetes?.nationality)],
+        ["Is Mother Alive", capitalizeString(motherDetes?.isMotherAlive)]
+      ];
+      
+      const mothersHometown = [
+        ["Village/Town", capitalizeString(motherHtown?.villageTown)],
+        ["Region/Code", capitalizeString(motherHtown?.regionCode)],
+        ["District/State", capitalizeString(motherHtown?.districtState)]
+      ];
+      
+      const nextOfKin = [
+        ["Next Of Kin", capitalizeString(NOK?.nextOfKin)],
+        ["Address", capitalizeString(NOK?.address)]
+      ];
+      
+      const verificationDocument = [
+        ["Type", capitalizeString(verificationDoc?.type)],
+        ["Document Number / NID", capitalizeString(verificationDoc?.documentNumberNid)],
+        ["Date Issued", capitalizeString(verificationDoc?.dateIssued)]
+      ];
+      
+      const contact = [
+        ["Local Phone Number", capitalizeString(cont?.localPhoneNumber)]
+      ];
+      
+      const institutionalIds = [
+        ["Voter's ID Number", capitalizeString(IIds?.votersIdNumber)],
+        ["Date Issued", capitalizeString(IIds?.dateIssued)]
+      ];
+      
+      const criminalRecord: any[] = Crec?.map((record: any) => {
         return [
-            ["Arrest Date",  (new Date(record?.arrestDate)).toDateString()],
-            ["Arresting Officer",  record?.arrestingOfficer],
-            ["Criminal Record Id",  record?.criminalRecordId],
-            ["Offence Type",  record?.offenceTypee],
-            ["Person Id",  record?.personId],
-            ["Sentence Length (months)",  record?.sentenceLengthMonths],
-        ]
-    })
-    const fvlcoinzationResultsDetes = [
-        ["Date", date],
-        ["Time Elapsed", `${formatTime(timeElapsed)}`],
-        ["Status", status],
-        ["Type", type],
-        ["Accuracy", `${accuracy.toFixed(4)}%`]
-    ]
+          ["Arrest Date", capitalizeString((new Date(record?.arrestDate)).toDateString())],
+          ["Arresting Officer", capitalizeString(record?.arrestingOfficer)],
+          ["Criminal Record ID", capitalizeString(record?.criminalRecordId)],
+          ["Offence Type", capitalizeString(record?.offenceTypee)],
+          ["Person ID", capitalizeString(record?.personId)],
+          ["Sentence Length (Months)", capitalizeString(record?.sentenceLengthMonths)]
+        ];
+      });
+      
+      const fvlcoinzationResultsDetes = [
+        ["Date", capitalizeString(date)],
+        ["Time Elapsed", capitalizeString(`${formatTime(timeElapsed)}`)],
+        ["Status", capitalizeString(status)],
+        ["Type", "Video"],
+        ["Accuracy", capitalizeString(`${accuracy.toFixed(4)}%`)]
+      ];
+      
 
     if(criminalRecord){
         criminalRecord.length = 1
@@ -478,7 +496,7 @@ const PrintableFvlconizationResult = (
                     >
                         <div className="w-full px-4 flex gap-2">
                             <DownloadableList 
-                                data={NextOfKin}
+                                data={nextOfKin}
                             />
                         </div>
                     </DownloadbleContainer>
