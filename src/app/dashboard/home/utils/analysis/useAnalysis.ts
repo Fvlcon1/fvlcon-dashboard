@@ -370,18 +370,20 @@ export const useAnalysis = (imageRef: RefObject<HTMLImageElement>) => {
      * @returns 
      */
     const getDetailsOfFacesFromVideoFvlconization = async (facesGroupedByIndex : occurance[]) => {
-        const checkedFaces = await Promise.all(facesGroupedByIndex.map(async (face) => {
+        const checkedFaces = await Promise.all(facesGroupedByIndex.map(async (face, index) => {
             const resultsContainingFacesMatches = getResultsContainingFaceMatches(face.content)
             const faceMatch = resultsContainingFacesMatches?.FaceMatches[0]// gets a single item in the category which has a face match
             let details : any = undefined
             if(faceMatch)
                 details = await getSingleFace(faceMatch.Face.FaceId);
             const boundingBox = (resultsContainingFacesMatches ?? face.content[0]).Person.Face.BoundingBox
+            const croppedImage = selectedImage ? await getImageURLFromBoundingBox(boundingBox, await generateVideoThumbnail(selectedImage.url, (resultsContainingFacesMatches ?? face.content[0]).Timestamp / 1000)) : ''
+            facesGroupedByIndex[index].croppedImage = croppedImage
             const match : checkedFaceType = {
                 matchedPerson: faceMatch?.Face.ExternalImageId,
                 similarity: faceMatch?.Similarity,
                 boundedImage : "",
-                croppedImage: selectedImage ? await getImageURLFromBoundingBox(boundingBox, await generateVideoThumbnail(selectedImage.url, (resultsContainingFacesMatches ?? face.content[0]).Timestamp / 1000)) : '',
+                croppedImage,
                 matchedImage: details?.imageUrl,
                 faceid: faceMatch?.Face.FaceId,
                 occurances : face,

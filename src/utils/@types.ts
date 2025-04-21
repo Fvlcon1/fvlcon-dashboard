@@ -181,6 +181,8 @@ export type fvlconizedFaceType = {
 export type occurance = {
   index: number;
   content: fvlconizedFaceType[];
+  croppedImage? : string
+  croppedImageS3Key? : string
 }
 export interface WebSocketMessage {
   action: string;

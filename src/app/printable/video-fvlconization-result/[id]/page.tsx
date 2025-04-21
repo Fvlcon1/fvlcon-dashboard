@@ -27,18 +27,28 @@ const Printable = async (
   const niaDetail = await getSingleFace(faceId)
   const log : FvlconizationVideoLogs = await getVideoLog(recordId)
 
+  //Get occurance which matches faceId
+  const validOccurance = log.occurance.find((singleOccurance: any) => 
+    singleOccurance?.content.find((item: any) => 
+      item.FaceMatches.find((faceMatch: any) => faceMatch.Face.FaceId === faceId)
+    )
+  );  
   
   //Get accuracy from log
-  const accuracy = log?.occurance?.flatMap((singleOccurance: any) =>
-    singleOccurance.content
-  )?.flatMap((item: any) =>
-    item.FaceMatches
-  )?.find((faceMatch: any) =>
-    faceMatch.Face.FaceId === faceId
-  )?.Face.Confidence;
+  // const accuracy = log?.occurance?.flatMap((singleOccurance: any) =>
+  //   singleOccurance.content
+  // )?.flatMap((item: any) =>
+  //   item.FaceMatches
+  // )?.find((faceMatch: any) =>
+  //   faceMatch.Face.FaceId === faceId
+  // )?.Face.Confidence;
+
+  console.log({validOccurance})
+  const accuracy = (validOccurance as any)?.content[0]?.FaceMatches[0]?.Face?.Confidence
+  console.log({accuracy})
+  const croppedImageUrl = (validOccurance as any)?.croppedImageUrl
   
   
-//   const croppedImageUrl = (findMediaWidthFaceId as any)?.segmentedImageUrl
   const uploadedImageUrl = (log as any)?.uploadedImageUrl
   const type = (log as any)?.type
   const date = getDateTime((log as any)?.date)
@@ -50,8 +60,8 @@ const Printable = async (
       className="w-full max-w-[800px] bg-white rounded-t-lg mt-[20px]"
     >
       <PrintableFvlconizationResult 
-        // croppedImageUrl={'croppedImageUrl'}
-        // uploadedImageUrl={uploadedImageUrl}
+        croppedImageUrl={croppedImageUrl}
+        uploadedImageUrl={uploadedImageUrl}
         action={action}
         filename={filename}
         data={niaDetail}

@@ -71,11 +71,28 @@ const useActivityStorage = () => {
             const result = await axios.get("/api/logs/fvlconizationVideoLogs/generateUploadPresignedUrlForVideoFvlconizationThumbnail", {params : { s3Key : thumbnailS3Key }})
             const presignedUrl = result.data.url
 
-            //upload thumnail to s3
+            //upload thumbnail to s3
             const thumbnail = await generateVideoThumbnail(videoUrl)
             const thumbnailBlob = base64ToBlob(thumbnail, "image/png");
             const { error } = await uploadToS3(presignedUrl, thumbnailBlob)
             if(error) throw new Error(error)
+
+            //upload cropped images of occurances to s3
+            await Promise.all(occurance.map(async (item, index) => {
+                const croppedImageS3Key = `cropped-images-of-occurances/${videoFile.name}${uuidv4()}-occurance-${index}`
+                const response = await axios.get("/api/logs/fvlconizationVideoLogs/generateUploadPresignedUrlForVideoFvlconizationThumbnail", {params : { s3Key : croppedImageS3Key }})
+                const presignedUrl = response.data.url
+                if(!item.croppedImage){
+                    delete item.croppedImage
+                    return
+                }
+                const imageBlob = base64ToBlob(item.croppedImage, "image/png");
+                const { error } = await uploadToS3(presignedUrl, imageBlob)
+                if(error) throw new Error(error)
+
+                item.croppedImageS3Key = croppedImageS3Key
+                delete item.croppedImage
+            }))
     
             //store log
             const response = await axios.post("/api/logs/fvlconizationVideoLogs", {

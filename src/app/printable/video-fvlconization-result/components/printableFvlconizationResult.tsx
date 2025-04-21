@@ -18,8 +18,8 @@ import { capitalizeString } from "@/utils/capitalizeString"
 const PrintableFvlconizationResult = (
     { 
         data, 
-        // croppedImageUrl, 
-        // uploadedImageUrl,
+        croppedImageUrl, 
+        uploadedImageUrl,
         action,
         filename,
         fvlconizationResultsDetails
@@ -27,8 +27,8 @@ const PrintableFvlconizationResult = (
      }: 
     { 
         data?: any
-        // croppedImageUrl : string
-        // uploadedImageUrl : string
+        croppedImageUrl : string
+        uploadedImageUrl : string
         action?: string
         filename? : string
         fvlconizationResultsDetails : {
@@ -249,7 +249,7 @@ const PrintableFvlconizationResult = (
                 <div className="w-full p-8 flex flex-col gap-6 bg-white">
                     <div className="w-full flex justify-between gap-2 items-center">
                         <div className="flex gap-3 items-center">
-                            {/* <div className="h-[100px] w-[100px] rounded-lg bg-bg-quantinary relative overflow-hidden">
+                            <div className="h-[100px] w-[100px] rounded-lg bg-bg-quantinary relative overflow-hidden">
                                 <Image
                                     alt="img"
                                     fill
@@ -266,7 +266,7 @@ const PrintableFvlconizationResult = (
                                     src={croppedImageUrl ?? ''}
                                     crossOrigin="anonymous"
                                 />
-                            </div> */}
+                            </div>
                             <div className="h-[100px] w-[100px] rounded-lg bg-bg-quantinary relative overflow-hidden">
                                 <Image
                                     alt="img"
