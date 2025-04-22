@@ -10,12 +10,17 @@ import { useContext, useState } from "react"
 import { trackingContext } from "../context/trackingContext"
 import { protectedAPI } from "@/utils/api/api"
 import { message } from "antd"
+import { showError } from "../utils/uiHelpers"
 import { parseCoordinates } from "@/utils/parseCoordinate"
 import ClickableTab from "@components/clickable/clickabletab"
 import Link from "next/link"
 
 const privateApi = new protectedAPI()
 
+/**
+ * PlateContainer displays information about a tracked vehicle plate.
+ * Handles click to show capture details and set map waypoints.
+ */
 const PlateContainer = ({
     id,
     plateNumber,
@@ -26,36 +31,41 @@ const PlateContainer = ({
     userId,
     type,
     S3Key
-} : IPlateTrackingType) => {
+}: IPlateTrackingType) => {
     const {setCaptureDetails, setCenter, setWayPoints} = useContext(trackingContext)
     const [hover, setHover] = useState(false)
 
+    /**
+     * Handles click to set capture details and update map state.
+     */
     const handleSetCaptureDetails = async () => {
-        setCaptureDetails({status : 'loading'})
-        const captureDetailsData : IPlateTrackingType= {
-            id,
-            plateNumber,
-            timestamp,
-            coordinates,
-            locationName,
-            imageUrl,
-            type,
-            userId,
-            S3Key
+        try {
+            setCaptureDetails({ status: 'loading' });
+            const captureDetailsData: IPlateTrackingType = {
+                id,
+                plateNumber,
+                coordinates,
+                timestamp,
+                locationName,
+                imageUrl,
+                type,
+                userId,
+                S3Key
+            };
+            setCaptureDetails({ data: captureDetailsData, status: undefined });
+            setWayPoints([
+                {
+                    ...captureDetailsData,
+                    radius: 10
+                }
+            ]);
+            setCenter(coordinates);
+        } catch (error: any) {
+            showError("Failed to set capture details");
         }
-        setCaptureDetails({
-            data : captureDetailsData,
-            status : undefined
-        })
-        setWayPoints([
-            {
-                ...captureDetailsData,
-                radius: 10
-            }
-        ])
-        setCenter(coordinates)
     }
 
+    // UI rendering
     return (
         <Pressable 
             onClick={handleSetCaptureDetails}

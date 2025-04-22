@@ -22,6 +22,7 @@ export type IPersonTrackingType = {
     imageUrl? : string
     userId : string
     similarity? : number
+    niaDetails? : any
 }
 
 export interface IPersonTrackingWithImageType extends IPersonTrackingType {
@@ -58,8 +59,10 @@ export interface IPlateTrackingWaypoints extends IPlateTrackingType {
 export type IPlateOrPerson = IPersonTrackingType | IPlateTrackingType
 
 export interface ICamDetilasPersonDataType {
-    streamName : string,
-    lastSeen : string,
+    faceId : string
+    niaDetails? : any
+    streamName : string
+    lastSeen : string
     time : Date
     coordinates: LatLngExpression & number[]
 }

@@ -1,15 +1,11 @@
 'use client'
 
-import ClickableTab from "@components/clickable/clickabletab"
-import AppTypography from "@styles/components/appTypography"
 import Flex from "@styles/components/flex"
 import theme from "@styles/theme"
-import { IoMdArrowDropdown } from "react-icons/io"
-import Profile from "./profile container/profile"
 import Button from "@components/button/button"
 import AnalysisResults from "./analysis results/analysisResults"
 import Skeleton from "react-loading-skeleton"
-import { ReactNode, useContext, useEffect, useState, useCallback, useRef } from 'react';
+import { useContext, useEffect, useState, useCallback, useRef } from 'react';
 import useWebSocket from "@/utils/useWebsocket"
 import { getUserDetailsFromTrackingData } from "../utils/getUserDetailsFromTrackingData"
 import { IPersonTrackingType, IPersonTrackingWithImageType, IPlateTrackingType, ITrackingDataType } from "@/app/tracking/components/types"
@@ -19,14 +15,19 @@ import DvlaRecord from "@components/records/dvlaRecord/dvlaRecord"
 import { liveComponentsContext } from "./context"
 import { simulatedPlates } from "./simulatedPlates"
 import { FaUndoAlt } from "react-icons/fa"
-import Text from "@styles/components/text"
-import { FaAngleDown } from "react-icons/fa6"
-import Dropdown from "@components/dropdown/dropdown"
-import { DropdownItem } from "@/utils/@types"
-import { IoCheckmarkDone } from "react-icons/io5"
 import Selectable, { SelectableOption } from "@components/dropdown/selectable"
 
 export type FilterType = "Person" | "Plate" | "All"
+
+// Utility to determine if a message should be processed based on filter type
+const shouldLoadMessage = (message: any, currentType: FilterType) => {
+    return (
+        (message.type === "plate" && currentType === "Plate") ||
+        (message.type === "person" && currentType === "Person") ||
+        (!message.type && currentType === "Person") ||
+        currentType === "All"
+    );
+};
 
 const Right = () => {
     const [analysisResults, setAnalysisResults] = useState(true)
@@ -41,47 +42,44 @@ const Right = () => {
         typeRef.current = type;
     }, [type]);
 
+    // Ref to track simulation timeouts for cleanup
+    const timeoutsRef = useRef<number[]>([]);
+
+    // Handles incoming websocket or simulated messages
     const onMessageUpdate = useCallback(async (message: any) => {
         const currentType = typeRef.current;
-        
-        const shouldLoad = 
-            (message.type === "plate" && currentType === "Plate") ||
-            (message.type === "person" && currentType === "Person") ||
-            (!message.type && currentType === "Person") ||
-            currentType === "All";
+        const shouldLoad = shouldLoadMessage(message, currentType);
 
-        shouldLoad && setIsMessageUpdated(true);
-        
-        console.log(`Processing message - Type: ${currentType}, Message type: ${message.type}`);
-        console.log(
-            (message.type === "plate" && currentType === "Plate"),
-            (message.type === "person" && currentType === "Person"),
-            (!message.type && currentType === "Person"),
-            currentType === "All"
-        );
+        if (shouldLoad) setIsMessageUpdated(true);
+
+        if (process.env.NODE_ENV === "development") {
+            console.debug(`Processing message - Type: ${currentType}, Message type: ${message.type}`);
+            console.debug({ shouldLoad });
+        }
 
         try {
             const getDetails = await getUserDetailsFromTrackingData(message);
-            console.log({getDetails});
-            
+            console.log({getDetails})
             if (getDetails) {
                 setDetections(prev => [...prev, getDetails]);
             }
         } catch (error) {
-            console.error("Error processing message:", error);
+            console.log({error})
         } finally {
             setIsMessageUpdated(false);
         }
-    }, []); // Empty dependency array since we're using ref
+    }, []);
 
     const { messages } = useWebSocket(process.env.NEXT_PUBLIC_WEBSOCKET_URL!, onMessageUpdate);
 
+    // Simulate incoming plate messages with cleanup
     const runSimulation = useCallback(() => {
-        simulatedPlates.forEach((plate, index) => {
-            setTimeout(() => {
+        timeoutsRef.current.forEach(clearTimeout);
+        timeoutsRef.current = simulatedPlates.map((plate, index) =>
+            window.setTimeout(() => {
                 onMessageUpdate(plate);
-            }, index * 5000);
-        });
+            }, index * 5000)
+        );
     }, [onMessageUpdate]);
 
     const menuItems: SelectableOption[] = [
@@ -97,11 +95,8 @@ const Right = () => {
 
     useEffect(() => {
         runSimulation();
-        
-        // Cleanup function to clear any pending timeouts
         return () => {
-            // This would normally clear timeouts, but we don't have the IDs
-            // In a real implementation, you'd track timeout IDs and clear them here
+            timeoutsRef.current.forEach(clearTimeout);
         };
     }, [runSimulation]);
 

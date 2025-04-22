@@ -9,6 +9,7 @@ import { Suspense } from "react";
 import HydrationLoader from "@components/loaders/hydrationLoader";
 import 'react-loading-skeleton/dist/skeleton.css'
 import AntdConfigProvider from "@components/antd/configProvider";
+import QueryProvider from "./utils/QueryProvider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -22,6 +23,7 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+
   return (
     <html lang="en" className="h-full max-w-full">
       <body className={`${inter.className} h-full`}>
@@ -29,10 +31,12 @@ export default function RootLayout({
           <Suspense>
             <IsClientCtxProvider>
               <AntdConfigProvider>
-                <LiveProvider>
-                  <ToastContainer />
-                  {children}
-                </LiveProvider>
+                <QueryProvider>
+                  <LiveProvider>
+                    <ToastContainer />
+                    {children}
+                  </LiveProvider>
+                </QueryProvider>
               </AntdConfigProvider>
             </IsClientCtxProvider>
           </Suspense>

@@ -48,13 +48,14 @@ const Table = () => {
             const people: IPersonTrackingWithImageType[] = [];
             for (const data of trackingData) {
                 const {details} = data
+                const personDetails = details?.personDetails
                 const { FaceId, Timestamp, coordinates, stream_name, S3Key, userId, imageUrl, Id } = data;
                 const arrayCoordinates = parseCoordinates(coordinates);
                 const location = await getLocationNameFromCordinates(arrayCoordinates);
                 
                 const personResultsParams: IPersonTrackingWithImageType = {
                     id : Id,
-                    name: `${details?.FirstName ?? ''} ${details?.MiddleName ?? ''} ${details?.LastName ?? ''}`,
+                    name: `${personDetails?.forenames ?? ''} ${personDetails?.surname ?? ''}`,
                     type: ITrackingDataTypes.person,
                     alias: "",
                     lastSeen: location?.name ?? 'Unknown',
@@ -65,11 +66,11 @@ const Table = () => {
                     S3Key,
                     userId,
                     imageUrl,
-                    originalImageUrl : details?.imageUrl ?? ''
+                    originalImageUrl : details?.imageUrl ?? '',
+                    niaDetails : details
                 };
                 people.push(personResultsParams);
             }
-            console.log({people})
             setPersonTrackingData({ data: people, status: null });
         } catch (error) {
             console.error({error});

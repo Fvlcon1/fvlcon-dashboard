@@ -11,28 +11,53 @@ import { ConfigProvider, DatePicker, message } from "antd"
 import { hexOpacity } from "@/utils/hexOpacity"
 import useTrackingData from "../utils/useTrackingData"
 
+/**
+ * Controls component for tracking feature.
+ * Handles date selection, camera toggling, and tracking data fetch.
+ */
 const Controls = () => {
-    const {showCameras, setShowCameras, setWayPoints, captureDetails} = useContext(trackingContext)
-    const [startDate, setStartDate] = useState<string | string[]>()
-    const [endDate, setEndDate] = useState<string | string[]>()
-    const [searchValue, setSearchValue] = useState<string>('')
-    const { getTrackingData } = useTrackingData()
+    const { showCameras, setShowCameras } = useContext(trackingContext);
+    const [startDate, setStartDate] = useState<string | string[]>();
+    const [endDate, setEndDate] = useState<string | string[]>();
+    const [searchValue, setSearchValue] = useState<string>('');
+    const { getTrackingData } = useTrackingData();
 
     /**
-     * Convert start and end dates to right format and calls tracking function when user clicks on start tracking
-     * @returns 
+     * Helper to standardize error feedback.
+     * @param msg - Message to show
+     */
+    const showWarning = (msg: string) => {
+        console.error(msg);
+        message.warning(msg);
+    };
+
+    /**
+     * Validates and processes dates, then fetches tracking data.
+     * Shows user-friendly errors if validation fails.
      */
     const handleStartTracking = async () => {
-        if(!startDate){
-            console.error("Please input start date")
-            return message.warning("Please input start date")
+        if (!startDate) {
+            showWarning('Please input start date');
+            return;
         }
-        const processedStartDate : Date = new Date(startDate as string)
-        const processedEndDate : Date = endDate ? new Date(endDate as string) : new Date()
-        await getTrackingData(processedStartDate, processedEndDate)
-    }
+        const processedStartDate: Date = new Date(startDate as string);
+        const processedEndDate: Date = endDate ? new Date(endDate as string) : new Date();
+        if (isNaN(processedStartDate.getTime())) {
+            showWarning('Invalid start date');
+            return;
+        }
+        if (endDate && isNaN(processedEndDate.getTime())) {
+            showWarning('Invalid end date');
+            return;
+        }
+        if (processedEndDate < processedStartDate) {
+            showWarning('End date must be after start date');
+            return;
+        }
+        await getTrackingData(processedStartDate, processedEndDate);
+    };
 
-
+    // UI rendering
     return (
         <ConfigProvider
             theme={{
@@ -64,23 +89,17 @@ const Controls = () => {
         >
             <div className="w-full flex justify-between">
                 <div className="flex gap-2">
+                    {/* Toggle camera visibility */}
                     <div 
                         className="flex gap-1 p-2 px-3 rounded-lg hover:bg-bg-quantinary cursor-pointer bg-bg-tetiary items-center"
-                        onClick={()=>setShowCameras(prev => !prev)}
+                        onClick={() => setShowCameras((prev: boolean) => !prev)}
                     >
-                        {
-                            showCameras ?
-                            <IoIosEye
-                                color={theme.colors.text.secondary}
-                            />
-                            :
-                            <IoIosEyeOff
-                                color={theme.colors.text.secondary}
-                            />
-                        }
-                        <Text>
-                            Show all Cameras
-                        </Text>
+                        {showCameras ? (
+                            <IoIosEye color={theme.colors.text.secondary} />
+                        ) : (
+                            <IoIosEyeOff color={theme.colors.text.secondary} />
+                        )}
+                        <Text>Show all Cameras</Text>
                     </div>
                     {/* <Searchbar
                         className="bg-bg-secondary rounded-lg"
@@ -90,21 +109,20 @@ const Controls = () => {
                     /> */}
                 </div>
                 <div className="flex gap-2">
+                    {/* Date pickers and start tracking button */}
                     <div className="flex items-center gap-2">
                         <DatePicker 
                             showTime
                             allowClear
                             placeholder="Start date"
-                            onChange={(date, dateToString)=>setStartDate(dateToString)}
+                            onChange={(_, dateToString) => setStartDate(dateToString)}
                         />
-                        <Text>
-                            To
-                        </Text>
+                        <Text>To</Text>
                         <DatePicker 
                             showTime
                             allowClear
                             placeholder="End date"
-                            onChange={(date, dateToString)=>setEndDate(dateToString)}
+                            onChange={(_, dateToString) => setEndDate(dateToString)}
                         />
                     </div>
                     <Button

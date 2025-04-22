@@ -16,6 +16,7 @@ import getLocationNameFromCordinates from "@/utils/getLocationNameFromCoordinate
 import Skeleton from "react-loading-skeleton"
 import { trackingContext } from "../context/trackingContext"
 import { message } from "antd"
+import { showWarning, showError } from "../utils/uiHelpers"
 import NoData from "./noData"
 import PlateContainer from "./plateContainer"
 
@@ -30,80 +31,70 @@ const Right = () => {
     
     const { imageUrl, setImageUrl } = useContext(trackingContext)
 
-    const getTrackingData = async (imageUrl: string) => {
-        setPersonTrackingData({ status: 'loading', data: [] })
-        try {
-            const response = await privateAPI.post("/tracking/searchFaceByImage", {
-                base64Image: imageUrl
-            })
-            const trackingData = response?.data
+    /**
+ * Fetches tracking data for a given image URL.
+ * Handles loading state, error feedback, and transforms API response.
+ * @param imageUrl Base64 image string
+ */
+const getTrackingData = async (imageUrl: string) => {
+    setPersonTrackingData({ status: 'loading', data: [] });
+    try {
+        const response = await privateAPI.post("/tracking/searchFaceByImage", { base64Image: imageUrl });
+        const trackingData = response?.data?.trackingData;
+        const niaDetails = response?.data?.details;
 
-            if(trackingData?.length > 0){
-                const people: IPersonTrackingType[] = []
-    
-                for (const data of trackingData) {
-                    try {
-                        const { FaceId, Timestamp, coordinates, stream_name, S3Key, UserId, Id } = data
-                        const arrayCoordinates = parseCoordinates(coordinates)
-                        const location = await getLocationNameFromCordinates(arrayCoordinates)
-                        const personName = `${data.details?.personDetails.forenames ?? ''} ${data.details?.personDetails.surname ?? ''}`
-    
-                        const personResultsParams: IPersonTrackingType = {
-                            id : Id,
-                            name: personName,
-                            type: ITrackingDataTypes.person,
-                            alias: "",
-                            lastSeen: location?.name ?? 'Unknown',
-                            coordinates: arrayCoordinates,
-                            timeSeen: new Date(Timestamp),
-                            faceId : FaceId,
-                            streamName : stream_name,
-                            S3Key,
-                            userId : UserId
-                        }
-                        people.push(personResultsParams)
-                    } catch (error: any) {
-                        console.log({ error })
-                        message.error("Error fetching data")
-                        setPersonTrackingData( prev => ({
-                            ...prev,
-                            status: null,
-                        }))
-                    }
+        if (trackingData) {
+            const people: IPersonTrackingType[] = [];
+            for (const data of trackingData) {
+                try {
+                    const { FaceId, Timestamp, coordinates, stream_name, S3Key, UserId, Id } = data;
+                    const arrayCoordinates = parseCoordinates(coordinates);
+                    const location = await getLocationNameFromCordinates(arrayCoordinates);
+                    const personName = `${niaDetails?.personDetails.forenames ?? ''} ${niaDetails?.personDetails.surname ?? ''}`;
+                    const personResultsParams: IPersonTrackingType = {
+                        id: Id,
+                        name: personName,
+                        type: ITrackingDataTypes.person,
+                        alias: "",
+                        lastSeen: location?.name ?? 'Unknown',
+                        coordinates: arrayCoordinates,
+                        timeSeen: new Date(Timestamp),
+                        faceId: FaceId,
+                        streamName: stream_name,
+                        S3Key,
+                        userId: UserId,
+                        niaDetails: niaDetails
+                    };
+                    people.push(personResultsParams);
+                } catch (error: any) {
+                    showError("Error fetching data");
+                    setPersonTrackingData(prev => ({ ...prev, status: null }));
                 }
-                const  delay = (ms : number) => {
-                    return new Promise(resolve => setTimeout(resolve, ms));
-                }
-                
-                const updatePersonTrackingData = async (people : IPersonTrackingType[]) => {
-                    for (let person of people) {
-                        setPersonTrackingData(prev => ({
-                            data: [...prev.data, person],
-                            status: null
-                        }));
-                        console.log({ person });
-                        await delay(100);
-                    }
-                }
-    
-                updatePersonTrackingData(people)
-            } else {
-                message.warning("No data found", 5)
-                setPersonTrackingData( prev => ({
-                    ...prev,
-                    status: null,
-                }))
             }
-
-        } catch (error: any) {
-            console.log({ error })
-            setPersonTrackingData({
-                status: null,
-                data: []
-            })
-            message.error(error.response.data)
+            // Helper for artificial delay (for UI smoothness)
+            const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+            /**
+             * Updates state with tracking people, one by one (with delay).
+             */
+            const updatePersonTrackingData = async (people: IPersonTrackingType[]) => {
+                for (let person of people) {
+                    setPersonTrackingData(prev => ({
+                        data: [...prev.data, person],
+                        status: null
+                    }));
+                    await delay(100);
+                }
+            };
+            updatePersonTrackingData(people);
+        } else {
+            showWarning("No data found");
+            setPersonTrackingData(prev => ({ ...prev, status: null }));
         }
+    } catch (error: any) {
+        setPersonTrackingData({ status: null, data: [] });
+        showError(error?.response?.data || "Unknown error");
     }
+}
 
     useEffect(()=>{
         setSearchResults(newPersonTrackingData)

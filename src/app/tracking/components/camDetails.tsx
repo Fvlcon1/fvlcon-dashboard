@@ -31,7 +31,9 @@ const CamDetails = () => {
                 streamName : transformedCaptureDetails.streamName,
                 lastSeen : transformedCaptureDetails.lastSeen,
                 time : transformedCaptureDetails.timeSeen,
-                coordinates : transformedCaptureDetails.coordinates
+                coordinates : transformedCaptureDetails.coordinates,
+                faceId : transformedCaptureDetails.faceId,
+                niaDetails : transformedCaptureDetails.niaDetails
             })
         } else if(captureDetails?.data?.type === ITrackingDataTypes.plate){
             const transformedCaptureDetails = captureDetails.data as IPlateTrackingType
@@ -93,7 +95,7 @@ const CamDetails = () => {
                         }
                     </div>
                     {
-                        captureDetails.data.type === ITrackingDataTypes.person ?
+                        captureDetails.data.type === ITrackingDataTypes.person && personData?
                         <CamDetailsPerson personData={personData}/>
                         :
                         captureDetails.data.type === ITrackingDataTypes.plate &&

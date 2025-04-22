@@ -6,34 +6,56 @@ import { message } from "antd"
 
 const privateApi = new protectedAPI()
 
-export const getUserDetailsFromTrackingData = async (trackingData : any) : Promise<IPersonTrackingWithImageType | IPlateTrackingType | undefined>  => {
+/**
+ * Extracts and formats user details from tracking data for both person and plate types.
+ * Handles async lookups (location, DVLA record) and error feedback.
+ * @param trackingData Incoming tracking data (person or plate)
+ * @returns Formatted tracking details or undefined on error
+ */
+export const getUserDetailsFromTrackingData = async (
+    trackingData: any
+): Promise<IPersonTrackingWithImageType | IPlateTrackingType | undefined> => {
     try {
-        const {details} = trackingData
-        console.log({trackingData})
-        const { FaceId, Timestamp, coordinates, stream_name, S3Key, userId, UserId, imageUrl, type, Id, plateNumber, locationName, Similarity } = trackingData;
+        const { details } = trackingData;
+        const {
+            FaceId,
+            Timestamp,
+            coordinates,
+            stream_name,
+            S3Key,
+            userId,
+            UserId,
+            imageUrl,
+            type,
+            Id,
+            plateNumber,
+            locationName,
+            Similarity,
+            originalImageUrl
+        } = trackingData;
         const arrayCoordinates = parseCoordinates(coordinates);
         const location = await getLocationNameFromCordinates(arrayCoordinates);
-        
-        if(type === "plate"){
-            const dvlaDetails = await fetchDvlaRecord(plateNumber)
+
+        if (type === "plate") {
+            // Plate detection: enrich with DVLA details
+            const dvlaDetails = await fetchDvlaRecord(plateNumber);
             const plateDetails: IPlateTrackingType = {
-                id : Id,
+                id: Id,
                 plateNumber,
                 imageUrl,
                 locationName,
                 coordinates,
-                timestamp : Timestamp,
+                timestamp: Timestamp,
                 type,
-                userId : UserId,
+                userId: UserId,
                 S3Key,
-                dvlaDetails
-            }
-            
-            console.log({plateDetails})
-            return plateDetails
+                dvlaDetails,
+            };
+            return plateDetails;
         } else {
+            // Person detection
             const userDetails: IPersonTrackingWithImageType = {
-                id : Id,
+                id: Id,
                 name: `${details?.personDetails?.forenames ?? ''} ${details?.personDetails?.surname ?? ''}`,
                 type: ITrackingDataTypes.person,
                 alias: "",
@@ -45,25 +67,31 @@ export const getUserDetailsFromTrackingData = async (trackingData : any) : Promi
                 S3Key,
                 userId,
                 imageUrl,
-                similarity : Similarity,
-                originalImageUrl : details?.imageUrl ?? ''
+                similarity: Similarity,
+                originalImageUrl,
+                niaDetails: details
             };
-            return userDetails
+            return userDetails;
         }
-    } catch (error : any) {
-        console.log({error})
-        message.error("Error fetching data")
+    } catch (error: any) {
+        // Centralized error feedback
+        console.error("Error extracting user details from tracking data:", error);
+        message.error("Error fetching tracking details");
     }
 }
 
 /**
- * Get dvla details of the plate
+ * Fetches DVLA details for a given plate number.
  * @param plateNumber Number plate of the vehicle
+ * @returns DVLA record object or undefined
  */
-const fetchDvlaRecord = async (plateNumber:string) => {
-    if(plateNumber){
-        const getRecord = await privateApi.get("/dvlarecords/getDvlaRecord", {plateNumber})
-        const record = getRecord?.data
-        return record
+const fetchDvlaRecord = async (plateNumber: string) => {
+    if (!plateNumber) return undefined;
+    try {
+        const getRecord = await privateApi.get("/dvlarecords/getDvlaRecord", { plateNumber });
+        return getRecord?.data;
+    } catch (error) {
+        console.error("Error fetching DVLA record:", error);
+        return undefined;
     }
-}
+};

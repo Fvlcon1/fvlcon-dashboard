@@ -1,3 +1,5 @@
+import { chrisNia } from "../utils/simulated-user-nia";
+
 export const simulatedPlates = [
     {
         Id: 1,
@@ -13,16 +15,59 @@ export const simulatedPlates = [
     },
     {
         id : "Id",
-        // name: `${details?.personDetails?.forenames ?? ''} ${details?.personDetails?.surname ?? ''}`,
+        name: `Chris Ampeh`,
+        details : chrisNia,
         coordinates: "0,0",
         timeSeen: new Date(),
         faceId: "FaceId",
         streamName: "stream_name",
         S3Key : "S3Key",
         userId : "009",
-        imageUrl : '/assets/simulated-people/1.jpg',
+        imageUrl : '/assets/simulated-people/chris1.jpeg',
         similarity : 90,
-        originalImageUrl : '/assets/simulatedCars/GC 167-21.jpg'
+        originalImageUrl : '/assets/simulated-people/chris-main.jpg'
+    },
+    {
+        id : "Id",
+        name: `Chris Ampeh`,
+        details : chrisNia,
+        coordinates: "0,0",
+        timeSeen: new Date(),
+        faceId: "FaceId",
+        streamName: "stream_name",
+        S3Key : "S3Key",
+        userId : "009",
+        imageUrl : '/assets/simulated-people/chris2.jpeg',
+        similarity : 90,
+        originalImageUrl : '/assets/simulated-people/chris-main.jpg'
+    },
+    {
+        id : "Id",
+        name: `Chris Ampeh`,
+        details : chrisNia,
+        coordinates: "0,0",
+        timeSeen: new Date(),
+        faceId: "FaceId",
+        streamName: "stream_name",
+        S3Key : "S3Key",
+        userId : "009",
+        imageUrl : '/assets/simulated-people/chris3.jpeg',
+        similarity : 90,
+        originalImageUrl : '/assets/simulated-people/chris-main.jpg'
+    },
+    {
+        id : "Id",
+        name: `Chris Ampeh`,
+        details : chrisNia,
+        coordinates: "0,0",
+        timeSeen: new Date(),
+        faceId: "FaceId",
+        streamName: "stream_name",
+        S3Key : "S3Key",
+        userId : "009",
+        imageUrl : '/assets/simulated-people/chris4.jpeg',
+        similarity : 90,
+        originalImageUrl : '/assets/simulated-people/chris-main.jpg'
     },
     {
         Id: 2,
