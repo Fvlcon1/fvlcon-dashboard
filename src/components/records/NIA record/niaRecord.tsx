@@ -75,6 +75,7 @@ const NiaRecord = ({
             windowStyle="!h-[90%] !w-[40%] !min-w-[700px]"
             icons={[
                 <DownloadPrintActions
+                    key="download-print-actions"
                     setShowFilenameContainer={setShowFilenameContainer}
                     getPrintableLink={getPrintableLink}
                     theme={theme}
