@@ -47,8 +47,8 @@ export const BlueDotMarker = ({
 
     useEffect(() => {
         const icon = new L.Icon({
-            iconUrl: '/assets/prod/blueDot.png',
-            iconSize: [18, 15],
+            iconUrl: '/assets/prod/blue-dot.png',
+            iconSize: [45, 45],
         });
         setCamMarkerIcon(icon);
     }, []);
@@ -77,6 +77,64 @@ export const TrackingMarker = ({
     useEffect(() => {
         const icon = new L.Icon({
             iconUrl: '/assets/prod/pin.png',
+            iconSize: [55, 50],
+        });
+        setCamMarkerIcon(icon);
+    }, []);
+
+    const Marker = dynamic(() => import('react-leaflet').then(mod => mod.Marker), { ssr: false });
+    const Popup = dynamic(() => import('react-leaflet').then(mod => mod.Popup), { ssr: false });
+
+    return (
+        <Marker position={position} icon={camMarkerIcon} eventHandlers={{ click: onClick }}>
+            <Popup>{popup ?? `${position[0]}, ${position[1]}`}</Popup>
+        </Marker>
+    );
+};
+
+export const StartMarker = ({
+    position,
+    popup,
+    onClick
+} : {
+    position : LatLngExpression & number[],
+    popup? : ReactNode,
+    onClick?: () => void
+}) => {
+    const [camMarkerIcon, setCamMarkerIcon] = useState<L.Icon>();
+
+    useEffect(() => {
+        const icon = new L.Icon({
+            iconUrl: '/assets/prod/green-flag.png',
+            iconSize: [55, 50],
+        });
+        setCamMarkerIcon(icon);
+    }, []);
+
+    const Marker = dynamic(() => import('react-leaflet').then(mod => mod.Marker), { ssr: false });
+    const Popup = dynamic(() => import('react-leaflet').then(mod => mod.Popup), { ssr: false });
+
+    return (
+        <Marker position={position} icon={camMarkerIcon} eventHandlers={{ click: onClick }}>
+            <Popup>{popup ?? `${position[0]}, ${position[1]}`}</Popup>
+        </Marker>
+    );
+};
+
+export const EndMarker = ({
+    position,
+    popup,
+    onClick
+} : {
+    position : LatLngExpression & number[],
+    popup? : ReactNode,
+    onClick?: () => void
+}) => {
+    const [camMarkerIcon, setCamMarkerIcon] = useState<L.Icon>();
+
+    useEffect(() => {
+        const icon = new L.Icon({
+            iconUrl: '/assets/prod/checkered-flag.png',
             iconSize: [55, 50],
         });
         setCamMarkerIcon(icon);

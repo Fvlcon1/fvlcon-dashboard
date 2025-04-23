@@ -14,6 +14,7 @@ import { message } from 'antd';
 import { usePathname, useSearchParams } from 'next/navigation';
 import { parseCoordinates } from '@/utils/parseCoordinate';
 import getLocationNameFromCordinates from '@/utils/getLocationNameFromCoordinates';
+import { BlueDotMarker, EndMarker, StartMarker } from './marker';
 
 const MapContainer = dynamic(() => import('react-leaflet').then(mod => mod.MapContainer), { ssr: false });
 const TileLayer = dynamic(() => import('react-leaflet').then(mod => mod.TileLayer), { ssr: false });
@@ -165,6 +166,19 @@ const MapComponent = () => {
                         />
                     ))}
                 {wayPoints?.map((item, index) => (
+                    index === 0 ?
+                    <BlueDotMarker 
+                        key={index}
+                        position={[item.coordinates[0], item.coordinates[1]] as LatLngExpression & number[]}
+                        onClick={()=>handleSetCaptureDetails(item)}
+                    />
+                    : index === wayPoints.length -1 ?
+                    <EndMarker
+                        key={index}
+                        position={[item.coordinates[0], item.coordinates[1]] as LatLngExpression & number[]}
+                        onClick={()=>handleSetCaptureDetails(item)}
+                    />
+                    :
                     <TrackingMarker
                         key={index}
                         position={[item.coordinates[0] + 0.0003, item.coordinates[1] - 0.0005] as LatLngExpression & number[]}
