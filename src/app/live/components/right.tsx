@@ -13,7 +13,7 @@ import Divider from "@components/divider/divider"
 import NoData from "@components/NoData/noData"
 import DvlaRecord from "@components/records/dvlaRecord/dvlaRecord"
 import { liveComponentsContext } from "./context"
-import { simulatedPlates } from "./simulatedPlates"
+import { simulatedData } from "./simulated-data/simulated-data"
 import { FaUndoAlt } from "react-icons/fa"
 import Selectable, { SelectableOption } from "@components/dropdown/selectable"
 
@@ -75,9 +75,9 @@ const Right = () => {
     // Simulate incoming plate messages with cleanup
     const runSimulation = useCallback(() => {
         timeoutsRef.current.forEach(clearTimeout);
-        timeoutsRef.current = simulatedPlates.map((plate, index) =>
+        timeoutsRef.current = simulatedData.map((data, index) =>
             window.setTimeout(() => {
-                onMessageUpdate(plate);
+                onMessageUpdate(data);
             }, index * 5000)
         );
     }, [onMessageUpdate]);

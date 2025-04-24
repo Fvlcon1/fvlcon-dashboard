@@ -56,35 +56,28 @@ export const LiveProvider = ({ children }: { children: ReactNode }) => {
         // },
         {
             id : '5',
-            url : "/assets/dev/outputShort.mp4",
+            url : "/assets/dev/simulated-plates-stream/outputShort.mp4",
             location : 'Kumasi',
             streamName : "stream2",
             coordinates : [6.669450646774655, -1.5176043915812956]
         },
         {
             id : '6',
-            url : "/assets/dev/outputLong.mp4",
+            url : "/assets/dev/simulated-plates-stream/outputLong.mp4",
             location : 'Kumasi',
             streamName : "stream2",
             coordinates : [6.669450646774655, -1.5176043915812956]
         },
         {
             id : '8',
-            url : "/assets/dev/output3.mp4",
-            location : 'Kumasi',
-            streamName : "stream2",
-            coordinates : [6.669450646774655, -1.5176043915812956]
-        },
-        {
-            id : '10',
-            url : "/assets/dev/person-output1.mp4",
+            url : "/assets/dev/simulated-plates-stream/output3.mp4",
             location : 'Kumasi',
             streamName : "stream2",
             coordinates : [6.669450646774655, -1.5176043915812956]
         },
         {
             id : '9',
-            url : "/assets/dev/output4.mp4",
+            url : "/assets/dev/simulated-plates-stream/output4.mp4",
             location : 'Kumasi',
             streamName : "stream2",
             coordinates : [6.669450646774655, -1.5176043915812956]
@@ -97,6 +90,34 @@ export const LiveProvider = ({ children }: { children: ReactNode }) => {
         //     coordinates : [6.669450646774655, -1.5176043915812956],
         //     type : "feed"
         // },
+        {
+            id : '11',
+            url : "/assets/dev/simulated-people-stream/person-school.mp4",
+            location : 'Kumasi',
+            streamName : "stream2",
+            coordinates : [6.669450646774655, -1.5176043915812956]
+        },
+        {
+            id : '11',
+            url : "/assets/dev/simulated-people-stream/person-mall.mp4",
+            location : 'Kumasi',
+            streamName : "stream2",
+            coordinates : [6.669450646774655, -1.5176043915812956]
+        },
+        {
+            id : '11',
+            url : "/assets/dev/simulated-people-stream/person-towncouncil.mp4",
+            location : 'Kumasi',
+            streamName : "stream2",
+            coordinates : [6.669450646774655, -1.5176043915812956]
+        },
+        {
+            id : '11',
+            url : "/assets/dev/simulated-people-stream/person-church.mp4",
+            location : 'Kumasi',
+            streamName : "stream2",
+            coordinates : [6.669450646774655, -1.5176043915812956]
+        },
     ])
     const [numberOfCamerasPerPage, setNumberOfCamerasPerPage] = useState<number>(4)
     const [folders, setFolders] = useState<FolderOrCamera[]>([]);
