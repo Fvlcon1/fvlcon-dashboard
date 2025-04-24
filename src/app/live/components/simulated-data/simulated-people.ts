@@ -1,7 +1,14 @@
+import { belinda } from "../../utils/simulated-user-nia/Belinda Yeboah";
 import { chrisNia } from "../../utils/simulated-user-nia/chris";
 import { christopher } from "../../utils/simulated-user-nia/Christopher Owusu";
 import { collins } from "../../utils/simulated-user-nia/Collins Asamoah";
+import { comfort } from "../../utils/simulated-user-nia/Comfort owusu";
 import { elvis } from "../../utils/simulated-user-nia/Elvis Nana-Agyekum";
+import { felix } from "../../utils/simulated-user-nia/Felix Kweku Obeng";
+import { gideon } from "../../utils/simulated-user-nia/Gideon Kojo-Takyi";
+import { moses } from "../../utils/simulated-user-nia/Moses Achampong";
+import { omar } from "../../utils/simulated-user-nia/Omar Faruk";
+import { samuel } from "../../utils/simulated-user-nia/Samuel Owusu Boakye";
 
 export const simulatedPeople = [
     {
@@ -63,5 +70,110 @@ export const simulatedPeople = [
         imageUrl : '/assets/simulated-people/captured/Elvis Nana-Agyekum.jpg',
         similarity : 90,
         originalImageUrl : '/assets/simulated-people/original/Elvis Nana-Agyekum.jpg'
+    },
+    {
+        id : "Id",
+        name: `Felix Kweku Obeng`,
+        details : felix,
+        Timestamp : new Date(),
+        coordinates: "0,0",
+        timeSeen: new Date(),
+        faceId: "FaceId",
+        streamName: "stream_name",
+        S3Key : "S3Key",
+        userId : "009",
+        imageUrl : '/assets/simulated-people/captured/Felix Kweku Obeng.jpg',
+        similarity : 90,
+        originalImageUrl : '/assets/simulated-people/original/Felix Kweku Obeng.jpg'
+    },
+    {
+        id : "Id",
+        name: `Gideon Kojo-Takyi`,
+        details : gideon,
+        Timestamp : new Date(),
+        coordinates: "0,0",
+        timeSeen: new Date(),
+        faceId: "FaceId",
+        streamName: "stream_name",
+        S3Key : "S3Key",
+        userId : "009",
+        imageUrl : '/assets/simulated-people/captured/Gideon Kojo-Takyi.jpg',
+        similarity : 90,
+        originalImageUrl : '/assets/simulated-people/original/Gideon Kojo-Takyi.jpg'
+    },
+    {
+        id : "Id",
+        name: `Samuel Owusu Boakye`,
+        details : samuel,
+        Timestamp : new Date(),
+        coordinates: "0,0",
+        timeSeen: new Date(),
+        faceId: "FaceId",
+        streamName: "stream_name",
+        S3Key : "S3Key",
+        userId : "009",
+        imageUrl : '/assets/simulated-people/captured/Samuel Owusu Boakye.jpg',
+        similarity : 90,
+        originalImageUrl : '/assets/simulated-people/original/Samuel Owusu Boakye.jpg'
+    },
+    {
+        id : "Id",
+        name: `Omar Faruk`,
+        details : omar,
+        Timestamp : new Date(),
+        coordinates: "0,0",
+        timeSeen: new Date(),
+        faceId: "FaceId",
+        streamName: "stream_name",
+        S3Key : "S3Key",
+        userId : "009",
+        imageUrl : '/assets/simulated-people/captured/Omar Faruk.jpg',
+        similarity : 90,
+        originalImageUrl : '/assets/simulated-people/original/Omar Faruk.jpg'
+    },
+    {
+        id : "Id",
+        name: `Moses Achampong`,
+        details : moses,
+        Timestamp : new Date(),
+        coordinates: "0,0",
+        timeSeen: new Date(),
+        faceId: "FaceId",
+        streamName: "stream_name",
+        S3Key : "S3Key",
+        userId : "009",
+        imageUrl : '/assets/simulated-people/captured/Moses Achampong.jpg',
+        similarity : 90,
+        originalImageUrl : '/assets/simulated-people/original/Moses Achampong.jpg'
+    },
+    {
+        id : "Id",
+        name: `Comfort owusu`,
+        details : comfort,
+        Timestamp : new Date(),
+        coordinates: "0,0",
+        timeSeen: new Date(),
+        faceId: "FaceId",
+        streamName: "stream_name",
+        S3Key : "S3Key",
+        userId : "009",
+        imageUrl : '/assets/simulated-people/captured/Comfort owusu.jpg',
+        originalImageUrl : '/assets/simulated-people/original/Comfort owusu.jpg',
+        similarity : 90,
+    },
+    {
+        id : "Id",
+        name: `Belinda Yeboah`,
+        details : belinda,
+        Timestamp : new Date(),
+        coordinates: "0,0",
+        timeSeen: new Date(),
+        faceId: "FaceId",
+        streamName: "stream_name",
+        S3Key : "S3Key",
+        userId : "009",
+        imageUrl : '/assets/simulated-people/captured/Belinda Yeboah.jpg',
+        originalImageUrl : '/assets/simulated-people/original/Belinda Yeboah.jpg',
+        similarity : 90,
     },
 ]
