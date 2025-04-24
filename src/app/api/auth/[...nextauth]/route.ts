@@ -7,7 +7,7 @@ import NextAuth, { NextAuthOptions } from 'next-auth';
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { authOptions } from './authOptions';
 
-const SECRET = process.env.JWT_SECRET || 'your-secret-key'; // Store your secret key in a .env file for security
+const SECRET = process.env.JWT_SECRET || 'your-secret-key';
 
 const handler =  NextAuth(authOptions);
 

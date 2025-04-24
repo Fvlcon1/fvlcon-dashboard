@@ -5,24 +5,10 @@ import CredentialsProvider from 'next-auth/providers/credentials';
 import bcrypt from 'bcryptjs';
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import prisma from '@/lib/prisma'; // Adjust based on your setup
-import { Resend } from 'resend'; // Assuming you're using Resend for sending emails
 import dotenv from 'dotenv';
-import jwt from 'jsonwebtoken';
-import { cookies } from "next/headers";
-import Cookies from 'js-cookie';
-import axios from "axios";
-import { JWT } from "next-auth/jwt";
-
-dotenv.config();
-const resend = new Resend(process.env.RESEND_API_KEY);
-
-const setTokenCookie = async (token : string) => {
-  const cookieStore = await cookies()
-  cookieStore.set('token', token)
-}
 
 export const authOptions: NextAuthOptions = {
-  debug: process.env.NODE_ENV === 'development', // Debugging in development only
+  debug: process.env.NODE_ENV === 'development',
 
   providers: [
     CredentialsProvider({
