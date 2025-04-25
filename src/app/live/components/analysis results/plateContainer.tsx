@@ -52,7 +52,7 @@ const PlateContainer = ({
                 <div className="flex gap-2 relative w-full bg-bg-tetiary justify-center rounded-lg">
                     {
                         detections.imageUrl &&
-                        <div className="w-[65px] h-[65px] overflow-hidden bg-bg-secondary relative">
+                        <div className="w-full h-[65px] overflow-hidden rounded-lg bg-bg-secondary relative">
                             <Image
                                 src={detections.imageUrl} 
                                 alt="test-bg"

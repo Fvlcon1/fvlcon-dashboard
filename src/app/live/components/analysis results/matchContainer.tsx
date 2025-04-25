@@ -10,8 +10,9 @@ import theme from "@styles/theme"
 import { Tooltip } from "antd"
 import Image from "next/image"
 import Link from "next/link"
-import { Dispatch, SetStateAction, useState } from "react"
+import { Dispatch, SetStateAction, useContext, useState } from "react"
 import { FaLocationDot } from "react-icons/fa6"
+import { liveComponentsContext } from "../context"
 
 /**
  * Displays a match container for a detected person, including images, similarity, and NIA record modal.
@@ -35,6 +36,7 @@ const MatchContainer = ({
     detections: IPersonTrackingWithImageType;
 }) => {
     const [visible, setVisible] = useState(false);
+    const {setIsNiaVisible, setDetection} = useContext(liveComponentsContext)
 
     // Helper to render image or fallback
     const renderImage = (url?: string, onClick?: () => void, alt = "Image", bg = "bg-bg-tetiary") => (
@@ -56,17 +58,16 @@ const MatchContainer = ({
         </div>
     );
 
+    /**
+     * Sets detection data
+     */
+    const handleNameClick = () => {
+        setDetection(detections)
+        setIsNiaVisible(true)
+    }
+
     return (
         <>
-            {/* NIA Record Modal */}
-            <NiaRecord 
-                visible={visible}
-                setVisible={setVisible}
-                data={detections.niaDetails}
-                faceId={detections.faceId}
-                croppedImage={detections.imageUrl ?? ''}
-                boundedImage={detections.imageUrl ?? ''}
-            />
             <div className="flex flex-col gap-1">
                 {/* Header: Type and Track link */}
                 <div className="flex justify-between gap-2 items-center">
@@ -108,7 +109,7 @@ const MatchContainer = ({
                 <div className="flex flex-col gap-[1px]">
                     {detections.name && detections.name.length > 1 ? (
                         <span
-                            onClick={() => setVisible(true)}
+                            onClick={handleNameClick}
                             className="cursor-pointer hover:opacity-70 duration-200"
                         >
                             <Text textColor={theme.colors.text.primary}>

@@ -16,6 +16,7 @@ import { liveComponentsContext } from "./context"
 import { simulatedData } from "./simulated-data/simulated-data"
 import { FaUndoAlt } from "react-icons/fa"
 import Selectable, { SelectableOption } from "@components/dropdown/selectable"
+import NiaRecord from "@components/records/NIA record/niaRecord"
 
 export type FilterType = "Person" | "Plate" | "All"
 
@@ -35,7 +36,7 @@ const Right = () => {
     const typeRef = useRef(type);
     const [isMessageUpdated, setIsMessageUpdated] = useState(false)
     const [detections, setDetections] = useState<(IPersonTrackingWithImageType | IPlateTrackingType)[]>([])
-    const {showDvlaRecord, setShowDvlaRecord, setDvlaData, dvlaData} = useContext(liveComponentsContext)
+    const {showDvlaRecord, setShowDvlaRecord, setDvlaData, dvlaData, isNiaVisible, setIsNiaVisible, detection} = useContext(liveComponentsContext)
 
     // Update the ref whenever type changes
     useEffect(() => {
@@ -102,11 +103,23 @@ const Right = () => {
 
     return (
         <>
+            {/* DVLA Record Modal */}
             <DvlaRecord
                 display={showDvlaRecord}
                 setDisplay={setShowDvlaRecord}
                 data={dvlaData}
             />
+
+            {/* NIA Record Modal */}
+            <NiaRecord
+                visible={isNiaVisible}
+                setVisible={setIsNiaVisible}
+                data={detection?.niaDetails}
+                faceId={detection?.faceId}
+                croppedImage={detection?.imageUrl ?? ''}
+                boundedImage={detection?.imageUrl ?? ''}
+            />
+
             <div className="fixed top-0 right-[60px] w-[210px] h-[100vh] py-4 px-6 gap-3">
                 <Flex
                     direction="column"
