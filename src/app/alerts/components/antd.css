@@ -1,0 +1,8 @@
+/* When switch is OFF */
+.custom-switch.ant-switch:not(.ant-switch-checked) {
+    background-color: #2C2C2C
+  }
+
+.custom-switch.ant-switch {
+  transition: background-color 0.3s ease;
+}

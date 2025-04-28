@@ -53,7 +53,7 @@ type InputProps = {
   
     return (
       <div
-        className={`flex w-full flex-1 gap-2 px-[15px] py-[10px] h-[45px] items-center rounded-full bg-bg-secondary border-bg-tetiary border-[1px] border-solid duration-200 ${className}`}
+        className={`flex w-full flex-1 gap-2 px-[15px] py-[10px] h-[40px] items-center rounded-full bg-bg-secondary border-bg-tetiary border-[1px] border-solid duration-200 ${className}`}
         onClick={onClick}
         style={{
           borderColor : inputFocus || hover ? theme.colors.main.primary : borderColor || theme.colors.bg.quantinary

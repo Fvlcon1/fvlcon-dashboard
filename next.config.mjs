@@ -4,7 +4,7 @@ const nextConfig = {
         if (!isServer) {
           config.resolve.fallback = {
             fs: false,
-            encoding : false
+            encoding : false,
           };
         }
         return config;

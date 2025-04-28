@@ -12,7 +12,6 @@ const MatchContainer = ({
     originalImageUrl? : string
     capturedImageUrl? : string
 }) => {
-    console.log({originalImageUrl, capturedImageUrl})
     const [zoomImage, setZoomImage] = useState<string>('')
     const [zoom, setZoom] = useState(false)
     return (

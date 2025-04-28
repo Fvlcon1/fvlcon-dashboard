@@ -6,6 +6,8 @@ export enum TypographySize {
   body = "12px",
   HM = "14px",
   HL = "16px",
+  HL2 = "22px",
+  HL3 = "34px",
 }
 
 export interface AppTypographyProps {

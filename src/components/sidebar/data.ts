@@ -3,6 +3,7 @@ import { IoFileTrayFull, IoSettings } from "react-icons/io5";
 import { MdDashboard } from "react-icons/md";
 import { RiLiveFill } from "react-icons/ri";
 import ProfilePopup from "./components/profilePopup";
+import { TbBellRingingFilled } from "react-icons/tb";
 
 export const bottomPagesData = [
     {
@@ -54,6 +55,12 @@ export const pagesData =[
         icon : FaMap,
         active : false,
         url : '/tracking'
+    },
+    {
+        name : 'Alerts',
+        icon : TbBellRingingFilled,
+        active : false,
+        url : '/alerts'
     },
     {
         name : 'Activity Log',

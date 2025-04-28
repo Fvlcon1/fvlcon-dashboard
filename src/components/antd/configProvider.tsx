@@ -22,7 +22,15 @@ const AntdConfigProvider = ({
                         cellActiveWithRangeBg : theme.colors.bg.tetiary,
                         hoverBorderColor : `${theme.colors.main.primary}${hexOpacity(40)}`,
                         cellHoverBg : theme.colors.bg.quantinary
-                    }
+                    },
+                    Switch: {
+                        colorPrimary: theme.colors.main.primary,
+                      },
+                    Checkbox: {
+                        colorPrimary: theme.colors.main.primary,
+                        controlItemBgActive: theme.colors.main.primary,
+                        colorBgContainer: theme.colors.bg.alt1,
+                    },
                 },
                 token : {
                     colorBgContainer : theme.colors.bg.secondary,
