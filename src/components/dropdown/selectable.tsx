@@ -22,6 +22,7 @@ interface SelectableProps {
   onChange?: (value: string) => void;
   placeholder?: string;
   className?: string;
+  innerClassName? : string,
   dropdownClassName?: string;
   theme?: {
     colors: {
@@ -67,6 +68,7 @@ const Selectable = ({
   onChange,
   placeholder = "Select an option",
   className = "",
+  innerClassName,
   dropdownClassName = "",
 }: SelectableProps) => {
   // For controlled or uncontrolled usage
@@ -124,7 +126,7 @@ const Selectable = ({
         menuItems={menuItems}
         className={dropdownClassName}
       >
-        <div className="flex flex-1 px-3 w-full h-full rounded-lg bg-bg-secondary justify-between items-center cursor-pointer hover:bg-bg-quantinary">
+        <div className={`flex flex-1 px-3 w-full h-full rounded-lg bg-bg-secondary justify-between items-center cursor-pointer hover:bg-bg-quantinary ${innerClassName}`}>
             <Text 
                 textColor={theme?.colors.text.primary}
             >
