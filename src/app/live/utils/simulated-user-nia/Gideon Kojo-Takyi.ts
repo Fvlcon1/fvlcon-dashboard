@@ -74,7 +74,7 @@ export const gideon = {
         "levelOfEducation": "Tertiary",
         "colourOfEyes": "Black",
         "disabilityCode": "None",
-        "surname": "Kojo-Takyi",
+        "surname": "Kojo - Takyi",
         "colourOfHair": "Black",
         "forenames": "Gideon",
         "height": "180"

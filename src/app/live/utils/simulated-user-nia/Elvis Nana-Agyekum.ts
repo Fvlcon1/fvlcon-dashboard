@@ -74,7 +74,7 @@ export const elvis = {
         "levelOfEducation": "Tertiary",
         "colourOfEyes": "Black",
         "disabilityCode": "None",
-        "surname": "Nana-Agyekum",
+        "surname": "Nana - Agyekum",
         "colourOfHair": "Black",
         "forenames": "Elvis",
         "height": "180"
