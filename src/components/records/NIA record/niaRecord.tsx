@@ -24,7 +24,8 @@ const NiaRecord = ({
     data,
     faceId,
     croppedImage,
-    boundedImage
+    boundedImage,
+    printable = true
 } : {
     visible : boolean,
     setVisible : React.Dispatch<React.SetStateAction<boolean>>
@@ -32,6 +33,7 @@ const NiaRecord = ({
     faceId? : string
     croppedImage : string
     boundedImage : string
+    printable? : boolean
 }) => {
     const [zoom, setZoom] = useState(false)
     const [zoomImage, setZoomImage] = useState('')
@@ -74,6 +76,7 @@ const NiaRecord = ({
             setDisplay={setVisible}
             windowStyle="!h-[90%] !w-[40%] !min-w-[700px]"
             icons={[
+                printable &&
                 <DownloadPrintActions
                     key="download-print-actions"
                     setShowFilenameContainer={setShowFilenameContainer}

@@ -118,6 +118,7 @@ const Right = () => {
                 faceId={detection?.faceId}
                 croppedImage={detection?.imageUrl ?? ''}
                 boundedImage={detection?.imageUrl ?? ''}
+                printable={false}
             />
 
             <div className="fixed top-0 right-[60px] w-[210px] h-[100vh] py-4 px-6 gap-3">
