@@ -15,7 +15,7 @@ const DBlist = () => {
         "Ghana Immigration",
         "Ghana Prisons",
         "NIA",
-        "Ghana Poilce Sercvice"
+        "Ghana Police Service"
     ]
 
     return (
