@@ -142,7 +142,7 @@ export const awsSegmentation = async (file: File, setLogs: Dispatch<SetStateActi
     setLogs(prev => ([
       ...prev, { date : new Date(), log : { content : "Generating presigned URL..." } }
     ]))
-    const { data: { presignedUrl, videoKey } } = await axios.get(`${process.env.NEXT_PUBLIC_AWS_BASE_URL}/upload-video`);
+    const { data: { presignedUrl, videoKey } } = await axios.get(`${process.env.NEXT_PUBLIC_AWS_VIDEO_BASE_URL}/upload-video`);
     setLogs(prev => ([
       ...prev, { date : new Date(), log : { content : `Successfully generated presigned url: ${presignedUrl}`, maxLines : 2 } }
     ]))
@@ -193,7 +193,7 @@ const uploadToS3 = async (presignedUrl: string, file: File) => {
 
 const startVideoAnalysis = async (videoKey: string) => {
   try {
-    const response = await axios.post(`${process.env.NEXT_PUBLIC_AWS_BASE_URL}/upload-video`, { videoKey });
+    const response = await axios.post(`${process.env.NEXT_PUBLIC_AWS_VIDEO_BASE_URL}/upload-video`, { videoKey });
 
     if (response.status !== 200) {
       throw new Error("Unable to start video analysis");
@@ -210,7 +210,7 @@ const pollJobStatus = async (jobId: string, videoKey: string, jobType: string, s
   return new Promise((resolve, reject) => {
     const intervalId = setInterval(async () => {
       try {
-        const { data: jobStatusData } = await axios.get(`${process.env.NEXT_PUBLIC_AWS_BASE_URL}/check-job-status`, {
+        const { data: jobStatusData } = await axios.get(`${process.env.NEXT_PUBLIC_AWS_VIDEO_BASE_URL}/check-job-status`, {
           params: { jobId, jobType, videoKey }
         });
         

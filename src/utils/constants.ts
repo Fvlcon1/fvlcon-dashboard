@@ -7,6 +7,6 @@ export const standardMargin = 10
 export const noTempalteRoutes_startsWith = ['/company-code', '/agreementpage', '/auth/login', '/auth/signup', '/auth/verification', '/auth/reset-password', '/auth/mfa', '/model/list-faces', '/model/video-analysis', '/printable/fvlconizationResult/', '/printable/video-fvlconization-result/']
 export const noTempalteRoutes = ['*', '/']
 export const API_URL =
-  "https://aytoeoiiq6.execute-api.us-east-1.amazonaws.com/Prod/faces";
+  "https://jvlht3o3ka.execute-api.us-east-1.amazonaws.com/Prod/faces";
 export const CHECK_FACE_URL =
-  "https://aytoeoiiq6.execute-api.us-east-1.amazonaws.com/Prod/faces/check";
+  "https://jvlht3o3ka.execute-api.us-east-1.amazonaws.com/Prod/faces/check";
